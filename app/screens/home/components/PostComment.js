@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
 import Images from '../../../constants/image';
@@ -11,34 +10,32 @@ import {Icon} from 'native-base';
 import styles from './styles';
 import Dimension from '../../../constants/dimensions';
 
-const PostCard = ({item, onClickItem, onPressOfComment}) => {
-  const onClickingItem = (item) => {
-    onClickItem(item);
-  };
+const PostComment = ({item, onClickItem, onPressOfComment}) => {
   return (
     <View style={styles.post_container}>
-      <View style={styles.post_card_container}>
-        <Image source={Images.MessiPlayer} style={styles.post_image_size} />
-        <View style={styles.post_content_view}>
+      <View style={styles.comment_card_container}>
+        <Image source={Images.MessiPlayer} style={styles.comment_image_size} />
+        <View style={styles.comment_content_view}>
           <View style={{width: Dimension.pro100}}>
             <View style={styles.post_title}>
               <Text style={styles.post_title_name}>{item.name}</Text>
-              <Text style={styles.post_title_time}>{item.time}</Text>
+              <Text style={styles.comment_title_time}>{item.time}</Text>
             </View>
-            <Text style={styles.post_description}>{item.description}</Text>
+            <Text style={styles.comment_description}>{item.description}</Text>
+          </View>
+          <View style={{marginTop: 22}}>
+            <Image source={Images.MoreIcon} style={styles.more_icon} />
           </View>
         </View>
       </View>
-      <View style={styles.post_news_content}>
-        <TouchableOpacity onPress={() => onClickingItem(item)}>
-          <Image
-            source={Images.MessiPlayer}
-            style={styles.post_news_image}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
+      <View>
+        <Image
+          source={Images.MessiPlayer}
+          style={styles.comment_news_image}
+          resizeMode="contain"
+        />
       </View>
-      <View style={styles.post_news_comment}>
+      <View style={styles.news_comment}>
         <View style={styles.post_news_like}>
           <Icon
             type="FontAwesome"
@@ -57,4 +54,4 @@ const PostCard = ({item, onClickItem, onPressOfComment}) => {
     </View>
   );
 };
-export default PostCard;
+export default PostComment;

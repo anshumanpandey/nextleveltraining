@@ -1,14 +1,14 @@
 import React from 'react';
-import {View,Image,Text} from 'react-native'
+import {View, TouchableOpacity,Image,Text} from 'react-native'
 import StarRating from 'react-native-star-rating';
 import Images from '../../../../constants/image'
 import {Icon} from 'native-base'
 import styles from './styles/post-search-style'
 
-const PostSearchCard =()=> {
+const PostSearchCard =({onPress})=> {
     const [star,setStar]=React.useState(3.5)
   return (
-    <View style={styles.ps_container}>
+    <TouchableOpacity onPress={onPress} style={styles.ps_container}>
         <View style={{marginTop:15,marginLeft:10}}>
             <Image source={Images.MessiPlayer} style={styles.ps_image}/>
         <View style={styles.ps_star_view}>
@@ -22,7 +22,7 @@ const PostSearchCard =()=> {
                     // selectedStar={(rating) => this.onStarRatingPress(rating)}
                 />
            </View>
-           
+
         </View>
         <View style={{marginTop:15,marginLeft:10,width:'80%'}}>
             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -31,7 +31,7 @@ const PostSearchCard =()=> {
                  <Icon type="Feather" name="heart" style={{fontSize:19,color:"#0F2F80"}}/>
                </View>
             </View>
-           
+
             <View style={{width:'80%'}}>
                 <Text>LoremIpsum is simply dummy text of the printing and typesetting industry.</Text>
             </View>
@@ -73,10 +73,10 @@ const PostSearchCard =()=> {
                   <Text>Qualification 4</Text>
                </View>
             </View>
-            
+
         </View>
-    
-    </View>
+
+    </TouchableOpacity>
   );
 }
 

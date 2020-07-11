@@ -24,7 +24,7 @@ class SearchComponent extends Component {
                       fontSize:14
                   }}
                 />
-             
+
                 <View style={{
                     backgroundColor:'#0F2F80',
                     width:30,
@@ -71,7 +71,7 @@ class SearchComponent extends Component {
            data={[1,2,3,4,5,6,7,8]}
            keyExtractor={item=>item.id}
            renderItem={({item})=>(
-             <PostSearchCard/>
+             <PostSearchCard onPress={() => alert('onPress')} />
            )}
           />
        </View>
