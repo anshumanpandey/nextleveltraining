@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
 import {Icon} from 'native-base';
 import styles from './styles';
+import NavigationService from '../../navigation/NavigationService';
 class Header extends Component {
   render() {
     return (
       <View style={styles.header_layout}>
         <View style={styles.header_item_container}>
-          <TouchableOpacity onPress={() => this.props.toggleDrawer()}>
+          <TouchableOpacity onPress={() => NavigationService.openDrawer()}>
             <Icon name="menu" type="Entypo" style={styles.header_menu_icon} />
           </TouchableOpacity>
           <View style={{flexDirection: 'row'}}>

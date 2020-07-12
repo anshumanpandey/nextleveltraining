@@ -43,5 +43,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     width: Dimension.pro85,
   },
+  headerTitle: {
+    marginLeft: 10,
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 export default styles;

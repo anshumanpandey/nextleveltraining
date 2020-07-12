@@ -29,7 +29,6 @@ const images = [
   },
 ];
 
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -57,7 +56,7 @@ class Home extends Component {
                 barStyle="light-content"
             />
         </View> */}
-        <Header toggleDrawer={this.props.navigation.toggleDrawer} />
+        <Header />
         <FlatList
           horizontal={false}
           style={{width: '100%', height: '100%'}}

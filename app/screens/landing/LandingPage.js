@@ -6,8 +6,8 @@ import {View, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon} from 'native-base';
-import Home from '../home/index';
-import Search from '../search/Search';
+import Home from '../home';
+import Search from '../search';
 import Booking from '../booking/Booking';
 import Message from '../message/Message';
 import Profile from '../profile/Profile';
@@ -48,12 +48,7 @@ class LandingPage extends Component {
           />
           <Tab.Screen
             name="Search"
-            component={(props) => (
-              <Search
-                {...props}
-                toggleDrawer={this.props.navigation.toggleDrawer}
-              />
-            )}
+            component={Search}
             options={{
               tabBarLabel: 'SEARCH',
               tabBarIcon: () => (
