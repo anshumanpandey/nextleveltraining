@@ -2,7 +2,7 @@ const Screens ={
     SignUp:'SignUp',
     Login:'Login',
     Level:'Level',
-    LandingPage:'LandingPage'
+    LandingPage:'MainStack'
 }
 
 export default Screens;

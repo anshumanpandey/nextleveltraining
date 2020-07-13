@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
+import React from 'react';
+import {View, TouchableOpacity, Text} from 'react-native';
 import {Icon} from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 
-const HeaderClosePlus = () => {
+const HeaderClosePlus = ({isSaveButton, saveOnPress}) => {
   return (
     <View style={styles.header_layout}>
       <View style={styles.header_item_container}>
@@ -16,11 +16,17 @@ const HeaderClosePlus = () => {
           />
         </TouchableOpacity>
         <View style={{flexDirection: 'row'}}>
-          <Icon
-            name="add"
-            type="MaterialIcons"
-            style={styles.header_menu_icon}
-          />
+          {isSaveButton ? (
+            <TouchableOpacity onPress={() => saveOnPress()}>
+              <Text style={{fontSize: 18, color: 'white', fontWeight: 'bold'}}>Save</Text>
+            </TouchableOpacity>
+          ) : (
+            <Icon
+              name="add"
+              type="MaterialIcons"
+              style={styles.header_menu_icon}
+            />
+          )}
         </View>
       </View>
     </View>

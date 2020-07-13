@@ -11,6 +11,7 @@ export default Dimension = {
   pro20: '20%',
   pro25: '25%',
   pro30: '30%',
+  pro31: '31%',
   pro33: '33.33%',
   pro38: '38%',
   pro40: '40%',

@@ -8,7 +8,7 @@ import ExperienceCard from './ExperienceCard';
 
 const InformationTab = () => {
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'white', marginTop: 10}}>
       <View style={styles.tab1Contain}>
         <View style={styles.tab1Container}>
           <View style={styles.tabs1}>
@@ -17,7 +17,7 @@ const InformationTab = () => {
             </Text>
             <Icon type="MaterialIcons" name="check" style={styles.icons} />
           </View>
-          <View style={[styles.tabs1, {alignItems: 'center'}]}>
+          <View style={[styles.tabs1, {justifyContent: 'center'}]}>
             <Text style={[styles.tab_text, {color: Colors.s_blue}]}>
               Valid ID
             </Text>

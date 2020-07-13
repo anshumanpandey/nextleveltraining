@@ -25,7 +25,7 @@ const HeaderWithSearch = ({navigation}) => {
           <View style={styles.inputText}>
             <TextInput
               placeholder="Post about training here..."
-              style={{fontSize: 14}}
+              style={{fontSize: 14, padding: 0}}
             />
           </View>
         </View>

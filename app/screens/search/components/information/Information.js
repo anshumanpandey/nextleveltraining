@@ -6,10 +6,23 @@ import {Icon} from 'native-base';
 import NavigationService from '../../../../navigation/NavigationService';
 import StarRating from 'react-native-star-rating';
 import InformationTab from './informationTab';
+import MediaTab from './MediaTab';
+import ReviewTab from './ReviewTab';
+import Tabs from './Tabs';
 import Colors from '../../../../constants/color';
 
 class Information extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTab: 0,
+    };
+  }
+
   render() {
+    const {selectedTab} = this.state;
+    const activeColor = Colors.s_blue;
+    const inActiveColor = 'gray';
     return (
       <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.topContain}>
@@ -77,22 +90,21 @@ class Information extends Component {
         </View>
 
         <View style={styles.tabContain}>
-          <View style={styles.tabContainer}>
-            <View style={styles.tabs}>
-              <Text style={[styles.tab_text, {color: Colors.s_blue}]}>
-                INFORMATION
-              </Text>
-            </View>
-            <View style={[styles.tabs, {borderBottomWidth: 0}]}>
-              <Text style={styles.tab_text}>MEDIA</Text>
-            </View>
-            <View style={[styles.tabs, {borderBottomWidth: 0}]}>
-              <Text style={styles.tab_text}>REVIEW</Text>
-            </View>
-          </View>
+          <Tabs
+            selectedTab={selectedTab}
+            activeColor={activeColor}
+            inActiveColor={inActiveColor}
+            onChangeTab={(index) => this.setState({selectedTab: index})}
+          />
         </View>
 
-        <InformationTab />
+        {selectedTab === 0 ? (
+          <InformationTab />
+        ) : selectedTab === 1 ? (
+          <MediaTab />
+        ) : (
+          <ReviewTab />
+        )}
       </ScrollView>
     );
   }

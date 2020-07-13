@@ -89,7 +89,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'space-between',
     paddingVertical: 10,
-    marginBottom: 5, borderBottomWidth: 0.5, borderBottomColor: 'gray'
+    marginBottom: 5,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'gray',
   },
   post_news_like: {
     flexDirection: 'row',
@@ -123,6 +125,25 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     tintColor: 'black',
+  },
+  ps_star_view: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginTop: 10,
+  },
+  ps_star_point: {
+    marginRight: 2,
+    fontSize: 12,
+    color: '#38A663',
+  },
+  post_news_contents: {
+    paddingBottom: 17,
+    marginBottom: 5,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'lightgray',
+    marginLeft: 12,
+    marginRight: 12,
   },
 });
 export default styles;

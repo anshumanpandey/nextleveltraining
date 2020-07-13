@@ -1,26 +1,40 @@
-import React, {Component, useState} from 'react';
-import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
+import React from 'react';
+import {Text, View, SafeAreaView} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {NavigationActions, StackActions} from 'react-navigation';
+import {NavigationContainer} from '@react-navigation/native';
 import ReduxThunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
-import Dimensions from './constants/dimensions';
 import reducers from './redux/reducer';
+import Dimensions from './constants/dimensions';
 import Menu from './screens/Menu/Menu.js';
 import NavigationService from './navigation/NavigationService.js';
 import Login from './screens/login/Login.js';
 import SignUp from './screens/signup/Signup.js';
 import Level from './screens/level/Level.js';
-import LandingPage from './screens/landing/LandingPage.js';
+import Home from './screens/home/Home';
+import Search from './screens/search/Search';
+import Booking from './screens/booking/Booking';
+import Message from './screens/message/Message';
+import Profile from './screens/profile/Profile';
+import EditInput from './screens/profile/EditInput';
+import AddTeam from './screens/profile/AddTeam';
+import UpComingMatch from './screens/profile/UpCommingMatch';
+import {Icon} from 'native-base';
+import Comment from './screens/home/Comments';
+import Information from './screens/search/components/information/Information';
+import BookNow from './screens/search/components/BookNow';
+import Payments from './screens/payments';
+import JobDetails from './screens/jobDetails';
 
-const MainStack = createStackNavigator(
+const HomeStack = createStackNavigator(
   {
-    Level: {screen: Level},
-    Login: {screen: Login},
-    SignUp: {screen: SignUp},
-    LandingPage: {screen: LandingPage},
+    Home: {screen: Home},
+    Comment: {screen: Comment},
   },
   {
     defaultNavigationOptions: ({navigation}) => {
@@ -31,10 +45,155 @@ const MainStack = createStackNavigator(
   },
 );
 
+const SearchStack = createStackNavigator(
+  {
+    Search: {screen: Search},
+    Information: {screen: Information},
+    BookNow: {screen: BookNow},
+    Payments: {screen: Payments},
+    JobDetails: {screen: JobDetails},
+  },
+  {
+    defaultNavigationOptions: ({navigation}) => {
+      return {
+        header: null,
+      };
+    },
+  },
+);
+
+const ProfileStack = createStackNavigator(
+  {
+    Profile: {screen: Profile},
+    EditInput: {screen: EditInput},
+    AddTeam: {screen: AddTeam},
+    UpComingMatch: {screen: UpComingMatch},
+  },
+  {
+    defaultNavigationOptions: ({navigation}) => {
+      return {
+        header: null,
+      };
+    },
+  },
+);
+const TabNavigator = createBottomTabNavigator(
+  {
+    Home: {
+      screen: HomeStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="SimpleLineIcons"
+              name="home"
+              style={[styles.icons, {color: tintColor}]}
+            />
+            <Text style={[styles.textTab, {color: tintColor}]}>HOME</Text>
+          </View>
+        ),
+      }),
+    },
+    Search: {
+      screen: SearchStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="search"
+              style={[styles.icons, {color: tintColor}]}
+            />
+            <Text style={[styles.textTab, {color: tintColor}]}>SEARCH</Text>
+          </View>
+        ),
+      }),
+    },
+    Booking: {
+      screen: Booking,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="shopping-cart"
+              style={[styles.icons, {color: tintColor}]}
+            />
+            <Text style={[styles.textTab, {color: tintColor}]}>BOOKING</Text>
+          </View>
+        ),
+      }),
+    },
+    Message: {
+      screen: Message,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="message-square"
+              style={[styles.icons, {color: tintColor}]}
+            />
+            <Text style={[styles.textTab, {color: tintColor}]}>MESSAGE</Text>
+          </View>
+        ),
+      }),
+    },
+    Profile: {
+      screen: ProfileStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({tintColor}) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="MaterialIcons"
+              name="person-outline"
+              style={[styles.icons, {color: tintColor}]}
+            />
+            <Text style={[styles.textTab, {color: tintColor}]}>PROFILE</Text>
+          </View>
+        ),
+      }),
+    },
+  },
+  {
+    defaultNavigationOptions: ({navigation}) => ({
+      tabBarOnPress: ({navigation, defaultHandler}) => {
+        if (navigation.state.routeName === 'homeTab') {
+          if (navigation.state.index === 0) {
+            defaultHandler();
+          } else {
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({routeName: 'drawer'})],
+            });
+            navigation.dispatch(resetAction);
+          }
+        } else {
+          defaultHandler();
+        }
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: '#0F2F80',
+      // inactiveTintColor: Colors.tabIconInActive,
+      allowFontScaling: true,
+      showLabel: false,
+      style: {
+        // backgroundColor: Colors.white,
+      },
+    },
+    navigationOptions: {
+      header: {
+        visible: true,
+      },
+    },
+  },
+);
+
 const RootStack = createDrawerNavigator(
   {
     MainStack: {
-      screen: MainStack,
+      screen: TabNavigator,
       defaultNavigationOptions: {
         drawerLockMode: 'locked-open',
       },
@@ -46,19 +205,42 @@ const RootStack = createDrawerNavigator(
   },
 );
 
+const AuthStack = createStackNavigator(
+  {
+    Level: {screen: Level},
+    Login: {screen: Login},
+    SignUp: {screen: SignUp},
+    MainStack: RootStack,
+  },
+  {
+    defaultNavigationOptions: ({navigation}) => {
+      return {
+        header: null,
+      };
+    },
+  },
+);
+
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
-  const Apps = createAppContainer(RootStack);
+  const Apps = createAppContainer(AuthStack);
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Apps
-        ref={(navigatorRef) => {
-          NavigationService.setTopLevelNavigator(navigatorRef);
-        }}
-      />
+      <NavigationContainer>
+        <Apps
+          ref={(navigatorRef) => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+        />
+      </NavigationContainer>
     </SafeAreaView>
   );
 };
 
+const styles = {
+  tabContain: {marginTop: 7, alignItems: 'center'},
+  icons: {fontSize: 20},
+  textTab: {fontSize: 10, marginTop: 5},
+};
 export default AppMain;

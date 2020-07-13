@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'lightgray',
   },
   tab1Contain: {
-    marginTop: Dimension.pro2_5,
     width: Dimension.pro100,
     borderBottomWidth: 5,
     borderBottomColor: 'rgb(237,237,237)',
@@ -110,21 +109,17 @@ const styles = StyleSheet.create({
   tabs: {
     padding: 10,
     alignItems: 'center',
-    width: Dimension.pro30,
-    borderBottomWidth: 1.5,
+    width: Dimension.pro31,
     borderBottomColor: 'rgb(119,71,206)',
   },
   tabs1: {
     padding: 10,
     flexDirection: 'row',
     width: Dimension.pro48,
-    // borderBottomWidth: 1.5,
-    // borderBottomColor: 'rgb(119,71,206)',
   },
 
   tab_text: {
     fontSize: 12,
-    color: 'gray',
   },
   icons: {
     alignItems: 'center',

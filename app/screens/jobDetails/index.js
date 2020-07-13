@@ -86,11 +86,11 @@ const JobDetails = () => {
         <Text style={[styles.btnText, {fontSize: 18}]}>Job Status</Text>
         <View style={{flexDirection: 'row'}}>
           <View style={styles.dashView}>
-            <View style={styles.dontFilled} />
+            <View style={[styles.dontFilled, {backgroundColor: 'rgba(29,181,56,1)'}]} />
             <Dash dashGap={0} dashColor={'gray'} style={{marginTop: 5, width:1, height:75, flexDirection:'column'}}/>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: -20}}>
-            <View style={[styles.triangle, {borderBottomColor: 'rgb(244,247,248)'}]} />
+            <View style={[styles.triangle, {borderRightColor: 'rgb(244,247,248)'}]} />
             <View style={[styles.details, {backgroundColor: 'rgb(244,247,248)', borderBottomWidth: 0}]}>
               <Text style={[styles.btnText, {fontSize: 18, color: 'black', paddingVertical: 8}]}>Booking Completed</Text>
               <Text style={[styles.btnText, {fontSize: 12, fontWeight: '300',}]}>Booking request sent on 18th Jan, 08:56</Text>
@@ -100,7 +100,9 @@ const JobDetails = () => {
 
         <View style={{flexDirection: 'row'}}>
           <View style={[styles.dashView, {marginTop: 5}]}>
-            <View style={styles.dontFilled} />
+            <View style={styles.dontFilled}>
+              <View style={styles.innerDontFilled} />
+            </View>
             <Dash dashGap={0} dashColor={'gray'} style={{marginTop: 5, width:1, height:60, flexDirection:'column'}}/>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: -45}}>
@@ -114,11 +116,11 @@ const JobDetails = () => {
 
         <View style={{flexDirection: 'row'}}>
           <View style={[styles.dashView, {marginTop: 0}]}>
-            <View style={[styles.dontFilled, {backgroundColor: 'lightgray'}]} />
+            <View style={[styles.dontFilled, {borderWidth: 0, backgroundColor: 'lightgray'}]} />
             <Dash dashGap={0} dashColor={'gray'} style={{marginTop: 5, width:1, height:0, flexDirection:'column'}}/>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: -30}}>
-            <View style={[styles.triangle, {borderBottomColor: 'rgb(244,247,248)'}]} />
+            <View style={[styles.triangle, {borderRightColor: 'rgb(244,247,248)'}]} />
             <View style={[styles.details, {backgroundColor: 'rgb(244,247,248)', borderBottomWidth: 0}]}>
               <Text style={[styles.btnText, {fontSize: 18, color: 'lightgray', paddingVertical: 8}]}>Job Finished</Text>
             </View>

@@ -21,9 +21,8 @@ class SearchComponent extends Component {
             style={{
               borderColor: '#DEDEDE',
               borderWidth: 1,
-              padding: 7,
+              paddingHorizontal: 7,
               marginHorizontal: 10,
-              position: 'relative',
               borderRadius: 10,
               width: '70%',
             }}>
@@ -31,6 +30,7 @@ class SearchComponent extends Component {
               placeholder="Search..."
               style={{
                 fontSize: 14,
+                height: 40,
               }}
             />
 
@@ -38,9 +38,9 @@ class SearchComponent extends Component {
               style={{
                 backgroundColor: '#0F2F80',
                 width: 30,
+                height: 40,
                 padding: 17,
                 position: 'absolute',
-                top: -2,
                 right: -3,
                 borderBottomRightRadius: 10,
                 borderTopRightRadius: 10,
