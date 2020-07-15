@@ -12,7 +12,7 @@ const Signup = (props) => {
   const [{ data, loading, error }, register] = useAxios({
     url: '/Account/Register',
     method: 'POST',
-  })
+  }, { manual: true })
 
   return (
     <ScrollView style={styles.signup_layout}>

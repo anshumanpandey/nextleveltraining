@@ -15,49 +15,52 @@ import { Alert } from 'react-native';
 
 
 
-const MainStack = createStackNavigator(
-
-    {
-
-        Level: { screen: Level },
-        Login: { screen: Login },
-        SignUp: { screen: SignUp },
-        LandingPage: { screen: LandingPage },
-
-    },
-    {
-        defaultNavigationOptions: ({ navigation }) => {
-            return {
-                header: null
-            }
-        }
-    }
-)
-
-const RootStack = createDrawerNavigator(
-    {
-        MainStack: {
-            screen: MainStack,
-            defaultNavigationOptions: {
-                drawerLockMode: 'locked-open',
-            }
-
-        }
-    },
-    {
-        drawerWidth: Dimensions.deviceWidth * 0.6,
-        contentComponent: Menu
-    }
-
-)
-
-
 
 const AppMain = () => {
-    const Apps = createAppContainer(RootStack)
-
     const [error] = useGlobalState('error')
     const [success] = useGlobalState('success')
+    const [token] = useGlobalState('token')
+
+    const screens = {}
+
+    if (!token) {
+        screens.Level= { screen: Level }
+        screens.Login= { screen: Login }
+        screens.SignUp= { screen: SignUp }
+    }
+
+
+    if (token) {
+        screens.LandingPage= { screen: LandingPage }
+    }
+    const MainStack = createStackNavigator(screens,
+        {
+            defaultNavigationOptions: ({ navigation }) => {
+                return {
+                    header: null
+                }
+            }
+        }
+    )
+
+    const RootStack = createDrawerNavigator(
+        {
+            MainStack: {
+                screen: MainStack,
+                defaultNavigationOptions: {
+                    drawerLockMode: 'locked-open',
+                }
+
+            }
+        },
+        {
+            drawerWidth: Dimensions.deviceWidth * 0.6,
+            contentComponent: Menu
+        }
+
+    )
+
+    const Apps = createAppContainer(RootStack)
 
     useEffect(() => {
         console.log('error', error)

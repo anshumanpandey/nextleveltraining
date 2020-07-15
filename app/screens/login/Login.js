@@ -13,7 +13,7 @@ const Login = (props) => {
   const [{ data, loading, error }, login] = useAxios({
     url: '/Account/Login',
     method: 'POST',
-  })
+  }, { manual: true })
 
   return (
     <ScrollView style={styles.login_layout}>
