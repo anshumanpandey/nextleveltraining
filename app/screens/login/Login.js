@@ -6,10 +6,12 @@ import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
 import ErrorLabel from '../../components/ErrorLabel';
 import GlobalStyles from '../../constants/GlobalStyles';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import Screen from '../../utils/screen';
 
-const Login = () => {
+const Login = (props) => {
   const [{ data, loading, error }, login] = useAxios({
-    url: '/Account/Register',
+    url: '/Account/Login',
     method: 'POST',
   })
 
@@ -22,18 +24,21 @@ const Login = () => {
         </View>
 
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ emailID: '', password: '' }}
           validate={(values) => {
             const errors = {}
 
-            if (!values.email) errors.email = 'Required'
+            if (!values.emailID) errors.emailID = 'Required'
             if (!values.password) errors.password = 'Required'
 
             return errors
           }}
           onSubmit={values => {
             login({ data: values})
-            .then((r) => console.log(r.data))
+            .then((r) => {
+              dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data})
+              props.navigation.navigate(Screen.LandingPage)
+            })
             .catch((r) => console.log(r))
           }}
         >
@@ -44,12 +49,12 @@ const Login = () => {
                   <TextInput
                     placeholder="Email ID"
                     keyboardType="email-address"
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    value={values.email}
+                    onChangeText={handleChange('emailID')}
+                    onBlur={handleBlur('emailID')}
+                    value={values.emailID}
                   />
                 </View>
-                {errors.email && touched.email && <ErrorLabel text={errors.email} />}
+                {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
                 <View style={styles.login_info_view}>
                   <TextInput
                     placeholder="Password"
@@ -72,7 +77,7 @@ const Login = () => {
                   style={[styles.login_btn_player, loading && GlobalStyles.disabled_button]}
                 >
                   <View style={styles.login_btn_player_view}>
-                    <Text style={styles.login_player_text}>Join Now</Text>
+                    <Text style={styles.login_player_text}>Login</Text>
                   </View>
                 </TouchableOpacity>
               </View>
