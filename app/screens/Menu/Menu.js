@@ -1,7 +1,4 @@
 import React,{useState} from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {ActionCreators} from '../../redux/action.js'
 import {StyleSheet,View,Text,TouchableOpacity,ImageBackground,TextInput,ScrollView,Image,SafeAreaView,FlatList} from 'react-native';
 import {Icon} from 'native-base'
 
