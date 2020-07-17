@@ -13,7 +13,7 @@ const JobDetails = () => {
   };
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
-      <HeaderTitleBack title={'Job Detail'} />
+      <HeaderTitleBack title={'Job Detail'} navigate={props.navigation.navigate} />
 
       <View style={styles.detailsView}>
         <View style={styles.userView}>

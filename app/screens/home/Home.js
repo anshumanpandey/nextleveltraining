@@ -75,7 +75,7 @@ const Home = (props) => {
 
   if (!loading && data && data.length == 0) {
     body = (
-      <Text>No post created</Text>
+      <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>No post created</Text>
     );
   }
 

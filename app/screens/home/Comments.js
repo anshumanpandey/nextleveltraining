@@ -44,7 +44,7 @@ const CommentsScreen = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.home_container}>
-        <HeaderWithSearch navigation={props.navigation} />
+        <HeaderWithSearch navigation={props.navigation} navigate={props.navigation.navigate} />
         <PostComment item={item} />
         {commentBody}
       </ScrollView>

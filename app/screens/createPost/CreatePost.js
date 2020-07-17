@@ -31,7 +31,7 @@ const Profile = (props) => {
               barStyle="light-content"
           />
       </View> */}
-      <Header toggleDrawer={props.toggleDrawer} />
+      <Header toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
       <Formik
         initialValues={{ file: {}, bodyText: '', title: '' }}
         validate={(values) => {
