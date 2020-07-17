@@ -110,7 +110,7 @@ const Home = (props) => {
               barStyle="light-content"
           />
       </View> */}
-      <Header toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
       {body}
       <Modal
         visible={visibleModal != false}

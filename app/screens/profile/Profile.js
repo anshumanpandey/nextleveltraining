@@ -16,7 +16,7 @@ const Profile = (props) => {
   const {user, AboutUs, Achievements, Teams, UpcomingMatches} = profile;
   return (
     <View style={{flex: 1}}>
-      <Header toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate}/>
+      <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}/>
       <ScrollView>
         <View>
           <View style={styles.userView}>
