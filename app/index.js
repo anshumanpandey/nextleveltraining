@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, View, SafeAreaView } from 'react-native';
+import { Text, View, SafeAreaView, Alert } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -28,7 +28,7 @@ import Information from './screens/search/components/information/Information';
 import BookNow from './screens/search/components/BookNow';
 import Payments from './screens/payments';
 import JobDetails from './screens/jobDetails';
-import { useGlobalState } from './state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
 import './api/AxiosBootstrap';
 
 const AppMain = () => {

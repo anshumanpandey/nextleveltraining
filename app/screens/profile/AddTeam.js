@@ -1,88 +1,136 @@
-import React, {useState} from 'react';
-import {View, TextInput, Text, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
-import {Icon} from 'native-base';
+import { Icon } from 'native-base';
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
 import NavigationService from '../../navigation/NavigationService';
 import Dimension from '../../constants/dimensions';
 import DatePicker from 'react-native-datepicker';
+import ErrorLabel from '../../components/ErrorLabel';
+import { Formik } from 'formik';
+import useAxios from 'axios-hooks'
+import moment from 'moment'
+import { compose } from 'redux';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+
 
 const AddTeam = (props) => {
   const cb = props.navigation.state.params.cb;
-  const [teamName, setTeamName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [isChecked, setChecked] = useState(false);
+
+  const [postTeamReq, postTeam] = useAxios({
+    url: '/Users/SaveTeam',
+    method: 'POST'
+  }, { manual: true })
+
+  const [getUserReq, getUserData] = useAxios({
+    url: '/Users/GetUser',
+  }, { manual: true })
+
   return (
-    <View>
-      <HeaderClosePlus
-        isSaveButton={true}
-        saveOnPress={() => {
-          cb({
-            id: 11,
-            title: teamName,
-            startDate,
-            endDate,
-          });
-          NavigationService.goBack();
-        }}
-      />
-      {/* eslint-disable-next-line react-native/no-inline-styles */}
-      <View style={{padding: 30}}>
-        <View style={styles.inputContain}>
-          <TextInput
-            onChangeText={(text) => setTeamName(text)}
-            style={{textAlign: 'left', padding: Dimension.px10, fontSize: 15}}
-            placeholder="Team Name"
-            keyboardType="email-address"
-          />
-        </View>
+    <Formik
+      initialValues={{ teamName: '', startDate: '', endDate: '', isChecked: false }}
+      validate={(values) => {
+        const errors = {}
 
-        <Text style={styles.timePeriod}>Time Period</Text>
+        if (!values.teamName) errors.teamName = 'Required'
+        if (!values.startDate) errors.startDate = 'Required'
+        if (!values.endDate) errors.endDate = 'Required'
 
-        <View style={styles.pickerView}>
-          <DatePicker
-            mode="date"
-            date={startDate}
-            format="DD-MM-YYYY"
-            placeholder={'Select Date'}
-            showIcon={false}
-            customStyles={styles.dateInputs}
-            cancelBtnText="Cancel"
-            confirmBtnText="Confirm"
-            onDateChange={(date) => {
-              setStartDate(date);
-            }}
-          />
+        return errors
+      }}
+      onSubmit={values => {
+        const data = {
+          teamName: values.teamName,
+          startDate: values.startDate,
+          endDate: values.endDate
+        }
+        postTeam({ data })
+        .then(r => getUserData())
+        .then((r) => {
+          dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
+          NavigationService.goBack()
+        })
+      }}
+    >
+      {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+        <>
+          <View>
+            <HeaderClosePlus
+              isSaveButton={true}
+              saveOnPress={handleSubmit}
+            />
+            {/* eslint-disable-next-line react-native/no-inline-styles */}
+            <View style={{ padding: 30 }}>
+              <View style={styles.inputContain}>
+                <TextInput
+                  onChangeText={(text) => setTeamName(text)}
+                  style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
+                  placeholder="Team Name"
+                  keyboardType="email-address"
+                  onChangeText={handleChange('teamName')}
+                  onBlur={handleBlur('teamName')}
+                  value={values.teamName}
+                />
+              </View>
+              {errors.teamName && touched.teamName && <ErrorLabel text={errors.teamName} />}
 
-          <Text style={styles.dateText}>TO</Text>
-          <DatePicker
-            mode="date"
-            date={endDate}
-            format="DD-MM-YYYY"
-            placeholder={'Select Date'}
-            showIcon={false}
-            customStyles={styles.dateInputs}
-            cancelBtnText="Cancel"
-            confirmBtnText="Confirm"
-            onDateChange={(date) => {
-              setEndDate(date);
-            }}
-          />
-        </View>
+              <Text style={styles.timePeriod}>Time Period</Text>
 
-        <TouchableOpacity
-          onPress={() => setChecked(!isChecked)}
-          style={styles.checkView}>
-          <Icon
-            name={isChecked ? 'check-square' : 'square'}
-            type="Feather"
-            style={styles.checkIcon}
-          />
-          <Text style={styles.checkText}>Currently playing with</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+              <View style={styles.pickerView}>
+                <View>
+                  <Text style={styles.dateText}>FROM</Text>
+                  <DatePicker
+                    mode="date"
+                    date={values.startDate}
+                    format="DD-MM-YYYY"
+                    placeholder={'Select Date'}
+                    showIcon={false}
+                    customStyles={styles.dateInputs}
+                    cancelBtnText="Cancel"
+                    confirmBtnText="Confirm"
+                    onDateChange={(_, date) => {
+                      setFieldValue("startDate", date)
+                    }}
+                  />
+                  {errors.startDate && touched.startDate && <ErrorLabel text={errors.startDate} />}
+                </View>
+
+
+                <View>
+                  <Text style={styles.dateText}>TO</Text>
+                  <DatePicker
+                    mode="date"
+                    date={values.endDate}
+                    format="DD-MM-YYYY"
+                    placeholder={'Select Date'}
+                    showIcon={false}
+                    customStyles={styles.dateInputs}
+                    cancelBtnText="Cancel"
+                    confirmBtnText="Confirm"
+                    onDateChange={(_, date) => {
+                      setFieldValue("endDate", date)
+                    }}
+                  />
+                  {errors.endDate && touched.endDate && <ErrorLabel text={errors.endDate} />}
+                </View>
+
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setFieldValue("isChecked",!values.isChecked)}
+                style={styles.checkView}>
+                <Icon
+                  name={values.isChecked ? 'check-square' : 'square'}
+                  type="Feather"
+                  style={styles.checkIcon}
+                />
+                <Text style={styles.checkText}>Currently playing with</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      )}
+    </Formik>
   );
 };
 
