@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   },
   post_card_container: {
     padding: 10,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   comment_card_container: {
     padding: 10,

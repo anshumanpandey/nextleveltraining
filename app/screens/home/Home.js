@@ -44,6 +44,7 @@ const Home = (props) => {
 
   useEffect(() => {
     if (!data) return
+    if (!data.length) return
     
     data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
@@ -56,17 +57,15 @@ const Home = (props) => {
           }
 
           if (fileString) {
-            console.log(fileString)
             j.imageUri = JSON.parse(fileString).file.uri
           }
 
-            SyncPosts(j.imageUri, token)
-
           dataToShow.push(j)
           setDataToShow(dataToShow)
+          SyncPosts(j.imageUri, token)
         })
     })
-  }, [data])
+  }, [loading])
 
   let body = (
     <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>
