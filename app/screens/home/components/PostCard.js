@@ -5,7 +5,6 @@ import {Icon} from 'native-base'
 import styles from './styles'
 
 const PostCard =({item,onClickItem})=> {
-
     const onClickingItem =(item)=>{
          onClickItem(item)
     }
@@ -29,7 +28,7 @@ const PostCard =({item,onClickItem})=> {
           onPress={()=>onClickingItem(item)}
          >
                 <Image 
-                source={Images.MessiPlayer} 
+                source={{ uri: item.imageUri }} 
                 style={styles.post_news_image}
                 resizeMode="cover"
                 />

@@ -15,6 +15,10 @@ const Login = (props) => {
     method: 'POST',
   }, { manual: true })
 
+  const [getUserReq, getUserData] = useAxios({
+    url: '/Users/GetUser',
+  }, { manual: true })
+
   return (
     <ScrollView style={styles.login_layout}>
       <View style={styles.login_container}>
@@ -37,6 +41,10 @@ const Login = (props) => {
             login({ data: values})
             .then((r) => {
               dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data})
+              return getUserData()
+            })
+            .then((r) => {
+              dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
               props.navigation.navigate(Screen.LandingPage)
             })
             .catch((r) => console.log(r))
@@ -72,7 +80,7 @@ const Login = (props) => {
               </View>
               <View style={styles.login_btn_view}>
                 <TouchableOpacity
-                  disabled={loading}
+                  disabled={loading || getUserReq.loading}
                   onPress={handleSubmit}
                   style={[styles.login_btn_player, loading && GlobalStyles.disabled_button]}
                 >

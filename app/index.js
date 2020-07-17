@@ -10,6 +10,7 @@ import Login from './screens/login/Login.js'
 import SignUp from './screens/signup/Signup.js'
 import Level from './screens/level/Level.js'
 import LandingPage from './screens/landing/LandingPage.js'
+import CreatePost from './screens/createPost/CreatePost'
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
 import { Alert } from 'react-native';
 
@@ -33,6 +34,7 @@ const AppMain = () => {
     if (token) {
         screens.LandingPage= { screen: LandingPage }
     }
+
     const MainStack = createStackNavigator(screens,
         {
             defaultNavigationOptions: ({ navigation }) => {
