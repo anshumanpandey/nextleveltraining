@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect} from 'react';
 import Header from '../../components/header/Header';
 import {
   View,
@@ -12,10 +12,14 @@ import {
 } from 'react-native';
 import {Icon} from 'native-base';
 import PostCard from './components/PostCard';
-import {Data} from './components/data';
+import useAxios from 'axios-hooks'
 import styles from './styles.js';
 import Images from '../../constants/image';
 import ImageView from 'react-native-image-view';
+import moment from 'moment'
+import SyncPosts from '../../utils/PostSyncher'
+import AsyncStorage from '@react-native-community/async-storage';
+import { useGlobalState } from '../../state/GlobalState'
 
 const images = [
   {
@@ -29,68 +33,115 @@ const images = [
   },
 ];
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible_modal: false,
-      itemImagePath: '',
-    };
-    this.onClickItem = this.onClickItem.bind(this);
-  }
-  componentDidMount() {}
-  onClickItem(item) {
-    console.log('item', item);
-    this.setState({visible_modal: true});
-  }
-  render() {
-    const {visible_modal} = this.state;
-    return (
-      <View style={styles.home_container}>
-        {/* <View style={{
-            width: "100%",
-            height: STATUS_BAR_HEIGHT,
-            backgroundColor: "#0F2F80"
-        }}>
-            <StatusBar
-                barStyle="light-content"
-            />
-        </View> */}
-        <Header />
-        <FlatList
-          horizontal={false}
-          style={{width: '100%', height: '100%'}}
-          data={Data}
-          keyExtractor={(item) => item.id}
-          renderItem={({item}) => (
-            <PostCard
-              item={item}
-              onClickItem={this.onClickItem}
-              onPressOfComment={() => this.props.navigation.navigate('Comment')}
-            />
-          )}
-        />
-        <Modal visible={visible_modal} transparent={true}>
-          <View style={{flex: 1}}>
-            {/* <View style={{position:'absolute',top:20,right:20,zIndex:100}}>
-            <TouchableOpacity
-             onPress={()=>this.setState({visible_modal:false})}
-            >
-               <Icon type="MaterialIcons" name="close" style={{color:'white'}}/>
-            </TouchableOpacity>
+const Home = (props) => {
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [dataToShow, setDataToShow] = useState([]);
+  const [token] = useGlobalState('token')
 
-          </View> */}
-            <ImageView
-              images={images}
-              imageIndex={0}
-              isVisible={visible_modal}
-              onClose={() => this.setState({visible_modal: false})}
-            />
-          </View>
-        </Modal>
-      </View>
+  const [{ data, loading, error }, login] = useAxios({
+    url: '/Users/GetPostsByUser',
+  })
+
+  useEffect(() => {
+    if (!data) return
+    
+    data.map(p => {
+      return AsyncStorage.getItem(`post-${p.Id}-file`)
+        .then(fileString => {
+          const j = {
+            id: p.Id,
+            name: p.Header,
+            time: moment(p.CreatedDate).format('DD MMM YYYY HH:mm'),
+            description: p.Body,
+          }
+
+          if (fileString) {
+            console.log(fileString)
+            j.imageUri = JSON.parse(fileString).file.uri
+          }
+
+            SyncPosts(j.imageUri, token)
+
+          dataToShow.push(j)
+          setDataToShow(dataToShow)
+        })
+    })
+  }, [data])
+
+  let body = (
+    <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>
+  );
+
+  if (!loading && data && data.length == 0) {
+    body = (
+      <Text>No post created</Text>
     );
   }
+
+  if (!loading && data && data.length != 0) {
+    body = (
+      <FlatList
+        horizontal={false}
+        style={{ width: '100%', height: '100%' }}
+        data={dataToShow}
+        keyExtractor={item => item.Id}
+        renderItem={({ item }) => (
+          <PostCard item={item} onClickItem={(item) => {
+            setVisibleModal(item)
+          }} />
+        )
+        }
+      />
+    );
+  }
+
+  return (
+    <View style={styles.home_container}>
+      {/* <View style={{
+          width: "100%",
+          height: STATUS_BAR_HEIGHT,
+          backgroundColor: "#0F2F80"
+      }}>
+          <StatusBar
+              barStyle="light-content"
+          />
+      </View> */}
+      <Header toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      {body}
+      <Modal
+        visible={visibleModal != false}
+        transparent={true}
+      >
+        <View style={{ flex: 1 }}>
+          {/* <View style={{position:'absolute',top:20,right:20,zIndex:100}}>
+          <TouchableOpacity
+           onPress={()=>this.setState({visibleModal:false})}
+          >
+             <Icon type="MaterialIcons" name="close" style={{color:'white'}}/>
+          </TouchableOpacity>
+        
+        </View> */}
+          <ImageView
+            images={[
+              {
+                source: {
+                  uri: visibleModal.imageUri,
+                },
+                title: 'Paris',
+                width: Dimensions.get('screen').width,
+                height: Dimensions.get('screen').height,
+              },
+            ]}
+            isPinchZoomEnabled
+            imageIndex={0}
+            isVisible={visibleModal != false}
+            onClose={() => setVisibleModal(false)}
+          />
+        </View>
+      </Modal>
+    </View>
+  )
+
 }
 
 export default Home;

@@ -22,7 +22,7 @@ const TeamUpComingCard = ({title, data, onEditPress}) => {
           style={{color: '#0F2F80', fontSize: 25}}
         />
       </View>
-      <View style={{marginTop: data.length <= 0 ? 20 : 10, marginRight: 15}}>
+      <View style={{marginTop: data && data.length <= 0 ? 20 : 10, marginRight: 15}}>
         <FlatList
           horizontal={false}
           data={data}

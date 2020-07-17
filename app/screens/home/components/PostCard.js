@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
 import Images from '../../../constants/image';
@@ -28,24 +27,27 @@ const PostCard = ({item, onClickItem, onPressOfComment}) => {
             <Text style={styles.post_description}>{item.description}</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.post_news_content}>
-        <TouchableOpacity onPress={() => onClickingItem(item)}>
-          <Image
-            source={Images.MessiPlayer}
-            style={styles.post_news_image}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.post_news_comment}>
-        <View style={styles.post_news_like}>
-          <Icon
-            type="FontAwesome"
-            name="thumbs-o-up"
-            style={styles.post_tumb_up}
-          />
-          <Text style={styles.post_like}>Like</Text>
+        <View style={styles.post_news_content}>
+         <TouchableOpacity
+          onPress={()=>onClickingItem(item)}
+         >
+                <Image 
+                source={{ uri: item.imageUri }} 
+                style={styles.post_news_image}
+                resizeMode="cover"
+                />
+         </TouchableOpacity>
+         
+        </View>
+        <View style={styles.post_news_comment}>
+            <View style={styles.post_news_like}>
+                <Icon type="FontAwesome" name="thumbs-o-up" style={styles.post_tumb_up}/>
+                <Text style={styles.post_like}>Like</Text>
+            </View>
+            <View style={styles.post_news_like}>
+                <Icon type="Octicons" name="comment" style={styles.post_comment}/>
+                <Text>Comment</Text>
+            </View>
         </View>
         <TouchableOpacity
           style={styles.post_news_like}

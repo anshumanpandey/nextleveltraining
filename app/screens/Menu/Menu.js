@@ -1,12 +1,10 @@
 import React,{useState} from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {ActionCreators} from '../../redux/action.js'
 import {StyleSheet,View,Text,TouchableOpacity,ImageBackground,TextInput,ScrollView,Image,SafeAreaView,FlatList} from 'react-native';
 import {Icon} from 'native-base'
 
 import Images from '../../constants/image.js'
 import styles from './styles'
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState.js';
 
 
 const menulist=[
@@ -62,7 +60,10 @@ const menulist=[
         id:8,
         title:'Logout',
         icon:`${Images.LogoutIcon}`,
-        path:'Login'
+        path:'Login',
+        onPress: () => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
+        }
     }
 
 ]
@@ -81,7 +82,7 @@ const Menu = (props)=>{
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>(
                         <TouchableOpacity
-                        //  onPress={()=>NavigationService.navigate(item.path)}
+                            onPress={()=> item.onPress && item.onPress()}
                         > 
                            <View style={styles.menu_item_view}>
                                <View style={styles.menu_inner_view}>

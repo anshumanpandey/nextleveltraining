@@ -9,8 +9,8 @@ import Screens from '../../utils/screen';
 
 class Level extends Component {
   
-  signupPlayer (){
-    NavigationService.navigate(Screens.SignUp)
+  signupPlayer (params){
+    NavigationService.navigate(Screens.SignUp, params)
   }
   signInpage (){
     NavigationService.navigate(Screens.Login)
@@ -34,6 +34,7 @@ class Level extends Component {
             </TouchableOpacity>
             <TouchableOpacity
              style={styles.level_btn_coach}
+             onPress={()=>this.signupPlayer({ role: "Coach"})}
             >
               <View style={styles.level_btn_player_view}>
                 <Image source={Images.CoachIcon} style={styles.level_btn_icon_size}/>
