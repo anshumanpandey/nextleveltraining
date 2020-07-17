@@ -16,6 +16,14 @@ const URL_MAP = {
     url: "/Users/ChangeAchievement",
     getParams: (values) => ({ achievements: values })
   },
+  Accomplishment: {
+    url: "/Users/SaveAccomplishment",
+    getParams: (values) => ({ accomplishment: values })
+  },
+  ["Price Per Hour"]: {
+    url: "/Users/ChangeRate",
+    getParams: (values) => ({ rate: values })
+  },
 }
 
 const EditInput = (props) => {
@@ -36,6 +44,7 @@ const EditInput = (props) => {
   return (
     <View>
       <HeaderClosePlus
+        isLoading={updateDataReq.loading || getUserReq.loading}
         isSaveButton={true}
         saveOnPress={() => {
           cb(values);
@@ -54,7 +63,7 @@ const EditInput = (props) => {
         <Text style={styles.titleText}>{title}</Text>
         <View style={styles.inputContain}>
           <TextInput
-            value={values}
+            value={values.toString()}
             onChangeText={(text) => setValues(text)}
             style={{height: Dimension.px200, textAlign: 'left'}}
             placeholder="Type here..."

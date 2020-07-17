@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions,Switch,TextInput } from 'react-native'
+import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
 import Header from '../../components/header/Header'
-import {Picker} from '@react-native-community/picker';
+import { Picker } from '@react-native-community/picker';
 import Images from "../../constants/image";
 import styles from "./CoachStyle";
+import NavigationService from '../../navigation/NavigationService';
 import NLToggleButton from '../../components/NLToggleButton';
+import { getGlobalState } from '../../state/GlobalState';
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
 const TEXT_COLOR = 'gray'
 const Width = Dimensions.get('window').width;
@@ -17,19 +19,19 @@ class MultiStep extends Component {
 
         this.state = {
             selectedSegmentIndex: 0,
-            selectedRole:"individual",
-            is_enable_sunday:false,
-            is_enable_monday:false,
-            is_enable_tuesday:false,
-            is_enable_wednesday:false,
-            is_enable_thursday:false,
-            is_enable_friday:false,
-            is_enable_saturday:false,
+            selectedRole: "individual",
+            is_enable_sunday: false,
+            is_enable_monday: false,
+            is_enable_tuesday: false,
+            is_enable_wednesday: false,
+            is_enable_thursday: false,
+            is_enable_friday: false,
+            is_enable_saturday: false,
         };
     }
-     toggleSwitchSunday = () => this.setState({
-         is_enable_sunday: !this.state.is_enable_sunday ? true : false
-     })
+    toggleSwitchSunday = () => this.setState({
+        is_enable_sunday: !this.state.is_enable_sunday ? true : false
+    })
     toggleSwitchMonday = () => this.setState({
         is_enable_monday: !this.state.is_enable_monday ? true : false
     })
@@ -49,11 +51,25 @@ class MultiStep extends Component {
         is_enable_saturday: !this.state.is_enable_saturday ? true : false
     })
 
+    handleOnCardPress = ({ title, data, screen = "EditInput", }) => {
+        NavigationService.navigate(screen, {
+            title,
+            data,
+            cb: (achievements) => { },
+        })
+    }
+
 
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Header toggleDrawer={this.props.navigation.toggleDrawer} />
+                <Header
+                    toggleDrawer={this.props.navigation.toggleDrawer}
+                    hideCreatePost={true}
+                    customButton={() => {
+                        return <Text style={{ color: 'white', fontSize: 18 }}>Save</Text>
+                    }}
+                />
                 {this.containerView()}
             </View>
         )
@@ -69,62 +85,62 @@ class MultiStep extends Component {
         }
     }
     //bank account
-    bankAccount(){
-        return(
+    bankAccount() {
+        return (
             <ScrollView>
-            <View style={styles.containerCommon}>
-                <View>
-                    <Text style={{fontSize:12,color:"blue"}}>Bank Account Details</Text>
+                <View style={styles.containerCommon}>
+                    <View>
+                        <Text style={{ fontSize: 12, color: "blue" }}>Bank Account Details</Text>
+                    </View>
+                    <View>
+                        <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your bank account details below</Text>
+                    </View>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                        <TextInput placeholder={"Bank Name"} />
+                    </View>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                        <TextInput placeholder={"Account Holder Name"} />
+                    </View>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                        <Picker
+                            selectedValue={this.state.selectedRole}
+                            style={{ height: 50, width: "100%" }}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({ selectedRole: itemValue })
+                            }>
+                            <Picker.Item label="Individual" value="individual" />
+                            <Picker.Item label="Company" value="company" />
+                        </Picker>
+                    </View>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                        <TextInput placeholder={"Sort code "} />
+                    </View>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                        <TextInput placeholder={"Account number"} />
+                    </View>
+                    <TouchableOpacity style={{
+                        backgroundColor: '#1111ff',
+                        height: 30,
+                        width: 70,
+                        alignSelf: 'flex-end',
+                        marginTop: 20,
+                        marginRight: 15,
+                        borderRadius: 5,
+                        justifyContent: 'center'
+                    }}
+                        onPress={() => {
+                            this.setState({
+                                selectedSegmentIndex: 2
+                            })
+                            this.segmentFlatList.scrollToIndex({ index: Math.round(2), animated: true })
+                            this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
+                        }}>
+                        <Text style={{
+                            color: 'white',
+                            textAlign: 'center'
+                        }}>Skip</Text>
+                    </TouchableOpacity>
                 </View>
-                <View>
-                    <Text style={{fontSize:10,color:"lightgrey"}}>Please enter your bank account details below</Text>
-                </View>
-                <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
-                    <TextInput placeholder={"Bank Name"} />
-                </View>
-                <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
-                    <TextInput placeholder={"Account Holder Name"} />
-                </View>
-                <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
-                    <Picker
-                        selectedValue={this.state.selectedRole}
-                        style={{height: 50, width: "100%"}}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({selectedRole: itemValue})
-                        }>
-                        <Picker.Item label="Individual" value="individual" />
-                        <Picker.Item label="Company" value="company" />
-                    </Picker>
-                </View>
-                <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
-                    <TextInput placeholder={"Sort code "} />
-                </View>
-                <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
-                    <TextInput placeholder={"Account number"} />
-                </View>
-                <TouchableOpacity style={{
-                    backgroundColor: '#1111ff',
-                    height: 30,
-                    width: 70,
-                    alignSelf: 'flex-end',
-                    marginTop: 20,
-                    marginRight: 15,
-                    borderRadius: 5,
-                    justifyContent: 'center'
-                }}
-                                  onPress = {() => {
-                                      this.setState({
-                                          selectedSegmentIndex: 2
-                                      })
-                                      this.segmentFlatList.scrollToIndex({ index: Math.round(2), animated: true })
-                                      this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
-                                  }}>
-                    <Text style = {{
-                        color: 'white',
-                        textAlign: 'center'
-                    }}>Skip</Text>
-                </TouchableOpacity>
-            </View>
             </ScrollView>
 
         )
@@ -132,25 +148,25 @@ class MultiStep extends Component {
 
     //travel
     //bank account
-    travel(){
-        return(
+    travel() {
+        return (
             <ScrollView>
                 <View style={styles.containerCommon}>
                     <View>
-                        <Text style={{fontSize:12,color:"blue"}}>Travel Details</Text>
+                        <Text style={{ fontSize: 12, color: "blue" }}>Travel Details</Text>
                     </View>
                     <View>
-                        <Text style={{fontSize:10,color:"lightgrey"}}>Please enter your travel details below</Text>
+                        <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your travel details below</Text>
                     </View>
-                    <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                         <TextInput placeholder={"Search"} />
                     </View>
-                    <View style={{borderBottomWidth : 0.8,borderBottomColor:"lightgrey"}}>
+                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                         <Picker
                             selectedValue={this.state.selectedRole}
-                            style={{height: 50, width: "100%"}}
+                            style={{ height: 50, width: "100%" }}
                             onValueChange={(itemValue, itemIndex) =>
-                                this.setState({selectedRole: itemValue})
+                                this.setState({ selectedRole: itemValue })
                             }>
                             <Picker.Item label="passcode1" value="individual" />
                             <Picker.Item label="passcode2" value="company" />
@@ -163,36 +179,44 @@ class MultiStep extends Component {
     }
 
 
-    about(){
-        return(
+    about() {
+        const profile = getGlobalState('profile')
+
+        return (
             <ScrollView>
                 <View style={styles.containerAbout}>
                     <View style={styles.ImageContainer}>
                         <Image source={{ uri: 'https://cdn5.vectorstock.com/i/1000x1000/06/34/soft-abstract-swoosh-wave-lines-border-layout-grey-vector-22850634.jpg' }} style={styles.profileImage} />
-                        <Image source={Images.RoundPencil} style={styles.profileEditIcon}/>
+                        <Image source={Images.RoundPencil} style={styles.profileEditIcon} />
                     </View>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>About me</Text>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
-                        </View>
+                    <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "About Me", data: profile.AboutUs })}>
                         <View style={styles.cardContainer}>
-                        <Text style={styles.profileDescription}>Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
+                            <View style={styles.cardInner}>
+                                <Text style={styles.textProfile}>About me</Text>
+                                <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
+                            </View>
+                            <View style={styles.cardContainer}>
+                                <Text style={styles.profileDescription}>{profile.AboutUs}</Text>
+                            </View>
                         </View>
-                    </View>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Accomplishment</Text>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
-                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "Accomplishment", data: profile.Accomplishment })}>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
+                            <View style={styles.cardInner}>
+                                <Text style={styles.textProfile}>Accomplishment</Text>
+                                <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
+                            </View>
+                            <View style={styles.cardContainer}>
+                                <Text style={styles.profileDescription}>
+                                    {profile.Accomplishment}
+                                </Text>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Experience</Text>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
+                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
                         </View>
                         <View style={styles.cardContainer}>
                             <Text style={styles.profileDescription}>Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
@@ -201,7 +225,7 @@ class MultiStep extends Component {
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Qualifications</Text>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
+                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
                         </View>
                         <View style={styles.cardContainer}>
                             <Text style={styles.profileDescription}>ABCD cerificates</Text>
@@ -209,50 +233,52 @@ class MultiStep extends Component {
                     </View>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
-                            <View style={{flexDirection:"row"}}>
+                            <View style={{ flexDirection: "row" }}>
                                 <Text style={styles.textProfile}>DBS Certificate</Text>
-                                <Image source={Images.Verified} style={{height:15,width:15,marginLeft:10}}/>
+                                <Image source={Images.Verified} style={{ height: 15, width: 15, marginLeft: 10 }} />
                             </View>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
+                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
                         </View>
                     </View>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
-                            <View style={{flexDirection:"row",justifyContent:"space-around"}}>
+                            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                                 <Text style={styles.textProfile}>Valid ID</Text>
-                                <Image source={Images.NotVerified} style={{height:15,width:15,marginLeft:10}}/>
+                                <Image source={Images.NotVerified} style={{ height: 15, width: 15, marginLeft: 10 }} />
                             </View>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
+                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
                         </View>
                     </View>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Price Per Hour</Text>
-                            <Image source={Images.Pencil} style={{height:20,width:20}}/>
-                        </View>
+                    <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "Price Per Hour", data: profile.Rate })}>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>$ 250</Text>
+                            <View style={styles.cardInner}>
+                                <Text style={styles.textProfile}>Price Per Hour</Text>
+                                <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
+                            </View>
+                            <View style={styles.cardContainer}>
+                                <Text style={styles.profileDescription}>$ {profile.Rate}</Text>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity style={{
                         backgroundColor: '#1111ff',
                         height: 30,
                         width: 70,
-                        marginBottom:5,
+                        marginBottom: 5,
                         alignSelf: 'flex-end',
                         marginTop: 20,
                         marginRight: 15,
                         borderRadius: 5,
                         justifyContent: 'center'
                     }}
-                                      onPress = {() => {
-                                          this.setState({
-                                              selectedSegmentIndex: 1
-                                          })
-                                          this.segmentFlatList.scrollToIndex({ index: Math.round(1), animated: true })
-                                          this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
-                                      }}>
-                        <Text style = {{
+                        onPress={() => {
+                            this.setState({
+                                selectedSegmentIndex: 1
+                            })
+                            this.segmentFlatList.scrollToIndex({ index: Math.round(1), animated: true })
+                            this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
+                        }}>
+                        <Text style={{
                             color: 'white',
                             textAlign: 'center'
                         }}>Skip</Text>
@@ -265,8 +291,8 @@ class MultiStep extends Component {
 
 
     //tracking location
-    trackingLocation(){
-        return(
+    trackingLocation() {
+        return (
             <View style={styles.containerCommon}>
                 <View style={styles.inputContainer}>
                     <TextInput placeholder={"Location Name"} />
@@ -274,9 +300,9 @@ class MultiStep extends Component {
                 <View style={styles.inputContainer}>
                     <TextInput placeholder={"Address"} />
                 </View>
-           <TouchableOpacity style={styles.buttonSave}>
-               <Text style={{color:"white" ,fontSize:16}}>Save</Text>
-           </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonSave}>
+                    <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -291,12 +317,12 @@ class MultiStep extends Component {
                     flex: 1,
                     marginTop: 45
                 }}
-                            horizontal={true}
-                            pagingEnabled={true}
-                            showsHorizontalScrollIndicator={false}
-                            ref={(scrollView) => { this.containerScrollView = scrollView }}
-                            onScroll={this.handleContainerScroll}
-                            scrollEventThrottle={16}
+                    horizontal={true}
+                    pagingEnabled={true}
+                    showsHorizontalScrollIndicator={false}
+                    ref={(scrollView) => { this.containerScrollView = scrollView }}
+                    onScroll={this.handleContainerScroll}
+                    scrollEventThrottle={16}
                 >
                     <View style={{
                         backgroundColor: 'white',
@@ -343,7 +369,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -376,7 +402,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -408,7 +434,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -440,7 +466,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -472,7 +498,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -504,7 +530,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -536,7 +562,7 @@ class MultiStep extends Component {
                                         <TextInput placeholder={"12:00 AM"}></TextInput>
                                     </View>
                                     <Text>TO</Text>
-                                    <View  style={styles.collapsedViewInner}>
+                                    <View style={styles.collapsedViewInner}>
                                         <TextInput placeholder={"12:00 PM"}></TextInput>
                                     </View>
                                 </View>
@@ -553,14 +579,14 @@ class MultiStep extends Component {
                             borderRadius: 5,
                             justifyContent: 'center'
                         }}
-                                          onPress = {() => {
-                                              this.setState({
-                                                  selectedSegmentIndex: 3
-                                              })
-                                              this.segmentFlatList.scrollToIndex({ index: Math.round(3), animated: true })
-                                              this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
-                                          }}>
-                            <Text style = {{
+                            onPress={() => {
+                                this.setState({
+                                    selectedSegmentIndex: 3
+                                })
+                                this.segmentFlatList.scrollToIndex({ index: Math.round(3), animated: true })
+                                this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
+                            }}>
+                            <Text style={{
                                 color: 'white',
                                 textAlign: 'center'
                             }}>Skip</Text>
@@ -591,39 +617,39 @@ class MultiStep extends Component {
                     position: 'absolute',
                     top: 0,
                 }}
-                          ref={(ref) => {
-                              this.segmentFlatList = ref
-                          }}
-                          showsHorizontalScrollIndicator={false}
-                          horizontal
-                          data={signupSegments}
-                          renderItem={({ item, index }) => {
-                              return (
-                                  <TouchableOpacity style={{
-                                      justifyContent: 'center',
-                                      width: Dimensions.get('window').width / 3,
-                                      height: 40
-                                  }}
-                                                    onPress={() => {
-                                                        this.setState({
-                                                            selectedSegmentIndex: index
-                                                        })
-                                                        this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * index })
-                                                    }} >
-                                      <Text style={{
-                                          color: this.state.selectedSegmentIndex == index ? '#6644bb' : TEXT_COLOR,
-                                          textAlign: 'center'
-                                      }}>{item}</Text>
-                                      {this.state.selectedSegmentIndex == index && <View style={{
-                                          position: 'absolute',
-                                          height: 3,
-                                          bottom: 0,
-                                          width: '100%',
-                                          backgroundColor: '#6644dd'
-                                      }} />}
-                                  </TouchableOpacity>
-                              )
-                          }} />
+                    ref={(ref) => {
+                        this.segmentFlatList = ref
+                    }}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={signupSegments}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                justifyContent: 'center',
+                                width: Dimensions.get('window').width / 3,
+                                height: 40
+                            }}
+                                onPress={() => {
+                                    this.setState({
+                                        selectedSegmentIndex: index
+                                    })
+                                    this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * index })
+                                }} >
+                                <Text style={{
+                                    color: this.state.selectedSegmentIndex == index ? '#6644bb' : TEXT_COLOR,
+                                    textAlign: 'center'
+                                }}>{item}</Text>
+                                {this.state.selectedSegmentIndex == index && <View style={{
+                                    position: 'absolute',
+                                    height: 3,
+                                    bottom: 0,
+                                    width: '100%',
+                                    backgroundColor: '#6644dd'
+                                }} />}
+                            </TouchableOpacity>
+                        )
+                    }} />
             </View>
         )
     }

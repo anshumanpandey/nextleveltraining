@@ -17,13 +17,14 @@ class Header extends Component {
             <Icon name="menu" type="Entypo" style={styles.header_menu_icon} />
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {this.props.hideCreatePost != true && <TouchableOpacity
             onPress={() => this.props.navigate(screen.CreatePost)}
           >
             <View style={{ flexDirection: 'row' }}>
               <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: 'white', marginRight: 10 }} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>}
+          {this.props.customButton && this.props.customButton()}
         </View>
       </View>
     );
