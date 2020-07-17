@@ -17,7 +17,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
   return (
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
-        <View style={{ flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Image source={Images.MessiPlayer} style={styles.post_image_size} />
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100 }}>
@@ -46,17 +46,13 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
             <Icon type="FontAwesome" name="thumbs-o-up" style={styles.post_tumb_up} />
             <Text style={styles.post_like}>Like</Text>
           </View>
-          <View style={styles.post_news_like}>
+          <TouchableOpacity
+            style={styles.post_news_like}
+            onPress={onPressOfComment}>
             <Icon type="Octicons" name="comment" style={styles.post_comment} />
             <Text>Comment</Text>
-          </View>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.post_news_like}
-          onPress={onPressOfComment}>
-          <Icon type="Octicons" name="comment" style={styles.post_comment} />
-          <Text>Comment</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

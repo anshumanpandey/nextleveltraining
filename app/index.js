@@ -18,6 +18,8 @@ import Booking from './screens/booking/Booking';
 import Message from './screens/message/Message';
 import Profile from './screens/profile/Profile';
 import EditInput from './screens/profile/EditInput';
+import CreatePostScreen from './screens/createPost/CreatePost';
+import CommentsScreen from './screens/home/Comments';
 import AddTeam from './screens/profile/AddTeam';
 import UpComingMatch from './screens/profile/UpCommingMatch';
 import { Icon } from 'native-base';
@@ -112,6 +114,22 @@ const AppMain = () => {
               />
               <Text style={[styles.textTab, { color: tintColor }]}>HOME</Text>
             </View>
+          ),
+        }),
+      },
+      CreatePost: {
+        screen: CreatePostScreen,
+        navigationOptions: () => ({
+          tabBarButtonComponent: ({ tintColor }) => (
+            <></>
+          ),
+        }),
+      },
+      CreateComment: {
+        screen: CommentsScreen,
+        navigationOptions: () => ({
+          tabBarButtonComponent: ({ tintColor }) => (
+            <></>
           ),
         }),
       },
@@ -235,13 +253,13 @@ const AppMain = () => {
     screens.SignUp = { screen: SignUp }
   }
 
-  const AuthStack = createStackNavigator(screens,{
-      defaultNavigationOptions: ({ navigation }) => {
-        return {
-          header: null,
-        };
-      },
+  const AuthStack = createStackNavigator(screens, {
+    defaultNavigationOptions: ({ navigation }) => {
+      return {
+        header: null,
+      };
     },
+  },
   );
 
   const Apps = createAppContainer(AuthStack);

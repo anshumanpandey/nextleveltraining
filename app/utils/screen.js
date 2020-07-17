@@ -3,7 +3,8 @@ const Screens ={
     Login:'Login',
     Level:'Level',
     LandingPage:'MainStack',
-    CreatePost: 'CreatePost'
+    CreatePost: 'CreatePost',
+    CreateComment: 'CreateComment'
 }
 
 export default Screens;

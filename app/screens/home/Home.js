@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/header/Header';
 import {
   View,
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {Icon} from 'native-base';
+import { Icon } from 'native-base';
 import PostCard from './components/PostCard';
 import useAxios from 'axios-hooks'
 import styles from './styles.js';
@@ -20,6 +20,7 @@ import moment from 'moment'
 import SyncPosts from '../../utils/PostSyncher'
 import AsyncStorage from '@react-native-community/async-storage';
 import { useGlobalState } from '../../state/GlobalState'
+import screen from '../../utils/screen'
 
 const images = [
   {
@@ -45,7 +46,7 @@ const Home = (props) => {
   useEffect(() => {
     if (!data) return
     if (!data.length) return
-    
+
     data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
@@ -54,6 +55,7 @@ const Home = (props) => {
             name: p.Header,
             time: moment(p.CreatedDate).format('DD MMM YYYY HH:mm'),
             description: p.Body,
+            comments: p.Comments || [],
           }
 
           if (fileString) {
@@ -62,7 +64,7 @@ const Home = (props) => {
 
           dataToShow.push(j)
           setDataToShow(dataToShow)
-          SyncPosts(j.imageUri, token)
+          //SyncPosts(j.imageUri, token)
         })
     })
   }, [loading])
@@ -85,9 +87,12 @@ const Home = (props) => {
         data={dataToShow}
         keyExtractor={item => item.Id}
         renderItem={({ item }) => (
-          <PostCard item={item} onClickItem={(item) => {
-            setVisibleModal(item)
-          }} />
+          <PostCard
+            onPressOfComment={() => props.navigation.navigate(screen.CreateComment, { post: item })}
+            item={item}
+            onClickItem={(item) => {
+              setVisibleModal(item)
+            }} />
         )
         }
       />
