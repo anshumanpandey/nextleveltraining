@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, Text, FlatList} from 'react-native';
 import styles from './styles';
 import {Icon} from 'native-base';
-import {Data} from '../home/components/data';
+import moment from 'moment';
 
 const TeamMatchCard = ({title, data, onEditPress}) => {
   return (
@@ -31,11 +31,10 @@ const TeamMatchCard = ({title, data, onEditPress}) => {
             <View style={styles.cardContain}>
               <Text style={styles.arrdataText}>{item.title}</Text>
               <Text style={[styles.dataText, {paddingBottom: 4}]}>
-                {item.startDate} To {item.endDate}
+                {moment(item.StartDate).format('ll')} To {moment(item.EndDate).format('ll')}
               </Text>
               <Text style={styles.dataText}>
-                Lorem Ipsum is simply dummy text of the printing and
-                typesetting! Lorem Ipsum is simply printing and typesetting.
+                {item.TeamName}
               </Text>
             </View>
           )}
