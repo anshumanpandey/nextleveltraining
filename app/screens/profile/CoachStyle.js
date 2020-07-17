@@ -14,6 +14,7 @@ const styles =StyleSheet.create({
     containerAbout:{
         width:"100%" ,
         flexDirection:"column",
+        backgroundColor: 'rgba(0,0,0,0.05)'
     },
     ImageContainer:{
         flexDirection:"row",
@@ -21,14 +22,14 @@ const styles =StyleSheet.create({
       borderBottomColor:"lightgrey",
       justifyContent:"center",
       alignItems:"center",
-      marginTop:scaleSize(5),
       marginBottom: scaleSize(5),
         backgroundColor: "white"
     },
     cardContainer:{
-        margin : scaleSize(10),
+        paddingHorizontal: scaleSize(10),
         backgroundColor: "white",
-        flexDirection:"column"
+        flexDirection:"column",
+        marginBottom: '2%'
     },
     cardInner:{
       margin : scaleSize(10),
