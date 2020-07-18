@@ -17,6 +17,7 @@ import ErrorLabel from '../../components/ErrorLabel';
 import Modal from 'react-native-modal';
 import FuzzySearch from 'fuzzy-search';
 import Colors from '../../constants/color.js';
+import MapView from 'react-native-maps';
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -371,22 +372,42 @@ class MultiStep extends Component {
                         </View>
                     </View>
                     <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <View style={{ flexDirection: "row" }}>
-                                <Text style={styles.textProfile}>DBS Certificate</Text>
-                                <Image source={Images.Verified} style={{ height: 15, width: 15, marginLeft: 10 }} />
+                        <TouchableOpacity onPress={() => {
+                            NavigationService.navigate('AddDbsCertificate', {
+                                title: 'Add Experience',
+                                cb: (team) => { },
+                                ...profile.DBSCeritificate
+                            })
+                        }}>
+                            <View style={styles.cardInner}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.textProfile}>DBS Certificate</Text>
+                                    {profile.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                </View>
+                                <Icon
+                                    type="EvilIcons"
+                                    name="pencil"
+                                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                                />
                             </View>
-                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                                <Text style={styles.textProfile}>Valid ID</Text>
-                                <Image source={Images.NotVerified} style={{ height: 15, width: 15, marginLeft: 10 }} />
+                        <TouchableOpacity onPress={() => {
+                            NavigationService.navigate('VerificationId', {
+                                title: 'Add Experience',
+                                cb: (team) => { },
+                                ...profile.VerificationDocument
+                            })
+                        }}>
+                            <View style={styles.cardInner}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.textProfile}>Valid ID</Text>
+                                    {profile.VerificationDocument && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                </View>
+                                <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
                             </View>
-                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "Price Per Hour", data: profile.Rate })}>
                         <View style={styles.cardContainer}>
@@ -857,6 +878,17 @@ const TravelForm = () => {
                                 {values.codes.map(c => {
                                     return (<Text>{c}</Text>);
                                 })}
+                            </View>
+                            <View style={{ borderWidth: 1, height: 300  }}>
+                                <MapView
+                                    style={{ flex: 1 }}
+                                    initialRegion={{
+                                        latitude: 37.78825,
+                                        longitude: -122.4324,
+                                        latitudeDelta: 0.0922,
+                                        longitudeDelta: 0.0421,
+                                    }}
+                                />
                             </View>
                             <Modal
                                 onBackdropPress={() => setShowModal(false)}

@@ -64,7 +64,7 @@ const Home = (props) => {
 
           dataToShow.push(j)
           setDataToShow(dataToShow)
-          //SyncPosts(j.imageUri, token)
+          //SyncPosts(JSON.parse(fileString).file.fileCopyUri, token)
         })
     })
   }, [loading])

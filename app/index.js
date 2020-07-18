@@ -22,6 +22,8 @@ import CreatePostScreen from './screens/createPost/CreatePost';
 import CommentsScreen from './screens/home/Comments';
 import AddTeam from './screens/profile/AddTeam';
 import AddExperience from './screens/profile/AddExperience';
+import AddDbsCertificate from './screens/profile/AddDbsCertificate';
+import VerificationId from './screens/profile/VerificationId';
 import UpComingMatch from './screens/profile/UpCommingMatch';
 import { Icon } from 'native-base';
 import Comment from './screens/home/Comments';
@@ -92,6 +94,8 @@ const AppMain = () => {
       EditInput: { screen: EditInput },
       AddTeam: { screen: AddTeam },
       AddExperience: { screen: AddExperience },
+      AddDbsCertificate: { screen: AddDbsCertificate },
+      VerificationId: { screen: VerificationId },
       UpComingMatch: { screen: UpComingMatch },
     },
     {
