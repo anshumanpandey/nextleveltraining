@@ -43,6 +43,39 @@ class MultiStep extends Component {
             is_enable_saturday: false,
         };
     }
+
+    componentDidMount() {
+        const profile = getGlobalState('profile')
+
+        if (profile.Availabilities && profile.Availabilities.length != 0) {
+            profile.Availabilities.map(day => {
+                if (day.Day == "Sunday"){
+                    this.setState({ is_enable_sunday: true, start_sunday: moment(day.FromTime).toDate(), end_sunday: moment(day.ToTime).toDate()  })
+                }
+                if (day.Day == "Monday"){
+                    this.setState({ is_enable_monday: true, start_monday: moment(day.FromTime).toDate(), end_monday: moment(day.ToTime).toDate()  })
+                }
+                if (day.Day == "Tuesday"){
+                    this.setState({ is_enable_tuesday: true, start_tuesday: moment(day.FromTime).toDate(), end_tuesday: moment(day.ToTime).toDate()  })
+                }
+                if (day.Day == "Wednesday"){
+                    this.setState({ is_enable_wednesday: true, start_wednesday: moment(day.FromTime).toDate(), end_wednesday: moment(day.ToTime).toDate()  })
+                }
+                if (day.Day == "Thursday"){
+                    this.setState({ is_enable_thursday: true, start_thursday: moment(day.FromTime).toDate(), end_thursday: moment(day.ToTime).toDate()  })
+                }
+                if (day.Day == "Friday"){
+                    this.setState({ is_enable_friday: true, start_friday: moment(day.FromTime).toDate(), end_friday: moment(day.ToTime).toDate()  })
+                }
+                if (day.Day == "Saturday"){
+                    this.setState({ is_enable_saturday: true, start_saturday: moment(day.FromTime).toDate(), end_saturday: moment(day.ToTime).toDate()  })
+                }
+            })
+
+        }
+        
+    }
+
     setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
     setTimeFor = (key, date) => this.setState({ [key]: date }, (c) => console.log(c))
 
@@ -457,9 +490,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_sunday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_sunday", d)} />
+                                    <TimeInput value={this.state.start_sunday} onSelected={(d) => this.setTimeFor("start_sunday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_sunday", d)} />
+                                    <TimeInput value={this.state.end_sunday} onSelected={(d) => this.setTimeFor("end_sunday", d)} />
                                 </View>
                             )}
 
@@ -486,9 +519,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_monday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_monday", d)} />
+                                    <TimeInput value={this.state.start_monday} onSelected={(d) => this.setTimeFor("start_monday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_monday", d)} />
+                                    <TimeInput value={this.state.end_monday} onSelected={(d) => this.setTimeFor("end_monday", d)} />
                                 </View>
                             )}
                         </View>
@@ -514,9 +547,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_tuesday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_tuesday", d)} />
+                                    <TimeInput value={this.state.start_tuesday} onSelected={(d) => this.setTimeFor("start_tuesday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_tuesday", d)} />
+                                    <TimeInput value={this.state.end_tuesday} onSelected={(d) => this.setTimeFor("end_tuesday", d)} />
                                 </View>
                             )}
                         </View>
@@ -542,9 +575,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_wednesday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_wednesday", d)} />
+                                    <TimeInput value={this.state.start_wednesday} onSelected={(d) => this.setTimeFor("start_wednesday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_wednesday", d)} />
+                                    <TimeInput value={this.state.end_wednesday} onSelected={(d) => this.setTimeFor("end_wednesday", d)} />
                                 </View>
                             )}
                         </View>
@@ -570,9 +603,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_thursday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_thursday", d)} />
+                                    <TimeInput value={this.state.start_thursday} onSelected={(d) => this.setTimeFor("start_thursday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_thursday", d)} />
+                                    <TimeInput value={this.state.end_thursday} onSelected={(d) => this.setTimeFor("end_thursday", d)} />
                                 </View>
                             )}
                         </View>
@@ -598,9 +631,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_friday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_friday", d)} />
+                                    <TimeInput value={this.state.start_friday} onSelected={(d) => this.setTimeFor("start_friday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_friday", d)} />
+                                    <TimeInput value={this.state.end_friday} onSelected={(d) => this.setTimeFor("end_friday", d)} />
                                 </View>
                             )}
                         </View>
@@ -626,9 +659,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_saturday && (
                                 <View style={styles.collapsedView}>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("start_saturday", d)} />
+                                    <TimeInput value={this.state.start_saturday} onSelected={(d) => this.setTimeFor("start_saturday", d)} />
                                     <Text>TO</Text>
-                                    <TimeInput onSelected={(d) => this.setTimeFor("end_saturday", d)} />
+                                    <TimeInput value={this.state.end_saturday} onSelected={(d) => this.setTimeFor("end_saturday", d)} />
                                 </View>
                             )}
                         </View>
@@ -721,10 +754,9 @@ class MultiStep extends Component {
 
 export default MultiStep
 
-const TimeInput = ({ onSelected }) => {
+const TimeInput = ({ onSelected, value }) => {
     const [showPicker, setShowPicker] = useState();
-    const [date, setDate] = useState();
-    const profile = getGlobalState('profile')
+    const [date, setDate] = useState(value);
 
     return (
         <>
@@ -746,7 +778,7 @@ const TimeInput = ({ onSelected }) => {
             )}
             <TouchableOpacity style={{ width: '40%' }} onPress={() => setShowPicker(true)}>
                 <View style={styles.collapsedViewInner}>
-                    <TextInput style={{ color: 'black' }} editable={false} value={date ? moment(date).format("H:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
+                    <TextInput style={{ color: 'black' }} editable={false} value={date ? moment(date).format("hh:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
                 </View>
             </TouchableOpacity>
         </>
