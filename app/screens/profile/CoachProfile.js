@@ -6,10 +6,14 @@ import Images from "../../constants/image";
 import styles from "./CoachStyle";
 import NavigationService from '../../navigation/NavigationService';
 import NLToggleButton from '../../components/NLToggleButton';
-import { getGlobalState } from '../../state/GlobalState';
+import { getGlobalState, useGlobalState } from '../../state/GlobalState';
 import { axiosInstance } from '../../api/AxiosBootstrap';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
+import { Formik } from 'formik';
+import useAxios from 'axios-hooks'
+import ErrorLabel from '../../components/ErrorLabel';
+var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
 const TEXT_COLOR = 'gray'
@@ -72,124 +76,124 @@ class MultiStep extends Component {
 
     render() {
         return (
-            <ScrollView contentContainerStyle={{ flexGrow: 1}}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={{ flex: 1 }}>
-                <Header
-                    toggleDrawer={this.props.navigation.toggleDrawer}
-                    hideCreatePost={true}
-                    customButton={() => {
-                        return <Text
-                            onPress={() => {
-                                const config = {
-                                    url: '/Users/SaveAvailability',
-                                    method: 'POST',
-                                }
-                                if (this.state.start_sunday && this.state.end_sunday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Sunday",
-                                            "fromTime": this.state.start_sunday,
-                                            "toTime": this.state.end_sunday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
+                    <Header
+                        toggleDrawer={this.props.navigation.toggleDrawer}
+                        hideCreatePost={true}
+                        customButton={() => {
+                            return <Text
+                                onPress={() => {
+                                    const config = {
+                                        url: '/Users/SaveAvailability',
+                                        method: 'POST',
+                                    }
+                                    if (this.state.start_sunday && this.state.end_sunday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Sunday",
+                                                "fromTime": this.state.start_sunday,
+                                                "toTime": this.state.end_sunday
+                                            }
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                                if (this.state.start_monday && this.state.end_monday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Monday",
-                                            "fromTime": this.state.start_monday,
-                                            "toTime": this.state.end_monday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
+                                    if (this.state.start_monday && this.state.end_monday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Monday",
+                                                "fromTime": this.state.start_monday,
+                                                "toTime": this.state.end_monday
+                                            }
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                                if (this.state.start_wednesday && this.state.end_wednesday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Wednesday",
-                                            "fromTime": this.state.start_wednesday,
-                                            "toTime": this.state.end_wednesday
-                                        }
+                                    if (this.state.start_wednesday && this.state.end_wednesday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Wednesday",
+                                                "fromTime": this.state.start_wednesday,
+                                                "toTime": this.state.end_wednesday
+                                            }
 
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                                if (this.state.start_tuesday && this.state.end_tuesday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Tuesday",
-                                            "fromTime": this.state.start_tuesday,
-                                            "toTime": this.state.end_tuesday
-                                        }
+                                    if (this.state.start_tuesday && this.state.end_tuesday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Tuesday",
+                                                "fromTime": this.state.start_tuesday,
+                                                "toTime": this.state.end_tuesday
+                                            }
 
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                                if (this.state.start_thursday && this.state.end_thursday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Thursday",
-                                            "fromTime": this.state.start_thursday,
-                                            "toTime": this.state.end_thursday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
+                                    if (this.state.start_thursday && this.state.end_thursday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Thursday",
+                                                "fromTime": this.state.start_thursday,
+                                                "toTime": this.state.end_thursday
+                                            }
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                                if (this.state.start_friday && this.state.end_friday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Friday",
-                                            "fromTime": this.state.start_friday,
-                                            "toTime": this.state.end_friday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
+                                    if (this.state.start_friday && this.state.end_friday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Friday",
+                                                "fromTime": this.state.start_friday,
+                                                "toTime": this.state.end_friday
+                                            }
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                                if (this.state.start_saturday && this.state.end_saturday) {
-                                    axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Saturday",
-                                            "fromTime": this.state.start_saturday,
-                                            "toTime": this.state.end_saturday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
+                                    if (this.state.start_saturday && this.state.end_saturday) {
+                                        axiosInstance({
+                                            ...config,
+                                            data: {
+                                                "day": "Saturday",
+                                                "fromTime": this.state.start_saturday,
+                                                "toTime": this.state.end_saturday
+                                            }
                                         })
-                                }
+                                            .then((r) => {
+                                                console.log(r.data)
+                                            })
+                                    }
 
-                            }}
-                            style={{ color: 'white', fontSize: 18 }}>Save</Text>
-                    }}
-                />
-                {this.containerView()}
-            </View>
+                                }}
+                                style={{ color: 'white', fontSize: 18 }}>Save</Text>
+                        }}
+                    />
+                    {this.containerView()}
+                </View>
 
             </ScrollView>
         )
@@ -412,19 +416,7 @@ class MultiStep extends Component {
 
     //tracking location
     trackingLocation() {
-        return (
-            <View style={styles.containerCommon}>
-                <View style={styles.inputContainer}>
-                    <TextInput placeholder={"Location Name"} />
-                </View>
-                <View style={styles.inputContainer}>
-                    <TextInput placeholder={"Address"} />
-                </View>
-                <TouchableOpacity style={styles.buttonSave}>
-                    <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
-                </TouchableOpacity>
-            </View>
-        )
+        return (<TrainingLocationFrom />)
     }
 
 
@@ -757,8 +749,6 @@ const TimeInput = ({ onSelected }) => {
     const [date, setDate] = useState();
     const profile = getGlobalState('profile')
 
-    console.log(profile)
-
     return (
         <>
             {showPicker && (
@@ -779,9 +769,74 @@ const TimeInput = ({ onSelected }) => {
             )}
             <TouchableOpacity style={{ width: '40%' }} onPress={() => setShowPicker(true)}>
                 <View style={styles.collapsedViewInner}>
-                    <TextInput style={{ color: 'black'}} editable={false} value={date ? moment(date).format("H:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
+                    <TextInput style={{ color: 'black' }} editable={false} value={date ? moment(date).format("H:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
                 </View>
             </TouchableOpacity>
         </>
+    );
+}
+
+
+const TrainingLocationFrom = () => {
+    const [profile] = useGlobalState('profile')
+    const [{ data, loading, error }, doPost] = useAxios({
+        url: '/Users/SaveTrainingLocation',
+        method: 'POST',
+      }, { manual: true })
+
+
+    return (
+        <Formik
+            initialValues={{ locationName: '', address: '' }}
+            validate={(values) => {
+                const errors = {}
+
+                if (!values.locationName) errors.locationName = 'Required'
+                if (!values.address) errors.address = 'Required'
+
+                return errors
+            }}
+            onSubmit={values => {
+                doPost({ data: {
+                    "locationName": values.locationName,
+                    "locationAddress": values.address,
+                    "role": profile.Role,
+                    "imageUrl": "string",
+                    "playerOrCoachID": profile.Id
+                }})
+                .then((r) => {
+                    console.log(r.data)
+                })
+            }}
+        >
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                <>
+                    <View style={styles.containerCommon}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                placeholder={"Location Name"}
+                                onChangeText={handleChange('locationName')}
+                                onBlur={handleBlur('locationName')}
+                                value={values.locationName}
+                            />
+                        </View>
+                        {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                placeholder={"Address"}
+                                onChangeText={handleChange('address')}
+                                onBlur={handleBlur('address')}
+                                value={values.address}
+                            />
+                        </View>
+                        {errors.address && touched.address && <ErrorLabel text={errors.address} />}
+
+                        <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5)}]}>
+                            <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
+                        </TouchableOpacity>
+                    </View>
+                </>
+            )}
+        </Formik>
     );
 }
