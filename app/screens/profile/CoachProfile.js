@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
@@ -7,6 +7,10 @@ import styles from "./CoachStyle";
 import NavigationService from '../../navigation/NavigationService';
 import NLToggleButton from '../../components/NLToggleButton';
 import { getGlobalState } from '../../state/GlobalState';
+import { axiosInstance } from '../../api/AxiosBootstrap';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment'
+
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
 const TEXT_COLOR = 'gray'
 const Width = Dimensions.get('window').width;
@@ -20,6 +24,9 @@ class MultiStep extends Component {
         this.state = {
             selectedSegmentIndex: 0,
             selectedRole: "individual",
+            showTimerPickerFor: null,
+            selected_start_date: null,
+            selected_end_date: null,
             is_enable_sunday: false,
             is_enable_monday: false,
             is_enable_tuesday: false,
@@ -29,27 +36,30 @@ class MultiStep extends Component {
             is_enable_saturday: false,
         };
     }
-    toggleSwitchSunday = () => this.setState({
+    setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
+    setTimeFor = (key, date) => this.setState({ [key]: date }, (c) => console.log(c))
+
+    toggleSwitchSunday = (cb) => this.setState({
         is_enable_sunday: !this.state.is_enable_sunday ? true : false
-    })
-    toggleSwitchMonday = () => this.setState({
+    }, cb)
+    toggleSwitchMonday = (cb) => this.setState({
         is_enable_monday: !this.state.is_enable_monday ? true : false
-    })
-    toggleSwitchTuesday = () => this.setState({
+    }, cb)
+    toggleSwitchTuesday = (cb) => this.setState({
         is_enable_tuesday: !this.state.is_enable_tuesday ? true : false
-    })
-    toggleSwitchWednesday = () => this.setState({
+    }, cb)
+    toggleSwitchWednesday = (cb) => this.setState({
         is_enable_wednesday: !this.state.is_enable_wednesday ? true : false
-    })
-    toggleSwitchThursday = () => this.setState({
+    }, cb)
+    toggleSwitchThursday = (cb) => this.setState({
         is_enable_thursday: !this.state.is_enable_thursday ? true : false
-    })
-    toggleSwitchFriday = () => this.setState({
+    }, cb)
+    toggleSwitchFriday = (cb) => this.setState({
         is_enable_friday: !this.state.is_enable_friday ? true : false
-    })
-    toggleSwitchSaturday = () => this.setState({
+    }, cb)
+    toggleSwitchSaturday = (cb) => this.setState({
         is_enable_saturday: !this.state.is_enable_saturday ? true : false
-    })
+    }, cb)
 
     handleOnCardPress = ({ title, data, screen = "EditInput", }) => {
         NavigationService.navigate(screen, {
@@ -62,16 +72,126 @@ class MultiStep extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1}}>
+                <View style={{ flex: 1 }}>
                 <Header
                     toggleDrawer={this.props.navigation.toggleDrawer}
                     hideCreatePost={true}
                     customButton={() => {
-                        return <Text style={{ color: 'white', fontSize: 18 }}>Save</Text>
+                        return <Text
+                            onPress={() => {
+                                const config = {
+                                    url: '/Users/SaveAvailability',
+                                    method: 'POST',
+                                }
+                                if (this.state.start_sunday && this.state.end_sunday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Sunday",
+                                            "fromTime": this.state.start_sunday,
+                                            "toTime": this.state.end_sunday
+                                        }
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                                if (this.state.start_monday && this.state.end_monday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Monday",
+                                            "fromTime": this.state.start_monday,
+                                            "toTime": this.state.end_monday
+                                        }
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                                if (this.state.start_wednesday && this.state.end_wednesday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Wednesday",
+                                            "fromTime": this.state.start_wednesday,
+                                            "toTime": this.state.end_wednesday
+                                        }
+
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                                if (this.state.start_tuesday && this.state.end_tuesday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Tuesday",
+                                            "fromTime": this.state.start_tuesday,
+                                            "toTime": this.state.end_tuesday
+                                        }
+
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                                if (this.state.start_thursday && this.state.end_thursday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Thursday",
+                                            "fromTime": this.state.start_thursday,
+                                            "toTime": this.state.end_thursday
+                                        }
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                                if (this.state.start_friday && this.state.end_friday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Friday",
+                                            "fromTime": this.state.start_friday,
+                                            "toTime": this.state.end_friday
+                                        }
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                                if (this.state.start_saturday && this.state.end_saturday) {
+                                    axiosInstance({
+                                        ...config,
+                                        data: {
+                                            "day": "Saturday",
+                                            "fromTime": this.state.start_saturday,
+                                            "toTime": this.state.end_saturday
+                                        }
+                                    })
+                                        .then((r) => {
+                                            console.log(r.data)
+                                        })
+                                }
+
+                            }}
+                            style={{ color: 'white', fontSize: 18 }}>Save</Text>
                     }}
                 />
                 {this.containerView()}
             </View>
+
+            </ScrollView>
         )
     }
 
@@ -356,7 +476,10 @@ class MultiStep extends Component {
                                 alignItems: 'center'
                             }}>
                                 <Text>Sunday</Text>
-                                <NLToggleButton active={this.state.is_enable_sunday} onPress={this.toggleSwitchSunday} />
+                                <NLToggleButton
+                                    active={this.state.is_enable_sunday}
+                                    onPress={() => this.toggleSwitchSunday()}
+                                />
                             </View>
                             <View style={{
                                 backgroundColor: 'lightgray',
@@ -365,13 +488,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_sunday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_sunday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_sunday", d)} />
                                 </View>
                             )}
 
@@ -398,13 +517,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_monday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_monday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_monday", d)} />
                                 </View>
                             )}
                         </View>
@@ -430,13 +545,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_tuesday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_tuesday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_tuesday", d)} />
                                 </View>
                             )}
                         </View>
@@ -462,13 +573,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_wednesday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_wednesday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_wednesday", d)} />
                                 </View>
                             )}
                         </View>
@@ -494,13 +601,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_thursday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_thursday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_thursday", d)} />
                                 </View>
                             )}
                         </View>
@@ -526,13 +629,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_friday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_friday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_friday", d)} />
                                 </View>
                             )}
                         </View>
@@ -558,13 +657,9 @@ class MultiStep extends Component {
                             }} />
                             {this.state.is_enable_saturday && (
                                 <View style={styles.collapsedView}>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 AM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("start_saturday", d)} />
                                     <Text>TO</Text>
-                                    <View style={styles.collapsedViewInner}>
-                                        <TextInput placeholder={"12:00 PM"}></TextInput>
-                                    </View>
+                                    <TimeInput onSelected={(d) => this.setTimeFor("end_saturday", d)} />
                                 </View>
                             )}
                         </View>
@@ -656,3 +751,37 @@ class MultiStep extends Component {
 }
 
 export default MultiStep
+
+const TimeInput = ({ onSelected }) => {
+    const [showPicker, setShowPicker] = useState();
+    const [date, setDate] = useState();
+    const profile = getGlobalState('profile')
+
+    console.log(profile)
+
+    return (
+        <>
+            {showPicker && (
+                <DateTimePicker
+                    mode="time"
+                    value={date || new Date()}
+                    format="DD-MM-YYYY"
+                    placeholder={'Select Date'}
+                    showIcon={false}
+                    cancelBtnText="Cancel"
+                    confirmBtnText="Confirm"
+                    onChange={(_, d) => {
+                        setShowPicker(false)
+                        setDate(d)
+                        onSelected(d)
+                    }}
+                />
+            )}
+            <TouchableOpacity style={{ width: '40%' }} onPress={() => setShowPicker(true)}>
+                <View style={styles.collapsedViewInner}>
+                    <TextInput style={{ color: 'black'}} editable={false} value={date ? moment(date).format("H:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
+                </View>
+            </TouchableOpacity>
+        </>
+    );
+}

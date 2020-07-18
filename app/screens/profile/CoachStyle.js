@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     collapsedViewInner: {
-        width: '40%',
+        width: '100%',
         borderBottomColor: "lightgrey",
         borderBottomWidth: 0.5
     }
