@@ -12,7 +12,7 @@ const TeachingCard = ({data}) => {
             <View style={styles.expView}>
               <Image source={Images.MessiPlayer} style={styles.expImg} />
               <View style={{paddingHorizontal: 10}}>
-                <Text style={styles.valueText}>{obj.title}</Text>
+                <Text style={[styles.valueText, {fontWeight: '600'}]}>{obj.title}</Text>
                 <Text style={styles.valueText}>{obj.subTitle}</Text>
               </View>
             </View>
