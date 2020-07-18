@@ -7,7 +7,7 @@ import Images from "../../constants/image";
 import styles from "./CoachStyle";
 import NavigationService from '../../navigation/NavigationService';
 import NLToggleButton from '../../components/NLToggleButton';
-import { getGlobalState, useGlobalState } from '../../state/GlobalState';
+import { getGlobalState, useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import { axiosInstance } from '../../api/AxiosBootstrap';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
@@ -16,6 +16,7 @@ import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel';
 import Modal from 'react-native-modal';
 import FuzzySearch from 'fuzzy-search'; // Or: var FuzzySearch = require('fuzzy-search');
+import { compose } from 'redux';
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -120,12 +121,13 @@ class MultiStep extends Component {
                         customButton={() => {
                             return <Text
                                 onPress={() => {
+                                    const promises = []
                                     const config = {
                                         url: '/Users/SaveAvailability',
                                         method: 'POST',
                                     }
                                     if (this.state.start_sunday && this.state.end_sunday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Sunday",
@@ -136,10 +138,11 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
                                     }
 
                                     if (this.state.start_monday && this.state.end_monday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Monday",
@@ -150,10 +153,11 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
                                     }
 
                                     if (this.state.start_wednesday && this.state.end_wednesday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Wednesday",
@@ -165,10 +169,11 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
                                     }
 
                                     if (this.state.start_tuesday && this.state.end_tuesday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Tuesday",
@@ -180,10 +185,12 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
+
                                     }
 
                                     if (this.state.start_thursday && this.state.end_thursday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Thursday",
@@ -194,10 +201,11 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
                                     }
 
                                     if (this.state.start_friday && this.state.end_friday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Friday",
@@ -208,10 +216,11 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
                                     }
 
                                     if (this.state.start_saturday && this.state.end_saturday) {
-                                        axiosInstance({
+                                        const p = axiosInstance({
                                             ...config,
                                             data: {
                                                 "day": "Saturday",
@@ -222,7 +231,15 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
+                                            promises.push(p)
                                     }
+
+                                    Promise.all(promises)
+                                    .then(() => axiosInstance({ url: '/Users/GetUser'}))
+                                    .then((r) => {
+                                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                                        props.navigation.navigate(Screen.LandingPage)
+                                    })
 
                                 }}
                                 style={{ color: 'white', fontSize: 18 }}>Save</Text>
@@ -719,6 +736,7 @@ class MultiStep extends Component {
                     }}
                     showsHorizontalScrollIndicator={false}
                     horizontal
+                    keyExtractor={(_, idx) => `${idx}-item`}
                     data={signupSegments}
                     renderItem={({ item, index }) => {
                         return (
