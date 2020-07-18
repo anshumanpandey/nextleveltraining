@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react'
 import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
-import { CheckBox } from 'native-base';
+import { CheckBox, Icon } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
 import Images from "../../constants/image";
@@ -15,8 +15,8 @@ import { Formik, FieldArray } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel';
 import Modal from 'react-native-modal';
-import FuzzySearch from 'fuzzy-search'; // Or: var FuzzySearch = require('fuzzy-search');
-import { compose } from 'redux';
+import FuzzySearch from 'fuzzy-search';
+import Colors from '../../constants/color.js';
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -276,6 +276,8 @@ class MultiStep extends Component {
     about() {
         const profile = getGlobalState('profile')
 
+        console.log(profile)
+
         return (
             <ScrollView>
                 <View style={styles.containerAbout}>
@@ -287,7 +289,11 @@ class MultiStep extends Component {
                         <View style={styles.cardContainer}>
                             <View style={styles.cardInner}>
                                 <Text style={styles.textProfile}>About me</Text>
-                                <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
+                                <Icon
+                                    type="EvilIcons"
+                                    name="pencil"
+                                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                                />
                             </View>
                             <View style={styles.cardContainer}>
                                 <Text style={styles.profileDescription}>{profile.AboutUs}</Text>
@@ -298,7 +304,11 @@ class MultiStep extends Component {
                         <View style={styles.cardContainer}>
                             <View style={styles.cardInner}>
                                 <Text style={styles.textProfile}>Accomplishment</Text>
-                                <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
+                                <Icon
+                                    type="EvilIcons"
+                                    name="pencil"
+                                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                                />
                             </View>
                             <View style={styles.cardContainer}>
                                 <Text style={styles.profileDescription}>
@@ -308,12 +318,47 @@ class MultiStep extends Component {
                         </View>
                     </TouchableOpacity>
                     <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Experience</Text>
-                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
-                        </View>
+                        <TouchableOpacity onPress={() => {
+                            NavigationService.navigate('AddExperience', {
+                                title: 'Add Experience',
+                                cb: (team) => { }
+                            })
+                        }}>
+                            <View style={styles.cardInner}>
+                                <Text style={styles.textProfile}>Experience</Text>
+                                <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_yellow }} />
+                            </View>
+                        </TouchableOpacity>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
+                            {profile.Experiences.map(e => {
+                                return (
+                                    <TouchableOpacity onPress={() => {
+                                        NavigationService.navigate('AddExperience', {
+                                            title: 'Add Experience',
+                                            cb: (team) => { },
+                                            ...e
+                                        })
+                                    }}>
+                                        <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
+                                            <View style={styles.editView}>
+                                                <Text style={{ fontWeight: 'bold' }}>{e.Club}</Text>
+                                                <Icon
+                                                    type="EvilIcons"
+                                                    name="pencil"
+                                                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                                                />
+                                            </View>
+                                            <Text>{e.JobPosition}</Text>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
+                                                <Text>{' '}To{' '}</Text>
+                                                <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>
+                                            </View>
+                                            <Text>Currently Working? {e.CurrentlyWorking ? 'Yes' : 'No'}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            })}
                         </View>
                     </View>
                     <View style={styles.cardContainer}>
@@ -951,7 +996,7 @@ const BankAccountForm = () => {
 
     const [getUserReq, getUserData] = useAxios({
         url: '/Users/GetUser',
-      }, { manual: true })
+    }, { manual: true })
 
     return (
         <ScrollView>
@@ -983,11 +1028,11 @@ const BankAccountForm = () => {
                         "code": values.sortCode,
                     }
                     doPost({ data })
-                    .then((r) => getUserData())
-                    .then((r) => {
-                        console.log(r.data)
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
-                      })
+                        .then((r) => getUserData())
+                        .then((r) => {
+                            console.log(r.data)
+                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                        })
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (

@@ -124,7 +124,11 @@ const styles = StyleSheet.create({
     modal: {
         margin: 0,
         flexGrow: 1
-    }
+    },
+    editView: {
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+      },
 
 })
 export default styles;
