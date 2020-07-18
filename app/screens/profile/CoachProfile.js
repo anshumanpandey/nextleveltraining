@@ -50,31 +50,31 @@ class MultiStep extends Component {
 
         if (profile.Availabilities && profile.Availabilities.length != 0) {
             profile.Availabilities.map(day => {
-                if (day.Day == "Sunday"){
-                    this.setState({ is_enable_sunday: true, start_sunday: moment(day.FromTime).toDate(), end_sunday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Sunday") {
+                    this.setState({ is_enable_sunday: true, start_sunday: moment(day.FromTime).toDate(), end_sunday: moment(day.ToTime).toDate() })
                 }
-                if (day.Day == "Monday"){
-                    this.setState({ is_enable_monday: true, start_monday: moment(day.FromTime).toDate(), end_monday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Monday") {
+                    this.setState({ is_enable_monday: true, start_monday: moment(day.FromTime).toDate(), end_monday: moment(day.ToTime).toDate() })
                 }
-                if (day.Day == "Tuesday"){
-                    this.setState({ is_enable_tuesday: true, start_tuesday: moment(day.FromTime).toDate(), end_tuesday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Tuesday") {
+                    this.setState({ is_enable_tuesday: true, start_tuesday: moment(day.FromTime).toDate(), end_tuesday: moment(day.ToTime).toDate() })
                 }
-                if (day.Day == "Wednesday"){
-                    this.setState({ is_enable_wednesday: true, start_wednesday: moment(day.FromTime).toDate(), end_wednesday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Wednesday") {
+                    this.setState({ is_enable_wednesday: true, start_wednesday: moment(day.FromTime).toDate(), end_wednesday: moment(day.ToTime).toDate() })
                 }
-                if (day.Day == "Thursday"){
-                    this.setState({ is_enable_thursday: true, start_thursday: moment(day.FromTime).toDate(), end_thursday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Thursday") {
+                    this.setState({ is_enable_thursday: true, start_thursday: moment(day.FromTime).toDate(), end_thursday: moment(day.ToTime).toDate() })
                 }
-                if (day.Day == "Friday"){
-                    this.setState({ is_enable_friday: true, start_friday: moment(day.FromTime).toDate(), end_friday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Friday") {
+                    this.setState({ is_enable_friday: true, start_friday: moment(day.FromTime).toDate(), end_friday: moment(day.ToTime).toDate() })
                 }
-                if (day.Day == "Saturday"){
-                    this.setState({ is_enable_saturday: true, start_saturday: moment(day.FromTime).toDate(), end_saturday: moment(day.ToTime).toDate()  })
+                if (day.Day == "Saturday") {
+                    this.setState({ is_enable_saturday: true, start_saturday: moment(day.FromTime).toDate(), end_saturday: moment(day.ToTime).toDate() })
                 }
             })
 
         }
-        
+
     }
 
     setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
@@ -138,7 +138,7 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
                                     }
 
                                     if (this.state.start_monday && this.state.end_monday) {
@@ -153,7 +153,7 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
                                     }
 
                                     if (this.state.start_wednesday && this.state.end_wednesday) {
@@ -169,7 +169,7 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
                                     }
 
                                     if (this.state.start_tuesday && this.state.end_tuesday) {
@@ -185,7 +185,7 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
 
                                     }
 
@@ -201,7 +201,7 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
                                     }
 
                                     if (this.state.start_friday && this.state.end_friday) {
@@ -216,7 +216,7 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
                                     }
 
                                     if (this.state.start_saturday && this.state.end_saturday) {
@@ -231,15 +231,15 @@ class MultiStep extends Component {
                                             .then((r) => {
                                                 console.log(r.data)
                                             })
-                                            promises.push(p)
+                                        promises.push(p)
                                     }
 
                                     Promise.all(promises)
-                                    .then(() => axiosInstance({ url: '/Users/GetUser'}))
-                                    .then((r) => {
-                                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                                        props.navigation.navigate(Screen.LandingPage)
-                                    })
+                                        .then(() => axiosInstance({ url: '/Users/GetUser' }))
+                                        .then((r) => {
+                                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                                            props.navigation.navigate(Screen.LandingPage)
+                                        })
 
                                 }}
                                 style={{ color: 'white', fontSize: 18 }}>Save</Text>
@@ -263,64 +263,7 @@ class MultiStep extends Component {
     }
     //bank account
     bankAccount() {
-        return (
-            <ScrollView>
-                <View style={styles.containerCommon}>
-                    <View>
-                        <Text style={{ fontSize: 12, color: "blue" }}>Bank Account Details</Text>
-                    </View>
-                    <View>
-                        <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your bank account details below</Text>
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <TextInput placeholder={"Bank Name"} />
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <TextInput placeholder={"Account Holder Name"} />
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <Picker
-                            selectedValue={this.state.selectedRole}
-                            style={{ height: 50, width: "100%" }}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({ selectedRole: itemValue })
-                            }>
-                            <Picker.Item label="Individual" value="individual" />
-                            <Picker.Item label="Company" value="company" />
-                        </Picker>
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <TextInput placeholder={"Sort code "} />
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <TextInput placeholder={"Account number"} />
-                    </View>
-                    <TouchableOpacity style={{
-                        backgroundColor: '#1111ff',
-                        height: 30,
-                        width: 70,
-                        alignSelf: 'flex-end',
-                        marginTop: 20,
-                        marginRight: 15,
-                        borderRadius: 5,
-                        justifyContent: 'center'
-                    }}
-                        onPress={() => {
-                            this.setState({
-                                selectedSegmentIndex: 2
-                            })
-                            this.segmentFlatList.scrollToIndex({ index: Math.round(2), animated: true })
-                            this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
-                        }}>
-                        <Text style={{
-                            color: 'white',
-                            textAlign: 'center'
-                        }}>Skip</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-
-        )
+        return (<BankAccountForm />)
     }
 
     //travel
@@ -996,5 +939,127 @@ const TrainingLocationFrom = () => {
                 </>
             )}
         </Formik>
+    );
+}
+
+const BankAccountForm = () => {
+    const [profile] = useGlobalState("profile")
+    const [{ data, loading, error }, doPost] = useAxios({
+        url: '/Users/SaveBankAccount',
+        method: 'POST'
+    }, { manual: true })
+
+    const [getUserReq, getUserData] = useAxios({
+        url: '/Users/GetUser',
+      }, { manual: true })
+
+    return (
+        <ScrollView>
+            <Formik
+                initialValues={{
+                    bankName: profile?.BankAccount?.BankName || '',
+                    holderName: profile?.BankAccount?.AccountName || '',
+                    role: profile?.BankAccount?.AccountType || '',
+                    sortCode: profile?.BankAccount?.Code || '',
+                    accountNumber: profile?.BankAccount?.AccountNumber || ''
+                }}
+                validate={(values) => {
+                    const errors = {}
+
+                    if (!values.bankName) errors.bankName = 'Required'
+                    if (!values.holderName) errors.holderName = 'Required'
+                    if (!values.role) errors.role = 'Required'
+                    if (!values.sortCode) errors.sortCode = 'Required'
+                    if (!values.accountNumber) errors.accountNumber = 'Required'
+
+                    return errors
+                }}
+                onSubmit={values => {
+                    const data = {
+                        "accountName": values.holderName,
+                        "bankName": values.bankName,
+                        "accountType": values.role,
+                        "accountNumber": values.accountNumber,
+                        "code": values.sortCode,
+                    }
+                    doPost({ data })
+                    .then((r) => getUserData())
+                    .then((r) => {
+                        console.log(r.data)
+                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
+                      })
+                }}
+            >
+                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+                    <>
+                        <View style={styles.containerCommon}>
+                            <View>
+                                <Text style={{ fontSize: 12, color: "blue" }}>Bank Account Details</Text>
+                            </View>
+                            <View>
+                                <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your bank account details below</Text>
+                            </View>
+                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                <TextInput
+                                    placeholder={"Bank Name"}
+                                    onChangeText={handleChange('bankName')}
+                                    onBlur={handleBlur('bankName')}
+                                    value={values.bankName}
+                                />
+                            </View>
+                            {errors.bankName && touched.bankName && <ErrorLabel text={errors.bankName} />}
+                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                <TextInput
+                                    placeholder={"Account Holder Name"}
+                                    onChangeText={handleChange('holderName')}
+                                    onBlur={handleBlur('holderName')}
+                                    value={values.holderName}
+                                />
+                            </View>
+                            {errors.holderName && touched.holderName && <ErrorLabel text={errors.holderName} />}
+
+                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                <Picker
+                                    selectedValue={values.role}
+                                    style={{ height: 50, width: "100%" }}
+                                    onValueChange={(itemValue, itemIndex) => {
+                                        if (itemValue == 0) return
+                                        setFieldValue('role', itemValue)
+                                    }}>
+                                    <Picker.Item color='gray' label="Select a role" value={0} />
+                                    <Picker.Item label="Individual" value="individual" />
+                                    <Picker.Item label="Company" value="company" />
+                                </Picker>
+                            </View>
+                            {errors.role && touched.role && <ErrorLabel text={errors.role} />}
+
+                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                <TextInput
+                                    placeholder={"Sort code "}
+                                    onChangeText={handleChange('sortCode')}
+                                    onBlur={handleBlur('sortCode')}
+                                    value={values.sortCode}
+                                />
+                            </View>
+                            {errors.sortCode && touched.sortCode && <ErrorLabel text={errors.sortCode} />}
+
+                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                <TextInput
+                                    placeholder={"Account number"}
+                                    onChangeText={handleChange('accountNumber')}
+                                    onBlur={handleBlur('accountNumber')}
+                                    value={values.accountNumber}
+                                />
+                            </View>
+                            {errors.accountNumber && touched.accountNumber && <ErrorLabel text={errors.accountNumber} />}
+
+                            <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5) }]}>
+                                <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                )}
+            </Formik>
+        </ScrollView>
     );
 }
