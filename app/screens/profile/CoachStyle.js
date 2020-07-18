@@ -120,6 +120,10 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: "lightgrey",
         borderBottomWidth: 0.5
+    },
+    modal: {
+        margin: 0,
+        flexGrow: 1
     }
 
 })

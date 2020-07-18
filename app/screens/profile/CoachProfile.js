@@ -1,5 +1,6 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
+import { CheckBox } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
 import Images from "../../constants/image";
@@ -10,9 +11,11 @@ import { getGlobalState, useGlobalState } from '../../state/GlobalState';
 import { axiosInstance } from '../../api/AxiosBootstrap';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
-import { Formik } from 'formik';
+import { Formik, FieldArray } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel';
+import Modal from 'react-native-modal';
+import FuzzySearch from 'fuzzy-search'; // Or: var FuzzySearch = require('fuzzy-search');
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -273,33 +276,7 @@ class MultiStep extends Component {
     //travel
     //bank account
     travel() {
-        return (
-            <ScrollView>
-                <View style={styles.containerCommon}>
-                    <View>
-                        <Text style={{ fontSize: 12, color: "blue" }}>Travel Details</Text>
-                    </View>
-                    <View>
-                        <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your travel details below</Text>
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <TextInput placeholder={"Search"} />
-                    </View>
-                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                        <Picker
-                            selectedValue={this.state.selectedRole}
-                            style={{ height: 50, width: "100%" }}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({ selectedRole: itemValue })
-                            }>
-                            <Picker.Item label="passcode1" value="individual" />
-                            <Picker.Item label="passcode2" value="company" />
-                        </Picker>
-                    </View>
-                </View>
-            </ScrollView>
-
-        )
+        return (<TravelForm />)
     }
 
 
@@ -776,13 +753,142 @@ const TimeInput = ({ onSelected }) => {
     );
 }
 
+const TravelForm = () => {
+    const [showModal, setShowModal] = useState(false)
+    const [searcher, setSearcher] = useState(null)
+    const [valuesToShow, setValuesToShow] = useState([])
+
+    const [{ data, loading, error }] = useAxios({
+        url: '/Users/GetTravelPostCodes',
+        method: 'POST',
+    })
+
+    useEffect(() => {
+        if (!data) return
+        const fakeData = [{ postCode: 'jks86f' }, { postCode: '86dosoj' }]
+        setValuesToShow(fakeData)
+        setSearcher(new FuzzySearch(fakeData, ['postCode']))
+    }, [loading]);
+
+    if (loading) {
+        return <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>;
+    }
+
+    return (
+        <ScrollView>
+            <View style={styles.containerCommon}>
+                <Formik
+                    initialValues={{ codes: [] }}
+                    validate={(values) => {
+                        const errors = {}
+
+                        if (values.codes.length == 0) errors.codes = 'Required'
+
+                        return errors
+                    }}
+                    onSubmit={values => {
+                        login({ data: values })
+                            .then((r) => {
+                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                                return getUserData()
+                            })
+                            .then((r) => {
+                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                                props.navigation.navigate(Screen.LandingPage)
+                            })
+                            .catch((r) => console.log(r))
+                    }}
+                >
+                    {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+                        <>
+                            <View>
+                                <Text style={{ fontSize: 12, color: "blue" }}>Travel Details</Text>
+                            </View>
+                            <View>
+                                <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your travel details below</Text>
+                            </View>
+                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                <TextInput placeholder={"Search"} />
+                            </View>
+                            <TouchableOpacity onPress={() => setShowModal(true)}>
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey", padding: '5%' }}>
+                                    <Text style={{ color: 'gray' }}>Select post code...</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <View>
+                                {values.codes.map(c => {
+                                    return (<Text>{c}</Text>);
+                                })}
+                            </View>
+                            <Modal
+                                onBackdropPress={() => setShowModal(false)}
+                                isVisible={showModal}
+                                style={styles.modal}>
+                                <View style={{ backgroundColor: 'white', height: '100%' }}>
+                                    <View style={{ marginBottom: '5%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
+                                            console.log('callked')
+                                            setValuesToShow(searcher.search(text));
+                                        }} />
+                                        <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
+                                    </View>
+
+
+                                    <FieldArray
+                                        name="codes"
+                                        render={arrayHelpers => {
+                                            return (
+                                                <FlatList
+                                                    data={valuesToShow}
+                                                    keyExtractor={(_, idx) => `${idx}-item`}
+                                                    style={{ height: '100%' }}
+                                                    renderItem={({ item, index }) => {
+                                                        const fn = () => {
+                                                            const found = values.codes.findIndex(i => item.postCode == i)
+                                                            if (found == -1) {
+                                                                arrayHelpers.insert(index, item.postCode)
+                                                            } else {
+                                                                arrayHelpers.remove(found)
+                                                            }
+                                                        }
+                                                        return (
+                                                            <View style={{ justifyContent: 'space-between', width: '95%', alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
+                                                                <TouchableOpacity
+                                                                    style={{ justifyContent: 'flex-start', width: '95%' }}
+                                                                    onPress={fn}>
+                                                                    <View style={{ marginLeft: '5%', flex: 1, alignItems: 'flex-start' }}>
+                                                                        <Text style={{ fontSize: 16, padding: '3%' }}>{item.postCode}</Text>
+                                                                    </View>
+                                                                </TouchableOpacity>
+                                                                <CheckBox
+                                                                    style={{ width: '5%' }}
+                                                                    checked={values.codes.includes(item.postCode)}
+                                                                    onPress={fn} />
+                                                            </View>
+                                                        );
+                                                    }}
+                                                />
+                                            );
+                                        }}
+
+                                    />
+                                </View>
+                            </Modal>
+                        </>
+                    )}
+                </Formik>
+            </View>
+        </ScrollView>
+    );
+}
+
 
 const TrainingLocationFrom = () => {
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveTrainingLocation',
         method: 'POST',
-      }, { manual: true })
+    }, { manual: true })
 
 
     return (
@@ -797,16 +903,18 @@ const TrainingLocationFrom = () => {
                 return errors
             }}
             onSubmit={values => {
-                doPost({ data: {
-                    "locationName": values.locationName,
-                    "locationAddress": values.address,
-                    "role": profile.Role,
-                    "imageUrl": "string",
-                    "playerOrCoachID": profile.Id
-                }})
-                .then((r) => {
-                    console.log(r.data)
+                doPost({
+                    data: {
+                        "locationName": values.locationName,
+                        "locationAddress": values.address,
+                        "role": profile.Role,
+                        "imageUrl": "string",
+                        "playerOrCoachID": profile.Id
+                    }
                 })
+                    .then((r) => {
+                        console.log(r.data)
+                    })
             }}
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -831,7 +939,7 @@ const TrainingLocationFrom = () => {
                         </View>
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
-                        <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5)}]}>
+                        <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5) }]}>
                             <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
                         </TouchableOpacity>
                     </View>
