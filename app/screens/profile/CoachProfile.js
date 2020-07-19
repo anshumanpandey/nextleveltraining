@@ -22,6 +22,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import { pickImage } from '../../helpers/ImagePicker';
+import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -827,7 +828,20 @@ const TimeInput = ({ onSelected, value }) => {
     );
 }
 
+let dataProviderInstance = new DataProvider((r1, r2) => {
+    return r1.postCode !== r2.postCode;
+});
+const layoutProvider = new LayoutProvider(
+    index => {
+        return 0
+    },
+    (type, dim) => {
+        dim.width = Dimensions.get("window").width;
+        dim.height = 35;
+    }
+);
 const TravelForm = () => {
+    const [dataProvider, setDataProvider] = useState()
     const [showModal, setShowModal] = useState(false)
     const [searcher, setSearcher] = useState(null)
     const [valuesToShow, setValuesToShow] = useState([])
@@ -838,9 +852,10 @@ const TravelForm = () => {
 
     useEffect(() => {
         if (!data) return
-        const fakeData = [{ postCode: 'jks86f' }, { postCode: '86dosoj' }]
-        setValuesToShow(fakeData)
-        setSearcher(new FuzzySearch(fakeData, ['postCode']))
+        const codes = data.map(i => ({ postCode: i }))
+        setValuesToShow(codes)
+        setDataProvider(dataProviderInstance.cloneWithRows(codes))
+        setSearcher(new FuzzySearch(codes, ['postCode']))
     }, [loading]);
 
     if (loading) {
@@ -889,15 +904,15 @@ const TravelForm = () => {
                         </TouchableOpacity>
                         <View>
                             {values.codes.map(c => {
-                                return (<Text>{c}</Text>);
+                                return (<Text>{c.postCode ? c.postCode : c}</Text>);
                             })}
                         </View>
                         <Modal
                             onBackdropPress={() => setShowModal(false)}
                             isVisible={showModal}
                             style={styles.modal}>
-                            <View style={{ backgroundColor: 'white', height: '100%' }}>
-                                <View style={{ marginBottom: '5%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ backgroundColor: 'white',height: '100%' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
                                         console.log('callked')
                                         setValuesToShow(searcher.search(text));
@@ -905,39 +920,26 @@ const TravelForm = () => {
                                     <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
                                 </View>
 
-
                                 <FieldArray
                                     name="codes"
                                     render={arrayHelpers => {
+                                        if (!dataProvider) return <></>
                                         return (
-                                            <FlatList
-                                                data={valuesToShow}
-                                                keyExtractor={(_, idx) => `${idx}-item`}
-                                                style={{ height: '100%' }}
-                                                renderItem={({ item, index }) => {
+                                            <RecyclerListView
+                                                extendedState={values.codes}
+                                                layoutProvider={layoutProvider}
+                                                dataProvider={dataProvider}
+                                                rowRenderer={(_, item, index, state) => {
                                                     const fn = () => {
                                                         const found = values.codes.findIndex(i => item.postCode == i)
+
                                                         if (found == -1) {
                                                             arrayHelpers.insert(index, item.postCode)
                                                         } else {
                                                             arrayHelpers.remove(found)
                                                         }
                                                     }
-                                                    return (
-                                                        <View style={{ justifyContent: 'space-between', width: '95%', alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
-                                                            <TouchableOpacity
-                                                                style={{ justifyContent: 'flex-start', width: '95%' }}
-                                                                onPress={fn}>
-                                                                <View style={{ marginLeft: '5%', flex: 1, alignItems: 'flex-start' }}>
-                                                                    <Text style={{ fontSize: 16, padding: '3%' }}>{item.postCode}</Text>
-                                                                </View>
-                                                            </TouchableOpacity>
-                                                            <CheckBox
-                                                                style={{ width: '5%' }}
-                                                                checked={values.codes.includes(item.postCode)}
-                                                                onPress={fn} />
-                                                        </View>
-                                                    );
+                                                    return <PostCodeListItem isSelected={values.codes.includes(item.postCode)} value={item.postCode} cb={fn} />;
                                                 }}
                                             />
                                         );
@@ -951,6 +953,24 @@ const TravelForm = () => {
             </Formik>
         </View>
     );
+}
+
+const PostCodeListItem = ({ isSelected, value, cb}) => {
+    return (
+        <View style={{ height: '100%',justifyContent: 'space-between', width: '95%', alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
+            <TouchableOpacity
+                style={{ justifyContent: 'flex-start', width: '95%' }}
+                onPress={cb}>
+                <View style={{ marginLeft: '5%', flex: 1, alignItems: 'flex-start' }}>
+                    <Text style={{ fontSize: 16, padding: '3%' }}>{value}</Text>
+                </View>
+            </TouchableOpacity>
+            <CheckBox
+                style={{ width: '5%' }}
+                checked={isSelected}
+                onPress={cb} />
+        </View>
+    )
 }
 
 
@@ -1186,7 +1206,7 @@ const BankAccountForm = () => {
                                 <TouchableOpacity onPress={() => setShowModal(true)}>
                                     <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                         <TextInput
-                                            style={{ color: values.role ? 'black': 'gray'}}
+                                            style={{ color: values.role ? 'black' : 'gray' }}
                                             editable={false}
                                             placeholder={"Select account type"}
                                             value={values.role}
@@ -1227,17 +1247,17 @@ const BankAccountForm = () => {
                                     <View style={{ marginBottom: '5%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                                         <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
                                     </View>
-                                    <TouchableOpacity style={{ justifyContent: 'center'}} onPress={() => {
+                                    <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => {
                                         setFieldValue('role', "Current")
                                         setShowModal(false)
                                     }}>
-                                        <Text style={{ fontSize: 26, borderTopWidth: 1 ,borderColor: 'rgba(0,0,0,0.2)',paddingHorizontal: '5%' }}>Current</Text>
+                                        <Text style={{ fontSize: 26, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Current</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{ justifyContent: 'center'}} onPress={() => {
+                                    <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => {
                                         setFieldValue('role', "Saving")
                                         setShowModal(false)
                                     }}>
-                                        <Text style={{ fontSize: 26, borderTopWidth: 1 ,borderColor: 'rgba(0,0,0,0.2)',paddingHorizontal: '5%' }}>Saving</Text>
+                                        <Text style={{ fontSize: 26, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Saving</Text>
                                     </TouchableOpacity>
                                 </View>
                             </Modal>
