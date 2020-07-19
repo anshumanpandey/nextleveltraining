@@ -413,14 +413,14 @@ class MultiStep extends Component {
                                     style={{ color: Colors.s_blue, fontSize: 25 }}
                                 />
                             </View>
+                            {profile.Qualifications && (
+                                <View style={styles.cardContainer}>
+                                    {profile.Qualifications.map(q => {
+                                        return <Text style={styles.profileDescription}>{q.Qualification}</Text>
+                                    })}
+                                </View>
+                            )}
                         </TouchableOpacity>
-                        {profile.Qualifications && (
-                            <View style={styles.cardContainer}>
-                                {profile.Qualifications.map(q => {
-                                    return <Text style={styles.profileDescription}>{q.Qualification}</Text>
-                                })}
-                            </View>
-                        )}
                     </View>
                     <View style={styles.cardContainer}>
                         <TouchableOpacity onPress={() => {
@@ -955,6 +955,7 @@ const TravelForm = () => {
 
 
 const TrainingLocationFrom = () => {
+    const [showModal, setShowModal] = useState(false)
     const [currentLocation, setCurrentLocation] = useState({
         latitude: 37.78825,
         longitude: -122.4324,
@@ -1105,6 +1106,7 @@ const TrainingLocationFrom = () => {
 }
 
 const BankAccountForm = () => {
+    const [showModal, setShowModal] = useState(false)
     const [profile] = useGlobalState("profile")
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveBankAccount',
@@ -1116,112 +1118,133 @@ const BankAccountForm = () => {
     }, { manual: true })
 
     return (
-        <ScrollView>
-            <Formik
-                initialValues={{
-                    bankName: profile?.BankAccount?.BankName || '',
-                    holderName: profile?.BankAccount?.AccountName || '',
-                    role: profile?.BankAccount?.AccountType || '',
-                    sortCode: profile?.BankAccount?.Code || '',
-                    accountNumber: profile?.BankAccount?.AccountNumber || ''
-                }}
-                validate={(values) => {
-                    const errors = {}
+        <>
+            <ScrollView>
+                <Formik
+                    initialValues={{
+                        bankName: profile?.BankAccount?.BankName || '',
+                        holderName: profile?.BankAccount?.AccountName || '',
+                        role: profile?.BankAccount?.AccountType || '',
+                        sortCode: profile?.BankAccount?.Code || '',
+                        accountNumber: profile?.BankAccount?.AccountNumber || ''
+                    }}
+                    validate={(values) => {
+                        const errors = {}
 
-                    if (!values.bankName) errors.bankName = 'Required'
-                    if (!values.holderName) errors.holderName = 'Required'
-                    if (!values.role) errors.role = 'Required'
-                    if (!values.sortCode) errors.sortCode = 'Required'
-                    if (!values.accountNumber) errors.accountNumber = 'Required'
+                        if (!values.bankName) errors.bankName = 'Required'
+                        if (!values.holderName) errors.holderName = 'Required'
+                        if (!values.role) errors.role = 'Required'
+                        if (!values.sortCode) errors.sortCode = 'Required'
+                        if (!values.accountNumber) errors.accountNumber = 'Required'
 
-                    return errors
-                }}
-                onSubmit={values => {
-                    const data = {
-                        "accountName": values.holderName,
-                        "bankName": values.bankName,
-                        "accountType": values.role,
-                        "accountNumber": values.accountNumber,
-                        "code": values.sortCode,
-                    }
-                    doPost({ data })
-                        .then((r) => getUserData())
-                        .then((r) => {
-                            console.log(r.data)
-                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        })
-                }}
-            >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
-                    <>
-                        <View style={styles.containerCommon}>
-                            <View>
-                                <Text style={{ fontSize: 12, color: "blue" }}>Bank Account Details</Text>
-                            </View>
-                            <View>
-                                <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your bank account details below</Text>
-                            </View>
-                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                <TextInput
-                                    placeholder={"Bank Name"}
-                                    onChangeText={handleChange('bankName')}
-                                    onBlur={handleBlur('bankName')}
-                                    value={values.bankName}
-                                />
-                            </View>
-                            {errors.bankName && touched.bankName && <ErrorLabel text={errors.bankName} />}
-                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                <TextInput
-                                    placeholder={"Account Holder Name"}
-                                    onChangeText={handleChange('holderName')}
-                                    onBlur={handleBlur('holderName')}
-                                    value={values.holderName}
-                                />
-                            </View>
-                            {errors.holderName && touched.holderName && <ErrorLabel text={errors.holderName} />}
+                        return errors
+                    }}
+                    onSubmit={values => {
+                        const data = {
+                            "accountName": values.holderName,
+                            "bankName": values.bankName,
+                            "accountType": values.role,
+                            "accountNumber": values.accountNumber,
+                            "code": values.sortCode,
+                        }
+                        doPost({ data })
+                            .then((r) => getUserData())
+                            .then((r) => {
+                                console.log(r.data)
+                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                            })
+                    }}
+                >
+                    {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+                        <>
+                            <View style={styles.containerCommon}>
+                                <View>
+                                    <Text style={{ fontSize: 12, color: "blue" }}>Bank Account Details</Text>
+                                </View>
+                                <View>
+                                    <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your bank account details below</Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                    <TextInput
+                                        placeholder={"Bank Name"}
+                                        onChangeText={handleChange('bankName')}
+                                        onBlur={handleBlur('bankName')}
+                                        value={values.bankName}
+                                    />
+                                </View>
+                                {errors.bankName && touched.bankName && <ErrorLabel text={errors.bankName} />}
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                    <TextInput
+                                        placeholder={"Account Holder Name"}
+                                        onChangeText={handleChange('holderName')}
+                                        onBlur={handleBlur('holderName')}
+                                        value={values.holderName}
+                                    />
+                                </View>
+                                {errors.holderName && touched.holderName && <ErrorLabel text={errors.holderName} />}
 
-                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                <Picker
-                                    selectedValue={values.role}
-                                    style={{ height: 50, width: "100%" }}
-                                    onValueChange={(itemValue, itemIndex) => {
-                                        if (itemValue == 0) return
-                                        setFieldValue('role', itemValue)
+                                <TouchableOpacity onPress={() => setShowModal(true)}>
+                                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                        <TextInput
+                                            style={{ color: values.role ? 'black': 'gray'}}
+                                            editable={false}
+                                            placeholder={"Select account type"}
+                                            value={values.role}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                                {errors.role && touched.role && <ErrorLabel text={errors.role} />}
+
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                    <TextInput
+                                        placeholder={"Sort code "}
+                                        onChangeText={handleChange('sortCode')}
+                                        onBlur={handleBlur('sortCode')}
+                                        value={values.sortCode}
+                                    />
+                                </View>
+                                {errors.sortCode && touched.sortCode && <ErrorLabel text={errors.sortCode} />}
+
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                    <TextInput
+                                        placeholder={"Account number"}
+                                        onChangeText={handleChange('accountNumber')}
+                                        onBlur={handleBlur('accountNumber')}
+                                        value={values.accountNumber}
+                                    />
+                                </View>
+                                {errors.accountNumber && touched.accountNumber && <ErrorLabel text={errors.accountNumber} />}
+
+                                <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5) }]}>
+                                    <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Modal
+                                onBackdropPress={() => setShowModal(false)}
+                                isVisible={showModal}
+                                style={styles.modal}>
+                                <View style={{ backgroundColor: 'white' }}>
+                                    <View style={{ marginBottom: '5%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                        <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
+                                    </View>
+                                    <TouchableOpacity style={{ justifyContent: 'center'}} onPress={() => {
+                                        setFieldValue('role', "Current")
+                                        setShowModal(false)
                                     }}>
-                                    <Picker.Item color='gray' label="Select Account Type" value={0} />
-                                    <Picker.Item label="Individual" value="individual" />
-                                    <Picker.Item label="Company" value="company" />
-                                </Picker>
-                            </View>
-                            {errors.role && touched.role && <ErrorLabel text={errors.role} />}
-
-                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                <TextInput
-                                    placeholder={"Sort code "}
-                                    onChangeText={handleChange('sortCode')}
-                                    onBlur={handleBlur('sortCode')}
-                                    value={values.sortCode}
-                                />
-                            </View>
-                            {errors.sortCode && touched.sortCode && <ErrorLabel text={errors.sortCode} />}
-
-                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                <TextInput
-                                    placeholder={"Account number"}
-                                    onChangeText={handleChange('accountNumber')}
-                                    onBlur={handleBlur('accountNumber')}
-                                    value={values.accountNumber}
-                                />
-                            </View>
-                            {errors.accountNumber && touched.accountNumber && <ErrorLabel text={errors.accountNumber} />}
-
-                            <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5) }]}>
-                                <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </>
-                )}
-            </Formik>
-        </ScrollView>
+                                        <Text style={{ fontSize: 26, borderTopWidth: 1 ,borderColor: 'rgba(0,0,0,0.2)',paddingHorizontal: '5%' }}>Current</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ justifyContent: 'center'}} onPress={() => {
+                                        setFieldValue('role', "Saving")
+                                        setShowModal(false)
+                                    }}>
+                                        <Text style={{ fontSize: 26, borderTopWidth: 1 ,borderColor: 'rgba(0,0,0,0.2)',paddingHorizontal: '5%' }}>Saving</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </Modal>
+                        </>
+                    )}
+                </Formik>
+            </ScrollView>
+        </>
     );
 }

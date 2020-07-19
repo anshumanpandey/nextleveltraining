@@ -77,7 +77,7 @@ const Menu = (props) => {
     const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile')
 
-    if (hasFullProfile(profile)) {
+    if (hasFullProfile(profile) && !menulist.find(i => i.title == 'Help')) {
         menulist.push(...fullProfileMenu)
     }
 
