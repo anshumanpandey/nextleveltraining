@@ -35,10 +35,10 @@ const styles =StyleSheet.create({
     },
     login_info_view:{
         width:Dimension.pro80,
-        padding:15,
+        padding:0,
         borderBottomColor:Colors.g_text,
         borderBottomWidth:1,
-        marginTop:Dimension.px15
+        marginTop:Dimension.px1
     },
     login_btn_view:{
         width:Dimension.pro100,
@@ -71,7 +71,8 @@ const styles =StyleSheet.create({
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
-        padding:5    
+        padding:5,
+        flexDirection: 'row'
     },
     login_btn_icon_size:{
         width:40,

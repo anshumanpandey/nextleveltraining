@@ -35,10 +35,10 @@ const styles =StyleSheet.create({
     },
     signup_info_view:{
         width:Dimension.pro80,
-        padding:15,
+        padding:1,
         borderBottomColor:Colors.g_text,
         borderBottomWidth:1,
-        marginTop:Dimension.px15
+        marginTop:Dimension.px1
     },
     signup_btn_view:{
         width:Dimension.pro100,

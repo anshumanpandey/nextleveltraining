@@ -6,13 +6,25 @@ import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
 import ErrorLabel from '../../components/ErrorLabel';
 import Screen from '../../utils/screen';
-
+import AsyncStorage from '@react-native-community/async-storage';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 const Signup = (props) => {
   const [{ data, loading, error }, register] = useAxios({
     url: '/Account/Register',
     method: 'POST',
   }, { manual: true })
+
+  const [loginReq, login] = useAxios({
+    url: '/Account/Login',
+    method: 'POST',
+  }, { manual: true })
+
+  const [getUserReq, getUserData] = useAxios({
+    url: '/Users/GetUser',
+  }, { manual: true })
+
+  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading
 
   return (
     <ScrollView style={styles.signup_layout}>
@@ -45,7 +57,16 @@ const Signup = (props) => {
           onSubmit={values => {
             register({ data: values })
               .then((r) => {
-                props.navigation.navigate(Screen.Login)
+                AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
+                return login({ data: { emailID: values.emailID, password: values.password } })
+              })
+              .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                return getUserData()
+              })
+              .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                props.navigation.navigate(Screen.LandingPage)
               })
               .catch((r) => console.log(r))
           }}
@@ -111,7 +132,8 @@ const Signup = (props) => {
               </View>
               <View style={styles.signup_btn_view}>
                 <TouchableOpacity
-                  style={styles.signup_btn_player}
+                  disabled={signupIsDisabled()}
+                  style={[styles.signup_btn_player, signupIsDisabled() && GlobalStyles.disabled_button]}
                   onPress={handleSubmit}
                 >
                   <View style={styles.signup_btn_player_view}>
@@ -130,11 +152,13 @@ const Signup = (props) => {
           </View>
           <View style={styles.signup_other_social_view}>
             <TouchableOpacity
+              disabled={signupIsDisabled()}
               style={styles.fb_btn_view}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={signupIsDisabled()}
               style={styles.google_btn_view}
             >
               <Text style={styles.google_title}>Google +</Text>
