@@ -4,31 +4,33 @@ import {Icon} from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 import screen from '../../utils/screen'
+import { useGlobalState } from '../../state/GlobalState';
+import hasFullProfile from '../../utils/perType/profileResolver';
 
-class Header extends Component {
-  render() {
-    return (
-      <View style={styles.header_layout}>
+const Header = (props) => {
+  const [profile] = useGlobalState('profile')
 
-        <View style={styles.header_item_container}>
-          <TouchableOpacity
-            onPress={() => this.props.toggleDrawer()}
-          >
-            <Icon name="menu" type="Entypo" style={styles.header_menu_icon} />
-          </TouchableOpacity>
+  return (
+    <View style={styles.header_layout}>
 
-          {this.props.hideCreatePost != true && <TouchableOpacity
-            onPress={() => this.props.navigate(screen.CreatePost)}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: 'white', marginRight: 10 }} />
-            </View>
-          </TouchableOpacity>}
-          {this.props.customButton && this.props.customButton()}
-        </View>
+      <View style={styles.header_item_container}>
+        <TouchableOpacity
+          onPress={() => props.toggleDrawer()}
+        >
+          <Icon name="menu" type="Entypo" style={styles.header_menu_icon} />
+        </TouchableOpacity>
+
+        {props.hideCreatePost != true && hasFullProfile(profile) &&<TouchableOpacity
+          onPress={() => props.navigate(screen.CreatePost)}
+        >
+          <View style={{ flexDirection: 'row' }}>
+            <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: 'white', marginRight: 10 }} />
+          </View>
+        </TouchableOpacity>}
+        {props.customButton && props.customButton()}
       </View>
-    );
-  }
+    </View>
+  );
 }
 
 export default Header;

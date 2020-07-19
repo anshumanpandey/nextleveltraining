@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Image, ScrollView, TouchableOpacity} from 'react-native';
 import {Icon} from 'native-base';
 import Header from '../../components/header/Header';
@@ -10,10 +10,21 @@ import TeamUpComingCard from './TeamUpComingCard';
 import NavigationService from '../../navigation/NavigationService';
 import {pickImage} from '../../helpers/ImagePicker';
 import { useGlobalState } from '../../state/GlobalState';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Profile = (props) => {
+  const [profilePic, setProfilePic] = useState();
   const [profile] = useGlobalState('profile')
   const {user, AboutUs, Achievements, Teams, UpcomingMatches} = profile;
+
+  useEffect(() => {
+    AsyncStorage.getItem('ProfilePic')
+    .then((s) => {
+      if (!s) return
+      setProfilePic(JSON.parse(s))
+    })
+  }, [])
+
   return (
     <View style={{flex: 1}}>
       <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}/>
@@ -24,11 +35,12 @@ const Profile = (props) => {
               <TouchableOpacity
                 onPress={async () => {
                   const source = await pickImage();
-                  //this.setState({user: source});
+                  setProfilePic(source)
+                  AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
                 }}
                 style={{position: 'relative'}}>
                 <Image
-                  source={user ? user : Images.MessiPlayer}
+                  source={profilePic ? { uri: profilePic.uri } : Images.MessiPlayer}
                   style={styles.userImg}
                 />
                 <View style={styles.editView}>

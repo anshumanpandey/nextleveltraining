@@ -21,6 +21,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
+import {pickImage} from '../../helpers/ImagePicker';
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -51,6 +52,12 @@ class MultiStep extends Component {
 
     componentDidMount() {
         const profile = getGlobalState('profile')
+
+        AsyncStorage.getItem('ProfilePic')
+            .then((s) => {
+                if (!s) return
+                this.setState({ profilePic: JSON.parse(s) })
+            })
 
         if (profile.Availabilities && profile.Availabilities.length != 0) {
             profile.Availabilities.map(day => {
@@ -278,15 +285,39 @@ class MultiStep extends Component {
     about() {
         const profile = getGlobalState('profile')
 
-        console.log(profile)
-
         return (
             <ScrollView>
                 <View style={styles.containerAbout}>
-                    <View style={styles.ImageContainer}>
-                        <Image source={{ uri: 'https://cdn5.vectorstock.com/i/1000x1000/06/34/soft-abstract-swoosh-wave-lines-border-layout-grey-vector-22850634.jpg' }} style={styles.profileImage} />
-                        <Image source={Images.RoundPencil} style={styles.profileEditIcon} />
-                    </View>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            const source = await pickImage();
+                            this.setState({ profilePic: source })
+                            AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
+                        }}
+                        style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
+                        <Image
+                            source={this.state.profilePic ? { uri: this.state.profilePic.uri } : 'https://cdn5.vectorstock.com/i/1000x1000/06/34/soft-abstract-swoosh-wave-lines-border-layout-grey-vector-22850634.jpg'}
+                            style={styles.profileImage}
+                        />
+                        <View style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute',
+                            width: Dimension.px30,
+                            height: Dimension.px30,
+                            backgroundColor: Colors.s_blue,
+                            borderRadius: Dimension.px30 / 2,
+                            right: 0,
+                            top: 3,
+                        }}>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: 'white', fontSize: 25 }}
+                            />
+                        </View>
+                    </TouchableOpacity>
+
                     <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "About Me", data: profile.AboutUs })}>
                         <View style={styles.cardContainer}>
                             <View style={styles.cardInner}>
@@ -428,29 +459,6 @@ class MultiStep extends Component {
                                 <Text style={styles.profileDescription}>$ {profile.Rate}</Text>
                             </View>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        backgroundColor: '#1111ff',
-                        height: 30,
-                        width: 70,
-                        marginBottom: 5,
-                        alignSelf: 'flex-end',
-                        marginTop: 20,
-                        marginRight: 15,
-                        borderRadius: 5,
-                        justifyContent: 'center'
-                    }}
-                        onPress={() => {
-                            this.setState({
-                                selectedSegmentIndex: 1
-                            })
-                            this.segmentFlatList.scrollToIndex({ index: Math.round(1), animated: true })
-                            this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
-                        }}>
-                        <Text style={{
-                            color: 'white',
-                            textAlign: 'center'
-                        }}>Skip</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -702,30 +710,6 @@ class MultiStep extends Component {
                                     </View>
                                 )}
                             </View>
-
-                            <TouchableOpacity style={{
-                                backgroundColor: '#1111ff',
-                                height: 30,
-                                width: 70,
-                                alignSelf: 'flex-end',
-                                marginTop: 20,
-                                marginRight: 15,
-                                borderRadius: 5,
-                                justifyContent: 'center'
-                            }}
-                                onPress={() => {
-                                    this.setState({
-                                        selectedSegmentIndex: 3
-                                    })
-                                    this.segmentFlatList.scrollToIndex({ index: Math.round(3), animated: true })
-                                    this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
-                                }}>
-                                <Text style={{
-                                    color: 'white',
-                                    textAlign: 'center'
-                                }}>Skip</Text>
-                            </TouchableOpacity>
-
                         </View>
                     </ScrollView>
 
@@ -1033,8 +1017,7 @@ const TrainingLocationFrom = () => {
                                             latitude: details.geometry.location.lat,
                                             longitude: details.geometry.location.lng,
                                         })
-                                        console.log(data.description)
-                                        setFieldValue("address",data.description)
+                                        setFieldValue("address", data.description)
                                     }}
                                     query={{
                                         key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',

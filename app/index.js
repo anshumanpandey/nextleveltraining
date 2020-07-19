@@ -33,6 +33,7 @@ import Payments from './screens/payments';
 import JobDetails from './screens/jobDetails';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
 import './api/AxiosBootstrap';
+import hasFullProfile from './utils/perType/profileResolver';
 
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
@@ -40,6 +41,7 @@ const AppMain = () => {
   const [error] = useGlobalState('error')
   const [success] = useGlobalState('success')
   const [token] = useGlobalState('token')
+  const [profile] = useGlobalState('profile')
 
   useEffect(() => {
     console.log('error', error)
@@ -106,100 +108,105 @@ const AppMain = () => {
       },
     },
   );
-  const TabNavigator = createBottomTabNavigator(
-    {
-      Home: {
-        screen: HomeStack,
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <View style={styles.tabContain}>
-              <Icon
-                type="SimpleLineIcons"
-                name="home"
-                style={[styles.icons, { color: tintColor }]}
-              />
-              <Text style={[styles.textTab, { color: tintColor }]}>HOME</Text>
-            </View>
-          ),
-        }),
-      },
-      CreatePost: {
-        screen: CreatePostScreen,
-        navigationOptions: () => ({
-          tabBarButtonComponent: ({ tintColor }) => (
-            <></>
-          ),
-        }),
-      },
-      CreateComment: {
-        screen: CommentsScreen,
-        navigationOptions: () => ({
-          tabBarButtonComponent: ({ tintColor }) => (
-            <></>
-          ),
-        }),
-      },
-      Search: {
-        screen: SearchStack,
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <View style={styles.tabContain}>
-              <Icon
-                type="Feather"
-                name="search"
-                style={[styles.icons, { color: tintColor }]}
-              />
-              <Text style={[styles.textTab, { color: tintColor }]}>SEARCH</Text>
-            </View>
-          ),
-        }),
-      },
-      Booking: {
-        screen: Booking,
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <View style={styles.tabContain}>
-              <Icon
-                type="Feather"
-                name="shopping-cart"
-                style={[styles.icons, { color: tintColor }]}
-              />
-              <Text style={[styles.textTab, { color: tintColor }]}>BOOKING</Text>
-            </View>
-          ),
-        }),
-      },
-      Message: {
-        screen: Message,
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <View style={styles.tabContain}>
-              <Icon
-                type="Feather"
-                name="message-square"
-                style={[styles.icons, { color: tintColor }]}
-              />
-              <Text style={[styles.textTab, { color: tintColor }]}>MESSAGE</Text>
-            </View>
-          ),
-        }),
-      },
-      Profile: {
-        screen: ProfileStack,
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <View style={styles.tabContain}>
-              <Icon
-                type="MaterialIcons"
-                name="person-outline"
-                style={[styles.icons, { color: tintColor }]}
-              />
-              <Text style={[styles.textTab, { color: tintColor }]}>PROFILE</Text>
-            </View>
-          ),
-        }),
-      },
+  const tabs = {
+    Profile: {
+      screen: ProfileStack,
+      navigationOptions: () => ({
+        tabBarVisible: hasFullProfile(profile),
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="MaterialIcons"
+              name="person-outline"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>PROFILE</Text>
+          </View>
+        ),
+      }),
     },
+  }
+
+  if (hasFullProfile(profile)) {
+    tabs.Home = {
+      screen: HomeStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="SimpleLineIcons"
+              name="home"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>HOME</Text>
+          </View>
+        ),
+      }),
+    }
+    tabs.CreatePost = {
+      screen: CreatePostScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
+    tabs.CreateComment = {
+      screen: CommentsScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+    tabs.Search = {
+      screen: SearchStack,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="search"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>SEARCH</Text>
+          </View>
+        ),
+      }),
+    }
+    tabs.Booking = {
+      screen: Booking,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="shopping-cart"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>BOOKING</Text>
+          </View>
+        ),
+      }),
+    }
+    tabs.Message = {
+      screen: Message,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="message-square"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>MESSAGE</Text>
+          </View>
+        ),
+      }),
+    }
+  }
+  const TabNavigator = createBottomTabNavigator(tabs,
     {
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {

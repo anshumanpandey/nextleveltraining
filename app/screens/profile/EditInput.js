@@ -30,7 +30,7 @@ const EditInput = (props) => {
   const title = props.navigation.state.params.title;
   const data = props.navigation.state.params.data;
   const cb = props.navigation.state.params.cb;
-  const [values, setValues] = useState(data);
+  const [values, setValues] = useState(data || '');
 
   const [updateDataReq, updateData] = useAxios({
     url: URL_MAP[props.navigation.state.params.title].url,
