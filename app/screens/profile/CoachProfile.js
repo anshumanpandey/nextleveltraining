@@ -21,7 +21,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
-import {pickImage} from '../../helpers/ImagePicker';
+import { pickImage } from '../../helpers/ImagePicker';
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -395,13 +395,32 @@ class MultiStep extends Component {
                         </View>
                     </View>
                     <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Qualifications</Text>
-                            <Image source={Images.Pencil} style={{ height: 20, width: 20 }} />
-                        </View>
-                        <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>ABCD cerificates</Text>
-                        </View>
+                        <TouchableOpacity onPress={() => {
+                            NavigationService.navigate('AddQualifications', {
+                                title: 'Add Experience',
+                                cb: (team) => { },
+                                Qualifications: profile.Qualifications
+                            })
+                        }}>
+                            <View style={styles.cardInner}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.textProfile}>Qualifications</Text>
+                                    {profile.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                </View>
+                                <Icon
+                                    type="EvilIcons"
+                                    name="pencil"
+                                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        {profile.Qualifications && (
+                            <View style={styles.cardContainer}>
+                                {profile.Qualifications.map(q => {
+                                    return <Text style={styles.profileDescription}>{q.Qualification}</Text>
+                                })}
+                            </View>
+                        )}
                     </View>
                     <View style={styles.cardContainer}>
                         <TouchableOpacity onPress={() => {
@@ -814,8 +833,7 @@ const TravelForm = () => {
     const [valuesToShow, setValuesToShow] = useState([])
 
     const [{ data, loading, error }] = useAxios({
-        url: '/Users/GetTravelPostCodes',
-        method: 'POST',
+        url: '/Users/GetPostCodes',
     })
 
     useEffect(() => {
@@ -1170,7 +1188,7 @@ const BankAccountForm = () => {
                                         if (itemValue == 0) return
                                         setFieldValue('role', itemValue)
                                     }}>
-                                    <Picker.Item color='gray' label="Select a role" value={0} />
+                                    <Picker.Item color='gray' label="Select Account Type" value={0} />
                                     <Picker.Item label="Individual" value="individual" />
                                     <Picker.Item label="Company" value="company" />
                                 </Picker>
