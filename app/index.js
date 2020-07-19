@@ -34,6 +34,7 @@ import JobDetails from './screens/jobDetails';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
 import './api/AxiosBootstrap';
 import hasFullProfile from './utils/perType/profileResolver';
+import SplashScreen from 'react-native-splash-screen'
 
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
@@ -42,6 +43,10 @@ const AppMain = () => {
   const [success] = useGlobalState('success')
   const [token] = useGlobalState('token')
   const [profile] = useGlobalState('profile')
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
 
   useEffect(() => {
     console.log('error', error)

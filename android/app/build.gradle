@@ -231,6 +231,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'  //with support libraries
     implementation project(':react-native-fbsdk')
+    implementation project(':react-native-splash-screen')
 }
 
 // Run this once to be able to run the application with BUCK
