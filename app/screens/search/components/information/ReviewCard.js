@@ -8,7 +8,7 @@ import StarRating from 'react-native-star-rating';
 const ReviewCard = ({item}) => {
   return (
     <View style={styles.post_container}>
-      <View style={styles.post_card_container}>
+      <View style={[styles.post_card_container, {flexDirection: 'row'}]}>
         <Image source={Images.MessiPlayer} style={styles.post_image_size} />
         <View style={styles.post_content_view}>
           <View style={{width: Dimension.pro100}}>

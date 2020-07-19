@@ -78,8 +78,9 @@ const styles = StyleSheet.create({
   },
   post_news_comment: {
     flexDirection: 'row',
-    width: Dimension.deviceWidth - 20,
+    // width: Dimension.deviceWidth - 20,
     marginLeft: 10,
+    marginRight: 10,
     justifyContent: 'space-between',
     marginTop: 10,
   },

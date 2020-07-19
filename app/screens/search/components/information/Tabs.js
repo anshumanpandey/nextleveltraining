@@ -7,10 +7,17 @@ const tabs = [
   {id: 2, title: 'MEDIA'},
   {id: 3, title: 'REVIEW'},
 ];
-const Tabs = ({selectedTab, activeColor, inActiveColor, onChangeTab}) => {
+const Tabs = ({
+  selectedTab,
+  activeColor,
+  inActiveColor,
+  onChangeTab,
+  tabTitle,
+}) => {
+  const tabData = tabTitle && tabTitle.length > 0 ? tabTitle : tabs;
   return (
     <View style={styles.tabContainer}>
-      {tabs.map((item, index) => {
+      {tabData.map((item, index) => {
         return (
           <TouchableOpacity
             onPress={() => onChangeTab(index)}
