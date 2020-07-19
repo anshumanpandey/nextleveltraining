@@ -71,7 +71,8 @@ const styles =StyleSheet.create({
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
-        padding:5    
+        padding:5,
+        flexDirection: 'row'
     },
     login_btn_icon_size:{
         width:40,
