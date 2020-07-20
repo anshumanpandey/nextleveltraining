@@ -28,7 +28,13 @@ const AddTeam = (props) => {
 
   return (
     <Formik
-      initialValues={{ teamName: '', startDate: '', endDate: '', isChecked: false }}
+      initialValues={{
+        teamID: props.navigation.getParam("Id") || undefined,
+        teamName: props.navigation.getParam("TeamName") || '',
+        startDate: props.navigation.getParam("StartDate") || '',
+        endDate: props.navigation.getParam("EndDate") || '',
+        isChecked: props.navigation.getParam("IsChecked") || false,
+      }}
       validate={(values) => {
         const errors = {}
 
@@ -40,12 +46,17 @@ const AddTeam = (props) => {
       }}
       onSubmit={values => {
         const data = {
+          teamID: values.teamID,
           teamName: values.teamName,
           startDate: values.startDate,
           endDate: values.endDate
         }
+
         postTeam({ data })
-        .then(r => getUserData())
+        .then(r => {
+          console.log(r.data)
+          return getUserData()
+        })
         .then((r) => {
           dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
           NavigationService.goBack()
@@ -64,7 +75,7 @@ const AddTeam = (props) => {
               <View style={styles.inputContain}>
                 <TextInput
                   onChangeText={(text) => setTeamName(text)}
-                  style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
+                  style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15, width: '100%' }}
                   placeholder="Team Name"
                   keyboardType="email-address"
                   onChangeText={handleChange('teamName')}

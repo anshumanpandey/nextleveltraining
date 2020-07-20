@@ -81,10 +81,11 @@ const Profile = (props) => {
           <TeamMatchCard
             title={'Teams'}
             data={Teams}
-            onEditPress={() =>
+            onEditPress={(item) =>
               NavigationService.navigate('AddTeam', {
                 title: 'Teams',
-                cb: (team) =>{}
+                cb: (team) =>{},
+                ...item
               })
             }
           />

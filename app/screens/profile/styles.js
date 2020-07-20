@@ -65,6 +65,8 @@ const styles = {
     borderBottomWidth: 0.5,
     paddingBottom: 12,
     marginBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   timePeriod: {fontWeight: 'bold', color: 'gray', marginTop: 15, fontSize: 15},
   dateText: {color: 'gray', fontSize: 15},

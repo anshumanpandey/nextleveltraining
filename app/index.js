@@ -38,6 +38,8 @@ import './api/AxiosBootstrap';
 import hasFullProfile from './utils/perType/profileResolver';
 import SplashScreen from 'react-native-splash-screen'
 
+let initialRouteName = null
+
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 
@@ -215,9 +217,13 @@ const AppMain = () => {
     }
   }
 
+  if (initialRouteName == null) {
+    initialRouteName = hasFullProfile(profile) == true ? 'Home' : 'Profile'
+  }
+
   const TabNavigator = createBottomTabNavigator(tabs,
     {
-      initialRouteName: hasFullProfile(profile) == true ? 'Home' : 'Profile',
+      initialRouteName,
       order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile'] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
