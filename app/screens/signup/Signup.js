@@ -6,13 +6,14 @@ import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
 import ErrorLabel from '../../components/ErrorLabel';
 import Screen from '../../utils/screen';
+import GlobalStyles from '../../constants/GlobalStyles';
 import AsyncStorage from '@react-native-community/async-storage';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin } from 'react-native-google-signin';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 const Signup = (props) => {
-  const [role, setRole] = useState();
+  const [socialLogin, setSocialLogin] = useState(false);
 
   const [{ data, loading, error }, register] = useAxios({
     url: '/Account/Register',
@@ -33,7 +34,12 @@ const Signup = (props) => {
     method: 'POST'
   }, { manual: true })
 
-  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading
+  const [FBloginReq, FBlogin] = useAxios({
+    url: '/Account/FacebookLogin',
+    method: 'POST',
+  }, { manual: true })
+
+  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading || FBloginReq.loading || socialLogin
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -46,11 +52,6 @@ const Signup = (props) => {
       accountName: '', // [Android] specifies an account name on the device that should be used
       iosClientId: '634112134799-ron6nkiu8tf6vrg1hiuojnuls9l8ddp1.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
-    AsyncStorage.getItem('role')
-    .then((r) => {
-      if (!r) return 
-      setRole(r)
-    })
   }, [])
 
   return (
@@ -180,48 +181,67 @@ const Signup = (props) => {
             <TouchableOpacity
               disabled={signupIsDisabled()}
               onPress={() => {
-                if (!role) return
                 if (Platform.OS === "android") {
                   LoginManager.setLoginBehavior("web_only")
                 }
+                setSocialLogin(true)
                 LoginManager.logInWithPermissions(["public_profile", "email"]).then((result) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { role, authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role', "Player"), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
                   })
                   .then((r) => {
+                    AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                    setSocialLogin(false)
                     props.navigation.navigate(Screen.LandingPage)
                   })
-                  .catch(err => console.log(err))
+                  .catch(err => {
+                    setSocialLogin(false)
+                    console.log(err)
+                  })
               }}
-              style={styles.fb_btn_view}
+              style={[styles.fb_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1}]}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
+                setSocialLogin(true)
                 try {
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
                   console.log(userInfo)
-                  loginWithGoogle({ data: {
-                    "name": `${userInfo.givenName} ${userInfo.familyName}`,
-                    "email": userInfo.email,
-                    "picture": userInfo.photo,
-                    "role": role,
-                    "authenticationToken": userInfo.serverAuthToken
-                  }})
+                  loginWithGoogle({
+                    data: {
+                      "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
+                      "email": userInfo.user.email,
+                      "picture": userInfo.user.photo,
+                      "role": props.navigation.getParam('role', "Player"),
+                      "authenticationToken": userInfo.serverAuthCode
+                    }
+                  })
+                    .then((r) => {
+                      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                      return getUserData()
+                    })
+                    .then((r) => {
+                      AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
+                      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                      setSocialLogin(false)
+                      props.navigation.navigate(Screen.LandingPage)
+                    })
                 } catch (e) {
+                  setSocialLogin(false)
                   console.log(e)
                 }
               }}
               disabled={signupIsDisabled()}
-              style={styles.google_btn_view}
+              style={[styles.google_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1}]}
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>

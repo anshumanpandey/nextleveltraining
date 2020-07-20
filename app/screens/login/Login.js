@@ -30,8 +30,13 @@ const Login = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
+  const [googeReq, loginWithGoogle] = useAxios({
+    url: '/Account/GoogleLogin',
+    method: 'POST'
+  }, { manual: true })
+
   const isLoginDisabled = () => {
-    return loading || FBloginReq.loading || getUserReq.loading
+    return loading || FBloginReq.loading || getUserReq.loading || googeReq.loading
   }
 
   useEffect(() => {
@@ -46,10 +51,11 @@ const Login = (props) => {
       iosClientId: '634112134799-ron6nkiu8tf6vrg1hiuojnuls9l8ddp1.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
     AsyncStorage.getItem('role')
-    .then((r) => {
-      if (!r) return 
-      setRole(r)
-    })
+      .then((r) => {
+        if (!r) return
+        setRole(r)
+      })
+
   }, [])
 
   return (
@@ -141,21 +147,21 @@ const Login = (props) => {
                   LoginManager.setLoginBehavior("web_only")
                 }
                 LoginManager.logInWithPermissions(["public_profile", "email"]).then((result) => {
-                    if (result.isCancelled) throw new Error("Login cancelled")                     
-                    return AccessToken.getCurrentAccessToken()
+                  if (result.isCancelled) throw new Error("Login cancelled")
+                  return AccessToken.getCurrentAccessToken()
                 })
-                .then(({ accessToken }) => FBlogin({data: { role , authenticationToken: accessToken }}))
-                .then((r) => {
-                  dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
-                  return getUserData()
-                })
-                .then((r) => {
-                  dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                  props.navigation.navigate(Screen.LandingPage)
-                })
-                .catch(err => console.log(err))
+                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role', "Player"), authenticationToken: accessToken } }))
+                  .then((r) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                    return getUserData()
+                  })
+                  .then((r) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                    props.navigation.navigate(Screen.LandingPage)
+                  })
+                  .catch(err => console.log(err))
               }}
-              style={[styles.fb_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1}]}
+              style={[styles.fb_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1 }]}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
@@ -166,11 +172,20 @@ const Login = (props) => {
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
                   console.log(userInfo)
+                  loginWithGoogle({
+                    data: {
+                      "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
+                      "email": userInfo.user.email,
+                      "picture": userInfo.user.photo,
+                      "role": role,
+                      "authenticationToken": userInfo.serverAuthToken
+                    }
+                  })
                 } catch (e) {
                   console.log(e)
                 }
               }}
-              style={[styles.google_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1}]}
+              style={[styles.google_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1 }]}
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>

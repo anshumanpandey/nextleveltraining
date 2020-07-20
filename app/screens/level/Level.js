@@ -7,16 +7,27 @@ import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Level = () => {
+const Level = (props) => {
   const [role, setRole] = useState();
 
   useEffect(() => {
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      AsyncStorage.getItem('role')
+        .then((r) => {
+          console.log(r)
+          if (!r) return
+          setRole(r)
+        })
+    });
+
     AsyncStorage.getItem('role')
       .then((r) => {
         if (!r) return
         setRole(r)
         NavigationService.navigate(Screens.Login)
       })
+
+      return () => focusListener.remove()
   }, [])
 
   return (
