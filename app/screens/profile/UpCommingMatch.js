@@ -14,7 +14,7 @@ const UpComingMatch = (props) => {
   const cb = props.navigation.state.params.cb;
 
 
-  const [, postMatch] = useAxios({
+  const [postMatchReq, postMatch] = useAxios({
     url: '/Users/SaveUpcomingMatch',
     method: 'POST'
   }, { manual: true })
@@ -25,7 +25,11 @@ const UpComingMatch = (props) => {
 
   return (
     <Formik
-      initialValues={{ teamName: '', matchDate: '' }}
+      initialValues={{
+        upcomingMatchID: props.navigation.getParam("Id") || undefined,
+        teamName: props.navigation.getParam("TeamName") || '',
+        matchDate: props.navigation.getParam("MatchDate") || '',
+      }}
       validate={(values) => {
         const errors = {}
 
@@ -48,6 +52,7 @@ const UpComingMatch = (props) => {
         <>
           <View>
             <HeaderClosePlus
+              isLoading={postMatchReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}
             />
@@ -55,7 +60,7 @@ const UpComingMatch = (props) => {
               <Text style={styles.titleText}>Playing Against Team Name</Text>
               <View style={[styles.inputContain, { marginTop: 0 }]}>
                 <TextInput
-                  style={{ textAlign: 'left', padding: Dimension.px10, width: Dimension.px100,fontSize: 15 }}
+                  style={{ textAlign: 'left', padding: Dimension.px10, width: '100%',fontSize: 15 }}
                   onChangeText={handleChange('teamName')}
                   onBlur={handleBlur('teamName')}
                   value={values.teamName}

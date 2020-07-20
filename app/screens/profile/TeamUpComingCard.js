@@ -1,43 +1,52 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, FlatList} from 'react-native';
+import { View, TouchableOpacity, Text, FlatList } from 'react-native';
 import styles from './styles';
-import {Icon} from 'native-base';
-import {Data} from '../home/components/data';
+import { Icon } from 'native-base';
+import Colors from '../../constants/color.js';
+import moment from 'moment';
 
-const TeamUpComingCard = ({title, data, onEditPress}) => {
+const TeamUpComingCard = ({ title, data, onEditPress }) => {
+  console.log(data)
   return (
-    <TouchableOpacity
+    <View
       onPress={() => onEditPress()}
       style={styles.cardContainer}>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          display: 'flex',
-          flexDirection: 'row',
-        }}>
-        <Text style={styles.titleText}>{title}</Text>
-        <Icon
-          type="EvilIcons"
-          name="pencil"
-          style={{color: '#0F2F80', fontSize: 25}}
-        />
-      </View>
-      <View style={{marginTop: data && data.length <= 0 ? 20 : 10, marginRight: 15}}>
+      <TouchableOpacity onPress={() => onEditPress()}>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            display: 'flex',
+            flexDirection: 'row',
+          }}>
+          <Text style={styles.titleText}>{title}</Text>
+          <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_yellow }} />
+        </View>
+      </TouchableOpacity>
+      <View style={{ marginTop: data && data.length <= 0 ? 20 : 10, marginRight: 15 }}>
         <FlatList
           horizontal={false}
           data={data}
           keyExtractor={(item) => item.id}
-          renderItem={({item}) => (
-            <View style={styles.cardContain}>
-              <Text style={[styles.dataText, {paddingBottom: 4}]}>
-                {item.startDate}
-              </Text>
-              <Text style={styles.dataText}>Vs {item.title}</Text>
-            </View>
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => onEditPress(item)}>
+              <View style={styles.cardContain}>
+                <View>
+                  <Text style={[styles.dataText, { paddingBottom: 4 }]}>
+                    {moment(item.MatchDate).format('ll')}
+                  </Text>
+                  <Text style={styles.dataText}>Vs {item.TeamName}</Text>
+                </View>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{ color: Colors.s_blue, fontSize: 25 }}
+                />
+              </View>
+            </TouchableOpacity>
           )}
         />
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 

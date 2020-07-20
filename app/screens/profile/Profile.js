@@ -93,10 +93,11 @@ const Profile = (props) => {
           <TeamUpComingCard
             title={'Upcoming Matches'}
             data={UpcomingMatches}
-            onEditPress={() =>
+            onEditPress={(item) =>
               NavigationService.navigate('UpComingMatch', {
                 title: 'Teams',
                 cb: (upComing) =>{},
+                ...item
               })
             }
           />
