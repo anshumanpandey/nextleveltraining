@@ -1207,7 +1207,7 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
                                 <View style={[styles.inputContainer]}>
                                     <TextInput
                                         editable={false}
-                                        placeholder="File"
+                                        placeholder="Upload Location Picture"
                                         keyboardType="email-address"
                                         onChangeText={handleChange('file')}
                                         onBlur={handleBlur('file')}
