@@ -8,19 +8,30 @@ const Message =(props) =>{
   const [messages, setMessages] = useState([]);
  
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello everyone!',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'Player',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ])
-  }, [])
+  getMessages()
+  }, [getMessages])
+
+
+
+  const getMessages = () => {
+    const config = {
+      url: '/Users/GetMessagesBySenderAndReciever',
+      method: 'POST',
+  }
+      const p = axiosInstance({
+          ...config,
+          data: {
+            "senderID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "recieverID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+      }).then((r) => {
+          if(r.data && r.data.length !== 0){
+            setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+              }
+          })
+
+  }
+
   const customInputToolbar = props => {
     return (
 
@@ -51,7 +62,22 @@ const Message =(props) =>{
     )
   }
   const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+    const config = {
+      url: '/Users/GetLastMessage',
+      method: 'POST',
+  }
+      const p = axiosInstance({
+          ...config,
+          data: {
+            "senderID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "recieverID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+      }).then((r) => {
+          if(r.data && r.data.length !== 0){
+            setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+              }
+          })
+    
   }, [])
  
   return (

@@ -16,6 +16,7 @@ import Home from './screens/home/Home';
 import Search from './screens/search/Search';
 import Booking from './screens/booking/Booking';
 import Message from './screens/message/Message';
+import LastMessage from './screens/message/lastMessages';
 import Profile from './screens/profile/index';
 import EditInput from './screens/profile/EditInput';
 import CreatePostScreen from './screens/createPost/CreatePost';
@@ -198,7 +199,7 @@ const AppMain = () => {
       }),
     }
     tabs.Message = {
-      screen: Message,
+      screen: LastMessage,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
