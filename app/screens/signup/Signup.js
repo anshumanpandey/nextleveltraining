@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, TextInput } from 'react-native'
 import Images from '../../constants/image'
 import styles from './styles.js';
@@ -178,6 +178,7 @@ const Signup = (props) => {
           </View>
           <View style={styles.signup_other_social_view}>
             <TouchableOpacity
+              disabled={signupIsDisabled()}
               onPress={() => {
                 if (!role) return
                 if (Platform.OS === "android") {
@@ -198,7 +199,6 @@ const Signup = (props) => {
                   })
                   .catch(err => console.log(err))
               }}
-              disabled={signupIsDisabled()}
               style={styles.fb_btn_view}
             >
               <Text style={styles.fb_title}>Facebook</Text>
