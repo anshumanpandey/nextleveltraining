@@ -42,7 +42,6 @@ const AddTeam = (props) => {
       innerRef={(r) => formikRef.current = r}
       initialValues={{
         type: props.navigation.state.params.Type || undefined,
-        verified: props.navigation.state.params.Verified || undefined,
       }}
       validate={(values) => {
         const errors = {}
@@ -56,7 +55,6 @@ const AddTeam = (props) => {
         const data = {
           "type": values.type || '',
           "file": values.file || '',
-          "verified": values.verified || false,
         }
         postDbsCertificate({ data })
           .then(r => AsyncStorage.setItem(`DbsCert-file`, JSON.stringify({file: values.file, uploaded: false})))
@@ -118,16 +116,6 @@ const AddTeam = (props) => {
               {values.file && <Image style={{ height: 250, resizeMode: 'contain'}} source={{ uri: values.file?.uri }} />}
               {errors.file && touched.file && <ErrorLabel text={errors.file} />}
 
-              <TouchableOpacity
-                onPress={() => setFieldValue("verified", !values.verified)}
-                style={styles.checkView}>
-                <Icon
-                  name={values.verified ? 'check-square' : 'square'}
-                  type="Feather"
-                  style={styles.checkIcon}
-                />
-                <Text style={styles.checkText}>Verified</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </>
