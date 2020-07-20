@@ -24,7 +24,7 @@ const Header = (props) => {
           onPress={() => props.navigate(screen.CreatePost)}
         >
           <View style={{ flexDirection: 'row' }}>
-            <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: 'white', marginRight: 10 }} />
+            <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: 'black', marginRight: 10 }} />
           </View>
         </TouchableOpacity>}
         {props.customButton && props.customButton()}

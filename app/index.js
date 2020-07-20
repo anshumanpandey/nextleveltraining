@@ -214,8 +214,11 @@ const AppMain = () => {
       }),
     }
   }
+
   const TabNavigator = createBottomTabNavigator(tabs,
     {
+      initialRouteName: hasFullProfile(profile) == true ? 'Home' : 'Profile',
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile'] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

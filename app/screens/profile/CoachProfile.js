@@ -23,6 +23,7 @@ import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import { pickImage } from '../../helpers/ImagePicker';
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
+import hasFullProfile from '../../utils/perType/profileResolver';
 var Color = require('color');
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
@@ -52,10 +53,13 @@ class MultiStep extends Component {
     }
 
     componentDidMount() {
-        this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
-        setTimeout(this.resolveCurrentStep, 1000)
-
         const profile = getGlobalState('profile')
+
+        if (!hasFullProfile(profile)) {
+            this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
+            setTimeout(this.resolveCurrentStep, 1000)
+        }
+
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
