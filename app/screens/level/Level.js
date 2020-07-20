@@ -39,7 +39,7 @@ const Level = (props) => {
       <View style={styles.level_btn_view}>
         <TouchableOpacity
           style={styles.level_btn_player}
-          onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Coach" })}
+          onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Player" })}
         >
           <View style={styles.level_btn_player_view}>
             <Image source={Images.PlayerIcon} style={styles.level_btn_icon_size} />
