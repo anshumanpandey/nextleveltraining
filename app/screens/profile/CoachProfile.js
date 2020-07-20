@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { Component, useState, useEffect, useRef } from 'react'
 import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
 import { CheckBox, Icon } from 'native-base';
 import Header from '../../components/header/Header'
@@ -89,6 +89,129 @@ class MultiStep extends Component {
 
     }
 
+
+    availabiltySaveFunction = () => {
+        const promises = []
+        const config = {
+            url: '/Users/SaveAvailability',
+            method: 'POST',
+        }
+        if (this.state.start_sunday && this.state.end_sunday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Sunday",
+                    "fromTime": this.state.start_sunday,
+                    "toTime": this.state.end_sunday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (this.state.start_monday && this.state.end_monday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Monday",
+                    "fromTime": this.state.start_monday,
+                    "toTime": this.state.end_monday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (this.state.start_wednesday && this.state.end_wednesday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Wednesday",
+                    "fromTime": this.state.start_wednesday,
+                    "toTime": this.state.end_wednesday
+                }
+
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (this.state.start_tuesday && this.state.end_tuesday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Tuesday",
+                    "fromTime": this.state.start_tuesday,
+                    "toTime": this.state.end_tuesday
+                }
+
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+
+        }
+
+        if (this.state.start_thursday && this.state.end_thursday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Thursday",
+                    "fromTime": this.state.start_thursday,
+                    "toTime": this.state.end_thursday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (this.state.start_friday && this.state.end_friday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Friday",
+                    "fromTime": this.state.start_friday,
+                    "toTime": this.state.end_friday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (this.state.start_saturday && this.state.end_saturday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Saturday",
+                    "fromTime": this.state.start_saturday,
+                    "toTime": this.state.end_saturday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        Promise.all(promises)
+            .then(() => axiosInstance({ url: '/Users/GetUser' }))
+            .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                props.navigation.navigate(Screen.LandingPage)
+            })
+    }
+
     setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
     setTimeFor = (key, date) => this.setState({ [key]: date }, (c) => console.log(c))
 
@@ -129,132 +252,23 @@ class MultiStep extends Component {
                 <Header
                     toggleDrawer={this.props.navigation.toggleDrawer}
                     hideCreatePost={true}
-                    customButton={() => {
+                    customButton={this.state.selectedSegmentIndex != 0 ? () => {
                         return <Text
                             onPress={() => {
-                                const promises = []
-                                const config = {
-                                    url: '/Users/SaveAvailability',
-                                    method: 'POST',
+                                if (this.state.selectedSegmentIndex == 1){
+                                    this.state.bankSubmitFn()
                                 }
-                                if (this.state.start_sunday && this.state.end_sunday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Sunday",
-                                            "fromTime": this.state.start_sunday,
-                                            "toTime": this.state.end_sunday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
+                                if (this.state.selectedSegmentIndex == 2){
+                                    console.log('savinf vailabilty')
+                                    this.availabiltySaveFunction();
                                 }
-
-                                if (this.state.start_monday && this.state.end_monday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Monday",
-                                            "fromTime": this.state.start_monday,
-                                            "toTime": this.state.end_monday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
+                                if (this.state.selectedSegmentIndex == 3){
+                                    this.state.traininLocationSubmitFn()
                                 }
-
-                                if (this.state.start_wednesday && this.state.end_wednesday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Wednesday",
-                                            "fromTime": this.state.start_wednesday,
-                                            "toTime": this.state.end_wednesday
-                                        }
-
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
-                                }
-
-                                if (this.state.start_tuesday && this.state.end_tuesday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Tuesday",
-                                            "fromTime": this.state.start_tuesday,
-                                            "toTime": this.state.end_tuesday
-                                        }
-
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
-
-                                }
-
-                                if (this.state.start_thursday && this.state.end_thursday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Thursday",
-                                            "fromTime": this.state.start_thursday,
-                                            "toTime": this.state.end_thursday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
-                                }
-
-                                if (this.state.start_friday && this.state.end_friday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Friday",
-                                            "fromTime": this.state.start_friday,
-                                            "toTime": this.state.end_friday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
-                                }
-
-                                if (this.state.start_saturday && this.state.end_saturday) {
-                                    const p = axiosInstance({
-                                        ...config,
-                                        data: {
-                                            "day": "Saturday",
-                                            "fromTime": this.state.start_saturday,
-                                            "toTime": this.state.end_saturday
-                                        }
-                                    })
-                                        .then((r) => {
-                                            console.log(r.data)
-                                        })
-                                    promises.push(p)
-                                }
-
-                                Promise.all(promises)
-                                    .then(() => axiosInstance({ url: '/Users/GetUser' }))
-                                    .then((r) => {
-                                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                                        props.navigation.navigate(Screen.LandingPage)
-                                    })
 
                             }}
                             style={{ color: 'white', fontSize: 18 }}>Save</Text>
-                    }}
+                    }: undefined}
                 />
                 {this.containerView()}
             </View>
@@ -273,7 +287,7 @@ class MultiStep extends Component {
     }
     //bank account
     bankAccount() {
-        return (<BankAccountForm />)
+        return (<BankAccountForm setSubmitFn={(fn) => this.setState({ bankSubmitFn: fn })} />)
     }
 
     //travel
@@ -491,7 +505,7 @@ class MultiStep extends Component {
 
     //tracking location
     trackingLocation() {
-        return (<TrainingLocationFrom />)
+        return (<TrainingLocationFrom setSubmitFn={(fn) => this.setState({ traininLocationSubmitFn: fn })} />)
     }
 
 
@@ -976,8 +990,8 @@ const PostCodeListItem = ({ isSelected, value, cb }) => {
 }
 
 
-const TrainingLocationFrom = () => {
-    const [showModal, setShowModal] = useState(false)
+const TrainingLocationFrom = ({ setSubmitFn }) => {
+    const formikRef = useRef()
     const [currentLocation, setCurrentLocation] = useState()
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, doPost] = useAxios({
@@ -989,9 +1003,14 @@ const TrainingLocationFrom = () => {
         url: '/Users/GetUser',
     }, { manual: true })
 
+    useEffect(() => {
+        setSubmitFn(formikRef.current.submitForm)
+    },[])
+
     return (
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1 }}>
             <Formik
+                innerRef={(r) => formikRef.current = r}
                 initialValues={{ locationName: '', address: '', file: null }}
                 validate={(values) => {
                     const errors = {}
@@ -1036,47 +1055,47 @@ const TrainingLocationFrom = () => {
                             </View>
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
-                                <GooglePlacesAutocomplete
-                                    placeholder={'Search location address'}
-                                    listViewDisplayed='true'
-                                    getDefaultValue={() => ''}
-                                    fetchDetails={true}
-                                    GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
-                                    debounce={300}
-                                    styles={{
-                                        container: {
-                                            minHeight: 45,
-                                        },
-                                        listView: {
-                                            position: 'absolute',
-                                            backgroundColor: 'white',
-                                            zIndex: 10,
-                                            top: 50
-                                        },
-                                        textInputContainer: {
-                                            backgroundColor: 'white',
-                                            borderTopWidth: 0,
-                                            borderBottomWidth: 0.8,
-                                            borderBottomColor: "lightgrey"
-                                        },
-                                        textInput: {
-                                            borderWidth: 0,
-                                            paddingLeft: 0,
-                                        }
-                                    }}
-                                    onPress={(data, details = null) => {
-                                        setCurrentLocation({
-                                            latitude: details.geometry.location.lat,
-                                            longitude: details.geometry.location.lng,
-                                        })
-                                        setFieldValue("address", data.description)
-                                    }}
-                                    query={{
-                                        key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',
-                                        language: 'en',
-                                        components: 'country:gbr',
-                                    }}
-                                />
+                            <GooglePlacesAutocomplete
+                                placeholder={'Search location address'}
+                                listViewDisplayed='true'
+                                getDefaultValue={() => ''}
+                                fetchDetails={true}
+                                GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
+                                debounce={300}
+                                styles={{
+                                    container: {
+                                        minHeight: 45,
+                                    },
+                                    listView: {
+                                        position: 'absolute',
+                                        backgroundColor: 'white',
+                                        zIndex: 10,
+                                        top: 50
+                                    },
+                                    textInputContainer: {
+                                        backgroundColor: 'white',
+                                        borderTopWidth: 0,
+                                        borderBottomWidth: 0.8,
+                                        borderBottomColor: "lightgrey"
+                                    },
+                                    textInput: {
+                                        borderWidth: 0,
+                                        paddingLeft: 0,
+                                    }
+                                }}
+                                onPress={(data, details = null) => {
+                                    setCurrentLocation({
+                                        latitude: details.geometry.location.lat,
+                                        longitude: details.geometry.location.lng,
+                                    })
+                                    setFieldValue("address", data.description)
+                                }}
+                                query={{
+                                    key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',
+                                    language: 'en',
+                                    components: 'country:gbr',
+                                }}
+                            />
                             {currentLocation && (
                                 <View style={{ borderWidth: 1, height: 200 }}>
                                     <MapView
@@ -1127,10 +1146,6 @@ const TrainingLocationFrom = () => {
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
                             {errors.file && touched.file && <ErrorLabel text={errors.file} />}
-
-                            <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5) }]}>
-                                <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
-                            </TouchableOpacity>
                         </View>
                     </>
                 )}
@@ -1139,8 +1154,9 @@ const TrainingLocationFrom = () => {
     );
 }
 
-const BankAccountForm = () => {
+const BankAccountForm = ({ setSubmitFn }) => {
     const [showModal, setShowModal] = useState(false)
+    const formikRef = useRef()
     const [profile] = useGlobalState("profile")
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveBankAccount',
@@ -1151,10 +1167,15 @@ const BankAccountForm = () => {
         url: '/Users/GetUser',
     }, { manual: true })
 
+    useEffect(() => {
+        setSubmitFn(formikRef.current.submitForm)
+    },[])
+
     return (
         <>
             <ScrollView>
                 <Formik
+                    innerRef={(r) => formikRef.current = r}
                     initialValues={{
                         bankName: profile?.BankAccount?.BankName || '',
                         holderName: profile?.BankAccount?.AccountName || '',
@@ -1249,10 +1270,6 @@ const BankAccountForm = () => {
                                     />
                                 </View>
                                 {errors.accountNumber && touched.accountNumber && <ErrorLabel text={errors.accountNumber} />}
-
-                                <TouchableOpacity onPress={handleSubmit} style={[styles.buttonSave, loading && { backgroundColor: Color('rgb(255, 255, 255)').alpha(0.5) }]}>
-                                    <Text style={{ color: "white", fontSize: 16 }}>Save</Text>
-                                </TouchableOpacity>
                             </View>
                             <Modal
                                 onBackdropPress={() => setShowModal(false)}
