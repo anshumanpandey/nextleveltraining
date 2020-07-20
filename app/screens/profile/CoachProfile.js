@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect, useRef } from 'react'
-import { View, StatusBar, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
-import { CheckBox, Icon } from 'native-base';
+import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
+import { CheckBox, Icon, Spinner } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
 import Images from "../../constants/image";
@@ -52,8 +52,10 @@ class MultiStep extends Component {
     }
 
     componentDidMount() {
-        const profile = getGlobalState('profile')
+        this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
+        setTimeout(this.resolveCurrentStep, 1000)
 
+        const profile = getGlobalState('profile')
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
@@ -87,6 +89,28 @@ class MultiStep extends Component {
 
         }
 
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener
+        this.focusListener.remove();
+    }
+
+    resolveCurrentStep = () => {
+        const profile = getGlobalState('profile')
+        if (this.stepOneIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 1 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
+        }
+        if (this.stepTwoIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 2 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
+        }
+
+        if (this.stepFourIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 4 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 4 })
+        }
     }
 
 
@@ -204,12 +228,28 @@ class MultiStep extends Component {
             promises.push(p)
         }
 
-        Promise.all(promises)
+        return Promise.all(promises)
             .then(() => axiosInstance({ url: '/Users/GetUser' }))
             .then((r) => {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                props.navigation.navigate(Screen.LandingPage)
             })
+    }
+
+    stepOneIsComplete = (profile) => {
+        return profile.AboutUs != null &&
+            profile.Accomplishment != null &&
+            profile.Experiences != null && profile.Experiences.length != 0 &&
+            profile.DBSCeritificate != null &&
+            profile.VerificationDocument != null &&
+            profile.Rate != 0
+    }
+
+    stepTwoIsComplete = (profile) => {
+        return profile.BankAccount != null
+    }
+
+    stepFourIsComplete = (profile) => {
+        return profile.TrainingLocations != null && profile.TrainingLocations.length != 0
     }
 
     setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
@@ -253,22 +293,36 @@ class MultiStep extends Component {
                     toggleDrawer={this.props.navigation.toggleDrawer}
                     hideCreatePost={true}
                     customButton={this.state.selectedSegmentIndex != 0 ? () => {
-                        return <Text
-                            onPress={() => {
-                                if (this.state.selectedSegmentIndex == 1){
-                                    this.state.bankSubmitFn()
-                                }
-                                if (this.state.selectedSegmentIndex == 2){
-                                    console.log('savinf vailabilty')
-                                    this.availabiltySaveFunction();
-                                }
-                                if (this.state.selectedSegmentIndex == 3){
-                                    this.state.traininLocationSubmitFn()
-                                }
+                        console.log('saving', this.state.saving)
+                        return (
+                            <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
+                                {this.state.saving && <Spinner size={28} color="white" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
+                                <TouchableOpacity
+                                    disabled={this.state.saving == true}
+                                    onPress={() => {
 
-                            }}
-                            style={{ color: 'white', fontSize: 18 }}>Save</Text>
-                    }: undefined}
+                                    if (this.state.selectedSegmentIndex == 1) {
+                                        this.setState({ saving: true })
+                                        this.state.bankSubmitFn()
+                                    }
+                                    if (this.state.selectedSegmentIndex == 2) {
+                                        this.setState({ saving: true })
+                                        this.availabiltySaveFunction()
+                                            .then(() => {
+                                                this.setState({ saving: false })
+                                            })
+                                    }
+                                    if (this.state.selectedSegmentIndex == 3) {
+                                        this.setState({ saving: true })
+                                        this.state.traininLocationSubmitFn()
+                                    }
+
+                                }}>
+                                    <Text style={{ color: 'white', opacity: this.state.saving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
+                                </TouchableOpacity>
+                            </View>
+                        );
+                    } : undefined}
                 />
                 {this.containerView()}
             </View>
@@ -299,8 +353,6 @@ class MultiStep extends Component {
 
     about() {
         const profile = getGlobalState('profile')
-
-        console.log(this.state.profilePic)
 
         return (
             <ScrollView>
@@ -1005,10 +1057,10 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
 
     useEffect(() => {
         setSubmitFn(formikRef.current.submitForm)
-    },[])
+    }, [])
 
     return (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1 }}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
             <Formik
                 innerRef={(r) => formikRef.current = r}
                 initialValues={{ locationName: '', address: '', file: null }}
@@ -1169,7 +1221,7 @@ const BankAccountForm = ({ setSubmitFn }) => {
 
     useEffect(() => {
         setSubmitFn(formikRef.current.submitForm)
-    },[])
+    }, [])
 
     return (
         <>

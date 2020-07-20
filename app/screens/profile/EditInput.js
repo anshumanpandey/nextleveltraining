@@ -65,7 +65,7 @@ const EditInput = (props) => {
           <TextInput
             value={values.toString()}
             onChangeText={(text) => setValues(text)}
-            style={{height: Dimension.px200, textAlign: 'left'}}
+            style={{height: Dimension.px200, width: '100%',textAlign: 'left' }}
             placeholder="Type here..."
             numberOfLines={15}
             textAlignVertical={'top'}
