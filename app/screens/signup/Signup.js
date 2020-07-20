@@ -31,7 +31,6 @@ const Signup = (props) => {
       <View style={styles.signup_container}>
         <View style={styles.signup_logo_view}>
           <Image source={Images.Mlogo} />
-          <Text style={styles.signup_logo_text}>Sign Up as {props.navigation.getParam('role', "Player")}</Text>
         </View>
 
         <Formik
