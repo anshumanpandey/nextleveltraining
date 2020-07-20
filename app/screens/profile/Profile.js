@@ -40,7 +40,7 @@ const Profile = (props) => {
                 }}
                 style={{position: 'relative'}}>
                 <Image
-                  source={profilePic ? { uri: profilePic.uri } : Images.MessiPlayer}
+                  source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                   style={styles.userImg}
                 />
                 <View style={styles.editView}>
