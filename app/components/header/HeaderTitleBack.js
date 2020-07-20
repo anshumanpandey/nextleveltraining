@@ -13,6 +13,7 @@ const HeaderTitleBack = ({title}) => {
           <Icon
             name="keyboard-arrow-left"
             type="MaterialIcons"
+            color="black"
             style={styles.header_menu_icon}
           />
         </TouchableOpacity>

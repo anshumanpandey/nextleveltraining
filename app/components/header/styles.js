@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
   },
   header_menu_icon: {
     fontSize: 35,
-    color: 'white',
   },
   profile_user: {
     width: 45,

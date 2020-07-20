@@ -12,15 +12,16 @@ const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading}) => {
           <Icon
             name="close"
             type="MaterialIcons"
+            color="black"
             style={styles.header_menu_icon}
           />
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
           {isSaveButton ? (
             <>
-            {isLoading && <Spinner color="white" style={{ marginRight: '10%'}} />}
+            {isLoading && <Spinner color="black" style={{ marginRight: '10%'}} />}
             <TouchableOpacity onPress={() => saveOnPress()}>
-              <Text style={{ fontSize: 18, color: 'white', opacity: isLoading ? 0.5 : 1,fontWeight: 'bold'}}>Save</Text>
+              <Text style={{ fontSize: 18, color: 'black', opacity: isLoading ? 0.5 : 1,fontWeight: 'bold'}}>Save</Text>
             </TouchableOpacity>
             </>
           ) : (

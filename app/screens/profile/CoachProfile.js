@@ -295,7 +295,7 @@ class MultiStep extends Component {
                     customButton={this.state.selectedSegmentIndex != 0 ? () => {
                         return (
                             <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
-                                {this.state.saving && <Spinner size={28} color="white" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
+                                {this.state.saving && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
                                 <TouchableOpacity
                                     disabled={this.state.saving == true}
                                     onPress={() => {
@@ -322,7 +322,7 @@ class MultiStep extends Component {
                                         }
 
                                     }}>
-                                    <Text style={{ color: 'white', opacity: this.state.saving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
+                                    <Text style={{ color: 'black', opacity: this.state.saving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
                                 </TouchableOpacity>
                             </View>
                         );

@@ -17,7 +17,7 @@ const Header = (props) => {
         <TouchableOpacity
           onPress={() => props.toggleDrawer()}
         >
-          <Icon name="menu" type="Entypo" style={styles.header_menu_icon} />
+          <Icon name="menu" type="Entypo" style={styles.header_menu_icon} color="black" />
         </TouchableOpacity>
 
         {props.hideCreatePost != true && hasFullProfile(profile) &&<TouchableOpacity
