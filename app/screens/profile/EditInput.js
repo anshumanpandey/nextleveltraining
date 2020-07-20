@@ -61,7 +61,7 @@ const EditInput = (props) => {
       />
       <View style={{padding: 15}}>
         <Text style={styles.titleText}>{title}</Text>
-        <View style={styles.inputContain}>
+        <View style={[styles.inputContain, { borderBottomWidth: 0}]}>
           <TextInput
             value={values.toString()}
             onChangeText={(text) => setValues(text)}

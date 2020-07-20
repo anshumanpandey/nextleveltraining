@@ -24,6 +24,7 @@ const Images ={
     HelpIcon:require('../assets/images/help-icon-icon2x.png'),
     LogoutIcon:require('../assets/images/logout-icon-2x.png'),
     Filter:require('../assets/images/filter.jpg'),
+    PlayerPlaceholder:require('../assets/images/player-placeholder.jpeg'),
 
     //other iamges
     KobePlayer:require('../assets/images/kobe.jpg'),

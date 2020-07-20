@@ -286,6 +286,8 @@ class MultiStep extends Component {
     about() {
         const profile = getGlobalState('profile')
 
+        console.log(this.state.profilePic)
+
         return (
             <ScrollView>
                 <View style={styles.containerAbout}>
@@ -297,7 +299,7 @@ class MultiStep extends Component {
                         }}
                         style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                         <Image
-                            source={this.state.profilePic ? { uri: this.state.profilePic.uri } : 'https://cdn5.vectorstock.com/i/1000x1000/06/34/soft-abstract-swoosh-wave-lines-border-layout-grey-vector-22850634.jpg'}
+                            source={this.state.profilePic ? { uri: this.state.profilePic.uri } : Images.PlayerPlaceholder}
                             style={styles.profileImage}
                         />
                         <View style={{
@@ -911,7 +913,7 @@ const TravelForm = () => {
                             onBackdropPress={() => setShowModal(false)}
                             isVisible={showModal}
                             style={styles.modal}>
-                            <View style={{ backgroundColor: 'white',height: '100%' }}>
+                            <View style={{ backgroundColor: 'white', height: '100%' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
                                         console.log('callked')
@@ -955,9 +957,9 @@ const TravelForm = () => {
     );
 }
 
-const PostCodeListItem = ({ isSelected, value, cb}) => {
+const PostCodeListItem = ({ isSelected, value, cb }) => {
     return (
-        <View style={{ height: '100%',justifyContent: 'space-between', width: '95%', alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
+        <View style={{ height: '100%', justifyContent: 'space-between', width: '95%', alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
             <TouchableOpacity
                 style={{ justifyContent: 'flex-start', width: '95%' }}
                 onPress={cb}>
@@ -976,10 +978,7 @@ const PostCodeListItem = ({ isSelected, value, cb}) => {
 
 const TrainingLocationFrom = () => {
     const [showModal, setShowModal] = useState(false)
-    const [currentLocation, setCurrentLocation] = useState({
-        latitude: 37.78825,
-        longitude: -122.4324,
-    })
+    const [currentLocation, setCurrentLocation] = useState()
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveTrainingLocation',
@@ -991,7 +990,7 @@ const TrainingLocationFrom = () => {
     }, { manual: true })
 
     return (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexg: 1 }}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1 }}>
             <Formik
                 initialValues={{ locationName: '', address: '', file: null }}
                 validate={(values) => {
@@ -1037,18 +1036,32 @@ const TrainingLocationFrom = () => {
                             </View>
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
-                            <View style={{ height: 60 }}>
                                 <GooglePlacesAutocomplete
-                                    placeholder={'Search'}
+                                    placeholder={'Search location address'}
                                     listViewDisplayed='true'
                                     getDefaultValue={() => ''}
                                     fetchDetails={true}
                                     GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
                                     debounce={300}
                                     styles={{
+                                        container: {
+                                            minHeight: 45,
+                                        },
                                         listView: {
                                             position: 'absolute',
-                                            backgroundColor: 'white'
+                                            backgroundColor: 'white',
+                                            zIndex: 10,
+                                            top: 50
+                                        },
+                                        textInputContainer: {
+                                            backgroundColor: 'white',
+                                            borderTopWidth: 0,
+                                            borderBottomWidth: 0.8,
+                                            borderBottomColor: "lightgrey"
+                                        },
+                                        textInput: {
+                                            borderWidth: 0,
+                                            paddingLeft: 0,
                                         }
                                     }}
                                     onPress={(data, details = null) => {
@@ -1064,30 +1077,32 @@ const TrainingLocationFrom = () => {
                                         components: 'country:gbr',
                                     }}
                                 />
-                            </View>
-                            <View style={{ borderWidth: 1, height: 200 }}>
-                                <MapView
-                                    style={{ flex: 1 }}
-                                    initialRegion={{
-                                        ...currentLocation,
-                                        latitudeDelta: 0.0922,
-                                        longitudeDelta: 0.0421,
-                                    }}
-                                    camera={{
-                                        center: currentLocation,
-                                        heading: 0,
-                                        pitch: 10,
-                                        zoom: 15,
-                                        altitude: 10,
-                                    }}
-                                >
-                                    <Marker
-                                        coordinate={currentLocation}
-                                        title={'Current Location'}
-                                        description={"werw"}
-                                    />
-                                </MapView>
-                            </View>
+                            {currentLocation && (
+                                <View style={{ borderWidth: 1, height: 200 }}>
+                                    <MapView
+                                        style={{ flex: 1 }}
+                                        initialRegion={{
+                                            latitude: currentLocation.latitude ? currentLocation.latitude : 37.78825,
+                                            longitude: currentLocation.longitude ? currentLocation.longitude : -122.4324,
+                                            latitudeDelta: 0.0922,
+                                            longitudeDelta: 0.0421,
+                                        }}
+                                        camera={{
+                                            center: currentLocation,
+                                            heading: 0,
+                                            pitch: 10,
+                                            zoom: 15,
+                                            altitude: 10,
+                                        }}
+                                    >
+                                        <Marker
+                                            coordinate={currentLocation}
+                                            title={'Current Location'}
+                                            description={"werw"}
+                                        />
+                                    </MapView>
+                                </View>
+                            )}
 
                             {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
@@ -1099,10 +1114,9 @@ const TrainingLocationFrom = () => {
                                         setFieldValue('file', file)
                                     })
                             }}>
-                                <View style={styles.inputContain}>
+                                <View style={[styles.inputContainer]}>
                                     <TextInput
                                         editable={false}
-                                        style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
                                         placeholder="File"
                                         keyboardType="email-address"
                                         onChangeText={handleChange('file')}
@@ -1193,15 +1207,6 @@ const BankAccountForm = () => {
                                     />
                                 </View>
                                 {errors.bankName && touched.bankName && <ErrorLabel text={errors.bankName} />}
-                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                    <TextInput
-                                        placeholder={"Account Holder Name"}
-                                        onChangeText={handleChange('holderName')}
-                                        onBlur={handleBlur('holderName')}
-                                        value={values.holderName}
-                                    />
-                                </View>
-                                {errors.holderName && touched.holderName && <ErrorLabel text={errors.holderName} />}
 
                                 <TouchableOpacity onPress={() => setShowModal(true)}>
                                     <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
@@ -1214,6 +1219,16 @@ const BankAccountForm = () => {
                                     </View>
                                 </TouchableOpacity>
                                 {errors.role && touched.role && <ErrorLabel text={errors.role} />}
+
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                    <TextInput
+                                        placeholder={"Account Holder Name"}
+                                        onChangeText={handleChange('holderName')}
+                                        onBlur={handleBlur('holderName')}
+                                        value={values.holderName}
+                                    />
+                                </View>
+                                {errors.holderName && touched.holderName && <ErrorLabel text={errors.holderName} />}
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
