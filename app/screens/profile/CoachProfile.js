@@ -293,7 +293,6 @@ class MultiStep extends Component {
                     toggleDrawer={this.props.navigation.toggleDrawer}
                     hideCreatePost={true}
                     customButton={this.state.selectedSegmentIndex != 0 ? () => {
-                        console.log('saving', this.state.saving)
                         return (
                             <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
                                 {this.state.saving && <Spinner size={28} color="white" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
@@ -301,23 +300,28 @@ class MultiStep extends Component {
                                     disabled={this.state.saving == true}
                                     onPress={() => {
 
-                                    if (this.state.selectedSegmentIndex == 1) {
-                                        this.setState({ saving: true })
-                                        this.state.bankSubmitFn()
-                                    }
-                                    if (this.state.selectedSegmentIndex == 2) {
-                                        this.setState({ saving: true })
-                                        this.availabiltySaveFunction()
-                                            .then(() => {
-                                                this.setState({ saving: false })
-                                            })
-                                    }
-                                    if (this.state.selectedSegmentIndex == 3) {
-                                        this.setState({ saving: true })
-                                        this.state.traininLocationSubmitFn()
-                                    }
+                                        if (this.state.selectedSegmentIndex == 1) {
+                                            this.setState({ saving: true })
+                                            this.state.bankSubmitFn()
+                                        }
+                                        if (this.state.selectedSegmentIndex == 2) {
+                                            this.setState({ saving: true })
+                                            this.availabiltySaveFunction()
+                                                .then(() => {
+                                                    this.setState({ saving: false })
+                                                })
+                                        }
+                                        if (this.state.selectedSegmentIndex == 3) {
+                                            this.setState({ saving: true })
+                                            this.state.traininLocationSubmitFn()
+                                        }
 
-                                }}>
+                                        if (this.state.selectedSegmentIndex == 4) {
+                                            this.setState({ saving: true })
+                                            this.state.travelSubmitFn()
+                                        }
+
+                                    }}>
                                     <Text style={{ color: 'white', opacity: this.state.saving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
                                 </TouchableOpacity>
                             </View>
@@ -347,7 +351,7 @@ class MultiStep extends Component {
     //travel
     //bank account
     travel() {
-        return (<TravelForm />)
+        return (<TravelForm setSubmitFn={(fn) => this.setState({ travelSubmitFn: fn })} />)
     }
 
 
@@ -908,15 +912,30 @@ const layoutProvider = new LayoutProvider(
         dim.height = 35;
     }
 );
-const TravelForm = () => {
+const TravelForm = ({ setSubmitFn }) => {
+    const formikRef = useRef()
     const [dataProvider, setDataProvider] = useState()
     const [showModal, setShowModal] = useState(false)
     const [searcher, setSearcher] = useState(null)
+    const [profile] = useGlobalState('profile')
     const [valuesToShow, setValuesToShow] = useState([])
+
+    const [, doPost] = useAxios({
+        url: '/Users/SaveTravelPostCode',
+        method: 'POST'
+    }, { manual: true })
+
+    const [getUserReq, getUserData] = useAxios({
+        url: '/Users/GetUser',
+    }, { manual: true })
 
     const [{ data, loading, error }] = useAxios({
         url: '/Users/GetPostCodes',
     })
+
+    useEffect(() => {
+        setSubmitFn(formikRef.current?.submitForm)
+    }, [])
 
     useEffect(() => {
         if (!data) return
@@ -926,14 +945,11 @@ const TravelForm = () => {
         setSearcher(new FuzzySearch(codes, ['postCode']))
     }, [loading]);
 
-    if (loading) {
-        return <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>;
-    }
-
     return (
         <View style={styles.containerCommon}>
             <Formik
-                initialValues={{ codes: [] }}
+                innerRef={(r) => formikRef.current = r}
+                initialValues={{ codes: profile?.TravelPostCodes?.map(t => t.PostCode) }}
                 validate={(values) => {
                     const errors = {}
 
@@ -942,80 +958,79 @@ const TravelForm = () => {
                     return errors
                 }}
                 onSubmit={values => {
-                    login({ data: values })
-                        .then((r) => {
-                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
-                            return getUserData()
-                        })
+                    doPost({ data: values.codes.map(t => ({ postCode: t })) })
+                        .then(r => getUserData())
                         .then((r) => {
                             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                            props.navigation.navigate(Screen.LandingPage)
+                            NavigationService.goBack()
                         })
                         .catch((r) => console.log(r))
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
                     <>
-                        <View>
-                            <Text style={{ fontSize: 12, color: "blue" }}>Travel Details</Text>
-                        </View>
-                        <View>
-                            <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your travel details below</Text>
-                        </View>
-                        <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                            <TextInput placeholder={"Search"} />
-                        </View>
-                        <TouchableOpacity onPress={() => setShowModal(true)}>
-                            <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey", padding: '5%' }}>
-                                <Text style={{ color: 'gray' }}>Select post code...</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <View>
-                            {values.codes.map(c => {
-                                return (<Text>{c.postCode ? c.postCode : c}</Text>);
-                            })}
-                        </View>
-                        <Modal
-                            onBackdropPress={() => setShowModal(false)}
-                            isVisible={showModal}
-                            style={styles.modal}>
-                            <View style={{ backgroundColor: 'white', height: '100%' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
-                                        console.log('callked')
-                                        setValuesToShow(searcher.search(text));
-                                    }} />
-                                    <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
+                        {loading && <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>}
+                        {!loading && (
+                            <>
+                                <View>
+                                    <Text style={{ fontSize: 12, color: "blue" }}>Travel Details</Text>
                                 </View>
+                                <View>
+                                    <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your travel details below</Text>
+                                </View>
+                                <TouchableOpacity onPress={() => setShowModal(true)}>
+                                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey", paddingVertical: '5%' }}>
+                                        <Text style={{ color: 'gray' }}>Select post code...</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <View>
+                                    {values.codes.map(c => {
+                                        return (<Text style={{ fontSize: 18 }}>{c.postCode ? c.postCode : c}</Text>);
+                                    })}
+                                </View>
+                                <Modal
+                                    onBackdropPress={() => setShowModal(false)}
+                                    isVisible={showModal}
+                                    style={styles.modal}>
+                                    <View style={{ backgroundColor: 'white', height: '100%' }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
+                                                console.log('callked')
+                                                setValuesToShow(searcher.search(text));
+                                            }} />
+                                            <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
+                                        </View>
 
-                                <FieldArray
-                                    name="codes"
-                                    render={arrayHelpers => {
-                                        if (!dataProvider) return <></>
-                                        return (
-                                            <RecyclerListView
-                                                extendedState={values.codes}
-                                                layoutProvider={layoutProvider}
-                                                dataProvider={dataProvider}
-                                                rowRenderer={(_, item, index, state) => {
-                                                    const fn = () => {
-                                                        const found = values.codes.findIndex(i => item.postCode == i)
+                                        <FieldArray
+                                            name="codes"
+                                            render={arrayHelpers => {
+                                                if (!dataProvider) return <></>
+                                                return (
+                                                    <RecyclerListView
+                                                        extendedState={values.codes}
+                                                        layoutProvider={layoutProvider}
+                                                        dataProvider={dataProvider}
+                                                        rowRenderer={(_, item, index, state) => {
+                                                            const fn = () => {
+                                                                const found = values.codes.findIndex(i => item.postCode == i)
 
-                                                        if (found == -1) {
-                                                            arrayHelpers.insert(index, item.postCode)
-                                                        } else {
-                                                            arrayHelpers.remove(found)
-                                                        }
-                                                    }
-                                                    return <PostCodeListItem isSelected={values.codes.includes(item.postCode)} value={item.postCode} cb={fn} />;
-                                                }}
-                                            />
-                                        );
-                                    }}
+                                                                if (found == -1) {
+                                                                    arrayHelpers.insert(index, item.postCode)
+                                                                } else {
+                                                                    arrayHelpers.remove(found)
+                                                                }
+                                                            }
+                                                            return <PostCodeListItem isSelected={values.codes.includes(item.postCode)} value={item.postCode} cb={fn} />;
+                                                        }}
+                                                    />
+                                                );
+                                            }}
 
-                                />
-                            </View>
-                        </Modal>
+                                        />
+                                    </View>
+                                </Modal>
+                            </>
+                        )}
                     </>
                 )}
             </Formik>
