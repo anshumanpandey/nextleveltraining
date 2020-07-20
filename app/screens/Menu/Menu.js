@@ -78,7 +78,7 @@ const Menu = (props) => {
     const [profile] = useGlobalState('profile')
 
     if (hasFullProfile(profile) && !menulist.find(i => i.title == 'Help')) {
-        menulist.push(...fullProfileMenu)
+        menulist.unshift(...fullProfileMenu)
     }
 
     useEffect(() => {
