@@ -853,7 +853,7 @@ class MultiStep extends Component {
                                     this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * index })
                                 }} >
                                 <Text style={{
-                                    color: this.state.selectedSegmentIndex == index ? '#6644bb' : TEXT_COLOR,
+                                    color: this.state.selectedSegmentIndex == index ? Colors.s_blue : TEXT_COLOR,
                                     textAlign: 'center'
                                 }}>{item}</Text>
                                 {this.state.selectedSegmentIndex == index && <View style={{
@@ -861,7 +861,7 @@ class MultiStep extends Component {
                                     height: 3,
                                     bottom: 0,
                                     width: '100%',
-                                    backgroundColor: '#6644dd'
+                                    backgroundColor: Colors.s_blue
                                 }} />}
                             </TouchableOpacity>
                         )
