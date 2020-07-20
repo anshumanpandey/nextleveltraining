@@ -7,9 +7,13 @@ import { Formik } from 'formik';
 import ErrorLabel from '../../components/ErrorLabel';
 import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
+import { LoginManager, AccessToken } from "react-native-fbsdk";
+import { GoogleSignin } from 'react-native-google-signin';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 const Signup = (props) => {
+  const [role, setRole] = useState();
+
   const [{ data, loading, error }, register] = useAxios({
     url: '/Account/Register',
     method: 'POST',
@@ -24,7 +28,30 @@ const Signup = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
-  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading
+  const [googeReq, loginWithGoogle] = useAxios({
+    url: '/Account/GoogleLogin',
+    method: 'POST'
+  }, { manual: true })
+
+  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId: '682593494821-mfc7dg2076o471fsq0v8sktjrqv6g8pn.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      hostedDomain: '', // specifies a hosted domain restriction
+      loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
+      forceConsentPrompt: false, // [Android] if you want to show the authorization prompt at each login.
+      accountName: '', // [Android] specifies an account name on the device that should be used
+      iosClientId: '634112134799-ron6nkiu8tf6vrg1hiuojnuls9l8ddp1.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    });
+    AsyncStorage.getItem('role')
+    .then((r) => {
+      if (!r) return 
+      setRole(r)
+    })
+  }, [])
 
   return (
     <ScrollView style={styles.signup_layout}>
@@ -151,12 +178,48 @@ const Signup = (props) => {
           </View>
           <View style={styles.signup_other_social_view}>
             <TouchableOpacity
+              onPress={() => {
+                if (!role) return
+                if (Platform.OS === "android") {
+                  LoginManager.setLoginBehavior("web_only")
+                }
+                LoginManager.logInWithPermissions(["public_profile", "email"]).then((result) => {
+                  if (result.isCancelled) throw new Error("Login cancelled")
+                  return AccessToken.getCurrentAccessToken()
+                })
+                  .then(({ accessToken }) => FBlogin({ data: { role, authenticationToken: accessToken } }))
+                  .then((r) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                    return getUserData()
+                  })
+                  .then((r) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                    props.navigation.navigate(Screen.LandingPage)
+                  })
+                  .catch(err => console.log(err))
+              }}
               disabled={signupIsDisabled()}
               style={styles.fb_btn_view}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={async () => {
+                try {
+                  await GoogleSignin.hasPlayServices();
+                  const userInfo = await GoogleSignin.signIn();
+                  console.log(userInfo)
+                  loginWithGoogle({ data: {
+                    "name": `${userInfo.givenName} ${userInfo.familyName}`,
+                    "email": userInfo.email,
+                    "picture": userInfo.photo,
+                    "role": role,
+                    "authenticationToken": userInfo.serverAuthToken
+                  }})
+                } catch (e) {
+                  console.log(e)
+                }
+              }}
               disabled={signupIsDisabled()}
               style={styles.google_btn_view}
             >
