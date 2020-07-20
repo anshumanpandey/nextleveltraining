@@ -989,7 +989,7 @@ const TravelForm = ({ setSubmitFn }) => {
                                 </TouchableOpacity>
                                 <View>
                                     {values.codes.map(c => {
-                                        return (<Text style={{ fontSize: 18 }}>{c.postCode ? c.postCode : c}</Text>);
+                                        return (<Text style={{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>{c.postCode ? c.postCode : c}</Text>);
                                     })}
                                 </View>
                                 <Modal
@@ -1000,7 +1000,7 @@ const TravelForm = ({ setSubmitFn }) => {
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
                                                 console.log('callked')
-                                                setValuesToShow(searcher.search(text));
+                                                setDataProvider(dataProviderInstance.cloneWithRows(searcher.search(text)))
                                             }} />
                                             <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
                                         </View>
