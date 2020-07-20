@@ -264,7 +264,7 @@ const AppMain = () => {
     },
     {
       drawerWidth: Dimensions.deviceWidth * 0.6,
-      contentComponent: Menu,
+      contentComponent: hasFullProfile(profile) ? Menu : null,
     },
   );
 
