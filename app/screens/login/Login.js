@@ -181,6 +181,15 @@ const Login = (props) => {
                       "authenticationToken": userInfo.serverAuthCode
                     }
                   })
+                  .then((r) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                    return getUserData()
+                  })
+                  .then((r) => {
+                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                    props.navigation.navigate(Screen.LandingPage)
+                  })
+                  .catch(err => console.log(err))
                 } catch (e) {
                   console.log(e)
                 }
