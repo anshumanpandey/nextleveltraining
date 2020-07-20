@@ -178,7 +178,7 @@ const Login = (props) => {
                       "email": userInfo.user.email,
                       "picture": userInfo.user.photo,
                       "role": role,
-                      "authenticationToken": userInfo.serverAuthToken
+                      "authenticationToken": userInfo.serverAuthCode
                     }
                   })
                 } catch (e) {
