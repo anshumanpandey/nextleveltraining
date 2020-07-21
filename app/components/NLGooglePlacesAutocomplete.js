@@ -33,7 +33,6 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                     },
                     listView: {
                         position: 'absolute',
-                        backgroundColor: 'red',
                         zIndex: 300000,
                     },
                     textInputContainer: {
