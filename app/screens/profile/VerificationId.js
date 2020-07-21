@@ -84,7 +84,7 @@ const AddTeam = (props) => {
                     if (itemValue == 0) return
                     setFieldValue('type', itemValue)
                   }}>
-                  <Picker.Item color='gray' label="Select a role" value={0} />
+                  <Picker.Item color='gray' label="Select ID Type" value={0} />
                   <Picker.Item label="Passport" value="Passport" />
                   <Picker.Item label="License" value="License" />
                   <Picker.Item label="Utility Bill" value="Utility Bill" />
@@ -104,7 +104,7 @@ const AddTeam = (props) => {
                   <TextInput
                     editable={false}
                     style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
-                    placeholder="File"
+                    placeholder="Upload Valid ID"
                     keyboardType="email-address"
                     onChangeText={handleChange('file')}
                     onBlur={handleBlur('file')}

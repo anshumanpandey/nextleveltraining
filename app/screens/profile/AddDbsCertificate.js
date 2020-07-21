@@ -83,7 +83,7 @@ const AddTeam = (props) => {
                     if (itemValue == 0) return
                     setFieldValue('type', itemValue)
                   }}>
-                  <Picker.Item color='gray' label="Select a role" value={0} />
+                  <Picker.Item color='gray' label="Select DBS Certificate Type" value={0} />
                   <Picker.Item label="Basic DBS Check" value="Basic DBS Check" />
                   <Picker.Item label="Standard DBS Check" value="Standard DBS Check" />
                   <Picker.Item label="Standard DBS Check" value="Standard DBS Check" />
@@ -105,7 +105,7 @@ const AddTeam = (props) => {
                   <TextInput
                     editable={false}
                     style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
-                    placeholder="File"
+                    placeholder="Upload DBS Certificate"
                     keyboardType="email-address"
                     onChangeText={handleChange('file')}
                     onBlur={handleBlur('file')}

@@ -119,7 +119,7 @@ const AppMain = () => {
     },
   );
   const tabs = {
-    Profile: {
+  Profile: {
       screen: ProfileStack,
       navigationOptions: () => ({
         tabBarVisible: hasFullProfile(profile),
@@ -132,6 +132,9 @@ const AppMain = () => {
             />
             <Text style={[styles.textTab, { color: tintColor }]}>PROFILE</Text>
           </View>
+        ),
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
         ),
       }),
     },
