@@ -13,7 +13,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
     }, [])
 
     return (
-        <View keyboardShouldPersistTaps="handled" style={{ zIndex: 20, width: '100%'}}>
+        <View style={{ zIndex: 20, height: 100,width: '100%'}}>
             <GooglePlacesAutocomplete
                 style={{ zIndex: 10 }}
                 placeholder={'Search location address'}
@@ -24,7 +24,6 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                 GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
                 debounce={300}
                  loader={true}
-                keyboardShouldPersistTaps="handled"
                 styles={{
                     container: {
                         minHeight: 45,
