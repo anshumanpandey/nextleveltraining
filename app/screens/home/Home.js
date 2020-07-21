@@ -62,6 +62,7 @@ const Home = (props) => {
             time: moment(p.CreatedDate).format(dateFormat),
             description: p.Body,
             comments: p.Comments || [],
+            likes: p.Likes || [],
           }
 
           if (fileString) {

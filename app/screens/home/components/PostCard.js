@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,24 @@ import Images from '../../../constants/image';
 import { Icon } from 'native-base';
 import styles from './styles';
 import Dimension from '../../../constants/dimensions';
+import useAxios from 'axios-hooks'
+import { useGlobalState } from '../../../state/GlobalState';
 
 const PostCard = ({ item, onClickItem, onPressOfComment }) => {
+  const [likes, setLikes] = useState([]);
+  const [profile] = useGlobalState('profile')
+
+  const [{ loading }, postLike] = useAxios({
+    url: '/Users/SaveLikebyPost',
+    method: 'POST',
+  }, { manual: true })
+
   const onClickingItem = (item) => {
     onClickItem(item);
   };
+  useEffect(() => {
+    setLikes(item.likes)
+  }, [])
   return (
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
@@ -42,10 +55,30 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
 
         </View>
         <View style={styles.post_news_comment}>
-          <View style={styles.post_news_like}>
-            <Icon type="FontAwesome" name="thumbs-o-up" style={styles.post_tumb_up} />
-            <Text style={styles.post_like}>Like</Text>
-          </View>
+          <TouchableOpacity
+            disabled={loading}
+            onPress={() => {
+              const data = {
+                "postID": item.id,
+                "userID": profile.Id
+              }
+              postLike({ data })
+                .then((r) => {
+                  console.log(r.data)
+                  setLikes(r.data.Likes)
+                })
+            }}
+          >
+            <View style={styles.post_news_like}>
+              <Icon
+                type="FontAwesome"
+                name="thumbs-o-up"
+                style={styles.post_tumb_up}
+              />
+              {likes.length != 0 && <Text style={styles.post_like}>{likes.length}</Text>}
+              <Text>{' '}Like</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.post_news_like}
             onPress={onPressOfComment}>
