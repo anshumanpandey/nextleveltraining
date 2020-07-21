@@ -13,27 +13,28 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
     }, [])
 
     return (
-        <>
+        <View keyboardShouldPersistTaps="handled" style={{ zIndex: 20, width: '100%'}}>
             <GooglePlacesAutocomplete
                 style={{ zIndex: 10 }}
                 placeholder={'Search location address'}
                 listViewDisplayed='true'
                 getDefaultValue={() => ''}
-                textInputProps={{
-                    value: inputValue,
-                }}
+                value={inputValue}
                 fetchDetails={true}
                 GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
                 debounce={300}
+                 loader={true}
+                keyboardShouldPersistTaps="handled"
                 styles={{
                     container: {
                         minHeight: 45,
+                        zIndex: 999,
+                        overflow: 'visible',
                     },
                     listView: {
                         position: 'absolute',
-                        backgroundColor: 'white',
-                        zIndex: 30,
-                        top: 50
+                        backgroundColor: 'red',
+                        zIndex: 300000,
                     },
                     textInputContainer: {
                         backgroundColor: 'white',
@@ -89,7 +90,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                     </MapView>
                 </View>
             )}
-        </>
+        </View>
     );
 }
 

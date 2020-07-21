@@ -11,6 +11,7 @@ import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screens from '../../utils/screen';
+import Colors from '../../constants/color';
 
 const NLUserDataForm = (props) => {
     const [{ data, loading, error }, register] = useAxios({
@@ -45,11 +46,16 @@ const NLUserDataForm = (props) => {
                 if (!values.address) errors.address = 'Required'
                 if (!values.emailID) errors.emailID = 'Required'
                 if (!values.mobileNo) errors.mobileNo = 'Required'
-                if (!values.password) errors.password = 'Required'
+                if (props.hidePasswordInput != true ) {
+                    if (!values.password) errors.password = 'Required'
+                }
 
                 return errors
             }}
             onSubmit={values => {
+                if (props.hidePasswordInput == true ) {
+                    delete data.password
+                }
                 register({ data: values })
                     .then((r) => {
                         AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
@@ -69,7 +75,7 @@ const NLUserDataForm = (props) => {
             {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
                 <>
                     <View style={styles.signup_info_input_view}>
-                        <View style={styles.signup_info_view}>
+                        <View style={{ width: '80%', borderBottomColor:Colors.g_text,borderBottomWidth:1,}}>
                             <TextInput
                                 placeholder="Full Name"
                                 keyboardType="default"
@@ -80,17 +86,17 @@ const NLUserDataForm = (props) => {
                         </View>
                         {errors.fullName && touched.fullName && <ErrorLabel text={errors.fullName} />}
 
-                        <View style={[styles.signup_info_view, { borderBottomWidth: 0, zIndex: 20, height: 50 }]}>
+                        <View style={{ width: '80%' }}>
                             <NLGooglePlacesAutocomplete
-                                style={{ backgroundColor: 'transparent'}}
+                                style={{ backgroundColor: 'transparent' }}
                                 defaultValue={values.address}
                                 onPress={(data, details) => {
-                                setFieldValue("address", data.description)
-                            }} />
+                                    setFieldValue("address", data.description)
+                                }} />
                         </View>
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
-                        <View style={styles.signup_info_view}>
+                        <View style={{ width: '80%', borderBottomColor:Colors.g_text,borderBottomWidth:1 }}>
                             <TextInput
                                 editable={!props.navigation.getParam('emailIDIsDisabled', false)}
                                 placeholder="Email ID"
@@ -102,7 +108,7 @@ const NLUserDataForm = (props) => {
                         </View>
                         {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
 
-                        <View style={styles.signup_info_view}>
+                        <View style={{ width: '80%', borderBottomColor:Colors.g_text,borderBottomWidth:1,}}>
                             <TextInput
                                 placeholder="Mobile Number"
                                 keyboardType='numeric'
@@ -113,16 +119,21 @@ const NLUserDataForm = (props) => {
                         </View>
                         {errors.mobileNo && touched.mobileNo && <ErrorLabel text={errors.mobileNo} />}
 
-                        <View style={styles.signup_info_view}>
-                            <TextInput
-                                placeholder="Password"
-                                secureTextEntry={true}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                value={values.password}
-                            />
-                        </View>
-                        {errors.password && touched.password && <ErrorLabel text={errors.password} />}
+                        {props.hidePasswordInput != true && (
+                            <>
+                                <View style={styles.signup_info_view}>
+                                    <TextInput
+                                        placeholder="Password"
+                                        secureTextEntry={true}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        value={values.password}
+                                    />
+                                </View>
+                                {errors.password && touched.password && <ErrorLabel text={errors.password} />}
+                            </>
+                        )}
+
 
                     </View>
                     <View style={styles.signup_btn_view}>
@@ -132,7 +143,7 @@ const NLUserDataForm = (props) => {
                             onPress={handleSubmit}
                         >
                             <View style={styles.signup_btn_player_view}>
-                            <Text style={styles.signup_player_text}>{props.navigation.getParam('btnText', 'Join Now')}</Text>
+                                <Text style={styles.signup_player_text}>{props.navigation.getParam('btnText', 'Join Now')}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>

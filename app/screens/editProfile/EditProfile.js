@@ -15,38 +15,13 @@ import NLUserDataForm from '../../components/userDataForm/NLUserDataForm'
 const EditProfile = (props) => {
     
     return (
-        <View style={{ flex: 1 }}>
-            {/* <View style={{
-          width: "100%",
-          height: STATUS_BAR_HEIGHT,
-          backgroundColor: "#0F2F80"
-      }}>
-          <StatusBar
-              barStyle="light-content"
-          />
-      </View> */}
+        <View style={{ flexGrow: 1 }}>
             <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
-            <NLUserDataForm {...props} />
+            <NLUserDataForm {...props} hidePasswordInput={true} />
         </View>
     )
 }
 
-const styles = StyleSheet.create({
-    scrollView: {
-        flex: 1,
-    },
-    post_view: {
-        padding: Dimension.pro5,
-        backgroundColor: 'white',
-        flex: 1,
-    },
-    textArea: {
-        flex: 0.5
-    },
-    modal: {
-        justifyContent: 'flex-end',
-        margin: 0,
-    },
-})
+
 
 export default EditProfile
