@@ -39,6 +39,7 @@ import hasFullProfile from './utils/perType/profileResolver';
 import SplashScreen from 'react-native-splash-screen'
 import EditProfile from './screens/editProfile/EditProfile';
 import AboutMeScreen from './screens/aboutMe/AboutMe';
+import BankAccountScreen from './screens/bankAccount/BankAccount';
 
 let initialRouteName = null
 
@@ -237,6 +238,14 @@ const AppMain = () => {
         ),
       }),
     }
+    tabs.BankAccount = {
+      screen: BankAccountScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
   }
 
   if (initialRouteName == null) {
@@ -246,7 +255,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe'] : ['Profile'],
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount'] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

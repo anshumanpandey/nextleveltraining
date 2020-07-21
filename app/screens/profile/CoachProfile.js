@@ -24,6 +24,7 @@ import { pickImage } from '../../helpers/ImagePicker';
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
+import GlobalStyles from '../../constants/GlobalStyles';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
 const TEXT_COLOR = 'gray'
@@ -1197,8 +1198,10 @@ export const BankAccountForm = ({ setSubmitFn }) => {
     }, { manual: true })
 
     useEffect(() => {
-        setSubmitFn(formikRef.current.submitForm)
+        setSubmitFn && setSubmitFn(formikRef.current.submitForm)
     }, [])
+
+    const signupIsDisabled = () => loading || getUserReq.loading
 
     return (
         <>
@@ -1300,6 +1303,20 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 </View>
                                 {errors.accountNumber && touched.accountNumber && <ErrorLabel text={errors.accountNumber} />}
                             </View>
+                            {!setSubmitFn && (
+                                <View style={styles.signup_btn_view}>
+                                    <TouchableOpacity
+                                        disabled={signupIsDisabled()}
+                                        style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
+                                        onPress={handleSubmit}
+                                    >
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                            <Text style={{ color: 'white'}}>Save</Text>
+                                            {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                             <Modal
                                 onBackdropPress={() => setShowModal(false)}
                                 isVisible={showModal}

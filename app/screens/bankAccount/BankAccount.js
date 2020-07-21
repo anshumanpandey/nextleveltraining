@@ -3,14 +3,14 @@ import resolveRoleForm from '../profile/resolveRoleForm'
 import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
 
-const AboutMeScreen = (props) => {
+const BankAccountScreen = (props) => {
     const [profile] = useGlobalState('profile')
     return (
         <>
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
-            {resolveRoleForm(profile)}
+            {resolveRoleForm(profile, 'BankAccount')}
         </>
     );
 }
 
-export default AboutMeScreen
+export default BankAccountScreen

@@ -23,6 +23,18 @@ const menulist = [
     }
 ]
 
+const coachMenulist = [
+    {
+        id: 9,
+        title: 'Bank Account',
+        icon: `${Images.LogoutIcon}`,
+        path: 'BankAccount',
+        onPress: (props, profile) => {
+            NavigationService.navigate('BankAccount')
+        }
+    }
+]
+
 const fullProfileMenu = [
     {
         id: 0,
@@ -90,8 +102,13 @@ const Menu = (props) => {
     const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile')
 
-    if (hasFullProfile(profile) && !menulist.find(i => i.title == 'Help')) {
-        menulist.unshift(...fullProfileMenu)
+    if (hasFullProfile(profile)) {
+        if (!menulist.find(i => i.title == 'Help')) {
+            menulist.unshift(...fullProfileMenu)
+        }
+        if (!menulist.find(i => i.path == 'BankAccount')) {
+            menulist.unshift(...coachMenulist)
+        }
     }
 
     useEffect(() => {
