@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,23 @@ import Images from '../../../constants/image';
 import {Icon} from 'native-base';
 import styles from './styles';
 import Dimension from '../../../constants/dimensions';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const PostComment = ({item, onClickItem, onPressOfComment}) => {
+  const [profilePic, setProfilePic] = useState();
+
+  useEffect(() => {
+    AsyncStorage.getItem('ProfilePic')
+      .then((s) => {
+        if (!s) return
+        setProfilePic(JSON.parse(s))
+      })
+  }, [])
+
   return (
     <View style={styles.post_container}>
       <View style={styles.comment_card_container}>
-        <Image source={Images.MessiPlayer} style={styles.comment_image_size} />
+        <Image source={profilePic ? { uri: profilePic.uri }: Images.MessiPlayer} style={styles.comment_image_size} />
         <View style={styles.comment_content_view}>
           <View style={{width: Dimension.pro100}}>
             <View style={styles.post_title}>
@@ -30,7 +41,7 @@ const PostComment = ({item, onClickItem, onPressOfComment}) => {
       </View>
       <View>
         <Image
-          source={Images.MessiPlayer}
+          source={{ uri: item.imageUri }}
           style={styles.comment_news_image}
           resizeMode="contain"
         />

@@ -115,7 +115,7 @@ class MultiStep extends Component {
         }
 
         if (this.stepFiveIsComplete(profile)) {
-            //NavigationService.navigate('Home')
+            NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
         }
     }

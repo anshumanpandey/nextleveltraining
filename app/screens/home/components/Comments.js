@@ -10,6 +10,7 @@ import Images from '../../../constants/image';
 import {Icon} from 'native-base';
 import styles from './styles';
 import Dimension from '../../../constants/dimensions';
+import moment from 'moment'
 
 const Comments = ({item, onClickItem, onPressOfComment}) => {
   const onClickingItem = (item) => {
@@ -23,7 +24,7 @@ const Comments = ({item, onClickItem, onPressOfComment}) => {
           <View style={{width: Dimension.pro100}}>
             <View style={styles.post_title}>
               <Text style={styles.post_title_name}>{item.name}</Text>
-              <Text style={styles.comment_title_time}>{item.time}</Text>
+              <Text style={styles.comment_title_time}>{moment(item.Commented).format('ll')}</Text>
             </View>
             <View style={styles.comment_name}>
               <Text
@@ -33,12 +34,7 @@ const Comments = ({item, onClickItem, onPressOfComment}) => {
                 ]}>
                 {item.name}
               </Text>
-              <Text style={styles.comment_description}>{item.description}</Text>
-            </View>
-            <View style={styles.like_reply}>
-              <Text style={styles.post_like_reply}>Like</Text>
-              <Text style={styles.post_like_reply}>reply</Text>
-              <Text />
+              <Text style={styles.comment_description}>{item.Text}</Text>
             </View>
           </View>
         </View>
