@@ -54,6 +54,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                         latitude: details.geometry.location.lat,
                         longitude: details.geometry.location.lng,
                     })
+                    setInputValue(data.description)
                 }}
                 onChangeText={(txt) => setInputValue(txt)}
                 query={{
