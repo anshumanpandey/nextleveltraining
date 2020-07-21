@@ -572,7 +572,7 @@ class MultiStep extends Component {
                                 />
                             </View>
                             <View style={styles.cardContainer}>
-                                <Text style={styles.profileDescription}>$ {profile.Rate}</Text>
+                                <Text style={styles.profileDescription}>£ {profile.Rate}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>

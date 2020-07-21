@@ -7,7 +7,8 @@ const styles = StyleSheet.create({
     width: Dimension.pro100,
   },
   post_card_container: {
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
     flexDirection: 'column',
   },
   comment_card_container: {
@@ -64,13 +65,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   post_news_content: {
-    marginLeft: 10,
+    marginLeft: 0,
     // width:'90%'
   },
   post_news_image: {
     height: Dimension.px200,
-    width: Dimension.deviceWidth - 20,
-    borderRadius: 10,
+    width: Dimension.deviceWidth,
+    borderRadius: 0,
   },
   comment_news_image: {
     height: Dimension.px250,

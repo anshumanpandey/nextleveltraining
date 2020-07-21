@@ -17,7 +17,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
   return (
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', paddingHorizontal: '5%' }}>
           <Image source={Images.MessiPlayer} style={styles.post_image_size} />
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100 }}>
