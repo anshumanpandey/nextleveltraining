@@ -31,7 +31,7 @@ const Profile = (props) => {
               barStyle="light-content"
           />
       </View> */}
-      <Header toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      <Header hideCreatePost={false} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
       <Formik
         initialValues={{ file: {}, bodyText: '', title: '' }}
         validate={(values) => {
@@ -61,7 +61,7 @@ const Profile = (props) => {
           <>
             <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.post_view}>
-                <View>
+                <View style={{ padding: Dimension.pro5 }}>
                   <View style={{ justifyContent: 'space-between', flexDirection: 'row',flexGrow: 1 }}>
                     <View style={{ flexDirection: 'column', height: 60, width: '90%' }}>
                       <Input
@@ -97,7 +97,7 @@ const Profile = (props) => {
                 {values.file.uri && (
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50,marginRight: '5%' }} />
+                      <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }} />
                     </View>
                   </View>
                 )}
@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   post_view: {
-    padding: Dimension.pro5,
     backgroundColor: 'white',
     flex: 1,
   },
