@@ -54,10 +54,8 @@ class MultiStep extends Component {
     componentDidMount() {
         const profile = getGlobalState('profile')
 
-        if (!hasFullProfile(profile)) {
-            this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
-            setTimeout(this.resolveCurrentStep, 1000)
-        }
+        this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
+        setTimeout(this.resolveCurrentStep, 1000)
 
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
@@ -96,7 +94,7 @@ class MultiStep extends Component {
 
     componentWillUnmount() {
         // Remove the event listener
-        this.focusListener.remove();
+        this.focusListener?.remove();
     }
 
     resolveCurrentStep = () => {
@@ -104,15 +102,29 @@ class MultiStep extends Component {
         if (this.stepOneIsComplete(profile)) {
             this.setState({ selectedSegmentIndex: 1 })
             this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
+            console.log('step one is completed, jumping to 2')
         }
         if (this.stepTwoIsComplete(profile)) {
             this.setState({ selectedSegmentIndex: 2 })
             this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
+            console.log('step two is completed, jumping to 3')
+        }
+
+        if (this.stepThreeIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 3 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
+            console.log('step three is completed, jumping to 4')
         }
 
         if (this.stepFourIsComplete(profile)) {
             this.setState({ selectedSegmentIndex: 4 })
             this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 4 })
+            console.log('step four is completed, jumping to 5')
+        }
+
+        if (this.stepFiveIsComplete(profile)) {
+            NavigationService.navigate('Home')
+            console.log('step four is completed, navigating to home')
         }
     }
 
@@ -251,8 +263,16 @@ class MultiStep extends Component {
         return profile.BankAccount != null
     }
 
+    stepThreeIsComplete = (profile) => {
+        return profile.Availabilities != null && profile.Availabilities.length != 0
+    }
+
     stepFourIsComplete = (profile) => {
         return profile.TrainingLocations != null && profile.TrainingLocations.length != 0
+    }
+
+    stepFiveIsComplete = (profile) => {
+        return profile.TravelPostCodes != null && profile.TravelPostCodes.length != 0
     }
 
     setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
@@ -1108,7 +1128,6 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
                         .then(r => getUserData())
                         .then((r) => {
                             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                            NavigationService.goBack()
                         })
                 }}
             >

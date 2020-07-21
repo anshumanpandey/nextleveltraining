@@ -69,7 +69,7 @@ const AddTeam = (props) => {
         <>
           <View>
             <HeaderClosePlus
-              isLoading={postTeamReq.loading}
+              isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}
             />
