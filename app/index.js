@@ -40,6 +40,8 @@ import SplashScreen from 'react-native-splash-screen'
 import EditProfile from './screens/editProfile/EditProfile';
 import AboutMeScreen from './screens/aboutMe/AboutMe';
 import BankAccountScreen from './screens/bankAccount/BankAccount';
+import TrainingLocationScreen from './screens/trainingLocation/TrainingLocation';
+import TravelScreen from './screens/travel/Travel';
 
 let initialRouteName = null
 
@@ -246,6 +248,24 @@ const AppMain = () => {
         ),
       }),
     }
+
+    tabs.TrainingLocation = {
+      screen: TrainingLocationScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }    
+
+    tabs.Travel = {
+      screen: TravelScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }    
   }
 
   if (initialRouteName == null) {
@@ -255,7 +275,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount'] : ['Profile'],
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel'] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

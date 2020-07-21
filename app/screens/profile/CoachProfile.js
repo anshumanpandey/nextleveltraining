@@ -386,7 +386,7 @@ class MultiStep extends Component {
 
     //tracking location
     trackingLocation() {
-        return (<TrainingLocationFrom setSubmitFn={(fn) => this.setState({ traininLocationSubmitFn: fn })} />)
+        return (<TrainingLocationForm setSubmitFn={(fn) => this.setState({ traininLocationSubmitFn: fn })} />)
     }
 
 
@@ -737,7 +737,7 @@ const layoutProvider = new LayoutProvider(
         dim.height = 35;
     }
 );
-const TravelForm = ({ setSubmitFn }) => {
+export const TravelForm = ({ setSubmitFn }) => {
     const formikRef = useRef()
     const [dataProvider, setDataProvider] = useState()
     const [showModal, setShowModal] = useState(false)
@@ -745,7 +745,7 @@ const TravelForm = ({ setSubmitFn }) => {
     const [profile] = useGlobalState('profile')
     const [valuesToShow, setValuesToShow] = useState([])
 
-    const [, doPost] = useAxios({
+    const [postReq, doPost] = useAxios({
         url: '/Users/SaveTravelPostCode',
         method: 'POST'
     }, { manual: true })
@@ -759,7 +759,7 @@ const TravelForm = ({ setSubmitFn }) => {
     })
 
     useEffect(() => {
-        setSubmitFn(formikRef.current?.submitForm)
+        setSubmitFn && setSubmitFn(formikRef.current?.submitForm)
     }, [])
 
     useEffect(() => {
@@ -769,6 +769,8 @@ const TravelForm = ({ setSubmitFn }) => {
         setDataProvider(dataProviderInstance.cloneWithRows(codes))
         setSearcher(new FuzzySearch(codes, ['postCode']))
     }, [loading]);
+
+    const signupIsDisabled = () => postReq.loading || getUserReq.loading || loading
 
     return (
         <View style={styles.containerCommon}>
@@ -813,6 +815,20 @@ const TravelForm = ({ setSubmitFn }) => {
                                         return (<Text style={{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>{c.postCode ? c.postCode : c}</Text>);
                                     })}
                                 </View>
+                                {!setSubmitFn && (
+                                    <View style={styles.signup_btn_view}>
+                                        <TouchableOpacity
+                                            disabled={signupIsDisabled()}
+                                            style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
+                                            onPress={handleSubmit}
+                                        >
+                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ color: 'white' }}>Save</Text>
+                                                {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                                 <Modal
                                     onBackdropPress={() => setShowModal(false)}
                                     isVisible={showModal}
@@ -882,7 +898,7 @@ const PostCodeListItem = ({ isSelected, value, cb }) => {
 }
 
 
-const TrainingLocationFrom = ({ setSubmitFn }) => {
+export const TrainingLocationForm = ({ setSubmitFn }) => {
     const formikRef = useRef()
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, doPost] = useAxios({
@@ -895,14 +911,20 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
     }, { manual: true })
 
     useEffect(() => {
-        setSubmitFn(formikRef.current.submitForm)
+        setSubmitFn && setSubmitFn(formikRef.current.submitForm)
     }, [])
+
+    const signupIsDisabled = () => loading || getUserReq.loading
 
     return (
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
             <Formik
                 innerRef={(r) => formikRef.current = r}
-                initialValues={{ locationName: '', address: '', file: null }}
+                initialValues={{
+                    locationName: '',
+                    address: '',
+                    file: null
+                }}
                 validate={(values) => {
                     const errors = {}
 
@@ -972,6 +994,20 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
                             {errors.file && touched.file && <ErrorLabel text={errors.file} />}
+                            {!setSubmitFn && (
+                                <View style={styles.signup_btn_view}>
+                                    <TouchableOpacity
+                                        disabled={signupIsDisabled()}
+                                        style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
+                                        onPress={handleSubmit}
+                                    >
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={{ color: 'white' }}>Save</Text>
+                                            {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                         </View>
                     </>
                 )}
@@ -1310,8 +1346,8 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                         style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
                                         onPress={handleSubmit}
                                     >
-                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                                            <Text style={{ color: 'white'}}>Save</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={{ color: 'white' }}>Save</Text>
                                             {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
                                         </View>
                                     </TouchableOpacity>
