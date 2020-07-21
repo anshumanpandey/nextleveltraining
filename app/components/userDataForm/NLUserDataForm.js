@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useRef, useEffect } from 'react'
 import { Text } from 'react-native'
 import NLGooglePlacesAutocomplete from '../NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
@@ -13,6 +13,8 @@ import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalSta
 import Screens from '../../utils/screen';
 
 const NLUserDataForm = (props) => {
+    const formikRef = useRef()
+
     const [{ data, loading, error }, register] = useAxios({
         url: '/Account/Register',
         method: 'POST',
@@ -29,8 +31,13 @@ const NLUserDataForm = (props) => {
 
     const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading
 
+    useEffect(() => {
+        props.setSubmitFn && props.setSubmitFn(formikRef.current?.submitForm)
+    }, [])
+
     return (
         <Formik
+            innerRef={(r) => formikRef.current = r}
             initialValues={{
                 fullName: props.navigation.getParam('FullName') || "",
                 address: props.navigation.getParam('Address') || "",
@@ -45,11 +52,21 @@ const NLUserDataForm = (props) => {
                 if (!values.address) errors.address = 'Required'
                 if (!values.emailID) errors.emailID = 'Required'
                 if (!values.mobileNo) errors.mobileNo = 'Required'
-                if (!values.password) errors.password = 'Required'
+
+                if (props.hidePasswordInput != true) {
+                    if (!values.password) errors.password = 'Required'
+                }
+
+                console.log('validation done')
+
 
                 return errors
             }}
             onSubmit={values => {
+                console.log('saving user data')
+                if (props.hidePasswordInput == true) {
+                    delete data.password
+                }
                 register({ data: values })
                     .then((r) => {
                         AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
@@ -82,9 +99,9 @@ const NLUserDataForm = (props) => {
 
                         <NLGooglePlacesAutocomplete
                             hideMap={true}
-                                style={{ backgroundColor: 'transparent'}}
-                                defaultValue={values.address}
-                                onPress={(data, details) => {
+                            style={{ backgroundColor: 'transparent' }}
+                            defaultValue={values.address}
+                            onPress={(data, details) => {
                                 setFieldValue("address", data.description)
                             }} />
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
@@ -112,29 +129,35 @@ const NLUserDataForm = (props) => {
                         </View>
                         {errors.mobileNo && touched.mobileNo && <ErrorLabel text={errors.mobileNo} />}
 
-                        <View style={styles.signup_info_view}>
-                            <TextInput
-                                placeholder="Password"
-                                secureTextEntry={true}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                value={values.password}
-                            />
-                        </View>
-                        {errors.password && touched.password && <ErrorLabel text={errors.password} />}
+                        {props.hidePasswordInput != true && (
+                            <>
+                                <View style={styles.signup_info_view}>
+                                    <TextInput
+                                        placeholder="Password"
+                                        secureTextEntry={true}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        value={values.password}
+                                    />
+                                </View>
+                                {errors.password && touched.password && <ErrorLabel text={errors.password} />}
+                            </>
+                        )}
 
                     </View>
-                    <View style={styles.signup_btn_view}>
-                        <TouchableOpacity
-                            disabled={signupIsDisabled()}
-                            style={[styles.signup_btn_player, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
-                            onPress={handleSubmit}
-                        >
-                            <View style={styles.signup_btn_player_view}>
-                            <Text style={styles.signup_player_text}>{props.navigation.getParam('btnText', 'Join Now')}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    {props.hideSaveBtn != true && (
+                        <View style={styles.signup_btn_view}>
+                            <TouchableOpacity
+                                disabled={signupIsDisabled()}
+                                style={[styles.signup_btn_player, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
+                                onPress={handleSubmit}
+                            >
+                                <View style={styles.signup_btn_player_view}>
+                                    <Text style={styles.signup_player_text}>{props.navigation.getParam('btnText', 'Join Now')}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </>
             )}
         </Formik>
