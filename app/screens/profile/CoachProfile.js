@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useRef } from 'react'
+import React, { Component, useState, useEffect, useRef, useCallback } from 'react'
 import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
 import { CheckBox, Icon, Spinner } from 'native-base';
 import Header from '../../components/header/Header'
@@ -40,15 +40,6 @@ class MultiStep extends Component {
             selectedSegmentIndex: 0,
             selectedRole: "individual",
             showTimerPickerFor: null,
-            selected_start_date: null,
-            selected_end_date: null,
-            is_enable_sunday: false,
-            is_enable_monday: false,
-            is_enable_tuesday: false,
-            is_enable_wednesday: false,
-            is_enable_thursday: false,
-            is_enable_friday: false,
-            is_enable_saturday: false,
         };
     }
 
@@ -124,131 +115,9 @@ class MultiStep extends Component {
         }
 
         if (this.stepFiveIsComplete(profile)) {
-            NavigationService.navigate('Home')
+            //NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
         }
-    }
-
-
-    availabiltySaveFunction = () => {
-        const promises = []
-        const config = {
-            url: '/Users/SaveAvailability',
-            method: 'POST',
-        }
-        if (this.state.start_sunday && this.state.end_sunday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Sunday",
-                    "fromTime": this.state.start_sunday,
-                    "toTime": this.state.end_sunday
-                }
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
-
-        if (this.state.start_monday && this.state.end_monday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Monday",
-                    "fromTime": this.state.start_monday,
-                    "toTime": this.state.end_monday
-                }
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
-
-        if (this.state.start_wednesday && this.state.end_wednesday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Wednesday",
-                    "fromTime": this.state.start_wednesday,
-                    "toTime": this.state.end_wednesday
-                }
-
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
-
-        if (this.state.start_tuesday && this.state.end_tuesday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Tuesday",
-                    "fromTime": this.state.start_tuesday,
-                    "toTime": this.state.end_tuesday
-                }
-
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-
-        }
-
-        if (this.state.start_thursday && this.state.end_thursday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Thursday",
-                    "fromTime": this.state.start_thursday,
-                    "toTime": this.state.end_thursday
-                }
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
-
-        if (this.state.start_friday && this.state.end_friday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Friday",
-                    "fromTime": this.state.start_friday,
-                    "toTime": this.state.end_friday
-                }
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
-
-        if (this.state.start_saturday && this.state.end_saturday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Saturday",
-                    "fromTime": this.state.start_saturday,
-                    "toTime": this.state.end_saturday
-                }
-            })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
-
-        return Promise.all(promises)
-            .then(() => axiosInstance({ url: '/Users/GetUser' }))
-            .then((r) => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-            })
     }
 
     stepOneIsComplete = (profile) => {
@@ -330,8 +199,9 @@ class MultiStep extends Component {
                                         }
                                         if (this.state.selectedSegmentIndex == 2) {
                                             this.setState({ saving: true })
-                                            this.availabiltySaveFunction()
-                                                .then(() => {
+                                            this.state.availabilitySubmitFn()
+                                                .then((r) => {
+                                                    console.log(r)
                                                     this.setState({ saving: false })
                                                 })
                                         }
@@ -422,214 +292,7 @@ class MultiStep extends Component {
                     }} >
                         {this.bankAccount()}
                     </View>
-
-                    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexg: 1 }}>
-                        <View style={{
-                            flex: 1,
-                            width: Dimensions.get('window').width
-                        }}>
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Sunday</Text>
-                                    <NLToggleButton
-                                        active={this.state.is_enable_sunday}
-                                        onPress={() => this.toggleSwitchSunday()}
-                                    />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_sunday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_sunday} onSelected={(d) => this.setTimeFor("start_sunday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_sunday} onSelected={(d) => this.setTimeFor("end_sunday", d)} />
-                                    </View>
-                                )}
-
-                            </View>
-
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Monday</Text>
-                                    <NLToggleButton active={this.state.is_enable_monday} onPress={this.toggleSwitchMonday} />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_monday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_monday} onSelected={(d) => this.setTimeFor("start_monday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_monday} onSelected={(d) => this.setTimeFor("end_monday", d)} />
-                                    </View>
-                                )}
-                            </View>
-
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Tuesday</Text>
-                                    <NLToggleButton active={this.state.is_enable_tuesday} onPress={this.toggleSwitchTuesday} />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_tuesday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_tuesday} onSelected={(d) => this.setTimeFor("start_tuesday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_tuesday} onSelected={(d) => this.setTimeFor("end_tuesday", d)} />
-                                    </View>
-                                )}
-                            </View>
-
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Wednesday</Text>
-                                    <NLToggleButton active={this.state.is_enable_wednesday} onPress={this.toggleSwitchWednesday} />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_wednesday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_wednesday} onSelected={(d) => this.setTimeFor("start_wednesday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_wednesday} onSelected={(d) => this.setTimeFor("end_wednesday", d)} />
-                                    </View>
-                                )}
-                            </View>
-
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Thursday</Text>
-                                    <NLToggleButton active={this.state.is_enable_thursday} onPress={this.toggleSwitchThursday} />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_thursday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_thursday} onSelected={(d) => this.setTimeFor("start_thursday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_thursday} onSelected={(d) => this.setTimeFor("end_thursday", d)} />
-                                    </View>
-                                )}
-                            </View>
-
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Friday</Text>
-                                    <NLToggleButton active={this.state.is_enable_friday} onPress={this.toggleSwitchFriday} />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_friday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_friday} onSelected={(d) => this.setTimeFor("start_friday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_friday} onSelected={(d) => this.setTimeFor("end_friday", d)} />
-                                    </View>
-                                )}
-                            </View>
-
-                            <View style={{
-                                width: '100%'
-                            }}>
-                                <View style={{
-                                    height: 60,
-                                    width: '100%',
-                                    paddingHorizontal: 15,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text>Saturday</Text>
-                                    <NLToggleButton active={this.state.is_enable_saturday} onPress={this.toggleSwitchSaturday} />
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'lightgray',
-                                    height: 1,
-                                    marginHorizontal: 15
-                                }} />
-                                {this.state.is_enable_saturday && (
-                                    <View style={styles.collapsedView}>
-                                        <TimeInput value={this.state.start_saturday} onSelected={(d) => this.setTimeFor("start_saturday", d)} />
-                                        <Text>TO</Text>
-                                        <TimeInput value={this.state.end_saturday} onSelected={(d) => this.setTimeFor("end_saturday", d)} />
-                                    </View>
-                                )}
-                            </View>
-                        </View>
-                    </ScrollView>
-
+                    <AvailabiltyForm setSubmitFn={(fn) => this.setState({ availabilitySubmitFn: fn })} />
                     <View style={{
                         backgroundColor: 'white',
                         flex: 1,
@@ -737,6 +400,444 @@ const layoutProvider = new LayoutProvider(
         dim.height = 35;
     }
 );
+
+export const AvailabiltyForm = ({ setSubmitFn }) => {
+    const [profile] = useGlobalState('profile')
+    const [saving, setSaving] = useState(false)
+    const [selectedDates, setSelectedDates] = useState({})
+    const [enabledDay, setEnabledDay] = useState({})
+
+    const setTimeFor = (key, date) => setSelectedDates({ ...selectedDates, [key]: date })
+    const toggleSwitchSundayFor = (key) => {
+        setEnabledDay({ ...enabledDay, [key]: enabledDay[key] == true ? false : true })
+    }
+
+    useEffect(() => {
+        if (profile.Availabilities && profile.Availabilities.length != 0) {
+            const toggles = []
+            const newState = {}
+            profile.Availabilities.forEach(day => {
+                if (day.Day == "Sunday") {
+                    toggles.push('Sunday')
+                    newState.start_sunday = moment(day.FromTime).toDate()
+                    newState.end_sunday = moment(day.ToTime).toDate()
+                }
+                if (day.Day == "Monday") {
+                    toggles.push('Monday')
+                    newState.start_monday = moment(day.FromTime).toDate()
+                    newState.end_monday = moment(day.ToTime).toDate()
+                }
+                if (day.Day == "Tuesday") {
+                    toggles.push('Tuesday')
+                    newState.start_tuesday = moment(day.FromTime).toDate()
+                    newState.end_tuesday = moment(day.ToTime).toDate()
+                }
+                if (day.Day == "Wednesday") {
+                    toggles.push('Wednesday')
+                    newState.start_wednesday = moment(day.FromTime).toDate()
+                    newState.end_wednesday = moment(day.ToTime).toDate()
+                }
+                if (day.Day == "Thursday") {
+                    toggles.push('Thursday')
+                    newState.start_thursday = moment(day.FromTime).toDate()
+                    newState.end_thursday = moment(day.ToTime).toDate()
+                }
+                if (day.Day == "Friday") {
+                    toggles.push('Friday')
+                    newState.start_friday = moment(day.FromTime).toDate()
+                    newState.end_friday = moment(day.ToTime).toDate()
+                }
+                if (day.Day == "Saturday") {
+                    toggles.push('Saturday')
+                    newState.start_saturday = moment(day.FromTime).toDate()
+                    newState.end_saturday = moment(day.ToTime).toDate()
+                }
+            })
+
+            setSelectedDates(newState)
+            setEnabledDay(() => {
+                return toggles.reduce((json, item) => {
+                    json[item] = true
+                    return json
+                }, {})
+            })
+
+        }
+    }, [profile.Availabilities])
+
+    const availabiltySaveFunction = useCallback(() => {
+        setSaving(true)
+        const promises = []
+        const config = {
+            url: '/Users/SaveAvailability',
+            method: 'POST',
+        }
+        if (selectedDates.start_sunday && selectedDates.end_sunday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Sunday",
+                    "fromTime": selectedDates.start_sunday,
+                    "toTime": selectedDates.end_sunday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (selectedDates.start_monday && selectedDates.end_monday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Monday",
+                    "fromTime": selectedDates.start_monday,
+                    "toTime": selectedDates.end_monday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (selectedDates.start_wednesday && selectedDates.end_wednesday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Wednesday",
+                    "fromTime": selectedDates.start_wednesday,
+                    "toTime": selectedDates.end_wednesday
+                }
+
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (selectedDates.start_tuesday && selectedDates.end_tuesday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Tuesday",
+                    "fromTime": selectedDates.start_tuesday,
+                    "toTime": selectedDates.end_tuesday
+                }
+
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+
+        }
+
+        if (selectedDates.start_thursday && selectedDates.end_thursday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Thursday",
+                    "fromTime": selectedDates.start_thursday,
+                    "toTime": selectedDates.end_thursday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (selectedDates.start_friday && selectedDates.end_friday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Friday",
+                    "fromTime": selectedDates.start_friday,
+                    "toTime": selectedDates.end_friday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        if (selectedDates.start_saturday && selectedDates.end_saturday) {
+            const p = axiosInstance({
+                ...config,
+                data: {
+                    "day": "Saturday",
+                    "fromTime": selectedDates.start_saturday,
+                    "toTime": selectedDates.end_saturday
+                }
+            })
+                .then((r) => {
+                    console.log(r.data)
+                })
+            promises.push(p)
+        }
+
+        return Promise.all(promises)
+            .then(() => axiosInstance({ url: '/Users/GetUser' }))
+            .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                setSaving(false)
+            })
+    }, [selectedDates]);
+
+    useEffect(() => {
+        setSubmitFn && setSubmitFn(availabiltySaveFunction)
+    }, [selectedDates])
+
+    const signupIsDisabled = () => saving
+
+    return (
+
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexg: 1 }}>
+            <View style={{
+                flex: 1,
+                width: Dimensions.get('window').width
+            }}>
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Sunday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Sunday}
+                            onPress={() => toggleSwitchSundayFor('Sunday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Sunday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_sunday} onSelected={(d) => setTimeFor("start_sunday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_sunday} onSelected={(d) => setTimeFor("end_sunday", d)} />
+                        </View>
+                    )}
+
+                </View>
+
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Monday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Monday}
+                            onPress={() => toggleSwitchSundayFor('Monday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Monday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_monday} onSelected={(d) => setTimeFor("start_monday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_monday} onSelected={(d) => setTimeFor("end_monday", d)} />
+                        </View>
+                    )}
+                </View>
+
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Tuesday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Tuesday}
+                            onPress={() => toggleSwitchSundayFor('Tuesday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Tuesday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_tuesday} onSelected={(d) => setTimeFor("start_tuesday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_tuesday} onSelected={(d) => setTimeFor("end_tuesday", d)} />
+                        </View>
+                    )}
+                </View>
+
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Wednesday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Wednesday}
+                            onPress={() => toggleSwitchSundayFor('Wednesday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Wednesday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_wednesday} onSelected={(d) => setTimeFor("start_wednesday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_wednesday} onSelected={(d) => setTimeFor("end_wednesday", d)} />
+                        </View>
+                    )}
+                </View>
+
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Thursday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Thursday}
+                            onPress={() => toggleSwitchSundayFor('Thursday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Thursday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_thursday} onSelected={(d) => setTimeFor("start_thursday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_thursday} onSelected={(d) => setTimeFor("end_thursday", d)} />
+                        </View>
+                    )}
+                </View>
+
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Friday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Friday}
+                            onPress={() => toggleSwitchSundayFor('Friday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Friday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_friday} onSelected={(d) => setTimeFor("start_friday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_friday} onSelected={(d) => setTimeFor("end_friday", d)} />
+                        </View>
+                    )}
+                </View>
+
+                <View style={{
+                    width: '100%'
+                }}>
+                    <View style={{
+                        height: 60,
+                        width: '100%',
+                        paddingHorizontal: 15,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Text>Saturday</Text>
+                        <NLToggleButton
+                            active={enabledDay.Saturday}
+                            onPress={() => toggleSwitchSundayFor('Saturday')}
+                        />
+                    </View>
+                    <View style={{
+                        backgroundColor: 'lightgray',
+                        height: 1,
+                        marginHorizontal: 15
+                    }} />
+                    {enabledDay.Saturday && (
+                        <View style={styles.collapsedView}>
+                            <TimeInput value={selectedDates.start_saturday} onSelected={(d) => setTimeFor("start_saturday", d)} />
+                            <Text>TO</Text>
+                            <TimeInput value={selectedDates.end_saturday} onSelected={(d) => setTimeFor("end_saturday", d)} />
+                        </View>
+                    )}
+                </View>
+                {!setSubmitFn && (
+                    <View style={styles.signup_btn_view}>
+                        <TouchableOpacity
+                            disabled={signupIsDisabled()}
+                            style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
+                            onPress={availabiltySaveFunction}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ color: 'white' }}>Save</Text>
+                                {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </View>
+        </ScrollView>
+
+    );
+}
+
 export const TravelForm = ({ setSubmitFn }) => {
     const formikRef = useRef()
     const [dataProvider, setDataProvider] = useState()
@@ -914,10 +1015,10 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
     useEffect(() => {
         setSubmitFn && setSubmitFn(formikRef.current.submitForm)
         AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
-        .then(img => {
-            if (!img) return
-            formikRef.current.setFieldValue('file', JSON.parse(img).file)
-        })
+            .then(img => {
+                if (!img) return
+                formikRef.current.setFieldValue('file', JSON.parse(img).file)
+            })
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
@@ -978,8 +1079,8 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                             <NLGooglePlacesAutocomplete
                                 defaultValue={values.address}
                                 onPress={(data, details = null) => {
-                                setFieldValue("address", data.description)
-                            }} />
+                                    setFieldValue("address", data.description)
+                                }} />
 
                             {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 

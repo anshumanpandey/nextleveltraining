@@ -50,6 +50,15 @@ const coachMenulist = [
         onPress: (props, profile) => {
             NavigationService.navigate('Travel')
         }
+    },
+    {
+        id: 12,
+        title: 'Availability',
+        icon: `${Images.LogoutIcon}`,
+        path: 'Availability',
+        onPress: (props, profile) => {
+            NavigationService.navigate('Availavility')
+        }
     }
 ]
 

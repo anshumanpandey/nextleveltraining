@@ -1,5 +1,5 @@
 import React from 'react'
-import { AboutMeCoachForm, BankAccountForm, TrainingLocationForm, TravelForm } from './CoachProfile'
+import { AboutMeCoachForm, BankAccountForm, TrainingLocationForm, TravelForm, AvailabiltyForm } from './CoachProfile'
 import PlayerProfile from './Profile'
 
 const resolveRoleForm = (profile, formName = "AboutMe", params) => {
@@ -25,6 +25,9 @@ const resolveRoleForm = (profile, formName = "AboutMe", params) => {
 
     if (formName == "Travel") {
         return <TravelForm />
+    }
+    if (formName == "Availavility") {
+        return <AvailabiltyForm />
     }
 
     return false
