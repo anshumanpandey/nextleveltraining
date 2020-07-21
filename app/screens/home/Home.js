@@ -45,6 +45,10 @@ const Home = (props) => {
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', refetch);
+    return () => focusListener?.remove();
+  }, [])
+
+  useEffect(() => {
     if (!data) return
     if (!data.length) return
     
@@ -71,9 +75,6 @@ const Home = (props) => {
     .then(p => {
       setDataToShow(p.sort((left, right) => moment.utc(right.time, dateFormat).diff(moment.utc(left.time, dateFormat)) ))
     })
-
-    return () => focusListener?.remove();
-
   }, [loading])
 
 
