@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { View } from 'native-base';
 import Colors from '../constants/color';
 
-const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style = {} }) => {
+const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = undefined, style = {} }) => {
     const [currentLocation, setCurrentLocation] = useState()
     const [inputValue, setInputValue] = useState(undefined)
 
@@ -13,22 +13,20 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
     }, [])
 
     return (
-        <View style={{ zIndex: 20, height: 100,width: '100%'}}>
+        <>
             <GooglePlacesAutocomplete
                 style={{ zIndex: 10 }}
                 placeholder={'Search location address'}
                 listViewDisplayed='true'
                 getDefaultValue={() => ''}
-                textInputProps={{
-                    value: inputValue,
-                    onChangeText: (txt) => setInputValue(txt)
-                }}
+                value={inputValue}
+                onChangeText={(txt) => setInputValue(txt)}
                 fetchDetails={true}
                 GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
-                debounce={300}
-                 loader={true}
+                loader={true}
                 styles={{
                     container: {
+                        width: '85%',
                         minHeight: 45,
                         zIndex: 999,
                         overflow: 'visible',
@@ -64,8 +62,8 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                     components: 'country:gbr',
                 }}
             />
-            {currentLocation && (
-                <View style={{ borderWidth: 1, height: 200 }}>
+            {hideMap == false && currentLocation && (
+                <View style={{ borderWidth: 1, height: 200, width: '85%' }}>
                     <MapView
                         style={{ flex: 1 }}
                         initialRegion={{
@@ -90,7 +88,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                     </MapView>
                 </View>
             )}
-        </View>
+        </>
     );
 }
 
