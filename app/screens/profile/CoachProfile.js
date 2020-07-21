@@ -461,10 +461,11 @@ class MultiStep extends Component {
                                             <Text>{e.JobPosition}</Text>
                                             <View style={{ flexDirection: 'row' }}>
                                                 <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
-                                                <Text>{' '}To{' '}</Text>
-                                                <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>
+                                                
+                                                {e.CurrentlyWorking == false && <Text>{' '}Till Date</Text>}
+                                                {e.CurrentlyWorking == true && <Text>{' '}To{' '}</Text>}
+                                                {e.CurrentlyWorking == true && <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>}
                                             </View>
-                                            <Text>Currently Working? {e.CurrentlyWorking ? 'Yes' : 'No'}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 );

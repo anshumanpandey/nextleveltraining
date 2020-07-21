@@ -42,7 +42,9 @@ const AddTeam = (props) => {
         if (!values.jobPosition) errors.jobPosition = 'Required'
         if (!values.club) errors.club = 'Required'
         if (!values.startDate) errors.startDate = 'Required'
-        if (!values.endDate) errors.endDate = 'Required'
+        if (!values.currentlyWorking) {
+          if (!values.endDate) errors.endDate = 'Required'
+        }
 
         return errors
       }}
@@ -56,7 +58,6 @@ const AddTeam = (props) => {
           "currentlyWorking": values.currentlyWorking
         }
         if (values.currentlyWorking) {
-          delete data.startDate
           delete data.endDate
         }
         postTeam({ data })
@@ -102,8 +103,7 @@ const AddTeam = (props) => {
               {errors.club && touched.club && <ErrorLabel text={errors.club} />}
 
 
-              {!values.currentlyWorking && (
-                <>
+
                   <Text style={styles.timePeriod}>Time Period</Text>
 
                   <View style={styles.pickerView}>
@@ -129,6 +129,7 @@ const AddTeam = (props) => {
                     <View>
                       <Text style={styles.dateText}>TO</Text>
                       <DatePicker
+                        disabled={values.currentlyWorking}
                         mode="date"
                         date={values.endDate}
                         format="DD-MM-YYYY"
@@ -145,8 +146,6 @@ const AddTeam = (props) => {
                     </View>
 
                   </View>
-                </>
-              )}
 
               <TouchableOpacity
                 onPress={() => setFieldValue("currentlyWorking", !values.currentlyWorking)}
@@ -156,7 +155,7 @@ const AddTeam = (props) => {
                   type="Feather"
                   style={styles.checkIcon}
                 />
-                <Text style={styles.checkText}>Currently working</Text>
+                <Text style={styles.checkText}>Currently Coaching</Text>
               </TouchableOpacity>
             </View>
           </View>
