@@ -133,8 +133,10 @@ const Menu = (props) => {
         if (!menulist.find(i => i.title == 'Help')) {
             menulist.unshift(...fullProfileMenu)
         }
-        if (!menulist.find(i => i.path == 'BankAccount')) {
-            menulist.unshift(...coachMenulist)
+        if (profile.Role == "Coach") {
+            if (!menulist.find(i => i.path == 'BankAccount')) {
+                menulist.unshift(...coachMenulist)
+            }
         }
     }
 
