@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
 import Header from '../../components/header/Header'
 import { useGlobalState } from '../../state/GlobalState'
 import Dimension from '../../constants/dimensions.js'
@@ -95,10 +95,9 @@ const Profile = (props) => {
                 {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
 
                 {values.file.uri && (
-                  <View style={{ flex: 0.5, justifyContent: 'flex-end' }}>
-                    <Text style={{ fontSize: 16 }}>File Selected...</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                      <Image source={{ uri: values.file.uri }} style={{ width: 60, height: 60, marginRight: '5%' }} />
+                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50,marginRight: '5%' }} />
                     </View>
                   </View>
                 )}
