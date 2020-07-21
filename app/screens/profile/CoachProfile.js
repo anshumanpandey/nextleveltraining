@@ -18,13 +18,12 @@ import Modal from 'react-native-modal';
 import FuzzySearch from 'fuzzy-search';
 import Colors from '../../constants/color.js';
 import MapView, { Marker } from 'react-native-maps';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 import { pickImage } from '../../helpers/ImagePicker';
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import hasFullProfile from '../../utils/perType/profileResolver';
-var Color = require('color');
+import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
 const TEXT_COLOR = 'gray'
@@ -1127,47 +1126,13 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
                             </View>
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
-                            <GooglePlacesAutocomplete
-                                placeholder={'Search location address'}
-                                listViewDisplayed='true'
-                                getDefaultValue={() => ''}
-                                fetchDetails={true}
-                                GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
-                                debounce={300}
-                                styles={{
-                                    container: {
-                                        minHeight: 45,
-                                    },
-                                    listView: {
-                                        position: 'absolute',
-                                        backgroundColor: 'white',
-                                        zIndex: 10,
-                                        top: 50
-                                    },
-                                    textInputContainer: {
-                                        backgroundColor: 'white',
-                                        borderTopWidth: 0,
-                                        borderBottomWidth: 0.8,
-                                        borderBottomColor: "lightgrey"
-                                    },
-                                    textInput: {
-                                        borderWidth: 0,
-                                        paddingLeft: 0,
-                                    }
-                                }}
-                                onPress={(data, details = null) => {
-                                    setCurrentLocation({
-                                        latitude: details.geometry.location.lat,
-                                        longitude: details.geometry.location.lng,
-                                    })
-                                    setFieldValue("address", data.description)
-                                }}
-                                query={{
-                                    key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',
-                                    language: 'en',
-                                    components: 'country:gbr',
-                                }}
-                            />
+                            <NLGooglePlacesAutocomplete onPress={(data, details = null) => {
+                                setCurrentLocation({
+                                    latitude: details.geometry.location.lat,
+                                    longitude: details.geometry.location.lng,
+                                })
+                                setFieldValue("address", data.description)
+                            }} />
                             {currentLocation && (
                                 <View style={{ borderWidth: 1, height: 200 }}>
                                     <MapView
