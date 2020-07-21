@@ -1063,7 +1063,6 @@ const PostCodeListItem = ({ isSelected, value, cb }) => {
 
 const TrainingLocationFrom = ({ setSubmitFn }) => {
     const formikRef = useRef()
-    const [currentLocation, setCurrentLocation] = useState()
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveTrainingLocation',
@@ -1127,38 +1126,8 @@ const TrainingLocationFrom = ({ setSubmitFn }) => {
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
                             <NLGooglePlacesAutocomplete onPress={(data, details = null) => {
-                                setCurrentLocation({
-                                    latitude: details.geometry.location.lat,
-                                    longitude: details.geometry.location.lng,
-                                })
                                 setFieldValue("address", data.description)
                             }} />
-                            {currentLocation && (
-                                <View style={{ borderWidth: 1, height: 200 }}>
-                                    <MapView
-                                        style={{ flex: 1 }}
-                                        initialRegion={{
-                                            latitude: currentLocation.latitude ? currentLocation.latitude : 37.78825,
-                                            longitude: currentLocation.longitude ? currentLocation.longitude : -122.4324,
-                                            latitudeDelta: 0.0922,
-                                            longitudeDelta: 0.0421,
-                                        }}
-                                        camera={{
-                                            center: currentLocation,
-                                            heading: 0,
-                                            pitch: 10,
-                                            zoom: 15,
-                                            altitude: 10,
-                                        }}
-                                    >
-                                        <Marker
-                                            coordinate={currentLocation}
-                                            title={'Current Location'}
-                                            description={"werw"}
-                                        />
-                                    </MapView>
-                                </View>
-                            )}
 
                             {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 

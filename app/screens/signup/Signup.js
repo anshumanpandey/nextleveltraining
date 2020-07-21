@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin } from 'react-native-google-signin';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
@@ -55,7 +56,7 @@ const Signup = (props) => {
   }, [])
 
   return (
-    <ScrollView style={styles.signup_layout}>
+    <ScrollView keyboardShouldPersistTaps="handled" style={styles.signup_layout}>
       <View style={styles.signup_container}>
         <View style={styles.signup_logo_view}>
           <Image source={Images.Mlogo} />
@@ -98,7 +99,7 @@ const Signup = (props) => {
               .catch((r) => console.log(r))
           }}
         >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+          {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
             <>
               <View style={styles.signup_info_input_view}>
                 <View style={styles.signup_info_view}>
@@ -112,14 +113,10 @@ const Signup = (props) => {
                 </View>
                 {errors.fullName && touched.fullName && <ErrorLabel text={errors.fullName} />}
 
-                <View style={styles.signup_info_view}>
-                  <TextInput
-                    placeholder="Address"
-                    keyboardType="default"
-                    onChangeText={handleChange('address')}
-                    onBlur={handleBlur('address')}
-                    value={values.address}
-                  />
+                <View style={[styles.signup_info_view, { borderBottomWidth: 0, zIndex: 20}]}>
+                  <NLGooglePlacesAutocomplete onPress={(data, details) => {
+                    setFieldValue("address", data.description)
+                  }} />
                 </View>
                 {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
@@ -205,7 +202,7 @@ const Signup = (props) => {
                     console.log(err)
                   })
               }}
-              style={[styles.fb_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1}]}
+              style={[styles.fb_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1 }]}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
@@ -241,7 +238,7 @@ const Signup = (props) => {
                 }
               }}
               disabled={signupIsDisabled()}
-              style={[styles.google_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1}]}
+              style={[styles.google_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1 }]}
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>
