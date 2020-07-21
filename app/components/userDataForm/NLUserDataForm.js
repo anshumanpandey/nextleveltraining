@@ -86,7 +86,7 @@ const NLUserDataForm = (props) => {
                         </View>
                         {errors.fullName && touched.fullName && <ErrorLabel text={errors.fullName} />}
 
-                        <View style={{ width: '80%' }}>
+                        <View style={{ height: 50,width: '80%' }}>
                             <NLGooglePlacesAutocomplete
                                 style={{ backgroundColor: 'transparent' }}
                                 defaultValue={values.address}
