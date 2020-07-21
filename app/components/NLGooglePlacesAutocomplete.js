@@ -19,7 +19,10 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                 placeholder={'Search location address'}
                 listViewDisplayed='true'
                 getDefaultValue={() => ''}
-                value={inputValue}
+                textInputProps={{
+                    value: inputValue,
+                    onChangeText: (txt) => setInputValue(txt)
+                }}
                 fetchDetails={true}
                 GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
                 debounce={300}
@@ -55,7 +58,6 @@ const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style =
                     })
                     setInputValue(data.description)
                 }}
-                onChangeText={(txt) => setInputValue(txt)}
                 query={{
                     key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',
                     language: 'en',

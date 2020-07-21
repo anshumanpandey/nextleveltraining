@@ -898,8 +898,9 @@ const PostCodeListItem = ({ isSelected, value, cb }) => {
 }
 
 
-export const TrainingLocationForm = ({ setSubmitFn }) => {
+export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
     const formikRef = useRef()
+    const [image, setImage] = useState()
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveTrainingLocation',
@@ -912,6 +913,11 @@ export const TrainingLocationForm = ({ setSubmitFn }) => {
 
     useEffect(() => {
         setSubmitFn && setSubmitFn(formikRef.current.submitForm)
+        AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
+        .then(img => {
+            if (!img) return
+            formikRef.current.setFieldValue('file', JSON.parse(img).file)
+        })
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
@@ -921,8 +927,9 @@ export const TrainingLocationForm = ({ setSubmitFn }) => {
             <Formik
                 innerRef={(r) => formikRef.current = r}
                 initialValues={{
-                    locationName: '',
-                    address: '',
+                    trainingLocationId: params.Id || undefined,
+                    locationName: params.LocationName || "",
+                    address: params.LocationAddress || "",
                     file: null
                 }}
                 validate={(values) => {
@@ -937,6 +944,7 @@ export const TrainingLocationForm = ({ setSubmitFn }) => {
                 onSubmit={values => {
                     doPost({
                         data: {
+                            "trainingLocationId": values.trainingLocationId || undefined,
                             "locationName": values.locationName,
                             "locationAddress": values.address,
                             "role": profile.Role,
@@ -967,7 +975,9 @@ export const TrainingLocationForm = ({ setSubmitFn }) => {
                             </View>
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
-                            <NLGooglePlacesAutocomplete onPress={(data, details = null) => {
+                            <NLGooglePlacesAutocomplete
+                                defaultValue={values.address}
+                                onPress={(data, details = null) => {
                                 setFieldValue("address", data.description)
                             }} />
 

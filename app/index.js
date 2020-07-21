@@ -42,6 +42,7 @@ import AboutMeScreen from './screens/aboutMe/AboutMe';
 import BankAccountScreen from './screens/bankAccount/BankAccount';
 import TrainingLocationScreen from './screens/trainingLocation/TrainingLocation';
 import TravelScreen from './screens/travel/Travel';
+import TrainingLocationEdit from './screens/trainingLocation/TrainingLocationEdit';
 
 let initialRouteName = null
 
@@ -256,7 +257,16 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }    
+    }   
+    
+    tabs.TrainingLocationEdit = {
+      screen: TrainingLocationEdit,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }  
 
     tabs.Travel = {
       screen: TravelScreen,
@@ -275,7 +285,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel'] : ['Profile'],
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'TrainingLocationEdit'] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

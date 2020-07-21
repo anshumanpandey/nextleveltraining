@@ -2,7 +2,7 @@ import React from 'react'
 import { AboutMeCoachForm, BankAccountForm, TrainingLocationForm, TravelForm } from './CoachProfile'
 import PlayerProfile from './Profile'
 
-const resolveRoleForm = (profile, formName = "AboutMe") => {
+const resolveRoleForm = (profile, formName = "AboutMe", params) => {
     if (!profile) return <></>
     if ("Role" in profile == false) return <></>
 
@@ -20,7 +20,7 @@ const resolveRoleForm = (profile, formName = "AboutMe") => {
     }
 
     if (formName == "TrainingLocation") {
-        return <TrainingLocationForm />
+        return <TrainingLocationForm {...params} />
     }
 
     if (formName == "Travel") {
