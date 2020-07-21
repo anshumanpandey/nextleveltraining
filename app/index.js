@@ -263,14 +263,14 @@ const AppMain = () => {
     {
       MainStack: {
         screen: TabNavigator,
-        defaultNavigationOptions: {
-          drawerLockMode: 'locked-open',
-        },
       },
     },
     {
       drawerWidth: Dimensions.deviceWidth * 0.6,
-      contentComponent: hasFullProfile(profile) ? Menu : null,
+      contentComponent: hasFullProfile(profile) ? Menu : undefined,
+      defaultNavigationOptions: {
+        drawerLockMode: hasFullProfile(profile) ? 'locked-open': 'locked-closed' ,
+      }
     },
   );
 
