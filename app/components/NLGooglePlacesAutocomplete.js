@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
 import { View } from 'native-base';
 import Colors from '../constants/color';
 
-const NLGooglePlacesAutocomplete = ({ onPress }) => {
+const NLGooglePlacesAutocomplete = ({ onPress, defaultValue = undefined, style = {} }) => {
     const [currentLocation, setCurrentLocation] = useState()
+    const [inputValue, setInputValue] = useState(undefined)
+
+    useEffect(() => {
+        setInputValue(defaultValue)
+    }, [])
 
     return (
         <>
             <GooglePlacesAutocomplete
-                style={{ zIndex: 10}}
+                style={{ zIndex: 10 }}
                 placeholder={'Search location address'}
                 listViewDisplayed='true'
                 getDefaultValue={() => ''}
+                textInputProps={{
+                    value: inputValue,
+                }}
                 fetchDetails={true}
                 GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
                 debounce={300}
@@ -31,11 +39,13 @@ const NLGooglePlacesAutocomplete = ({ onPress }) => {
                         backgroundColor: 'white',
                         borderTopWidth: 0,
                         borderBottomWidth: 0.8,
-                        borderBottomColor: Colors.g_text
+                        borderBottomColor: Colors.g_text,
+                        ...style
                     },
                     textInput: {
                         borderWidth: 0,
                         paddingLeft: 0,
+                        ...style
                     }
                 }}
                 onPress={(data, details = null) => {
@@ -45,6 +55,7 @@ const NLGooglePlacesAutocomplete = ({ onPress }) => {
                         longitude: details.geometry.location.lng,
                     })
                 }}
+                onChangeText={(txt) => setInputValue(txt)}
                 query={{
                     key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',
                     language: 'en',

@@ -4,7 +4,8 @@ const Screens ={
     Level:'Level',
     LandingPage:'MainStack',
     CreatePost: 'CreatePost',
-    CreateComment: 'CreateComment'
+    CreateComment: 'CreateComment',
+    EditProfile: 'EditProfile'
 }
 
 export default Screens;

@@ -1308,13 +1308,13 @@ const BankAccountForm = ({ setSubmitFn }) => {
                                         setFieldValue('role', "Current")
                                         setShowModal(false)
                                     }}>
-                                        <Text style={{ fontSize: 26, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Current</Text>
+                                        <Text style={{ fontSize: 22, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Current</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => {
                                         setFieldValue('role', "Saving")
                                         setShowModal(false)
                                     }}>
-                                        <Text style={{ fontSize: 26, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Saving</Text>
+                                        <Text style={{ fontSize: 22, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Saving</Text>
                                     </TouchableOpacity>
                                 </View>
                             </Modal>

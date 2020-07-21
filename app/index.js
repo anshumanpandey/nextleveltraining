@@ -37,6 +37,7 @@ import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './sta
 import './api/AxiosBootstrap';
 import hasFullProfile from './utils/perType/profileResolver';
 import SplashScreen from 'react-native-splash-screen'
+import EditProfile from './screens/editProfile/EditProfile';
 
 let initialRouteName = null
 
@@ -165,6 +166,15 @@ const AppMain = () => {
       }),
     }
 
+    tabs.EditProfile = {
+      screen: EditProfile,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
     tabs.CreateComment = {
       screen: CommentsScreen,
       navigationOptions: () => ({
@@ -227,7 +237,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost'] : ['Profile'],
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile'] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

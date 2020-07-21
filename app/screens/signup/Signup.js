@@ -3,15 +3,12 @@ import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, Te
 import Images from '../../constants/image'
 import styles from './styles.js';
 import useAxios from 'axios-hooks'
-import { Formik } from 'formik';
-import ErrorLabel from '../../components/ErrorLabel';
 import Screen from '../../utils/screen';
-import GlobalStyles from '../../constants/GlobalStyles';
 import AsyncStorage from '@react-native-community/async-storage';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin } from 'react-native-google-signin';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
+import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
@@ -61,115 +58,7 @@ const Signup = (props) => {
         <View style={styles.signup_logo_view}>
           <Image source={Images.Mlogo} />
         </View>
-
-        <Formik
-          initialValues={{
-            fullName: "",
-            address: "",
-            emailID: "",
-            mobileNo: "",
-            password: "",
-            role: props.navigation.getParam('role', "Player")
-          }}
-          validate={(values) => {
-            const errors = {}
-
-            if (!values.fullName) errors.fullName = 'Required'
-            if (!values.address) errors.address = 'Required'
-            if (!values.emailID) errors.emailID = 'Required'
-            if (!values.mobileNo) errors.mobileNo = 'Required'
-            if (!values.password) errors.password = 'Required'
-
-            return errors
-          }}
-          onSubmit={values => {
-            register({ data: values })
-              .then((r) => {
-                AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
-                return login({ data: { emailID: values.emailID, password: values.password } })
-              })
-              .then((r) => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
-                return getUserData()
-              })
-              .then((r) => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                props.navigation.navigate(Screen.LandingPage)
-              })
-              .catch((r) => console.log(r))
-          }}
-        >
-          {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
-            <>
-              <View style={styles.signup_info_input_view}>
-                <View style={styles.signup_info_view}>
-                  <TextInput
-                    placeholder="Full Name"
-                    keyboardType="default"
-                    onChangeText={handleChange('fullName')}
-                    onBlur={handleBlur('fullName')}
-                    value={values.fullName}
-                  />
-                </View>
-                {errors.fullName && touched.fullName && <ErrorLabel text={errors.fullName} />}
-
-                <View style={[styles.signup_info_view, { borderBottomWidth: 0, zIndex: 20}]}>
-                  <NLGooglePlacesAutocomplete onPress={(data, details) => {
-                    setFieldValue("address", data.description)
-                  }} />
-                </View>
-                {errors.address && touched.address && <ErrorLabel text={errors.address} />}
-
-                <View style={styles.signup_info_view}>
-                  <TextInput
-                    placeholder="Email ID"
-                    keyboardType="email-address"
-                    onChangeText={handleChange('emailID')}
-                    onBlur={handleBlur('emailID')}
-                    value={values.emailID}
-                  />
-                </View>
-                {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
-
-                <View style={styles.signup_info_view}>
-                  <TextInput
-                    placeholder="Mobile Number"
-                    keyboardType='numeric'
-                    onChangeText={handleChange('mobileNo')}
-                    onBlur={handleBlur('mobileNo')}
-                    value={values.mobileNo}
-                  />
-                </View>
-                {errors.mobileNo && touched.mobileNo && <ErrorLabel text={errors.mobileNo} />}
-
-                <View style={styles.signup_info_view}>
-                  <TextInput
-                    placeholder="Password"
-                    secureTextEntry={true}
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
-                  />
-                </View>
-                {errors.password && touched.password && <ErrorLabel text={errors.password} />}
-
-              </View>
-              <View style={styles.signup_btn_view}>
-                <TouchableOpacity
-                  disabled={signupIsDisabled()}
-                  style={[styles.signup_btn_player, signupIsDisabled() && GlobalStyles.disabled_button]}
-                  onPress={handleSubmit}
-                >
-                  <View style={styles.signup_btn_player_view}>
-                    <Text style={styles.signup_player_text}>Join Now</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
-        </Formik>
-
-
+        <NLUserDataForm {...props} />
         <View style={styles.signup_other_view}>
           <View style={styles.signup_line}>
             <Text style={styles.signup_continue}>Or Continue with</Text>

@@ -7,6 +7,8 @@ import styles from './styles'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState.js';
 import hasFullProfile from '../../utils/perType/profileResolver.js';
 import AsyncStorage from '@react-native-community/async-storage';
+import NavigationService from '../../navigation/NavigationService.js';
+import Screens from '../../utils/screen.js';
 
 
 const menulist = [
@@ -26,7 +28,15 @@ const fullProfileMenu = [
         id: 0,
         title: 'Personal Details',
         icon: `${Images.PersonalDetailIcon}`,
-        path: 'PaidEvent'
+        path: 'PaidEvent',
+        onPress: (props, profile) => {
+            NavigationService.navigate(Screens.EditProfile, {
+                navigation: props.navigation,
+                emailIDIsDisabled: true,
+                btnText: 'Save',
+                ...profile
+            })
+        }
     },
     {
         id: 1,
@@ -100,7 +110,7 @@ const Menu = (props) => {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        onPress={() => item.onPress && item.onPress()}
+                        onPress={() => item.onPress && item.onPress(props, profile)}
                     >
                         <View style={styles.menu_item_view}>
                             <View style={styles.menu_inner_view}>
