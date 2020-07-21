@@ -42,7 +42,7 @@ const Profile = (props) => {
 
           return errors;
         }}
-        onSubmit={values => {
+        onSubmit={(values, { resetForm }) => {
           const data = {
             "header": values.title,
             "body": values.bodyText,
@@ -53,7 +53,10 @@ const Profile = (props) => {
           .then(r => {
             AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({file: values.file, uploaded: false}))
           })
-          .then(() => props.navigation.navigate('Home'))
+          .then(() => {
+            props.navigation.navigate('Home')
+            resetForm({ values: {}})
+          })
 
         }}
       >
@@ -94,7 +97,7 @@ const Profile = (props) => {
                 />
                 {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
 
-                {values.file.uri && (
+                {values.file && values.file.uri && (
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }} />
@@ -140,7 +143,7 @@ const Profile = (props) => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    flex: 1,
+    flexGrow: 1,
   },
   post_view: {
     backgroundColor: 'white',
