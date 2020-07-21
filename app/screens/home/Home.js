@@ -39,15 +39,16 @@ const Home = (props) => {
   const [dataToShow, setDataToShow] = useState([]);
   const [token] = useGlobalState('token')
 
-  const [{ data, loading, error }, login] = useAxios({
+  const [{ data, loading, error }, refetch] = useAxios({
     url: '/Users/GetPostsByUser',
   })
 
   useEffect(() => {
+    const focusListener = props.navigation.addListener('didFocus', refetch);
     if (!data) return
     if (!data.length) return
 
-    data.map(p => {
+    const posts = data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
           const j = {
@@ -61,13 +62,20 @@ const Home = (props) => {
           if (fileString) {
             j.imageUri = JSON.parse(fileString).file.uri
           }
-
-          dataToShow.push(j)
-          setDataToShow(dataToShow)
+          return j
           //SyncPosts(JSON.parse(fileString).file.fileCopyUri, token)
         })
     })
+    Promise.all(posts)
+    .then(p => {
+      setDataToShow(p)
+    })
+
+    return () => focusListener?.remove();
+
   }, [loading])
+
+
 
   let body = (
     <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>

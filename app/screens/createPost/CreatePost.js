@@ -50,7 +50,9 @@ const Profile = (props) => {
           }
 
           doPost({ data })
-          .then(r => AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({file: values.file, uploaded: false})))
+          .then(r => {
+            AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({file: values.file, uploaded: false}))
+          })
           .then(() => props.navigation.navigate('Home'))
 
         }}
@@ -61,10 +63,10 @@ const Profile = (props) => {
               <View style={styles.post_view}>
                 <View>
                   <View style={{ justifyContent: 'space-between', flexDirection: 'row',flexGrow: 1 }}>
-                    <View style={{ flexDirection: 'column', height: 60 }}>
+                    <View style={{ flexDirection: 'column', height: 60, width: '90%' }}>
                       <Input
                         placeholderTextColor="gray"
-                        style={{ height: '90%', width: '100%'}}
+                        style={{ height: '90%', width: '100%', }}
                         onChangeText={handleChange('title')}
                         onBlur={handleBlur('title')}
                         value={values.title}
