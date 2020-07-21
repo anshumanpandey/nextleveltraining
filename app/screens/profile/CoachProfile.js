@@ -91,33 +91,40 @@ class MultiStep extends Component {
 
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
-        if (this.stepOneIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 1 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
-            console.log('step one is completed, jumping to 2')
-        }
-        if (this.stepTwoIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 2 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
-            console.log('step two is completed, jumping to 3')
-        }
 
-        if (this.stepThreeIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 3 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
-            console.log('step three is completed, jumping to 4')
+        if (this.stepFiveIsComplete(profile)) {
+            NavigationService.navigate('Home')
+            console.log('step four is completed, navigating to home')
+            return
         }
 
         if (this.stepFourIsComplete(profile)) {
             this.setState({ selectedSegmentIndex: 4 })
             this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 4 })
             console.log('step four is completed, jumping to 5')
+            return
         }
 
-        if (this.stepFiveIsComplete(profile)) {
-            NavigationService.navigate('Home')
-            console.log('step four is completed, navigating to home')
+        if (this.stepThreeIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 3 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
+            console.log('step three is completed, jumping to 4')
+            return
         }
+
+        if (this.stepTwoIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 2 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
+            console.log('step two is completed, jumping to 3')
+            return
+        }
+
+        if (this.stepOneIsComplete(profile)) {
+            this.setState({ selectedSegmentIndex: 1 })
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
+            console.log('step one is completed, jumping to 2')
+        }
+
     }
 
     stepOneIsComplete = (profile) => {
@@ -169,14 +176,6 @@ class MultiStep extends Component {
     toggleSwitchSaturday = (cb) => this.setState({
         is_enable_saturday: !this.state.is_enable_saturday ? true : false
     }, cb)
-
-    handleOnCardPress = ({ title, data, screen = "EditInput", }) => {
-        NavigationService.navigate(screen, {
-            title,
-            data,
-            cb: (achievements) => { },
-        })
-    }
 
 
     render() {
@@ -1131,6 +1130,14 @@ export const AboutMeCoachForm = () => {
     const [profilePic, setProfilePic] = useState('profile');
     const [profile] = useGlobalState('profile');
 
+    const handleOnCardPress = ({ title, data, screen = "EditInput", }) => {
+        NavigationService.navigate(screen, {
+            title,
+            data,
+            cb: (achievements) => { },
+        })
+    }
+
     return (
         <ScrollView>
             <View style={styles.containerAbout}>
@@ -1164,7 +1171,7 @@ export const AboutMeCoachForm = () => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "About Me", data: profile.AboutUs })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "About Me", data: profile.AboutUs })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>About me</Text>
@@ -1179,7 +1186,7 @@ export const AboutMeCoachForm = () => {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "Accomplishment", data: profile.Accomplishment })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Accomplishment", data: profile.Accomplishment })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Accomplishment</Text>
@@ -1311,7 +1318,7 @@ export const AboutMeCoachForm = () => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => this.handleOnCardPress({ title: "Price Per Hour", data: profile.Rate })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Price Per Hour</Text>

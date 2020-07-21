@@ -43,6 +43,7 @@ const NLUserDataForm = (props) => {
                 address: props.navigation.getParam('Address') || "",
                 emailID: props.navigation.getParam('EmailID') || "",
                 mobileNo: props.navigation.getParam('MobileNo') || "",
+                role: props.navigation.getParam('role', "Player"),
                 password: "",
             }}
             validate={(values) => {

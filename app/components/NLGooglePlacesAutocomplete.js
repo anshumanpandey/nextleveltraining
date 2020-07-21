@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
 import { View } from 'native-base';
 import Colors from '../constants/color';
 
 const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = undefined, style = {} }) => {
+    const inputRef = useRef()
     const [currentLocation, setCurrentLocation] = useState()
     const [inputValue, setInputValue] = useState(undefined)
 
     useEffect(() => {
         setInputValue(defaultValue)
+        inputRef.current?.setAddressText(defaultValue)
     }, [])
 
     return (
         <>
             <GooglePlacesAutocomplete
+                ref={(instance) => { inputRef.current = instance }}
                 style={{ zIndex: 10 }}
                 placeholder={'Search location address'}
                 listViewDisplayed='true'
-                getDefaultValue={() => ''}
-                value={inputValue}
                 onChangeText={(txt) => setInputValue(txt)}
                 fetchDetails={true}
                 GooglePlacesDetailsQuery={{ fields: 'formatted_address,geometry' }}
