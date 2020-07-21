@@ -47,14 +47,15 @@ const Home = (props) => {
     const focusListener = props.navigation.addListener('didFocus', refetch);
     if (!data) return
     if (!data.length) return
-
+    
+    const dateFormat = 'DD MMM YYYY HH:mm'
     const posts = data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
           const j = {
             id: p.Id,
             name: p.Header,
-            time: moment(p.CreatedDate).format('DD MMM YYYY HH:mm'),
+            time: moment(p.CreatedDate).format(dateFormat),
             description: p.Body,
             comments: p.Comments || [],
           }
@@ -68,7 +69,7 @@ const Home = (props) => {
     })
     Promise.all(posts)
     .then(p => {
-      setDataToShow(p)
+      setDataToShow(p.sort((left, right) => moment.utc(right.time, dateFormat).diff(moment.utc(left.time, dateFormat)) ))
     })
 
     return () => focusListener?.remove();

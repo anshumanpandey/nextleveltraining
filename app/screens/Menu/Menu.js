@@ -92,7 +92,7 @@ const Menu = (props) => {
 
         <View style={styles.menu_view}>
             <View style={styles.menu_avatar}>
-                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic.uri } : Images.KobePlayer} />
+                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder} />
                 <Text style={styles.avatar_title}>{profile?.FullName}</Text>
             </View>
             <FlatList

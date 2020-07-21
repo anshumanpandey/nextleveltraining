@@ -272,7 +272,7 @@ const AppMain = () => {
       drawerWidth: Dimensions.deviceWidth * 0.6,
       contentComponent: hasFullProfile(profile) ? Menu : undefined,
       defaultNavigationOptions: {
-        drawerLockMode: hasFullProfile(profile) ? 'locked-open': 'locked-closed' ,
+        drawerLockMode: hasFullProfile(profile) ? 'unlocked': 'locked-closed' ,
       }
     },
   );
