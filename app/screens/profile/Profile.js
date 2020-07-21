@@ -12,7 +12,7 @@ import {pickImage} from '../../helpers/ImagePicker';
 import { useGlobalState } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const Profile = (props) => {
+const PlayerProfile = (props) => {
   const [profilePic, setProfilePic] = useState();
   const [profile] = useGlobalState('profile')
   const {user, AboutUs, Achievements, Teams, UpcomingMatches} = profile;
@@ -107,4 +107,4 @@ const Profile = (props) => {
   );
 }
 
-export default Profile;
+export default PlayerProfile;

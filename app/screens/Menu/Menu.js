@@ -42,7 +42,10 @@ const fullProfileMenu = [
         id: 1,
         title: 'About Me',
         icon: `${Images.AboutMeIcon}`,
-        path: 'FavouriteList'
+        path: 'FavouriteList',
+        onPress: (props, profile) => {
+            NavigationService.navigate('AboutMe')
+        }
     },
     {
         id: 2,
