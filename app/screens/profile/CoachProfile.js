@@ -482,8 +482,8 @@ class MultiStep extends Component {
                                                 <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
                                                 <Text>{' '}To{' '}</Text>
                                                                                                 
-                                                {e.CurrentlyWorking == false && <Text>{' '}Till Date</Text>}
-                                                {e.CurrentlyWorking == true && <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>}
+                                                {e.CurrentlyWorking == true && <Text>{' '}Till Date</Text>}
+                                                {e.CurrentlyWorking == false && <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>}
                                             </View>
                                         </View>
                                     </TouchableOpacity>
