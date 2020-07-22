@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TextInput, Text, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
 import styles from './styles';
 import { Icon } from 'native-base';
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
@@ -74,8 +74,8 @@ const AddTeam = (props) => {
               saveOnPress={handleSubmit}
             />
             {/* eslint-disable-next-line react-native/no-inline-styles */}
-            <View style={{ padding: 30 }}>
-              <View style={styles.inputContain}>
+            <View>
+              <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
                 <Picker
                   selectedValue={values.type}
                   style={{ height: 50, width: "100%" }}
@@ -101,7 +101,7 @@ const AddTeam = (props) => {
                     setFieldValue('file', file)
                   })
               }}>
-                <View style={styles.inputContain}>
+                <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
                   <TextInput
                     editable={false}
                     style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
@@ -113,7 +113,7 @@ const AddTeam = (props) => {
                   />
                 </View>
               </TouchableOpacity>
-              {values.file && <Image style={{ height: 250, resizeMode: 'contain'}} source={{ uri: values.file?.uri }} />}
+              {values.file && <Image style={{ height: '80%', width: Dimensions.get("screen").width,resizeMode: 'contain'}} source={{ uri: values.file?.uri }} />}
               {errors.file && touched.file && <ErrorLabel text={errors.file} />}
 
             </View>
