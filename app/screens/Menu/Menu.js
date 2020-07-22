@@ -35,6 +35,15 @@ const Menu = (props) => {
             }
         },
         {
+            id: 12,
+            title: 'Availability',
+            icon: `${Images.LogoutIcon}`,
+            path: 'Availability',
+            onPress: (props, profile) => {
+                NavigationService.navigate('Availavility')
+            }
+        },
+        {
             id: 10,
             title: 'Training Locations',
             icon: `${Images.LogoutIcon}`,
@@ -43,24 +52,6 @@ const Menu = (props) => {
                 NavigationService.navigate('TrainingLocation')
             }
         },
-        {
-            id: 11,
-            title: 'Travel',
-            icon: `${Images.LogoutIcon}`,
-            path: 'Travel',
-            onPress: (props, profile) => {
-                NavigationService.navigate('Travel')
-            }
-        },
-        {
-            id: 12,
-            title: 'Availability',
-            icon: `${Images.LogoutIcon}`,
-            path: 'Availability',
-            onPress: (props, profile) => {
-                NavigationService.navigate('Availavility')
-            }
-        }
     ]
 
     const fullProfileMenu = [
@@ -137,6 +128,7 @@ const Menu = (props) => {
 
     const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile')
+    let finalMenu = []
 
     if (hasFullProfile(profile)) {
         if (!menulist.find(i => i.title == 'Help')) {
@@ -144,6 +136,14 @@ const Menu = (props) => {
         }
         if (profile.Role == "Coach") {
             if (!menulist.find(i => i.path == 'BankAccount')) {
+                finalMenu = [
+                    // part of the array before the specified index
+                    ...menulist.slice(0, 2),
+                    // inserted items
+                    ...coachMenulist,
+                    // part of the array after the specified index
+                    ...menulist.slice(2)
+                ]
                 menulist.unshift(...coachMenulist)
             }
         }
@@ -164,7 +164,7 @@ const Menu = (props) => {
                 <Text style={styles.avatar_title}>{profile?.FullName}</Text>
             </View>
             <FlatList
-                data={menulist}
+                data={finalMenu}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <TouchableOpacity

@@ -26,7 +26,7 @@ import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
 
-const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION', 'TRAVEL']
+const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
 const Width = Dimensions.get('window').width;
 
@@ -92,16 +92,10 @@ class MultiStep extends Component {
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
 
-        if (this.stepFiveIsComplete(profile)) {
-            NavigationService.navigate('Home')
-            console.log('step four is completed, navigating to home')
-            return
-        }
-
         if (this.stepFourIsComplete(profile)) {
             this.setState({ selectedSegmentIndex: 4 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 4 })
-            console.log('step four is completed, jumping to 5')
+            NavigationService.navigate('Home')
+            console.log('step four is completed, navigating to home')
             return
         }
 
@@ -146,10 +140,6 @@ class MultiStep extends Component {
 
     stepFourIsComplete = (profile) => {
         return profile.TrainingLocations != null && profile.TrainingLocations.length != 0
-    }
-
-    stepFiveIsComplete = (profile) => {
-        return profile.TravelPostCodes != null && profile.TravelPostCodes.length != 0
     }
 
     setShowTimePickerFor = (key) => this.setState({ showTimerPickerFor: key })
@@ -209,11 +199,6 @@ class MultiStep extends Component {
                                             this.state.traininLocationSubmitFn()
                                         }
 
-                                        if (this.state.selectedSegmentIndex == 4) {
-                                            this.setState({ saving: true })
-                                            this.state.travelSubmitFn()
-                                        }
-
                                     }}>
                                     <Text style={{ color: 'black', opacity: this.state.saving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
                                 </TouchableOpacity>
@@ -239,12 +224,6 @@ class MultiStep extends Component {
     //bank account
     bankAccount() {
         return (<BankAccountForm setSubmitFn={(fn) => this.setState({ bankSubmitFn: fn })} />)
-    }
-
-    //travel
-    //bank account
-    travel() {
-        return (<TravelForm setSubmitFn={(fn) => this.setState({ travelSubmitFn: fn })} />)
     }
 
 
@@ -300,13 +279,6 @@ class MultiStep extends Component {
                         {this.trackingLocation()}
                     </View>
 
-                    <View style={{
-                        backgroundColor: 'white',
-                        flex: 1,
-                        width: Dimensions.get('window').width
-                    }} >
-                        {this.travel()}
-                    </View>
 
                 </ScrollView>
                 <FlatList style={{
@@ -834,148 +806,6 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
             </View>
         </ScrollView>
 
-    );
-}
-
-export const TravelForm = ({ setSubmitFn }) => {
-    const formikRef = useRef()
-    const [dataProvider, setDataProvider] = useState()
-    const [showModal, setShowModal] = useState(false)
-    const [searcher, setSearcher] = useState(null)
-    const [profile] = useGlobalState('profile')
-    const [valuesToShow, setValuesToShow] = useState([])
-
-    const [postReq, doPost] = useAxios({
-        url: '/Users/SaveTravelPostCode',
-        method: 'POST'
-    }, { manual: true })
-
-    const [getUserReq, getUserData] = useAxios({
-        url: '/Users/GetUser',
-    }, { manual: true })
-
-    const [{ data, loading, error }] = useAxios({
-        url: '/Users/GetPostCodes',
-    })
-
-    useEffect(() => {
-        setSubmitFn && setSubmitFn(formikRef.current?.submitForm)
-    }, [])
-
-    useEffect(() => {
-        if (!data) return
-        const codes = data.map(i => ({ postCode: i }))
-        setValuesToShow(codes)
-        setDataProvider(dataProviderInstance.cloneWithRows(codes))
-        setSearcher(new FuzzySearch(codes, ['postCode']))
-    }, [loading]);
-
-    const signupIsDisabled = () => postReq.loading || getUserReq.loading || loading
-
-    return (
-        <View style={styles.containerCommon}>
-            <Formik
-                innerRef={(r) => formikRef.current = r}
-                initialValues={{ codes: profile?.TravelPostCodes?.map(t => t.PostCode) }}
-                validate={(values) => {
-                    const errors = {}
-
-                    if (values.codes.length == 0) errors.codes = 'Required'
-
-                    return errors
-                }}
-                onSubmit={values => {
-                    doPost({ data: values.codes.map(t => ({ postCode: t })) })
-                        .then(r => getUserData())
-                        .then((r) => {
-                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                            NavigationService.goBack()
-                        })
-                        .catch((r) => console.log(r))
-                }}
-            >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
-                    <>
-                        {loading && <Text style={{ fontSize: 28, textAlign: 'center', marginTop: '10%' }}>Loading...</Text>}
-                        {!loading && (
-                            <>
-                                <View>
-                                    <Text style={{ fontSize: 12, color: "blue" }}>Travel Details</Text>
-                                </View>
-                                <View>
-                                    <Text style={{ fontSize: 10, color: "lightgrey" }}>Please enter your travel details below</Text>
-                                </View>
-                                <TouchableOpacity onPress={() => setShowModal(true)}>
-                                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey", paddingVertical: '5%' }}>
-                                        <Text style={{ color: 'gray' }}>Select post code...</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <View>
-                                    {values.codes.map(c => {
-                                        return (<Text style={{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>{c.postCode ? c.postCode : c}</Text>);
-                                    })}
-                                </View>
-                                {!setSubmitFn && (
-                                    <View style={styles.signup_btn_view}>
-                                        <TouchableOpacity
-                                            disabled={signupIsDisabled()}
-                                            style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
-                                            onPress={handleSubmit}
-                                        >
-                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ color: 'white' }}>Save</Text>
-                                                {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
-                                <Modal
-                                    onBackdropPress={() => setShowModal(false)}
-                                    isVisible={showModal}
-                                    style={styles.modal}>
-                                    <View style={{ backgroundColor: 'white', height: '100%' }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <TextInput style={{ flex: 1, marginLeft: '5%' }} placeholder="Type a post code" onChangeText={(text) => {
-                                                console.log('callked')
-                                                setDataProvider(dataProviderInstance.cloneWithRows(searcher.search(text)))
-                                            }} />
-                                            <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
-                                        </View>
-
-                                        <FieldArray
-                                            name="codes"
-                                            render={arrayHelpers => {
-                                                if (!dataProvider) return <></>
-                                                return (
-                                                    <RecyclerListView
-                                                        extendedState={values.codes}
-                                                        layoutProvider={layoutProvider}
-                                                        dataProvider={dataProvider}
-                                                        rowRenderer={(_, item, index, state) => {
-                                                            const fn = () => {
-                                                                const found = values.codes.findIndex(i => item.postCode == i)
-
-                                                                if (found == -1) {
-                                                                    arrayHelpers.insert(index, item.postCode)
-                                                                } else {
-                                                                    arrayHelpers.remove(found)
-                                                                }
-                                                            }
-                                                            return <PostCodeListItem isSelected={values.codes.includes(item.postCode)} value={item.postCode} cb={fn} />;
-                                                        }}
-                                                    />
-                                                );
-                                            }}
-
-                                        />
-                                    </View>
-                                </Modal>
-                            </>
-                        )}
-                    </>
-                )}
-            </Formik>
-        </View>
     );
 }
 
