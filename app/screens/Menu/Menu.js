@@ -147,6 +147,8 @@ const Menu = (props) => {
                 menulist.unshift(...coachMenulist)
             }
         }
+
+        finalMenu = menulist
     }
 
     useEffect(() => {
