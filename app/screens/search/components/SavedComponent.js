@@ -17,6 +17,14 @@ const SavedComponent = (props) => {
     }
   })
 
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('tabPress', e => {
+      searchCoaches()
+    });
+  
+    return unsubscribe;
+  }, [props.navigation]);
+
   return (
     <>
       <FlatList
