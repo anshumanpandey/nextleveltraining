@@ -1,8 +1,8 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Images from '../../../../constants/image';
 import styles from './information-style';
-import { Icon } from 'native-base';
+import { Icon, Spinner } from 'native-base';
 import NavigationService from '../../../../navigation/NavigationService';
 import StarRating from 'react-native-star-rating';
 import InformationTab from './informationTab';
@@ -10,11 +10,31 @@ import MediaTab from './MediaTab';
 import ReviewTab from './ReviewTab';
 import Tabs from './Tabs';
 import Colors from '../../../../constants/color';
+import getDistance from 'geolib/es/getDistance';
+import { useGlobalState } from '../../../../state/GlobalState';
+var convert = require('convert-units')
 
 const Information = (props) => {
+  const [profile] = useGlobalState('profile')
   const [selectedTab, setSelectedTab] = useState(0);
+  const [milesAway, setMilesAway] = useState();
   const activeColor = Colors.s_blue;
   const inActiveColor = 'gray';
+
+  useEffect(() => {
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      const meters = getDistance(
+        { latitude: profile.Lat, longitude: profile.Lng, },
+        { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
+      )
+
+      console.log(convert(meters).from('m').to("mi"))
+
+      setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
+
+    });
+    return () => focusListener?.remove();
+  }, [])
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -53,14 +73,17 @@ const Information = (props) => {
               <Text style={styles.headText}>£ {props.navigation.getParam("Rate")}</Text>
               <Text style={{ fontSize: 12, color: 'gray' }}>per hour</Text>
             </View>
-            <View style={styles.rate_miles_view}>
-              <Text style={[styles.headText, { textAlign: 'right' }]}>
-                {'2.3 miles'}
-              </Text>
-              <Text style={{ fontSize: 12, textAlign: 'right', color: 'gray' }}>
-                {'away from your'}
-              </Text>
-            </View>
+            {milesAway && (
+              <View style={styles.rate_miles_view}>
+                <Text style={[styles.headText, { textAlign: 'right' }]}>
+                  {`${milesAway} miles`}
+                </Text>
+                <Text style={{ fontSize: 12, textAlign: 'right', color: 'gray' }}>
+                  {'away from your'}
+                </Text>
+              </View>
+            )}
+            {!milesAway && ( <Spinner color={Colors.s_yellow} /> )}
           </View>
 
           <View style={styles.buttonContain}>

@@ -34,7 +34,7 @@ const InformationTab = (props) => {
       />
       <DetailsCard
         title={'Accomplishments'}
-        value={props.AboutUs}
+        value={props.Accomplishment}
       />
       <ExperienceCard
         title={'Experience'}

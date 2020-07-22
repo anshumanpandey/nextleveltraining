@@ -6,8 +6,6 @@ import Images from '../../../constants/image';
 import NavigationService from '../../../navigation/NavigationService';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
-import getDistance from 'geolib/es/getDistance';
-var convert = require('convert-units')
 
 const SearchComponent = () => {
   const [profile] = useGlobalState('profile')

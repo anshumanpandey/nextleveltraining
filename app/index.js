@@ -128,7 +128,7 @@ const AppMain = () => {
     },
   );
   const tabs = {
-  Profile: {
+    Profile: {
       screen: ProfileStack,
       navigationOptions: () => ({
         tabBarVisible: hasFullProfile(profile),
@@ -260,8 +260,8 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }   
-    
+    }
+
     tabs.TrainingLocationEdit = {
       screen: TrainingLocationEdit,
       navigationOptions: () => ({
@@ -269,7 +269,7 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }  
+    }
 
     tabs.Availavility = {
       screen: AvailavilityScreen,
@@ -278,7 +278,7 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }  
+    }
 
     tabs.Travel = {
       screen: TravelScreen,
@@ -287,7 +287,7 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }    
+    }
 
     tabs.Terms = {
       screen: TermsScreen,
@@ -296,7 +296,7 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }   
+    }
 
     tabs.PrivacyPolicy = {
       screen: PrivacyPolicyScreen,
@@ -305,17 +305,17 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }  
+    }
   }
 
   if (initialRouteName == null) {
-    initialRouteName = hasFullProfile(profile) == true ? 'Home' : 'Profile'
+    initialRouteName = hasFullProfile(profile) == true && token ? 'Home' : 'Profile'
   }
 
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility','TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy"] : ['Profile'],
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
@@ -360,7 +360,7 @@ const AppMain = () => {
       drawerWidth: Dimensions.deviceWidth * 0.6,
       contentComponent: hasFullProfile(profile) ? Menu : undefined,
       defaultNavigationOptions: {
-        drawerLockMode: hasFullProfile(profile) ? 'unlocked': 'locked-closed' ,
+        drawerLockMode: hasFullProfile(profile) ? 'unlocked' : 'locked-closed',
       }
     },
   );
