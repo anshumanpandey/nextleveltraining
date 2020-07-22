@@ -86,27 +86,6 @@ const SearchComponent = () => {
             )}
           </View>
         </View>
-        <View
-          style={{
-            width: 40,
-            height: 40,
-            marginRight: 20,
-            borderRadius: 20,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'white',
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}>
-          <Image source={Images.Filter} />
-        </View>
       </View>
       <FlatList
         horizontal={false}

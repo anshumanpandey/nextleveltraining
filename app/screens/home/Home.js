@@ -11,7 +11,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import { Icon } from 'native-base';
+import { Icon, Spinner } from 'native-base';
 import PostCard from './components/PostCard';
 import useAxios from 'axios-hooks'
 import styles from './styles.js';
@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { useGlobalState } from '../../state/GlobalState'
 import screen from '../../utils/screen'
 import Video from 'react-native-video';
+import Colors from '../../constants/color';
 
 
 const Home = (props) => {
@@ -110,8 +111,6 @@ const Home = (props) => {
     );
   }
 
-  console.log(visibleModal)
-
   return (
     <View style={styles.home_container}>
       {/* <View style={{
@@ -125,57 +124,80 @@ const Home = (props) => {
       </View> */}
       <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
       {body}
-      <Modal
-        visible={visibleModal != false}
-        transparent={true}
-      >
-        <View style={{ flex: 1 }}>
-          <View style={{ position: 'absolute', top: 20, right: 20, zIndex: 100 }}>
-            <TouchableOpacity
-              onPress={() => setVisibleModal(false)}
-            >
-              <Icon type="MaterialIcons" name="close" style={{ color: 'white' }} />
-            </TouchableOpacity>
+      <MediaPreview visibleModal={visibleModal} setVisibleModal={setVisibleModal} />
+    </View>
+  )
+}
 
-          </View>
-          {visibleModal && (!visibleModal.fileType || !visibleModal.fileType.includes('video')) && (
-            <ImageView
-              images={[
-                {
-                  source: { uri: visibleModal.imageUri },
-                  title: 'Paris',
-                  width: Dimensions.get('screen').width,
-                  height: Dimensions.get('screen').height,
-                },
-              ]}
-              isPinchZoomEnabled
-              imageIndex={0}
-              isVisible={visibleModal != false}
-              onClose={() => setVisibleModal(false)}
-            />
-          )}
+const MediaPreview = ({ visibleModal, setVisibleModal }) => {
+  const [videoIsReady, setVideoIsReady] = useState(false);
 
-          {visibleModal && (!visibleModal.fileType || visibleModal.fileType.includes('video')) && (
+  return (
+    <Modal
+      visible={visibleModal != false}
+      transparent={true}
+    >
+      <View style={[{ flexGrow: 1 } && videoIsReady == false && { backgroundColor: 'black', opacity: 0.8 }]}>
+        <View style={[{ position: 'absolute', top: 20, right: 20, zIndex: 100 }]}>
+          <TouchableOpacity
+            onPress={() => setVisibleModal(false)}
+          >
+            <Icon type="MaterialIcons" name="close" style={{ color: 'white' }} />
+          </TouchableOpacity>
+
+        </View>
+        {visibleModal && (!visibleModal.fileType || !visibleModal.fileType.includes('video')) && (
+          <ImageView
+            images={[
+              {
+                source: { uri: visibleModal.imageUri },
+                title: 'Paris',
+                width: Dimensions.get('screen').width,
+                height: Dimensions.get('screen').height,
+              },
+            ]}
+            isPinchZoomEnabled
+            imageIndex={0}
+            isVisible={visibleModal != false}
+            onClose={() => setVisibleModal(false)}
+          />
+        )}
+
+        {visibleModal && (!visibleModal.fileType || visibleModal.fileType.includes('video')) && (
+          <>
             <Video
               controls={true}
               source={{ uri: visibleModal.imageUri }}   // Can be a URL or a local file.
               onError={() => {
                 Alert.alert('Error', 'We could not load the video')
               }}               // Callback when video cannot be loaded
+              onLoadStart={(d) => {
+                console.log('onLoadStart')
+              }}
+              onLoad={(d) => {
+                console.log('onLoad')
+                setVideoIsReady(true)
+              }}
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 bottom: 0,
                 right: 0,
+                display: videoIsReady ? 'flex' : "none"
               }} />
-          )}
+            {!videoIsReady && (
+              <View style={{  backgroundColor: 'black', opacity: 0.8 ,justifyContent: 'center', alignItems: 'center',idth: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
+                <Spinner color={Colors.s_yellow} size={100} />
+                <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
+              </View>
+            )}
+          </>
+        )}
 
-        </View>
-      </Modal>
-    </View>
-  )
-
+      </View>
+    </Modal>
+  );
 }
 
 export default Home;
