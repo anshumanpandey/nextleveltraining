@@ -7,7 +7,7 @@ class Search extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <Header navigate={this.props.navigation.navigate}/>
+        <Header hideCreatePost={true} toggleDrawer={this.props.navigation.toggleDrawer} navigate={this.props.navigation.navigate}/>
         <ParentComponent />
       </View>
     );

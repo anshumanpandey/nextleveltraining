@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import styles from './styles';
 import Dimension from '../../../constants/dimensions';
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../../state/GlobalState';
+import Video from 'react-native-video';
 
 const PostCard = ({ item, onClickItem, onPressOfComment }) => {
   const [likes, setLikes] = useState([]);
@@ -43,15 +44,34 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
           </View>
         </View>
         <View style={styles.post_news_content}>
-          <TouchableOpacity
-            onPress={() => onClickingItem(item)}
-          >
-            <Image
-              source={{ uri: item.imageUri }}
-              style={styles.post_news_image}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
+          {!item.fileType.includes('video') && (
+            <TouchableOpacity
+              onPress={() => onClickingItem(item)}
+            >
+              <Image
+                source={{ uri: item.imageUri }}
+                style={styles.post_news_image}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+          )}
+          {item.fileType.includes('video') && (
+            <TouchableOpacity
+              onPress={() => onClickingItem(item)}
+            >
+              <Video
+                source={{ uri: item.imageUri }}
+                paused={true}
+                currentPosition={1}
+                controls={true}
+                onError={() => {
+                  Alert.alert('Error', 'We could not load the video')
+                }}               // Callback when video cannot be loaded
+                style={{
+                  height: 200,
+                }} />
+            </TouchableOpacity>
+          )}
 
         </View>
         <View style={styles.post_news_comment}>

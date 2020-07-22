@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { Icon } from 'native-base';
 import PostCard from './components/PostCard';
@@ -21,18 +22,8 @@ import SyncPosts from '../../utils/PostSyncher'
 import AsyncStorage from '@react-native-community/async-storage';
 import { useGlobalState } from '../../state/GlobalState'
 import screen from '../../utils/screen'
+import Video from 'react-native-video';
 
-const images = [
-  {
-    source: {
-      uri:
-        'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-    },
-    title: 'Paris',
-    width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height,
-  },
-];
 
 const Home = (props) => {
   const [visibleModal, setVisibleModal] = useState(false);
@@ -51,7 +42,7 @@ const Home = (props) => {
   useEffect(() => {
     if (!data) return
     if (!data.length) return
-    
+
     const dateFormat = 'DD MMM YYYY HH:mm'
     const posts = data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
@@ -67,15 +58,16 @@ const Home = (props) => {
 
           if (fileString) {
             j.imageUri = JSON.parse(fileString).file.uri
+            j.fileType = JSON.parse(fileString).file.type
           }
           return j
           //SyncPosts(JSON.parse(fileString).file.fileCopyUri, token)
         })
     })
     Promise.all(posts)
-    .then(p => {
-      setDataToShow(p.sort((left, right) => moment.utc(right.time, dateFormat).diff(moment.utc(left.time, dateFormat)) ))
-    })
+      .then(p => {
+        setDataToShow(p.sort((left, right) => moment.utc(right.time, dateFormat).diff(moment.utc(left.time, dateFormat))))
+      })
   }, [loading])
 
 
@@ -110,6 +102,8 @@ const Home = (props) => {
     );
   }
 
+  console.log(visibleModal)
+
   return (
     <View style={styles.home_container}>
       {/* <View style={{
@@ -128,30 +122,47 @@ const Home = (props) => {
         transparent={true}
       >
         <View style={{ flex: 1 }}>
-          {/* <View style={{position:'absolute',top:20,right:20,zIndex:100}}>
-          <TouchableOpacity
-           onPress={()=>this.setState({visibleModal:false})}
-          >
-             <Icon type="MaterialIcons" name="close" style={{color:'white'}}/>
-          </TouchableOpacity>
-        
-        </View> */}
-          <ImageView
-            images={[
-              {
-                source: {
-                  uri: visibleModal.imageUri,
+          <View style={{ position: 'absolute', top: 20, right: 20, zIndex: 100 }}>
+            <TouchableOpacity
+              onPress={() => setVisibleModal(false)}
+            >
+              <Icon type="MaterialIcons" name="close" style={{ color: 'white' }} />
+            </TouchableOpacity>
+
+          </View>
+          {visibleModal && !visibleModal.fileType.includes('video') && (
+            <ImageView
+              images={[
+                {
+                  source: { uri: visibleModal.imageUri },
+                  title: 'Paris',
+                  width: Dimensions.get('screen').width,
+                  height: Dimensions.get('screen').height,
                 },
-                title: 'Paris',
-                width: Dimensions.get('screen').width,
-                height: Dimensions.get('screen').height,
-              },
-            ]}
-            isPinchZoomEnabled
-            imageIndex={0}
-            isVisible={visibleModal != false}
-            onClose={() => setVisibleModal(false)}
-          />
+              ]}
+              isPinchZoomEnabled
+              imageIndex={0}
+              isVisible={visibleModal != false}
+              onClose={() => setVisibleModal(false)}
+            />
+          )}
+
+          {visibleModal && visibleModal.fileType.includes('video') && (
+            <Video
+              controls={true}
+              source={{ uri: visibleModal.imageUri }}   // Can be a URL or a local file.
+              onError={() => {
+                Alert.alert('Error', 'We could not load the video')
+              }}               // Callback when video cannot be loaded
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+              }} />
+          )}
+
         </View>
       </Modal>
     </View>

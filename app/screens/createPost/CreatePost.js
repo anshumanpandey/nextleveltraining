@@ -10,6 +10,7 @@ import { Formik } from 'formik';
 import AsyncStorage from '@react-native-community/async-storage';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel'
+import Video from 'react-native-video';
 
 const Profile = (props) => {
   const [profile] = useGlobalState('profile')
@@ -33,7 +34,7 @@ const Profile = (props) => {
       </View> */}
       <Header hideCreatePost={false} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
       <Formik
-        initialValues={{ file: {}, bodyText: '', title: '' }}
+        initialValues={{ file: null, bodyText: '', title: '' }}
         validate={(values) => {
           const errors = {}
 
@@ -50,13 +51,13 @@ const Profile = (props) => {
           }
 
           doPost({ data })
-          .then(r => {
-            AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({file: values.file, uploaded: false}))
-          })
-          .then(() => {
-            props.navigation.navigate('Home')
-            resetForm({ values: {}})
-          })
+            .then(r => {
+              AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
+            })
+            .then(() => {
+              props.navigation.navigate('Home')
+              resetForm({ values: {} })
+            })
 
         }}
       >
@@ -65,7 +66,7 @@ const Profile = (props) => {
             <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.post_view}>
                 <View style={{ padding: Dimension.pro5 }}>
-                  <View style={{ justifyContent: 'space-between', flexDirection: 'row',flexGrow: 1 }}>
+                  <View style={{ justifyContent: 'space-between', flexDirection: 'row', flexGrow: 1 }}>
                     <View style={{ flexDirection: 'column', height: 60, width: '90%' }}>
                       <Input
                         placeholderTextColor="gray"
@@ -97,12 +98,27 @@ const Profile = (props) => {
                 />
                 {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
 
-                {values.file && values.file.uri && (
+                {values.file && !values.file.type.includes('video') && (
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }} />
                     </View>
                   </View>
+                )}
+
+                {values.file && values.file.type.includes('video') && (
+                  <Video 
+                    paused={true}
+                    currentPosition={10}
+                    controls={true}
+                    source={{ uri: values.file.uri, }}   // Can be a URL or a local file.
+                    onError={() => {
+                      Alert.alert('Error', 'We could not load the video')
+                    }}               // Callback when video cannot be loaded
+                    style={{
+                      flex: 2,
+                      height: '50%'
+                    }} />
                 )}
 
               </View>
@@ -114,7 +130,7 @@ const Profile = (props) => {
               <View style={{ backgroundColor: 'white', height: '50%', padding: '8%' }}>
                 <TouchableOpacity onPress={() => {
                   DocumentPicker.pick({
-                    type: [DocumentPicker.types.images, DocumentPicker.types.video],
+                    type: [DocumentPicker.types.images],
                   })
                     .then((file) => {
                       setShowModal(false)
@@ -127,10 +143,21 @@ const Profile = (props) => {
                   </View>
                 </TouchableOpacity>
 
-                <View style={{ flexDirection: 'row', marginTop: '10%' }}>
-                  <Icon type="Entypo" name="video" style={{ fontSize: 28, color: 'steelblue' }} />
-                  <Text style={{ fontSize: 24, marginLeft: '8%' }}>Video</Text>
-                </View>
+                <TouchableOpacity onPress={() => {
+                  DocumentPicker.pick({
+                    type: [DocumentPicker.types.video],
+                  })
+                    .then((file) => {
+                      setShowModal(false)
+                      file.type.includes('video')
+                      setFieldValue('file', file)
+                    })
+                }}>
+                  <View style={{ flexDirection: 'row', marginTop: '10%' }}>
+                    <Icon type="Entypo" name="video" style={{ fontSize: 28, color: 'steelblue' }} />
+                    <Text style={{ fontSize: 24, marginLeft: '8%' }}>Video</Text>
+                  </View>
+                </TouchableOpacity>
 
               </View>
             </Modal>
