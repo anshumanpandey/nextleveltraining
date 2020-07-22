@@ -44,6 +44,8 @@ import TrainingLocationScreen from './screens/trainingLocation/TrainingLocation'
 import TravelScreen from './screens/travel/Travel';
 import TrainingLocationEdit from './screens/trainingLocation/TrainingLocationEdit';
 import AvailavilityScreen from './screens/availavility/Availavility';
+import TermsScreen from './screens/terms/TermsScreen';
+import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen';
 
 let initialRouteName = null
 
@@ -286,6 +288,24 @@ const AppMain = () => {
         ),
       }),
     }    
+
+    tabs.Terms = {
+      screen: TermsScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }   
+
+    tabs.PrivacyPolicy = {
+      screen: PrivacyPolicyScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }  
   }
 
   if (initialRouteName == null) {
@@ -295,7 +315,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility','TrainingLocationEdit', "CreateComment"] : ['Profile'],
+      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility','TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

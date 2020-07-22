@@ -26,8 +26,10 @@
     "axios": "^0.19.2",
     "axios-hooks": "^2.1.0",
     "color": "^3.1.2",
+    "convert-units": "^2.3.4",
     "formik": "^2.1.5",
     "fuzzy-search": "^3.2.1",
+    "geolib": "^3.3.1",
     "moment": "^2.27.0",
     "native-base": "^2.13.12",
     "react": "16.11.0",
@@ -65,7 +67,8 @@
     "react-redux": "^7.2.0",
     "recyclerlistview": "^3.0.0",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",

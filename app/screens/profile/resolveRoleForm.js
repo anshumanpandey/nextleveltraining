@@ -11,7 +11,7 @@ const resolveRoleForm = (profile, formName = "AboutMe", params) => {
             return <AboutMeCoachForm />
         }
         if (profile.Role == "Player") {
-            return <PlayerProfile />
+            return <PlayerProfile {...params} />
         }
     }
 

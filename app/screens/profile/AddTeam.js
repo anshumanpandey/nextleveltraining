@@ -40,7 +40,9 @@ const AddTeam = (props) => {
 
         if (!values.teamName) errors.teamName = 'Required'
         if (!values.startDate) errors.startDate = 'Required'
-        if (!values.endDate) errors.endDate = 'Required'
+        if (values.isChecked == false) {
+          if (!values.endDate) errors.endDate = 'Required'
+        }
 
         return errors
       }}
@@ -50,6 +52,10 @@ const AddTeam = (props) => {
           teamName: values.teamName,
           startDate: values.startDate,
           endDate: values.endDate
+        }
+
+        if (values.isChecked == true) {
+          delete data.endDate
         }
 
         postTeam({ data })
@@ -111,6 +117,7 @@ const AddTeam = (props) => {
                 <View>
                   <Text style={styles.dateText}>TO</Text>
                   <DatePicker
+                    disabled={values.isChecked}
                     mode="date"
                     date={values.endDate}
                     format="DD-MM-YYYY"

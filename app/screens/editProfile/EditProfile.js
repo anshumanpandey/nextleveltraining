@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 import Header from '../../components/header/Header'
 import NLUserDataForm from '../../components/userDataForm/NLUserDataForm'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
-import { compose } from 'redux'
+import { Spinner } from 'native-base'
 
 const EditProfile = (props) => {
     const [isSaving, setIsSaving] = useState(false);
@@ -47,6 +47,7 @@ const EditProfile = (props) => {
                     {...props}
                     hidePasswordInput={true}
                     hideSaveBtn={true}
+                    action="update"
                     setSubmitFn={(submitFn) => {
                         setSubmitFn(() => submitFn)
                     }}

@@ -12,11 +12,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screens from '../../utils/screen';
 
-const NLUserDataForm = (props) => {
+const NLUserDataForm = ({ action = "register",...props}) => {
     const formikRef = useRef()
 
     const [{ data, loading, error }, register] = useAxios({
-        url: '/Account/Register',
+        url: action == 'update' ? '/Users/UpdateProfile' : '/Account/Register',
         method: 'POST',
     }, { manual: true })
 
@@ -45,6 +45,8 @@ const NLUserDataForm = (props) => {
                 mobileNo: props.navigation.getParam('MobileNo') || "",
                 role: props.navigation.getParam('role', "Player"),
                 password: "",
+                lat: 0,
+                lng: 0
             }}
             validate={(values) => {
                 const errors = {}
@@ -66,15 +68,20 @@ const NLUserDataForm = (props) => {
             onSubmit={values => {
                 console.log('saving user data')
                 if (props.hidePasswordInput == true) {
-                    delete data.password
+                    delete values.password
                 }
                 register({ data: values })
                     .then((r) => {
-                        AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
-                        return login({ data: { emailID: values.emailID, password: values.password } })
+                        if (action == 'register') {
+                            AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
+                            return login({ data: { emailID: values.emailID, password: values.password } })
+                        }
+                        return Promise.resolve()
                     })
                     .then((r) => {
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                        if (action == 'register') {
+                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                        }
                         return getUserData()
                     })
                     .then((r) => {
@@ -104,6 +111,8 @@ const NLUserDataForm = (props) => {
                             defaultValue={values.address}
                             onPress={(data, details) => {
                                 setFieldValue("address", data.description)
+                                setFieldValue("lat", details.geometry.location.lat)
+                                setFieldValue("lng", details.geometry.location.lng)
                             }} />
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 

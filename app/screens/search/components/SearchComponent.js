@@ -1,18 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { View, FlatList, TextInput, Image } from 'react-native';
-import { Icon } from 'native-base';
+import { Icon, Spinner } from 'native-base';
 import PostSearchCard from './subcomponents/PostSearchCard';
 import Images from '../../../constants/image';
 import NavigationService from '../../../navigation/NavigationService';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
+import getDistance from 'geolib/es/getDistance';
+var convert = require('convert-units')
 
 const SearchComponent = () => {
   const [profile] = useGlobalState('profile')
+  const [keyword, setKeyword] = useState('')
+  const [coaches, setCoaches] = useState([])
 
   const [searchCoachesReq, searchCoaches] = useAxios({
-    url: `/Users/GetCoaches/${profile.Id}`,
-  })
+    url: `/Users/GetCoaches`,
+    method: 'POST',
+  }, { manual: true })
 
   return (
     <View style={{ height: '100%', width: '100%', backgroundColor: 'white' }}>
@@ -34,6 +39,8 @@ const SearchComponent = () => {
             width: '70%',
           }}>
           <TextInput
+            onChangeText={(txt) => setKeyword(txt)}
+            value={keyword}
             placeholder="Search..."
             style={{
               fontSize: 14,
@@ -55,15 +62,30 @@ const SearchComponent = () => {
               display: 'flex',
               alignItems: 'center',
             }}>
-            <Icon
-              type="EvilIcons"
-              name="search"
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                color: 'white',
-              }}
-            />
+            {!searchCoachesReq.loading && (
+              <Icon
+                onPress={() => {
+                  searchCoaches({
+                    data: {
+                      playerId: profile.Id,
+                      search: keyword
+                    }
+                  })
+                    .then((r) => setCoaches(r.data))
+                }}
+                type="EvilIcons"
+                name="search"
+                style={{
+                  position: 'absolute',
+                  zIndex: 1,
+                  color: 'white',
+                }}
+              />
+            )}
+
+            {searchCoachesReq.loading && (
+              <Spinner size={26} />
+            )}
           </View>
         </View>
         <View
@@ -90,11 +112,21 @@ const SearchComponent = () => {
       </View>
       <FlatList
         horizontal={false}
-        data={searchCoachesReq.data}
+        data={coaches}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostSearchCard
-            onPress={() => NavigationService.navigate('Information')}
+            {...item}
+            onPress={() => NavigationService.navigate('Information', {...item})}
+            refreshCb={() => {
+              searchCoaches({
+                data: {
+                  playerId: profile.Id,
+                  search: keyword
+                }
+              })
+                .then((r) => setCoaches(r.data))
+            }}
           />
         )}
       />

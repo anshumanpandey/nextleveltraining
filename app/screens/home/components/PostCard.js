@@ -44,7 +44,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
           </View>
         </View>
         <View style={styles.post_news_content}>
-          {!item.fileType.includes('video') && (
+          {item.fileType && !item.fileType.includes('video') && (
             <TouchableOpacity
               onPress={() => onClickingItem(item)}
             >
@@ -55,7 +55,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
               />
             </TouchableOpacity>
           )}
-          {item.fileType.includes('video') && (
+          {item.fileType && item.fileType.includes('video') && (
             <TouchableOpacity
               onPress={() => onClickingItem(item)}
             >

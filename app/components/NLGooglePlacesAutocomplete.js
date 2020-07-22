@@ -55,7 +55,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = un
                         latitude: details.geometry.location.lat,
                         longitude: details.geometry.location.lng,
                     })
-                    setInputValue(data.description)
+                    setInputValue(data.description, details)
                 }}
                 query={{
                     key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',

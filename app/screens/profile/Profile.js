@@ -27,7 +27,7 @@ const PlayerProfile = (props) => {
 
   return (
     <View style={{flex: 1}}>
-      <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}/>
+      {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}/>}
       <ScrollView>
         <View>
           <View style={styles.userView}>

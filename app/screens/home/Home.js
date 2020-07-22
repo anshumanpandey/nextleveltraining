@@ -45,6 +45,7 @@ const Home = (props) => {
 
     const dateFormat = 'DD MMM YYYY HH:mm'
     const posts = data.map(p => {
+      console.log(p)
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
           const j = {
@@ -56,12 +57,15 @@ const Home = (props) => {
             likes: p.Likes || [],
           }
 
-          if (fileString) {
-            j.imageUri = JSON.parse(fileString).file.uri
-            j.fileType = JSON.parse(fileString).file.type
+          if (p.MediaURL) {
+            j.imageUri = p.MediaURL
+          } else if (fileString) {
+            const jsonFile = JSON.parse(fileString)
+            j.imageUri = jsonFile.file.uri
+            j.fileType = jsonFile.file.type
+            SyncPosts(jsonFile.file, p.Id)
           }
           return j
-          //SyncPosts(JSON.parse(fileString).file.fileCopyUri, token)
         })
     })
     Promise.all(posts)
@@ -130,7 +134,7 @@ const Home = (props) => {
             </TouchableOpacity>
 
           </View>
-          {visibleModal && !visibleModal.fileType.includes('video') && (
+          {visibleModal && (!visibleModal.fileType || !visibleModal.fileType.includes('video')) && (
             <ImageView
               images={[
                 {
@@ -147,7 +151,7 @@ const Home = (props) => {
             />
           )}
 
-          {visibleModal && visibleModal.fileType.includes('video') && (
+          {visibleModal && (!visibleModal.fileType || visibleModal.fileType.includes('video')) && (
             <Video
               controls={true}
               source={{ uri: visibleModal.imageUri }}   // Can be a URL or a local file.

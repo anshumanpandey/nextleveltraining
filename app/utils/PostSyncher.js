@@ -1,16 +1,26 @@
 import Upload from 'react-native-background-upload'
+import RNFetchBlob from 'rn-fetch-blob'
+import { getGlobalState } from '../state/GlobalState'
 
-const SyncPosts = (uri, token) => {
-    console.log(uri)
+const FileSyncher = (fileObject, idToAttach) => {
+    const profile = getGlobalState('profile')
+    const token = getGlobalState('token')
+    const { uri } = fileObject
+
     const options = {
         url: 'http://44.233.116.105/NextLevelTrainingApi/api/Users/UploadFile',
         path: uri,
         method: 'POST',
-        type: 'raw',
+        type: 'multipart',
         maxRetries: 2, // set retry count (Android only). Default 2
+        field: "File",
         headers: {
             'content-type': 'multipart/form-data', // Customize content-type
-            'Authorization': token
+            'Authorization': `Bearer ${token}`
+        },
+        parameters: {
+            Type: 'Post',
+            Id: idToAttach
         },
         // Below are options only supported on Android
         notification: {
@@ -19,24 +29,25 @@ const SyncPosts = (uri, token) => {
         useUtf8Charset: true
     }
 
+
     Upload.startUpload(options).then((uploadId) => {
         console.log('Upload started')
         Upload.addListener('progress', uploadId, (data) => {
-            console.log(`Progress: ${data.progress}%`)
+            console.log(`[${uri}] Progress: ${data.progress}%`)
         })
         Upload.addListener('error', uploadId, (data) => {
-            console.log(`Error: ${data.error}%`)
+            console.log(`[${uri}] Error: ${JSON.stringify(data)}`)
         })
         Upload.addListener('cancelled', uploadId, (data) => {
-            console.log(`Cancelled!`)
+            console.log(`[${uri}] Cancelled!`)
         })
         Upload.addListener('completed', uploadId, (data) => {
             // data includes responseCode: number and responseBody: Object
-            console.log('Completed!')
+            console.log(`[${uri}] Completed!`)
         })
     }).catch((err) => {
         console.log('Upload error!', err)
     })
 }
 
-export default SyncPosts;
+export default FileSyncher;
