@@ -6,15 +6,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Images from '../../../constants/image';
-import { Icon } from 'native-base';
+import { Icon, Spinner } from 'native-base';
 import styles from './styles';
 import Dimension from '../../../constants/dimensions';
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../../state/GlobalState';
 import Video from 'react-native-video';
+import Colors from '../../../constants/color';
 
 const PostCard = ({ item, onClickItem, onPressOfComment }) => {
   const [likes, setLikes] = useState([]);
+  const [videoIsReady, setVideoIsReady] = useState(false);
   const [profile] = useGlobalState('profile')
 
   const [{ loading }, postLike] = useAxios({
@@ -28,6 +30,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
   useEffect(() => {
     setLikes(item.likes)
   }, [])
+
   return (
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
@@ -60,16 +63,30 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
               onPress={() => onClickingItem(item)}
             >
               <Video
-                source={{ uri: item.imageUri }}
-                paused={true}
-                currentPosition={1}
-                controls={true}
-                onError={() => {
-                  Alert.alert('Error', 'We could not load the video')
-                }}               // Callback when video cannot be loaded
-                style={{
-                  height: 200,
-                }} />
+                  source={{ uri: item.imageUri }}
+                  paused={true}
+                  onLoadStart={(d) => {
+                    console.log('onLoadStart')
+                  }}
+                  onLoad={(d) => {
+                    console.log('onLoad')
+                    setVideoIsReady(true)
+                  }}
+                  currentPosition={1}
+                  controls={true}
+                  onError={() => {
+                    Alert.alert('Error', 'We could not load the video')
+                  }}               // Callback when video cannot be loaded
+                  style={{
+                    height: 200,
+                    display: videoIsReady ? 'flex':"none"
+                  }} />
+              {!videoIsReady && (
+                <>
+                <Spinner color={Colors.s_yellow} size={100} />
+                <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
+                </>
+              )}
             </TouchableOpacity>
           )}
 

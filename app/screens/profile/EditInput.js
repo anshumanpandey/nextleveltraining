@@ -5,7 +5,7 @@ import useAxios from 'axios-hooks'
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
 import NavigationService from '../../navigation/NavigationService';
 import Dimension from '../../constants/dimensions';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 
 const URL_MAP = {
   "About Me": {
@@ -24,6 +24,10 @@ const URL_MAP = {
     url: "/Users/ChangeRate",
     getParams: (values) => ({ rate: values })
   },
+  ["Travel Miles"]: {
+    url: "/Users/SaveTravelMile",
+    getParams: (values, profile) => ({ coachId: profile.Id , travelDistance: values })
+  },
 }
 
 const EditInput = (props) => {
@@ -31,6 +35,7 @@ const EditInput = (props) => {
   const data = props.navigation.state.params.data;
   const cb = props.navigation.state.params.cb;
   const [values, setValues] = useState(data || '');
+  const [profile] = useGlobalState('profile')
 
   const [updateDataReq, updateData] = useAxios({
     url: URL_MAP[props.navigation.state.params.title].url,
@@ -48,7 +53,7 @@ const EditInput = (props) => {
         isSaveButton={true}
         saveOnPress={() => {
           cb(values);
-          updateData({ data: URL_MAP[props.navigation.state.params.title].getParams(values)})
+          updateData({ data: URL_MAP[props.navigation.state.params.title].getParams(values, profile)})
           .then((r) => {
             return getUserData()
           })
@@ -69,7 +74,7 @@ const EditInput = (props) => {
             numberOfLines={15}
             textAlignVertical={'top'}
             multiline
-            keyboardType="email-address"
+            keyboardType={props.navigation.state.params.keyboardType == "numeric" ? "numeric" : "email-address" }
           />
         </View>
       </View>

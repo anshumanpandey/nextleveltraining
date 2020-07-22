@@ -58,7 +58,11 @@ const Home = (props) => {
           }
 
           if (p.MediaURL) {
-            j.imageUri = p.MediaURL
+            j.fileType = "image"
+            if (p.MediaURL.includes('MOV')) {
+              j.fileType = "video"
+            }
+            j.imageUri = `http://44.233.116.105/NextLevelTrainingApi${p.MediaURL}`
           } else if (fileString) {
             const jsonFile = JSON.parse(fileString)
             j.imageUri = jsonFile.file.uri
@@ -86,7 +90,7 @@ const Home = (props) => {
     );
   }
 
-  if (!loading && data && data.length != 0) {
+  if (!loading && data && dataToShow.length != 0) {
     body = (
       <FlatList
         horizontal={false}

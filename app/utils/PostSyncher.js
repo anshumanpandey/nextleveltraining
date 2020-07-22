@@ -44,6 +44,7 @@ const FileSyncher = (fileObject, idToAttach) => {
         Upload.addListener('completed', uploadId, (data) => {
             // data includes responseCode: number and responseBody: Object
             console.log(`[${uri}] Completed!`)
+            console.log(data)
         })
     }).catch((err) => {
         console.log('Upload error!', err)

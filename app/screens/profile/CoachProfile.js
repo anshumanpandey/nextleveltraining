@@ -1130,10 +1130,11 @@ export const AboutMeCoachForm = () => {
     const [profilePic, setProfilePic] = useState('profile');
     const [profile] = useGlobalState('profile');
 
-    const handleOnCardPress = ({ title, data, screen = "EditInput", }) => {
+    const handleOnCardPress = ({ title, data, screen = "EditInput", keyboardType }) => {
         NavigationService.navigate(screen, {
             title,
             data,
+            keyboardType,
             cb: (achievements) => { },
         })
     }
@@ -1318,7 +1319,7 @@ export const AboutMeCoachForm = () => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate, screen: "EditInput",keyboardType: "numeric" })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Price Per Hour</Text>
@@ -1330,6 +1331,22 @@ export const AboutMeCoachForm = () => {
                         </View>
                         <View style={styles.cardContainer}>
                             <Text style={styles.profileDescription}>£ {profile.Rate}</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.Rate, screen: "EditInput", keyboardType: "numeric" })}>
+                    <View style={styles.cardContainer}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>Travel Miles</Text>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        <View style={styles.cardContainer}>
+                            <Text style={styles.profileDescription}>{profile.Rate}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>

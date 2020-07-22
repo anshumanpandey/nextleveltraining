@@ -32,7 +32,7 @@ const Profile = (props) => {
               barStyle="light-content"
           />
       </View> */}
-      <Header hideCreatePost={false} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      <Header hideCreatePost={true} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
       <Formik
         initialValues={{ file: null, bodyText: '', title: '' }}
         validate={(values) => {
@@ -133,6 +133,7 @@ const Profile = (props) => {
                     type: [DocumentPicker.types.images],
                   })
                     .then((file) => {
+                      console.log(file)
                       setShowModal(false)
                       setFieldValue('file', file)
                     })
