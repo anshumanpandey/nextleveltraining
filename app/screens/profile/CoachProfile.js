@@ -127,7 +127,8 @@ class MultiStep extends Component {
             profile.Experiences != null && profile.Experiences.length != 0 &&
             profile.DBSCeritificate != null &&
             profile.VerificationDocument != null &&
-            profile.Rate != 0
+            profile.Rate != 0 &&
+            profile.TravelMile != null
     }
 
     stepTwoIsComplete = (profile) => {
@@ -359,24 +360,16 @@ const TimeInput = ({ onSelected, value }) => {
     );
 }
 
-let dataProviderInstance = new DataProvider((r1, r2) => {
-    return r1.postCode !== r2.postCode;
-});
-const layoutProvider = new LayoutProvider(
-    index => {
-        return 0
-    },
-    (type, dim) => {
-        dim.width = Dimensions.get("window").width;
-        dim.height = 35;
-    }
-);
-
 export const AvailabiltyForm = ({ setSubmitFn }) => {
     const [profile] = useGlobalState('profile')
     const [saving, setSaving] = useState(false)
     const [selectedDates, setSelectedDates] = useState({})
     const [enabledDay, setEnabledDay] = useState({})
+
+    const [{ data, loading, error }, doPost] = useAxios({
+        url: '/Users/SaveAvailability',
+        method: 'POST',
+    }, { manual: true })
 
     const setTimeFor = (key, date) => setSelectedDates({ ...selectedDates, [key]: date })
     const toggleSwitchSundayFor = (key) => {
@@ -438,125 +431,77 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 
     const availabiltySaveFunction = useCallback(() => {
         setSaving(true)
-        const promises = []
-        const config = {
-            url: '/Users/SaveAvailability',
-            method: 'POST',
-        }
+        const data = []
         if (selectedDates.start_sunday && selectedDates.end_sunday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Sunday",
-                    "fromTime": selectedDates.start_sunday,
-                    "toTime": selectedDates.end_sunday
-                }
+            data.push({
+                "day": "Sunday",
+                "fromTime": selectedDates.start_sunday,
+                "toTime": selectedDates.end_sunday,
+                "isWorking": true
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
+        } 
 
         if (selectedDates.start_monday && selectedDates.end_monday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Monday",
-                    "fromTime": selectedDates.start_monday,
-                    "toTime": selectedDates.end_monday
-                }
+            data.push({
+                "day": "Monday",
+                "fromTime": selectedDates.start_monday,
+                "toTime": selectedDates.end_monday,
+                "isWorking": true,
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
+        } 
 
         if (selectedDates.start_wednesday && selectedDates.end_wednesday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Wednesday",
-                    "fromTime": selectedDates.start_wednesday,
-                    "toTime": selectedDates.end_wednesday
-                }
-
+            data.push({
+                "day": "Wednesday",
+                "fromTime": selectedDates.start_wednesday,
+                "toTime": selectedDates.end_wednesday,
+                "isWorking": true,
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
+        } 
 
         if (selectedDates.start_tuesday && selectedDates.end_tuesday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Tuesday",
-                    "fromTime": selectedDates.start_tuesday,
-                    "toTime": selectedDates.end_tuesday
-                }
-
+            data.push({
+                "day": "Tuesday",
+                "fromTime": selectedDates.start_tuesday,
+                "toTime": selectedDates.end_tuesday,
+                "isWorking": true,
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-
-        }
+        } 
 
         if (selectedDates.start_thursday && selectedDates.end_thursday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Thursday",
-                    "fromTime": selectedDates.start_thursday,
-                    "toTime": selectedDates.end_thursday
-                }
+            data.push({
+                "day": "Thursday",
+                "fromTime": selectedDates.start_thursday,
+                "toTime": selectedDates.end_thursday,
+                "isWorking": true,
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
+        } 
 
         if (selectedDates.start_friday && selectedDates.end_friday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Friday",
-                    "fromTime": selectedDates.start_friday,
-                    "toTime": selectedDates.end_friday
-                }
+            data.push({
+                "day": "Friday",
+                "fromTime": selectedDates.start_friday,
+                "toTime": selectedDates.end_friday,
+                "isWorking": true,
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
+        } 
 
         if (selectedDates.start_saturday && selectedDates.end_saturday) {
-            const p = axiosInstance({
-                ...config,
-                data: {
-                    "day": "Saturday",
-                    "fromTime": selectedDates.start_saturday,
-                    "toTime": selectedDates.end_saturday
-                }
+            data.push({
+                "day": "Saturday",
+                "fromTime": selectedDates.start_saturday,
+                "toTime": selectedDates.end_saturday,
+                "isWorking": true,
             })
-                .then((r) => {
-                    console.log(r.data)
-                })
-            promises.push(p)
-        }
+        } 
 
-        return Promise.all(promises)
-            .then(() => axiosInstance({ url: '/Users/GetUser' }))
-            .then((r) => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                setSaving(false)
-            })
+        return doPost({ data })
+        .then(() => axiosInstance({ url: '/Users/GetUser' }))
+        .then((r) => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+            setSaving(false)
+        })
+
     }, [selectedDates]);
 
     useEffect(() => {
@@ -809,24 +754,6 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     );
 }
 
-const PostCodeListItem = ({ isSelected, value, cb }) => {
-    return (
-        <View style={{ height: '100%', justifyContent: 'space-between', width: '95%', alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
-            <TouchableOpacity
-                style={{ justifyContent: 'flex-start', width: '95%' }}
-                onPress={cb}>
-                <View style={{ marginLeft: '5%', flex: 1, alignItems: 'flex-start' }}>
-                    <Text style={{ fontSize: 16, padding: '3%' }}>{value}</Text>
-                </View>
-            </TouchableOpacity>
-            <CheckBox
-                style={{ width: '5%' }}
-                checked={isSelected}
-                onPress={cb} />
-        </View>
-    )
-}
-
 
 export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
     const formikRef = useRef()
@@ -860,7 +787,9 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                     trainingLocationId: params.Id || undefined,
                     locationName: params.LocationName || "",
                     address: params.LocationAddress || "",
-                    file: null
+                    file: null,
+                    lat: 0,
+                    lng: 0
                 }}
                 validate={(values) => {
                     const errors = {}
@@ -879,7 +808,9 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                             "locationAddress": values.address,
                             "role": profile.Role,
                             "imageUrl": "string",
-                            "playerOrCoachID": profile.Id
+                            "playerOrCoachID": profile.Id,
+                            lat: values.lat,
+                            lng: values.lng
                         }
                     })
                         .then((r) => {
@@ -909,6 +840,8 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                                 defaultValue={values.address}
                                 onPress={(data, details = null) => {
                                     setFieldValue("address", data.description)
+                                    setFieldValue("lat", details.geometry.location.lat)
+                                    setFieldValue("lng", details.geometry.location.lng)
                                 }} />
 
                             {errors.address && touched.address && <ErrorLabel text={errors.address} />}
@@ -1149,7 +1082,7 @@ export const AboutMeCoachForm = () => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate, screen: "EditInput",keyboardType: "numeric" })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate, screen: "EditInput", keyboardType: "numeric" })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Price Per Hour</Text>
@@ -1165,7 +1098,7 @@ export const AboutMeCoachForm = () => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.Rate, screen: "EditInput", keyboardType: "numeric" })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.TravelMile ? profile.TravelMile.travelDistance : "", screen: "EditInput", keyboardType: "numeric" })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Travel Miles</Text>
@@ -1176,7 +1109,7 @@ export const AboutMeCoachForm = () => {
                             />
                         </View>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>{profile.Rate}</Text>
+                            <Text style={styles.profileDescription}>{profile.TravelMile ? profile.TravelMile.travelDistance : ""}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
