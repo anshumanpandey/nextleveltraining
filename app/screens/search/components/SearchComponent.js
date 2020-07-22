@@ -110,7 +110,7 @@ const SearchComponent = () => {
       </View>
       <FlatList
         horizontal={false}
-        data={coaches}
+        data={coaches.filter(c => c.Status != 'Saved')}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostSearchCard

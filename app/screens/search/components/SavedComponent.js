@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import { FlatList } from 'react-native'
 import PostSearchCard from './subcomponents/PostSearchCard'
 import useAxios from 'axios-hooks'
@@ -31,7 +31,7 @@ const SavedComponent = (props) => {
               searchCoaches({
                 data: {
                   playerId: profile.Id,
-                  search: keyword
+                  search: ""
                 }
               })
                 .then((r) => setCoaches(r.data))
