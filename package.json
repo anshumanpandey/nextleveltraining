@@ -12,7 +12,8 @@
     "clean-build": "cd android && gradlew clean && cd .. && npm run android-windows",
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "android-release": "cd android && gradlew assembleRelease",
-    "android-debug": "npm run android-bundle && cd android && ./gradlew assembleDebug"
+    "android-debug": "npm run android-bundle && cd android && ./gradlew assembleDebug",
+    "build:debug": "react-native run-android --variant=release"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.11.0",
