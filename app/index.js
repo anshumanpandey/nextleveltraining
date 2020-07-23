@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, View, SafeAreaView, Alert } from 'react-native';
+import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -192,20 +192,27 @@ const AppMain = () => {
         ),
       }),
     }
+    const searchMenuItem = {
+      tabBarIcon: ({ tintColor }) => (
+        <View style={styles.tabContain}>
+          <Icon
+            type="Feather"
+            name="search"
+            style={[styles.icons, { color: tintColor }]}
+          />
+          <Text style={[styles.textTab, { color: tintColor }]}>SEARCH</Text>
+        </View>
+      )
+    }
+    if (profile.Role == "Coach") {
+      searchMenuItem.tabBarButtonComponent = (p) => {
+        return <></>
+      }
+    }
+
     tabs.Search = {
       screen: SearchStack,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => (
-          <View style={styles.tabContain}>
-            <Icon
-              type="Feather"
-              name="search"
-              style={[styles.icons, { color: tintColor }]}
-            />
-            <Text style={[styles.textTab, { color: tintColor }]}>SEARCH</Text>
-          </View>
-        ),
-      }),
+      navigationOptions: () => searchMenuItem,
     }
     tabs.Booking = {
       screen: Booking,
