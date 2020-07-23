@@ -152,17 +152,21 @@ const Menu = (props) => {
     }
 
     useEffect(() => {
-        AsyncStorage.getItem('ProfilePic')
+        if (!profile.ProfileImage) {
+            AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
-                setProfilePic(JSON.parse(s))
+                setProfilePic(JSON.parse(s).uri)
             })
+        } else {
+            setProfilePic(profile.ProfileImage)
+        }
     }, [props])
     return (
 
         <View style={styles.menu_view}>
             <View style={styles.menu_avatar}>
-                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder} />
+                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />
                 <Text style={styles.avatar_title}>{profile?.FullName}</Text>
             </View>
             <FlatList
