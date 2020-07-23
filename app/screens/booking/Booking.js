@@ -17,7 +17,7 @@ class Booking extends Component {
                 barStyle="light-content"
             />
         </View> */}
-        <Header toggleDrawer={this.props.toggleDrawer} navigate={props.navigation.navigate}/>
+        <Header toggleDrawer={this.props.toggleDrawer} navigate={this.props.navigation.navigate}/>
         <FlatList
            horizontal={false}
            data={[1,2,3,4,5,6,7,8]}

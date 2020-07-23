@@ -23,14 +23,22 @@ const Information = (props) => {
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
-      const meters = getDistance(
-        { latitude: profile.Lat, longitude: profile.Lng, },
-        { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
-      )
 
-      console.log(convert(meters).from('m').to("mi"))
+      console.log(profile.Lat)
+      console.log(profile.Lng)
+      console.log(props.navigation.getParam("Lat"))
+      console.log(props.navigation.getParam("Lng"))
 
-      setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
+      if (!profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
+        setMilesAway(-1)
+      } else {
+        const meters = getDistance(
+          { latitude: profile.Lat, longitude: profile.Lng, },
+          { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
+        )
+  
+        setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
+      }      
 
     });
     return () => focusListener?.remove();
@@ -73,7 +81,7 @@ const Information = (props) => {
               <Text style={styles.headText}>£ {props.navigation.getParam("Rate")}</Text>
               <Text style={{ fontSize: 12, color: 'gray' }}>per hour</Text>
             </View>
-            {milesAway && (
+            {milesAway && milesAway != -1 && (
               <View style={styles.rate_miles_view}>
                 <Text style={[styles.headText, { textAlign: 'right' }]}>
                   {`${milesAway} miles`}
@@ -83,7 +91,8 @@ const Information = (props) => {
                 </Text>
               </View>
             )}
-            {!milesAway && ( <Spinner color={Colors.s_yellow} /> )}
+            {milesAway == undefined && ( <Spinner color={Colors.s_yellow} /> )}
+            {milesAway == -1 && (<Text>Could not get distance</Text>)}
           </View>
 
           <View style={styles.buttonContain}>
