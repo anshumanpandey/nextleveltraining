@@ -45,8 +45,8 @@ const NLUserDataForm = ({ action = "register",...props}) => {
                 mobileNo: props.navigation.getParam('MobileNo') || "",
                 role: props.navigation.getParam('role', "Player"),
                 password: "",
-                lat: 0,
-                lng: 0
+                lat: props.navigation.getParam('Lat'),
+                lng: props.navigation.getParam('Lng'),
             }}
             validate={(values) => {
                 const errors = {}
