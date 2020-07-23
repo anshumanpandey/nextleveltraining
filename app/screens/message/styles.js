@@ -11,11 +11,16 @@ const styles =StyleSheet.create({
         margin:10,
         flex: 1
     },
+    notFoundText:{
+    alignSelf:"center",
+    fontSize:20
+
+    },
     container_text: {
         flex: 1,
         flexDirection: 'column',
         marginLeft:12 ,
-        justifyContent: 'center',
+        //justifyContent: 'center',
     },
     innerRow:{
      flexDirection:"row",

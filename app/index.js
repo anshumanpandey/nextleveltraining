@@ -96,6 +96,7 @@ const AppMain = () => {
       Search: { screen: Search },
       Information: { screen: Information },
       BookNow: { screen: BookNow },
+      Chat:{screen:Message},
       Payments: { screen: Payments },
       JobDetails: { screen: JobDetails },
     },
@@ -235,7 +236,7 @@ const AppMain = () => {
           </View>
         ),
       }),
-    }
+    },
     tabs.AboutMe = {
       screen: AboutMeScreen,
       navigationOptions: () => ({
