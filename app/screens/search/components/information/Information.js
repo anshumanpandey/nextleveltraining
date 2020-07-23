@@ -92,7 +92,7 @@ const Information = (props) => {
               </View>
             )}
             {milesAway == undefined && ( <Spinner color={Colors.s_yellow} /> )}
-            {milesAway == -1 && (<Text>Could not get distance</Text>)}
+            {milesAway == -1 && (<Text></Text>)}
           </View>
 
           <View style={styles.buttonContain}>
