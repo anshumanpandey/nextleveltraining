@@ -70,7 +70,7 @@ const NLUserDataForm = ({ action = "register",...props}) => {
                 if (props.hidePasswordInput == true) {
                     delete values.password
                 }
-                register({ data: values })
+                return register({ data: values })
                     .then((r) => {
                         if (action == 'register') {
                             AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
