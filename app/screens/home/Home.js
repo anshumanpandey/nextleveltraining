@@ -54,7 +54,6 @@ const Home = (props) => {
     const posts = data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
-          console.log(p)
           const j = {
             id: p.Id,
             name: p.Header,
@@ -73,10 +72,12 @@ const Home = (props) => {
             }
             j.imageUri = p.MediaURL
           } else if (fileString) {
+            console.log("no media url")
             const jsonFile = JSON.parse(fileString)
             j.imageUri = jsonFile.file.uri
             j.fileType = jsonFile.file.type
             SyncPosts(jsonFile.file, p.Id)
+            .then(() => AsyncStorage.removeItem(`post-${p.Id}-file`))
           }
           return j
         })
@@ -140,6 +141,10 @@ const Home = (props) => {
 const MediaPreview = ({ visibleModal, setVisibleModal }) => {
   const [videoIsReady, setVideoIsReady] = useState(false);
 
+  useEffect(() => {
+    if (visibleModal == false) setVideoIsReady(false)
+  }, [visibleModal])
+
   return (
     <Modal
       visible={visibleModal != false}
@@ -187,15 +192,11 @@ const MediaPreview = ({ visibleModal, setVisibleModal }) => {
                 setVideoIsReady(true)
               }}
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                display: videoIsReady ? 'flex' : "none"
+                width: Dimensions.get('screen').width, height: Dimensions.get('screen').height,
+                opacity: videoIsReady ? 1 : 0,
               }} />
             {!videoIsReady && (
-              <View style={{  backgroundColor: 'black', opacity: 0.8 ,justifyContent: 'center', alignItems: 'center',idth: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
+              <View style={{  backgroundColor: 'black', opacity: 0.8 ,justifyContent: 'center', alignItems: 'center',width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
                 <Spinner color={Colors.s_yellow} size={100} />
                 <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
               </View>
