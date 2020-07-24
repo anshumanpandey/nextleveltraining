@@ -1,13 +1,12 @@
 import React, { Component, useRef, useEffect } from 'react'
-import { Text } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import NLGooglePlacesAutocomplete from '../NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { Formik } from 'formik';
 import ErrorLabel from '../ErrorLabel';
-import { View } from 'native-base';
+import { View, Input as TextInput } from 'native-base';
 import styles from './styles.js';
 import useAxios from 'axios-hooks'
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screens from '../../utils/screen';
@@ -96,6 +95,7 @@ const NLUserDataForm = ({ action = "register",...props}) => {
                     <View style={styles.signup_info_input_view}>
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Full Name"
                                 keyboardType="default"
                                 onChangeText={handleChange('fullName')}
@@ -118,6 +118,7 @@ const NLUserDataForm = ({ action = "register",...props}) => {
 
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 editable={!props.navigation.getParam('emailIDIsDisabled', false)}
                                 placeholder="Email ID"
                                 keyboardType="email-address"
@@ -130,6 +131,7 @@ const NLUserDataForm = ({ action = "register",...props}) => {
 
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Mobile Number"
                                 keyboardType='numeric'
                                 onChangeText={handleChange('mobileNo')}
@@ -143,6 +145,7 @@ const NLUserDataForm = ({ action = "register",...props}) => {
                             <>
                                 <View style={styles.signup_info_view}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder="Password"
                                         secureTextEntry={true}
                                         onChangeText={handleChange('password')}
