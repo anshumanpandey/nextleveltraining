@@ -85,8 +85,8 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
             isVisible={isDatePickerVisible}
             mode="datetime"
             onConfirm={(d) => {
-              setDate(moment(date))
               setIsDatePickerVisible(false)
+              setDate(moment(date))
             }}
             onCancel={() => setIsDatePickerVisible(false)}
           />
