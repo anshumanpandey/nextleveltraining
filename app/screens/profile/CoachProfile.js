@@ -796,15 +796,14 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                     locationName: params.LocationName || "",
                     address: params.LocationAddress || "",
                     file: null,
-                    lat: 0,
-                    lng: 0
+                    lat: params.Lat || 0,
+                    lng: params.Lng || 0
                 }}
                 validate={(values) => {
                     const errors = {}
 
                     if (!values.locationName) errors.locationName = 'Required'
                     if (!values.address) errors.address = 'Required'
-                    if (!values.file) errors.file = 'Required'
 
                     return errors
                 }}
@@ -849,16 +848,6 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             </View>
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
-                            <NLGooglePlacesAutocomplete
-                                defaultValue={values.address}
-                                onPress={(data, details = null) => {
-                                    setFieldValue("address", data.description)
-                                    setFieldValue("lat", details.geometry.location.lat)
-                                    setFieldValue("lng", details.geometry.location.lng)
-                                }} />
-
-                            {errors.address && touched.address && <ErrorLabel text={errors.address} />}
-
                             <TouchableOpacity onPress={() => {
                                 DocumentPicker.pick({
                                     type: [DocumentPicker.types.images],
@@ -881,6 +870,17 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
                             {errors.file && touched.file && <ErrorLabel text={errors.file} />}
+
+                            <NLGooglePlacesAutocomplete
+                                defaultValue={values.address}
+                                onPress={(data, details = null) => {
+                                    setFieldValue("address", data.description)
+                                    setFieldValue("lat", details.geometry.location.lat)
+                                    setFieldValue("lng", details.geometry.location.lng)
+                                }} />
+
+                            {errors.address && touched.address && <ErrorLabel text={errors.address} />}
+
                             {!setSubmitFn && (
                                 <View style={styles.signup_btn_view}>
                                     <TouchableOpacity
