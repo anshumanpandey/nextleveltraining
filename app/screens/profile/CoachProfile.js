@@ -334,6 +334,8 @@ const TimeInput = ({ onSelected, value }) => {
     const [showPicker, setShowPicker] = useState();
     const [date, setDate] = useState(value);
 
+    const hasValue = () => date ? true : false
+
     return (
         <>
             {showPicker && (
@@ -345,6 +347,7 @@ const TimeInput = ({ onSelected, value }) => {
                     showIcon={false}
                     cancelBtnText="Cancel"
                     confirmBtnText="Confirm"
+                    style={{ color: 'black'}}
                     onChange={(_, d) => {
                         setShowPicker(false)
                         setDate(d)
@@ -352,9 +355,9 @@ const TimeInput = ({ onSelected, value }) => {
                     }}
                 />
             )}
-            <TouchableOpacity style={{ width: '40%' }} onPress={() => setShowPicker(true)}>
-                <View style={styles.collapsedViewInner}>
-                    <TextInput style={{ color: 'black' }} editable={false} value={date ? moment(date).format("hh:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
+            <TouchableOpacity style={{ width: '40%', height: '80%' }} onPress={() => setShowPicker(true)}>
+                <View style={[styles.collapsedViewInner]}>
+                    <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>{ hasValue() ?  moment(date).format("hh:mm A") : "12:00 PM"}</Text>
                 </View>
             </TouchableOpacity>
         </>
@@ -440,7 +443,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_sunday,
                 "isWorking": true
             })
-        } 
+        }
 
         if (selectedDates.start_monday && selectedDates.end_monday) {
             data.push({
@@ -449,7 +452,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_monday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_wednesday && selectedDates.end_wednesday) {
             data.push({
@@ -458,7 +461,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_wednesday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_tuesday && selectedDates.end_tuesday) {
             data.push({
@@ -467,7 +470,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_tuesday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_thursday && selectedDates.end_thursday) {
             data.push({
@@ -476,7 +479,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_thursday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_friday && selectedDates.end_friday) {
             data.push({
@@ -485,7 +488,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_friday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_saturday && selectedDates.end_saturday) {
             data.push({
@@ -494,14 +497,14 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_saturday,
                 "isWorking": true,
             })
-        } 
+        }
 
         return doPost({ data })
-        .then(() => axiosInstance({ url: '/Users/GetUser' }))
-        .then((r) => {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-            setSaving(false)
-        })
+            .then(() => axiosInstance({ url: '/Users/GetUser' }))
+            .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                setSaving(false)
+            })
 
     }, [selectedDates]);
 
@@ -756,7 +759,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 }
 
 
-export const TrainingLocationForm = ({ setSubmitFn, onCreate,...params }) => {
+export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...params }) => {
     const formikRef = useRef()
     const [image, setImage] = useState()
     const [profile] = useGlobalState('profile')
@@ -769,13 +772,22 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate,...params }) => {
         url: '/Users/GetUser',
     }, { manual: true })
 
-    useEffect(() => {
+    const initFn = () => {
         setSubmitFn && setSubmitFn(formikRef.current.submitForm)
         AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
             .then(img => {
                 if (!img) return
                 formikRef.current.setFieldValue('file', JSON.parse(img).file)
             })
+    }
+
+
+    useEffect(() => {
+        initFn()
+        if (navigation) {
+            const focusListener = navigation.addListener('didFocus', initFn);
+            return () => focusListener?.remove();
+        }
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
@@ -833,6 +845,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate,...params }) => {
                         <View style={styles.containerCommon}>
                             <View style={styles.inputContainer}>
                                 <TextInput
+                                    placeholderTextColor={'rgba(0,0,0,0.3)'}
                                     placeholder={"Location Name"}
                                     onChangeText={handleChange('locationName')}
                                     onBlur={handleBlur('locationName')}
@@ -861,6 +874,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate,...params }) => {
                             }}>
                                 <View style={[styles.inputContainer]}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         editable={false}
                                         placeholder="Upload Location Picture"
                                         keyboardType="email-address"
@@ -1199,6 +1213,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Bank Name"}
                                         onChangeText={handleChange('bankName')}
                                         onBlur={handleBlur('bankName')}
@@ -1210,6 +1225,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 <TouchableOpacity onPress={() => setShowModal(true)}>
                                     <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                         <TextInput
+                                            placeholderTextColor={'rgba(0,0,0,0.3)'}
                                             style={{ color: values.role ? 'black' : 'gray' }}
                                             editable={false}
                                             placeholder={"Select account type"}
@@ -1221,6 +1237,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account Holder Name"}
                                         onChangeText={handleChange('holderName')}
                                         onBlur={handleBlur('holderName')}
@@ -1231,6 +1248,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Sort code "}
                                         onChangeText={handleChange('sortCode')}
                                         onBlur={handleBlur('sortCode')}
@@ -1241,6 +1259,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account number"}
                                         onChangeText={handleChange('accountNumber')}
                                         onBlur={handleBlur('accountNumber')}
