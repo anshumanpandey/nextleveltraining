@@ -3,13 +3,22 @@ import {View,StatusBar} from 'react-native'
 import {Icon} from 'native-base'
 import Header from '../../components/header/Header'
 import { GiftedChat ,Send,InputToolbar,Bubble} from 'react-native-gifted-chat'
+import { axiosInstance } from '../../api/AxiosBootstrap';
+import { useGlobalState } from '../../state/GlobalState';
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 const Message =(props) =>{
-  const [messages, setMessages] = useState([]);
- 
+  const [messages, setMessages] = useState([]); 
+
+  const [value, setValue] = useState("");
+  const [profile] = useGlobalState('profile')
   useEffect(() => {
-  getMessages()
-  }, [getMessages])
+    const intervalId = setInterval(() => {
+      getMessages()
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  
+  }, [])
 
 
 
@@ -21,12 +30,28 @@ const Message =(props) =>{
       const p = axiosInstance({
           ...config,
           data: {
-            "senderID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "recieverID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            "receiverId": props.navigation.getParam("ReceiverId") ? props.navigation.getParam("ReceiverId") : profile.Id ,
+            "senderId": props.navigation.getParam("SenderId") ? props.navigation.getParam("SenderId") : profile.Id 
         }
       }).then((r) => {
+        console.log(r,'sssss')
           if(r.data && r.data.length !== 0){
-            setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+            var message = []
+            r.data.map((item) => {
+                      messages.push({
+                        _id: parseInt(item.ReceiverId),
+                        text: item.Text + '',
+                        createdAt: item.SentDate,
+                        user: {
+                          _id: parseInt(item.SenderId),
+                          // name: item.sfn + '',
+                          avatar: item.ImageUrl,
+                        },
+                      })
+                    })
+            setMessages(previousMessages => GiftedChat.append(previousMessages, message))
+              }else{
+                setMessages([])
               }
           })
 
@@ -61,20 +86,35 @@ const Message =(props) =>{
       />
     )
   }
-  const onSend = useCallback((messages = []) => {
+  const onSend = useCallback((message = []) => {
     const config = {
-      url: '/Users/GetLastMessage',
+      url: '/Users/SendMessage',
       method: 'POST',
   }
       const p = axiosInstance({
           ...config,
           data: {
-            "senderID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "recieverID": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            "text": message[0].text,
+            "receiverId": props.navigation.getParam("ReceiverId") ? props.navigation.getParam("ReceiverId") : profile.Id ,
+            "senderId": props.navigation.getParam("SenderId") ? props.navigation.getParam("SenderId") : profile.Id ,
+            "sentDate": message[0].createdAt
         }
       }).then((r) => {
-          if(r.data && r.data.length !== 0){
-            setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+        console.log(r,'rrrr')
+          if(r.data && r.data.length !== 0){ 
+            // r.data.map((item) => {
+            //   message.push({
+            //     _id: parseInt(item.ReceiverId),
+            //     text: item.Text + '',
+            //     createdAt: item.SentDate,
+            //     user: {
+            //       _id: parseInt(profile.Id),
+            //       // name: item.sfn + '',
+            //       avatar: item.ImageUrl,
+            //     },
+            //   })
+            // })
+            setMessages(previousMessages => GiftedChat.append(previousMessages, message))
               }
           })
     
@@ -97,6 +137,8 @@ const Message =(props) =>{
       onSend={messages => onSend(messages)}
       renderInputToolbar={props => customInputToolbar(props)}
       renderBubble={props=>renderBubble(props)}
+    //  onInputTextChanged={text => setValue(text)}
+     // text={value}
       renderSend={(props) => (
         <Send
           {...props}
@@ -114,7 +156,7 @@ const Message =(props) =>{
        )
       }
       user={{
-        _id: 1,
+        _id: profile.Id,
       }}
       alwaysShowSend={true}
     />
