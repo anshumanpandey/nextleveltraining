@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { View, StatusBar, FlatList } from 'react-native'
 import Header from '../../components/header/Header'
 import BookCard from './components/BookCard'
@@ -19,9 +19,22 @@ const Booking = (props) => {
     }
   })
 
+  useEffect(() => {
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      getBookings({
+        data: {
+          "userID": profile.Id,
+          "role": "Player"
+        }
+      })
+    });
+
+    return () => focusListener.remove()
+  }, [])
+
   return (
     <View style={{ flex: 1 }}>
-      <Header hideCreatePost={true} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
       {loading && <Spinner size={80} color={Colors.s_yellow} />}
       {!loading && (
         <FlatList
