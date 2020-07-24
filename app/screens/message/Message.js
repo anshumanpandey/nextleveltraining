@@ -13,18 +13,22 @@ const Message =(props) =>{
   const [profile] = useGlobalState('profile');
   
   useEffect(() => {
-    
-    const intervalId = setInterval(() => {
+    console.log( props.navigation.getParam("ReceiverId"),'rec1ID')
+    console.log( props.navigation.getParam("SenderId"),'send1ID')
+    console.log(profile.Id,'profileID')
+    //const intervalId = setInterval(() => {
       getMessages()
-   }, 1000);
+  // }, 4000);
 
-   return () => clearInterval(intervalId);
+   //return () => clearInterval(intervalId);
   
   }, [])
 
 
 
   const getMessages = () => {
+   // alert("hii")
+   
     const config = {
       url: '/Users/GetMessagesBySenderAndReciever',
       method: 'POST',
@@ -32,8 +36,8 @@ const Message =(props) =>{
       const p = axiosInstance({
           ...config,
           data: {
-            "receiverId": props.navigation.getParam("ReceiverId") ? props.navigation.getParam("ReceiverId") : profile.Id ,
-            "senderId": props.navigation.getParam("SenderId") ? props.navigation.getParam("SenderId") : profile.Id 
+            "receiverId": props.navigation.getParam("ReceiverId"),
+            "senderId":  props.navigation.getParam("SenderId"),
         }
       }).then((r) => {
        // console.log(r,'sssss')
@@ -88,7 +92,8 @@ const Message =(props) =>{
       />
     )
   }
-  const onSend = useCallback((message = []) => {
+  const onSend = useCallback((sendMessage = []) => {
+   // console.log(props.navigation.getParam("SenderId") ===  profile.Id ? profile.Id : props.navigation.getParam("ReceiverId"),'senderId')
     const config = {
       url: '/Users/SendMessage',
       method: 'POST',
@@ -96,16 +101,15 @@ const Message =(props) =>{
       const p = axiosInstance({
           ...config,
           data: {
-            "text": message[0].text,
-            "receiverId": props.navigation.getParam("ReceiverId") ? props.navigation.getParam("ReceiverId") : profile.Id ,
-            "senderId": props.navigation.getParam("SenderId") ? props.navigation.getParam("SenderId") : profile.Id ,
-            "sentDate": message[0].createdAt
+            "text": sendMessage[0].text,
+            "receiverId": props.navigation.getParam("ReceiverId")  ===  profile.Id ? props.navigation.getParam("SenderId") : props.navigation.getParam("ReceiverId"),
+            "senderId":  profile.Id,
+            "sentDate": sendMessage[0].createdAt
         }
       }).then((r) => {
-        console.log(r,'rrrr')
           if(r.data && r.data.length !== 0){ 
             // r.data.map((item) => {
-            //   message.push({
+            //   sendMessage.push({
             //     _id: parseInt(item.ReceiverId),
             //     text: item.Text + '',
             //     createdAt: item.SentDate,
@@ -116,7 +120,7 @@ const Message =(props) =>{
             //     },
             //   })
             // })
-            setMessages(previousMessages => GiftedChat.append(previousMessages, message))
+            setMessages(previousMessages => GiftedChat.append(previousMessages, sendMessage))
               }
           })
     
