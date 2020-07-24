@@ -43,10 +43,6 @@ const Home = (props) => {
   }, [])
 
   useEffect(() => {
-    SyncProfileAssets();
-  }, [profile])
-
-  useEffect(() => {
     if (!data) return
     if (!data.length) return
 
