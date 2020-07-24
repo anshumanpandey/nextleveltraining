@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react'
-import { View, Text, Image, Alert, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import { View, Text, Image, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import { GoogleSignin } from 'react-native-google-signin';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import Images from '../../constants/image'
@@ -11,7 +11,7 @@ import GlobalStyles from '../../constants/GlobalStyles';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Spinner } from 'native-base';
+import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
 
 const Login = (props) => {
