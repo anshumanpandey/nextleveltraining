@@ -9,7 +9,7 @@ import NavigationService from '../../navigation/NavigationService';
 import NLToggleButton from '../../components/NLToggleButton';
 import { getGlobalState, useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import { axiosInstance } from '../../api/AxiosBootstrap';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment'
 import { Formik, FieldArray } from 'formik';
 import useAxios from 'axios-hooks'
@@ -339,25 +339,20 @@ const TimeInput = ({ onSelected, value }) => {
     return (
         <>
             {showPicker && (
-                <DateTimePicker
-                    mode="time"
-                    value={date || new Date()}
-                    format="DD-MM-YYYY"
-                    placeholder={'Select Date'}
-                    showIcon={false}
-                    cancelBtnText="Cancel"
-                    confirmBtnText="Confirm"
-                    style={{ color: 'black'}}
-                    onChange={(_, d) => {
-                        setShowPicker(false)
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="datetime"
+                    onConfirm={(d) => {
                         setDate(d)
                         onSelected(d)
+                        setShowPicker(false)
                     }}
+                    onCancel={() => setShowPicker(false)}
                 />
             )}
             <TouchableOpacity style={{ width: '40%', height: '80%' }} onPress={() => setShowPicker(true)}>
                 <View style={[styles.collapsedViewInner]}>
-                    <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>{ hasValue() ?  moment(date).format("hh:mm A") : "12:00 PM"}</Text>
+                    <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>{hasValue() ? moment(date).format("hh:mm A") : "12:00 PM"}</Text>
                 </View>
             </TouchableOpacity>
         </>
@@ -927,7 +922,7 @@ export const AboutMeCoachForm = () => {
                 if (!s) return
                 setProfilePic(JSON.parse(s).uri)
             })
-            //TODO: fix on path from server
+        //TODO: fix on path from server
         /*if (profile.ProfileImage) {
             setProfilePic(profile.ProfileImage)
         }*/
