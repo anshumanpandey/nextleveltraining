@@ -1,8 +1,8 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Images from '../../../constants/image';
 import styles from './information/information-style';
-import { Icon } from 'native-base';
+import { Icon, Spinner } from 'native-base';
 import NavigationService from '../../../navigation/NavigationService';
 import Dimension from '../../../constants/dimensions';
 import Menu from 'react-native-material-menu';
@@ -16,15 +16,6 @@ import useAxios from 'axios-hooks'
 
 const _format = 'ddd, MMM DD, YYYY';
 const _today = moment();
-const timer = [
-  { id: 1, time: '09:00 am to 11:00 am' },
-  { id: 2, time: '10:00 am to 12:00 pm' },
-  { id: 3, time: '11:00 am to 01:00 pm' },
-  { id: 4, time: '12:00 pm to 02:00 pm' },
-  { id: 5, time: '01:00 pm to 03:00 pm' },
-  { id: 6, time: '02:00 pm to 04:00 pm' },
-  { id: 7, time: '03:00 pm to 05:00 pm' },
-];
 let _menu = null;
 const showMenu = () => {
   _menu.show();
@@ -40,6 +31,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
 
   const [profile] = useGlobalState('profile')
 
+  const [dropdownOptions, setDropdownOptions] = useState([])
   const [date, setDate] = useState(_today)
   const [isDatePickerVisible, setIsDatePickerVisible] = useState()
   const [time, setTime] = useState()
@@ -49,11 +41,22 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
   const [availableTimePerCoach, getUserData] = useAxios({
     url: '/Users/GetAvailableTimeByCoachId',
     method: 'POST',
-    data: {
+  }, { manual: true })
+
+  useEffect(() => {
+    const data = {
       "coachID": coach.Id,
-      "date": date.toDate().toISOString()
+      "date": date.utc().startOf('day').toDate().toISOString()
     }
-  })
+    console.log(data)
+    getUserData({ data })
+      .then((r) => {
+        setDropdownOptions(r.data)
+        if (r.data.length == 0){
+          setTime(undefined)
+        }
+      })
+  }, [date])
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -68,25 +71,25 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
               style={{ fontSize: 25, color: 'white', padding: 10 }}
             />
             <TouchableOpacity
-              disabled={selectedLocation == undefined}
-              onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation })}>
-              <Text style={{ color: 'white', fontSize: 18, padding: 10, opacity: selectedLocation ? 1 : 0.5 }}>
+              disabled={selectedLocation == undefined || time == undefined}
+              onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation, selectedTime: time, selectedDate: date })}>
+              <Text style={{ color: 'white', fontSize: 18, padding: 10, opacity: selectedLocation && time ? 1 : 0.5 }}>
                 Save
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.userView}>
-            <Image source={Images.MessiPlayer} style={styles.userImg} />
+            <Image source={{ uri: coach.ProfileImage }} style={styles.userImg} />
             <Text style={{ color: 'white', fontSize: 18, marginLeft: 15 }}>
-              {profile.FullName}
+              {coach.FullName}
             </Text>
           </View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
-            mode="datetime"
+            mode="date"
             onConfirm={(d) => {
               setIsDatePickerVisible(false)
-              setDate(moment(date))
+              setDate(moment(d))
             }}
             onCancel={() => setIsDatePickerVisible(false)}
           />
@@ -108,55 +111,62 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
 
         <View style={styles.whenView}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
-          <Menu
-            ref={(ref) => (_menu = ref)}
-            style={{ maxHeight: 225 }}
-            button={
-              <TouchableOpacity
-                style={styles.menuContainer}
-                onPress={() => {
-                  showMenu();
-                }}>
-                <Text style={{ fontSize: 15 }}>
-                  {time ? time : 'Select Time'}
-                </Text>
-                <Icon
-                  name="arrow-drop-down"
-                  type="MaterialIcons"
-                  style={{ fontSize: 30, color: 'lightgray' }}
-                />
-              </TouchableOpacity>
-            }>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {timer.map((objs, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setTime(objs.time)
-                      hideMenu();
-                    }}
-                    style={{
-                      width: Dimension.deviceWidth - 75,
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                      paddingHorizontal: 10,
-                      borderBottomWidth: 0.5,
-                      borderColor: 'lightgray',
-                      height: 45,
-                    }}>
-                    <Text
+          {availableTimePerCoach.loading && <Spinner color={Colors.s_yellow} />}
+          {!availableTimePerCoach.loading && (
+            <Menu
+              ref={(ref) => (_menu = ref)}
+              style={{ maxHeight: 225 }}
+              button={
+                <TouchableOpacity
+                  style={styles.menuContainer}
+                  disabled={dropdownOptions.length == 0}
+                  onPress={() => {
+                    showMenu();
+                  }}>
+                  <Text style={{ fontSize: 15 }}>
+                    {time && time}
+                    {!time && dropdownOptions.length != 0 && 'Select Time'}
+                    {!time && dropdownOptions.length == 0 && 'No available hours'}
+                  </Text>
+                  <Icon
+                    name="arrow-drop-down"
+                    type="MaterialIcons"
+                    style={{ fontSize: 30, color: 'lightgray' }}
+                  />
+                </TouchableOpacity>
+              }>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {!availableTimePerCoach.loading && dropdownOptions.length != 0 && dropdownOptions.map((objs, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        setTime(objs)
+                        hideMenu();
+                      }}
                       style={{
-                        marginLeft: 8,
-                        fontWeight: objs.time === time ? '600' : '400',
+                        width: Dimension.deviceWidth - 75,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingHorizontal: 10,
+                        borderBottomWidth: 0.5,
+                        borderColor: 'lightgray',
+                        height: 45,
                       }}>
-                      {objs.time}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </Menu>
+                      <Text
+                        style={{
+                          marginLeft: 8,
+                          fontWeight: objs === time ? '600' : '400',
+                        }}>
+                        {objs}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </Menu>
+
+          )}
         </View>
         <View style={styles.whenView}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>Where?</Text>
@@ -179,10 +189,10 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
           <>
             {coach.TrainingLocations.length != 0 && (
               <TeachingCard selectedItem={selectedLocation} onPress={(i) => setSelectedLocation(i)} data={coach.TrainingLocations.map(i => ({
-              id: i.Id,
-              title: i.LocationName,
-              subTitle: i.LocationAddress,
-            }))} />
+                id: i.Id,
+                title: i.LocationName,
+                subTitle: i.LocationAddress,
+              }))} />
             )}
             {coach.TrainingLocations.length == 0 && <Text style={{ color: Colors.s_blue, fontSize: 14 }}>Where?</Text>}
           </>
