@@ -4,7 +4,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <GoogleMaps/GoogleMaps.h>
-#import <react-native-splash-screen/RNSplashScreen.h>
+#import SplashScreen.h
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
