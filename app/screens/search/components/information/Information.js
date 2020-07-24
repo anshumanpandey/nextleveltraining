@@ -24,13 +24,6 @@ const Information = (props) => {
   useEffect(() => {
    console.log(profile,'ppp')
     const focusListener = props.navigation.addListener('didFocus', () => {
-<<<<<<< HEAD
-      const meters = getDistance(
-        { latitude: 52.518611, longitude: 13.408056},
-        { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
-      )
-    setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
-=======
 
       console.log(profile.Lat)
       console.log(profile.Lng)
@@ -47,7 +40,6 @@ const Information = (props) => {
   
         setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
       }      
->>>>>>> 6b11ed92828f5072bbbdd8609abd3d88b038478d
 
     });
     return () => focusListener?.remove();
