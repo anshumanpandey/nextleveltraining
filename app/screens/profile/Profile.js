@@ -11,21 +11,25 @@ import NavigationService from '../../navigation/NavigationService';
 import { pickImage } from '../../helpers/ImagePicker';
 import { useGlobalState } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
+import { axiosInstance } from '../../api/AxiosBootstrap';
+import Upload from 'react-native-background-upload'
+
 
 const PlayerProfile = (props) => {
   const [profilePic, setProfilePic] = useState();
   const [profile] = useGlobalState('profile')
+  const [token] = useGlobalState('token')
   const { user, AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   useEffect(() => {
     if (profile.ProfileImage) {
-      setProfilePic(profile.ProfileImage)
+      setProfilePic({ uri: profile.ProfileImage})
     } else {
       AsyncStorage.getItem('ProfilePic')
-      .then((s) => {
-        if (!s) return
-        setProfilePic(JSON.parse(s))
-      })
+        .then((s) => {
+          if (!s) return
+          setProfilePic(JSON.parse(s))
+        })
     }
   }, [])
 
@@ -41,6 +45,52 @@ const PlayerProfile = (props) => {
                   const source = await pickImage();
                   setProfilePic(source)
                   AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
+
+                  const options = {
+                    url: 'http://44.233.116.105/NextLevelTrainingApi/api/Users/UploadFile',
+                    path: source.uri,
+                    method: 'POST',
+                    type: 'multipart',
+                    maxRetries: 2, // set retry count (Android only). Default 2
+                    field: "File",
+                    headers: {
+                      'content-type': 'multipart/form-data', // Customize content-type
+                      'Authorization': `Bearer ${token}`
+                    },
+                    parameters: {
+                      Type: "profile",
+                      Id: profile.Id
+                    },
+                    // Below are options only supported on Android
+                    notification: {
+                      enabled: false
+                    },
+                    useUtf8Charset: true
+                  }
+
+
+                  return Upload.startUpload(options).then((uploadId) => {
+                    console.log('Upload started')
+                    Upload.addListener('progress', uploadId, (data) => {
+                      console.log(`[${source.uri}] Progress: ${data.progress}%`)
+                    })
+                    Upload.addListener('error', uploadId, (data) => {
+                      console.log(`[${source.uri}] Error: ${JSON.stringify(data)}`)
+                    })
+                    Upload.addListener('cancelled', uploadId, (data) => {
+                      console.log(`[${source.uri}] Cancelled!`)
+                    })
+                    Upload.addListener('completed', uploadId, (data) => {
+                      // data includes responseCode: number and responseBody: Object
+                      console.log(`[${source.uri}] Completed!`)
+                      return axiosInstance({ url: '/Users/GetUser' })
+                      .then((r) => {
+                        console.log(r.data)
+                        console.log("new profile")
+                      })
+                    })
+                  })                  
+
                 }}
                 style={{ position: 'relative' }}>
                 <Image
