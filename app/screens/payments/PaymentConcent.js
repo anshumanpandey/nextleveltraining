@@ -119,7 +119,7 @@ const PaymentConcentScreen = (props) => {
       {openModal && (
         <Modal>
           <WebView
-            style={{ flex: 1, backgroundColor: 'blue' }}
+            style={{ flex: 1 }}
             ref={ref => (webview.current = ref)}
             source={{ uri: openModal }}
             onNavigationStateChange={(e) => {
