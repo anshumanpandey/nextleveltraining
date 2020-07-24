@@ -149,7 +149,7 @@ const Login = (props) => {
             <TouchableOpacity
               disabled={isLoginDisabled()}
               onPress={() => {
-                if (!role || props.navigation.getParam('role', null) == null) return
+                if (!role && props.navigation.getParam('role', null) == null) return
                 console.log(role)
                 if (Platform.OS === "android") {
                   LoginManager.setLoginBehavior("web_only")
