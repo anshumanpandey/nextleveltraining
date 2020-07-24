@@ -132,7 +132,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      this.setState({ time: objs.time });
+                      setTime(objs.time)
                       hideMenu();
                     }}
                     style={{
