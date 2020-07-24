@@ -82,7 +82,10 @@ const Menu = (props) => {
             id: 2,
             title: 'My Bookings',
             icon: `${Images.MyBookingIcon}`,
-            path: 'BookEvent'
+            path: 'BookEvent',
+            onPress: (props, profile) => {
+                NavigationService.navigate('Booking')
+            }
         },
         {
             id: 4,
