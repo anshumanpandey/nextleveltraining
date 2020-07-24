@@ -57,7 +57,7 @@ const Information = (props) => {
           />
         </View>
         <View style={styles.infoContain}>
-          <Image source={Images.MessiPlayer} style={styles.user_pic} />
+          <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
           <View style={{ position: 'absolute', right: 5 }}>
             <View style={styles.ps_star_view}>
               <Text style={styles.ps_star_point}>{props.navigation.getParam("AverageRating")}</Text>

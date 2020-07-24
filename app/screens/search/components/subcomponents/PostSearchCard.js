@@ -18,7 +18,7 @@ const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.ps_container}>
       <View style={{ marginTop: 15, marginLeft: 10 }}>
-        <Image source={Images.MessiPlayer} style={styles.ps_image} />
+        <Image source={{ uri: props.ProfileImage }} style={styles.ps_image} />
         <View style={styles.ps_star_view}>
           <Text style={styles.ps_star_point}>{props.AverageRating}</Text>
           {Number.isInteger(props.AverageRating) && (

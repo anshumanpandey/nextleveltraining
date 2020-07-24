@@ -31,7 +31,7 @@ const TeamMatchCard = ({ title, data, onEditPress }) => {
               <View>
                 <Text style={styles.arrdataText}>{item.title}</Text>
                 <Text style={[styles.dataText, { paddingBottom: 4 }]}>
-                  {moment(item.StartDate).format('ll')} To {moment(item.EndDate).format('ll')}
+                  {moment(item.StartDate).format('ll')} {moment(item.EndDate).isBefore(100, "year") ? "Till Date" : `To ${moment(item.EndDate).format('ll')}`}
                 </Text>
                 <Text style={styles.dataText}>
                   {item.TeamName}
