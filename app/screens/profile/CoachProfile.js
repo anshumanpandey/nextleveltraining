@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useRef, useCallback } from 'react'
-import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch } from 'react-native'
+import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, TextInput as RNTextInput } from 'react-native'
 import { CheckBox, Icon, Spinner, Input as TextInput } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
@@ -838,7 +838,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                     <>
                         <View style={styles.containerCommon}>
                             <View style={styles.inputContainer}>
-                                <TextInput
+                                <RNTextInput
+                                    style={{ height: 50 }}
                                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                                     placeholder={"Location Name"}
                                     onChangeText={handleChange('locationName')}
@@ -857,7 +858,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                     })
                             }}>
                                 <View style={[styles.inputContainer]}>
-                                    <TextInput
+                                    <RNTextInput
+                                        style={{ height: 50 }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         editable={false}
                                         placeholder="Upload Location Picture"
