@@ -102,7 +102,7 @@ const SearchComponent = () => {
                   search: keyword
                 }
               })
-                .then((r) => setCoaches(r.data))
+                .then((r) => setCoaches([...r.data]))
             }}
           />
         )}
