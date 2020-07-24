@@ -50,13 +50,19 @@ const Login = (props) => {
       accountName: '', // [Android] specifies an account name on the device that should be used
       iosClientId: '682593494821-0pkvvshud13mpk5q3l3bork71bsm4fed.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
-    AsyncStorage.getItem('role')
-      .then((r) => {
-        if (!r) return
-        setRole(r)
-      })
 
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      AsyncStorage.getItem('role')
+        .then((r) => {
+          if (!r) return
+          setRole(r)
+        })
+    });
+
+    return () => focusListener.remove()
   }, [])
+
+
 
   return (
     <ScrollView style={styles.login_layout}>
@@ -183,15 +189,15 @@ const Login = (props) => {
                       "authenticationToken": userInfo.serverAuthCode
                     }
                   })
-                  .then((r) => {
-                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
-                    return getUserData()
-                  })
-                  .then((r) => {
-                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                    props.navigation.navigate(Screen.LandingPage)
-                  })
-                  .catch(err => console.log(err))
+                    .then((r) => {
+                      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                      return getUserData()
+                    })
+                    .then((r) => {
+                      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                      props.navigation.navigate(Screen.LandingPage)
+                    })
+                    .catch(err => console.log(err))
                 } catch (e) {
                   console.log(e)
                 }
