@@ -56,6 +56,13 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "nextleveltraining-tvOS";
 		};
+		D657259E24CA799100E82E92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D657259A24CA799100E82E92 /* SplashScreen.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D7682761D8E76B80014119E;
+			remoteInfo = SplashScreen;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -67,7 +74,7 @@
 		04B6B24FE0103C61674547A3 /* Pods-nextleveltraining-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-nextleveltraining-tvOSTests/Pods-nextleveltraining-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		083FA84FB8489A7521A2648D /* Pods-nextleveltraining.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining.debug.xcconfig"; path = "Target Support Files/Pods-nextleveltraining/Pods-nextleveltraining.debug.xcconfig"; sourceTree = "<group>"; };
 		0DEAB34DD905394E21A83BB3 /* Pods-nextleveltraining-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining-tvOS.release.xcconfig"; path = "Target Support Files/Pods-nextleveltraining-tvOS/Pods-nextleveltraining-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* nextleveltraining.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nextleveltraining.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Next Level Training.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Next Level Training.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = nextleveltraining/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = nextleveltraining/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -97,6 +104,7 @@
 		B542DD3E99B5C1E90DEE46CD /* libPods-nextleveltraining.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7232393A29348C2BEE0370A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		BD304460AFD3AA4E744A9CB6 /* Pods-nextleveltraining-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-nextleveltraining-tvOS/Pods-nextleveltraining-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D657259A24CA799100E82E92 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		E388662C3D0164980B432098 /* libPods-nextleveltraining-nextleveltrainingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-nextleveltrainingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB0606CC56EE6A4DB9E38D65 /* libPods-nextleveltraining-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9070CCEE144F2C87CF179A /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
@@ -218,6 +226,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D657259A24CA799100E82E92 /* SplashScreen.xcodeproj */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				B542DD3E99B5C1E90DEE46CD /* libPods-nextleveltraining.a */,
@@ -254,10 +263,18 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* nextleveltraining.app */,
+				13B07F961A680F5B00A75B9A /* Next Level Training.app */,
 				00E356EE1AD99517003FC87E /* nextleveltrainingTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* nextleveltraining-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* nextleveltraining-tvOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D657259B24CA799100E82E92 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D657259F24CA799100E82E92 /* libSplashScreen.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -303,7 +320,7 @@
 			);
 			name = nextleveltraining;
 			productName = nextleveltraining;
-			productReference = 13B07F961A680F5B00A75B9A /* nextleveltraining.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Next Level Training.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* nextleveltraining-tvOS */ = {
@@ -383,6 +400,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D657259B24CA799100E82E92 /* Products */;
+					ProjectRef = D657259A24CA799100E82E92 /* SplashScreen.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* nextleveltraining */,
@@ -392,6 +415,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D657259F24CA799100E82E92 /* libSplashScreen.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSplashScreen.a;
+			remoteRef = D657259E24CA799100E82E92 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
@@ -774,7 +807,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = nextleveltraining;
+				PRODUCT_NAME = "Next Level Training";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -797,7 +830,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = nextleveltraining;
+				PRODUCT_NAME = "Next Level Training";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
