@@ -6,6 +6,7 @@ import Dimension from '../../constants/dimensions.js'
 import { Textarea, Icon, Input, Spinner } from 'native-base'
 import Modal from 'react-native-modal';
 import DocumentPicker from 'react-native-document-picker';
+import ImagePicker from 'react-native-image-picker';
 import { Formik } from 'formik';
 import AsyncStorage from '@react-native-community/async-storage';
 import useAxios from 'axios-hooks'
@@ -136,14 +137,29 @@ const Profile = (props) => {
               style={styles.modal}>
               <View style={{ backgroundColor: 'white', height: '50%', padding: '8%' }}>
                 <TouchableOpacity onPress={() => {
-                  DocumentPicker.pick({
-                    type: [DocumentPicker.types.images],
-                  })
-                    .then((file) => {
+                  const options = {
+                    title: 'Select picture',
+                    chooseFromLibraryButtonTitle: '',
+                    storageOptions: {
+                      skipBackup: true,
+                      path: 'images',
+                    },
+                  };
+
+                  ImagePicker.launchCamera(options, (file) => {
+
+                    if (response.didCancel) {
+                      console.log('User cancelled image picker');
+                    } else if (response.error) {
+                      console.log('ImagePicker Error: ', response.error);
+                    } else if (response.customButton) {
+                      console.log('User tapped custom button: ', response.customButton);
+                    } else {
                       console.log(file)
                       setShowModal(false)
                       setFieldValue('file', file)
-                    })
+                    }
+                  });
                 }}>
                   <View style={{ flexDirection: 'row' }}>
                     <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: 'green' }} />
