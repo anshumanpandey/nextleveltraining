@@ -25,6 +25,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview
 import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
+import { syncProfilePic } from '../../utils/SyncProfileAssets';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -755,7 +756,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 }
 
 
-export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
+export const TrainingLocationForm = ({ setSubmitFn, onCreate,...params }) => {
     const formikRef = useRef()
     const [image, setImage] = useState()
     const [profile] = useGlobalState('profile')
@@ -819,7 +820,11 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                         })
                         .then(r => getUserData())
                         .then((r) => {
-                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                            if (onCreate) {
+                                onCreate(() => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }));
+                            } else {
+                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                            }
                         })
                 }}
             >
@@ -890,7 +895,7 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
 }
 
 export const AboutMeCoachForm = () => {
-    const [profilePic, setProfilePic] = useState('profile');
+    const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile');
 
     const handleOnCardPress = ({ title, data, screen = "EditInput", keyboardType }) => {
@@ -902,18 +907,25 @@ export const AboutMeCoachForm = () => {
         })
     }
 
+    useEffect(() => {
+        if (profile.ProfileImage) {
+            setProfilePic(profile.ProfileImage)
+        }
+    }, [])
+
     return (
         <ScrollView>
             <View style={styles.containerAbout}>
                 <TouchableOpacity
                     onPress={async () => {
                         const source = await pickImage();
-                        setProfilePic(source)
+                        setProfilePic(source.uri)
                         AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
+                        syncProfilePic(source)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                     <Image
-                        source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
+                        source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
                         style={styles.profileImage}
                     />
                     <View style={{

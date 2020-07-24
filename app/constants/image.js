@@ -25,6 +25,7 @@ const Images ={
     LogoutIcon:require('../assets/images/logout-icon-2x.png'),
     Filter:require('../assets/images/filter.jpg'),
     PlayerPlaceholder:require('../assets/images/player-placeholder.jpeg'),
+    PaypalLogo:require('../assets/images/paypal_logo.png'),
 
     //other iamges
     KobePlayer:require('../assets/images/kobe.jpg'),

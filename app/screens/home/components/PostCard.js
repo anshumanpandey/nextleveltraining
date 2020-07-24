@@ -35,17 +35,18 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
         <View style={{ flexDirection: 'row', paddingHorizontal: '5%' }}>
-          <Image source={Images.MessiPlayer} style={styles.post_image_size} />
+          <Image source={item.profileImage ? { uri: item.profileImage }: Images.MessiPlayer} style={styles.post_image_size} />
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100 }}>
               <View style={styles.post_title}>
-                <Text style={styles.post_title_name}>{item.name}</Text>
+                <Text style={styles.post_title_name}>{item.createdBy}</Text>
                 <Text style={styles.post_title_time}>{item.time}</Text>
               </View>
-              <Text style={styles.post_description}>{item.description}</Text>
             </View>
           </View>
         </View>
+        <Text style={[styles.post_description, { paddingHorizontal: '5%' }]}>{item.description}</Text>
+
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
             <TouchableOpacity
@@ -120,7 +121,8 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
             style={styles.post_news_like}
             onPress={onPressOfComment}>
             <Icon type="Octicons" name="comment" style={styles.post_comment} />
-            <Text>Comment</Text>
+            {item.comments.length != 0 && <Text style={styles.post_like}>{item.comments.length}</Text>}
+            <Text>{' '}Comment</Text>
           </TouchableOpacity>
         </View>
       </View>

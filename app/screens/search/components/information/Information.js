@@ -97,7 +97,7 @@ const Information = (props) => {
 
           <View style={styles.buttonContain}>
             <TouchableOpacity
-              onPress={() => NavigationService.navigate('BookNow')}
+              onPress={() => NavigationService.navigate('BookNow', { coach: props.navigation.state.params })}
               style={styles.button_view}>
               <Icon
                 type="MaterialIcons"
@@ -128,9 +128,9 @@ const Information = (props) => {
       </View>
 
       {selectedTab === 0 ? (
-        <InformationTab {...props.navigation.state.params} />
+        <InformationTab selectedTab={selectedTab} {...props.navigation.state.params} />
       ) : selectedTab === 1 ? (
-        <MediaTab />
+        <MediaTab selectedTab={selectedTab} posts={props.navigation.state.params.Posts} />
       ) : (
             <ReviewTab />
           )}

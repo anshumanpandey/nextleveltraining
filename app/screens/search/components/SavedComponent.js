@@ -4,6 +4,8 @@ import PostSearchCard from './subcomponents/PostSearchCard'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../../state/GlobalState'
 import NavigationService from '../../../navigation/NavigationService';
+import { Spinner } from 'native-base'
+import Colors from '../../../constants/color'
 
 const SavedComponent = (props) => {
   const [profile] = useGlobalState('profile')
@@ -19,11 +21,18 @@ const SavedComponent = (props) => {
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('tabPress', e => {
-      searchCoaches()
+      searchCoaches({
+        data: {
+          "playerId": profile.Id,
+          "search": ""
+        }
+      })
     });
-  
+
     return unsubscribe;
   }, [props.navigation]);
+
+  if (searchCoachesReq.loading) return <Spinner color={Colors.s_yellow} size={48} />
 
   return (
     <>
@@ -42,7 +51,6 @@ const SavedComponent = (props) => {
                   search: ""
                 }
               })
-                .then((r) => setCoaches(r.data))
             }}
           />
         )}

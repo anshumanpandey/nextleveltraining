@@ -4,6 +4,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import Images from '../../../constants/image';
 import { Icon } from 'native-base';
@@ -37,11 +38,11 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
   return (
     <View style={styles.post_container}>
       <View style={styles.comment_card_container}>
-        <Image source={profilePic ? { uri: profilePic.uri } : Images.MessiPlayer} style={styles.comment_image_size} />
+        <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.comment_image_size} />
         <View style={styles.comment_content_view}>
           <View style={{ width: Dimension.pro100 }}>
             <View style={styles.post_title}>
-              <Text style={styles.post_title_name}>{item.name}</Text>
+              <Text style={styles.post_title_name}>{item.createdBy}</Text>
               <Text style={styles.comment_title_time}>{item.time}</Text>
             </View>
             <Text style={styles.comment_description}>{item.description}</Text>
@@ -51,11 +52,10 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
           </View>
         </View>
       </View>
-      <View>
+      <View style={{ backgroundColor: 'blue'}}>
         <Image
           source={{ uri: item.imageUri }}
-          style={styles.comment_news_image}
-          resizeMode="contain"
+          style={[styles.comment_news_image, { width: Dimensions.get('screen').width }]}
         />
       </View>
       <View style={styles.news_comment}>
@@ -87,7 +87,8 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
           style={styles.post_news_like}
           onPress={onPressOfComment}>
           <Icon type="Octicons" name="comment" style={styles.post_comment} />
-          <Text>Comment</Text>
+          {item.comments != 0 && <Text style={styles.post_like}>{item.comments.length}</Text>}
+          <Text>{' '}Comment</Text>
         </TouchableOpacity>
       </View>
     </View>

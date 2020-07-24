@@ -1,5 +1,4 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
-import HeaderWithSearch from '../../components/header/HeaderWithSearch';
 import { ScrollView, FlatList, View, TextInput, Text, Dimensions, Keyboard } from 'react-native';
 import PostComment from './components/PostComment';
 import Comments from './components/Comments';
@@ -8,6 +7,7 @@ import styles from './styles.js';
 import { Icon, Spinner } from 'native-base';
 import { useGlobalState } from '../../state/GlobalState';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import Header from '../../components/header/Header';
 
 const CommentsScreen = (props) => {
   const listRef = useRef()
@@ -52,7 +52,7 @@ const CommentsScreen = (props) => {
   return (
     <>
       <ScrollView innerRef={(r) => listRef.current = r} style={styles.home_container}>
-        <HeaderWithSearch navigation={props.navigation} navigate={props.navigation.navigate} />
+        <Header hideCreatePost={true} navigation={props.navigation} navigate={props.navigation.navigate} />
         <PostComment item={post} />
         {commentBody}
       </ScrollView>

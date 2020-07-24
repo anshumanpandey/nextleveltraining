@@ -1,34 +1,39 @@
 import React, { Component } from 'react'
-import {View,StatusBar,FlatList} from 'react-native'
+import { View, StatusBar, FlatList } from 'react-native'
 import Header from '../../components/header/Header'
 import BookCard from './components/BookCard'
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+import useAxios from 'axios-hooks'
+import { Spinner } from 'native-base'
+import Colors from '../../constants/color'
+import { useGlobalState } from '../../state/GlobalState'
 
-class Booking extends Component {
-  render() {
-    return (
-      <View style={{flex:1}}>
-          {/* <View style={{
-            width: "100%",
-            height: STATUS_BAR_HEIGHT,
-            backgroundColor: "#0F2F80"
-        }}>
-            <StatusBar
-                barStyle="light-content"
-            />
-        </View> */}
-        <Header toggleDrawer={this.props.toggleDrawer} navigate={this.props.navigation.navigate}/>
+
+const Booking = (props) => {
+  const [profile] = useGlobalState('profile')
+  const [{ data, loading, error }, getBookings] = useAxios({
+    url: '/Users/GetBookings',
+    method: 'POST',
+    data: {
+      "userID": profile.Id,
+      "role": "Player"
+    }
+  })
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Header hideCreatePost={true} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      {loading && <Spinner size={80} color={Colors.s_yellow} />}
+      {!loading && (
         <FlatList
-           horizontal={false}
-           data={[1,2,3,4,5,6,7,8]}
-           keyExtractor={item=>item.id}
-           renderItem={({item})=>(
-             <BookCard/>
-           )}
-          />
-      </View>
-    )
-  }
+          horizontal={false}
+          data={data}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <BookCard {...item} />
+          )}
+        />
+      )}
+    </View>
+  )
 }
-
 export default Booking

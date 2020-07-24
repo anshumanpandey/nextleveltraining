@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {View, Image, ScrollView, TouchableOpacity} from 'react-native';
-import {Icon} from 'native-base';
+import React, { useState, useEffect } from 'react';
+import { View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Icon } from 'native-base';
 import Header from '../../components/header/Header';
 import Images from '../../constants/image';
 import styles from './styles';
@@ -8,37 +8,41 @@ import UserCard from './UserCard';
 import TeamMatchCard from './TeamMatchCard';
 import TeamUpComingCard from './TeamUpComingCard';
 import NavigationService from '../../navigation/NavigationService';
-import {pickImage} from '../../helpers/ImagePicker';
+import { pickImage } from '../../helpers/ImagePicker';
 import { useGlobalState } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const PlayerProfile = (props) => {
   const [profilePic, setProfilePic] = useState();
   const [profile] = useGlobalState('profile')
-  const {user, AboutUs, Achievements, Teams, UpcomingMatches} = profile;
+  const { user, AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   useEffect(() => {
-    AsyncStorage.getItem('ProfilePic')
-    .then((s) => {
-      if (!s) return
-      setProfilePic(JSON.parse(s))
-    })
+    if (profile.ProfileImage) {
+      setProfilePic(profile.ProfileImage)
+    } else {
+      AsyncStorage.getItem('ProfilePic')
+      .then((s) => {
+        if (!s) return
+        setProfilePic(JSON.parse(s))
+      })
+    }
   }, [])
 
   return (
-    <View style={{flex: 1}}>
-      {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}/>}
+    <View style={{ flex: 1 }}>
+      {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />}
       <ScrollView>
         <View>
           <View style={styles.userView}>
-            <View style={{marginTop: 50}}>
+            <View style={{ marginTop: 50 }}>
               <TouchableOpacity
                 onPress={async () => {
                   const source = await pickImage();
                   setProfilePic(source)
                   AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
                 }}
-                style={{position: 'relative'}}>
+                style={{ position: 'relative' }}>
                 <Image
                   source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                   style={styles.userImg}
@@ -47,7 +51,7 @@ const PlayerProfile = (props) => {
                   <Icon
                     type="EvilIcons"
                     name="pencil"
-                    style={{color: 'white', fontSize: 25}}
+                    style={{ color: 'white', fontSize: 25 }}
                   />
                 </View>
               </TouchableOpacity>
@@ -61,7 +65,7 @@ const PlayerProfile = (props) => {
               NavigationService.navigate('EditInput', {
                 title: 'About Me',
                 data: AboutUs,
-                cb: (aboutMe) => {},
+                cb: (aboutMe) => { },
               })
             }
           />
@@ -73,7 +77,7 @@ const PlayerProfile = (props) => {
               NavigationService.navigate('EditInput', {
                 title: 'Achievements',
                 data: Achievements,
-                cb: (achievements) => {},
+                cb: (achievements) => { },
               })
             }
           />
@@ -84,7 +88,7 @@ const PlayerProfile = (props) => {
             onEditPress={(item) =>
               NavigationService.navigate('AddTeam', {
                 title: 'Teams',
-                cb: (team) =>{},
+                cb: (team) => { },
                 ...item
               })
             }
@@ -96,7 +100,7 @@ const PlayerProfile = (props) => {
             onEditPress={(item) =>
               NavigationService.navigate('UpComingMatch', {
                 title: 'Teams',
-                cb: (upComing) =>{},
+                cb: (upComing) => { },
                 ...item
               })
             }

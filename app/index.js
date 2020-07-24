@@ -46,6 +46,8 @@ import TrainingLocationEdit from './screens/trainingLocation/TrainingLocationEdi
 import AvailavilityScreen from './screens/availavility/Availavility';
 import TermsScreen from './screens/terms/TermsScreen';
 import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen';
+import LogoutScreen from './screens/logoutScreen/LogoutScreen';
+import PaymentConcentScreen from './screens/payments/PaymentConcent';
 
 let initialRouteName = null
 
@@ -97,6 +99,7 @@ const AppMain = () => {
       Information: { screen: Information },
       BookNow: { screen: BookNow },
       Payments: { screen: Payments },
+      PaymentConcent: { screen: PaymentConcentScreen },
       JobDetails: { screen: JobDetails },
     },
     {
@@ -147,9 +150,19 @@ const AppMain = () => {
         ),
       }),
     },
+    Logout: {
+      screen: LogoutScreen,
+      navigationOptions: () => ({
+        drawerLockMode: 'locked-closed',
+        tabBarVisible: false,
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    },
   }
 
-  if (hasFullProfile(profile)) {
+  if (hasFullProfile(profile) == true && token) {
     tabs.Home = {
       screen: HomeStack,
       navigationOptions: () => ({
@@ -322,7 +335,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

@@ -19,7 +19,7 @@ const Menu = (props) => {
             icon: `${Images.LogoutIcon}`,
             path: 'Login',
             onPress: () => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
+                NavigationService.navigate('Logout')
             }
         }
     ]
@@ -46,7 +46,7 @@ const Menu = (props) => {
         {
             id: 10,
             title: 'Training Locations',
-            icon: `${Images.LogoutIcon}`,
+            icon: `${Images.HomeTrainingIcon}`,
             path: 'TrainingLocation',
             onPress: (props, profile) => {
                 NavigationService.navigate('TrainingLocation')
@@ -85,16 +85,13 @@ const Menu = (props) => {
             path: 'BookEvent'
         },
         {
-            id: 3,
-            title: 'Payment Methods',
-            icon: `${Images.PaymentMethodIcon}`,
-            path: 'Profile'
-        },
-        {
             id: 4,
-            title: 'Training Area',
+            title: 'Training Locations',
             icon: `${Images.HomeTrainingIcon}`,
-            path: 'PaymentMethod'
+            path: 'PaymentMethod',
+            onPress: (props, profile) => {
+                NavigationService.navigate('TrainingLocation')
+            }
         },
         {
             id: 5,
