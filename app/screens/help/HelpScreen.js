@@ -20,7 +20,7 @@ const HelpScreen = (props) => {
 
 const styles = StyleSheet.create({
     title1: {
-        fontSize: 22,
+        fontSize: 20,
         textAlign: 'center'
     },
 })

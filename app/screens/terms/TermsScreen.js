@@ -113,11 +113,11 @@ const TermsScreen = (props) => {
 
 const styles = StyleSheet.create({
     title1: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold'
     },
     title2: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold'
     },
     text1: {
