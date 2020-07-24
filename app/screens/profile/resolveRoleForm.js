@@ -2,7 +2,7 @@ import React from 'react'
 import { AboutMeCoachForm, BankAccountForm, TrainingLocationForm, TravelForm, AvailabiltyForm } from './CoachProfile'
 import PlayerProfile from './Profile'
 
-const resolveRoleForm = (profile, formName = "AboutMe", params) => {
+const resolveRoleForm = (profile, formName = "AboutMe", params, attachFn) => {
     if (!profile) return <></>
     if ("Role" in profile == false) return <></>
 
@@ -16,7 +16,7 @@ const resolveRoleForm = (profile, formName = "AboutMe", params) => {
     }
 
     if (formName == "BankAccount") {
-        return <BankAccountForm />
+        return <BankAccountForm setSubmitFn={attachFn}/>
     }
 
     if (formName == "TrainingLocation") {
