@@ -97,7 +97,7 @@ const Profile = (props) => {
                 />
                 {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
 
-                <View style={{ padding: Dimension.pro5, marginTop: 'auto' }}>
+                <View style={{ padding: Dimension.pro5 }}>
                   <TouchableOpacity onPress={() => setShowModal(true)}>
                     <View style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: '5%', width: '30%', marginTop: '3%', flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text>Upload</Text>
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textArea: {
-    flex: 0.5
+    flex: 0.3
   },
   modal: {
     justifyContent: 'flex-end',
