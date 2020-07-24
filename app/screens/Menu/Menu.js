@@ -119,7 +119,12 @@ const Menu = (props) => {
             id: 7,
             title: 'Help',
             icon: `${Images.HelpIcon}`,
-            path: ''
+            path: '',
+            onPress: (props, profile) => {
+                NavigationService.navigate("Help", {
+                    navigation: props.navigation,
+                })
+            }
         },
     ]
 
