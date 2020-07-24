@@ -45,7 +45,7 @@ const Profile = (props) => {
         customButton={() => {
           return (
             <View style={{ justifyContent: 'flex-end', flexDirection: 'row', flexGrow: 1, opacity: postReq.loading ? 0.5 : 1 }}>
-              {postReq.loading && <Spinner />}
+              {postReq.loading && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
               <TouchableOpacity disabled={postReq.loading} onPress={formikRef?.current?.handleSubmit}>
                 <Text style={{ fontSize: 18 }}>Post</Text>
               </TouchableOpacity>
@@ -69,6 +69,7 @@ const Profile = (props) => {
         onSubmit={(values, { resetForm }) => {
           const data = {
             "body": values.bodyText,
+            "header": "",
             "numberOfLikes": 0
           }
 
