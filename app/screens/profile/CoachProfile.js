@@ -341,7 +341,7 @@ const TimeInput = ({ onSelected, value }) => {
             {showPicker && (
                 <DateTimePickerModal
                     isVisible={showPicker}
-                    mode="datetime"
+                    mode="time"
                     onConfirm={(d) => {
                         setDate(d)
                         onSelected(d)
