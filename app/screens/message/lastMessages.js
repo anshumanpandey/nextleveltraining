@@ -41,8 +41,11 @@ const LastMessage = (props) => {
     }
      
       useEffect(() => {
-         getUserData()
-         console.log(getUserReq,'hhhh')
+        // const intervalId = setInterval(() => {
+            getUserData()
+        //   }, 1000);
+      
+        //   return () => clearInterval(intervalId);
          }, [])
 return (
       <View style={styles.signup_container}>
