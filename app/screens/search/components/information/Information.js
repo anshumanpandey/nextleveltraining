@@ -22,7 +22,6 @@ const Information = (props) => {
   const inActiveColor = 'gray';
 
   useEffect(() => {
-   console.log(profile,'ppp')
     const focusListener = props.navigation.addListener('didFocus', () => {
 
       console.log(profile.Lat)

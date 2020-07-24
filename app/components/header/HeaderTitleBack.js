@@ -3,8 +3,11 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
+import hasFullProfile from '../../utils/perType/profileResolver';
+import { useGlobalState } from '../../state/GlobalState';
 
 const HeaderTitleBack = ({ title }) => {
+  const [profile] = useGlobalState('profile')
   return (
     <View style={styles.header_layout}>
       <View
