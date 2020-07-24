@@ -938,7 +938,7 @@ export const AboutMeCoachForm = () => {
                         const source = await pickImage();
                         setProfilePic(source.uri)
                         AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
-                        syncProfilePic(source)
+                        // syncProfilePic(source)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                     <Image
