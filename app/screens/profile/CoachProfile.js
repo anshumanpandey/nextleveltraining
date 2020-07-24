@@ -922,9 +922,15 @@ export const AboutMeCoachForm = () => {
     }
 
     useEffect(() => {
-        if (profile.ProfileImage) {
+        AsyncStorage.getItem('ProfilePic')
+            .then((s) => {
+                if (!s) return
+                setProfilePic(JSON.parse(s).uri)
+            })
+            //TODO: fix on path from server
+        /*if (profile.ProfileImage) {
             setProfilePic(profile.ProfileImage)
-        }
+        }*/
     }, [])
 
     return (

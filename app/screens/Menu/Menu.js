@@ -157,7 +157,14 @@ const Menu = (props) => {
     }
 
     useEffect(() => {
-        if (!profile.ProfileImage) {
+        AsyncStorage.getItem('ProfilePic')
+            .then((s) => {
+                if (!s) return
+                setProfilePic(JSON.parse(s).uri)
+            })
+            //TODO: fix on path from server
+
+        /*if (!profile.ProfileImage) {
             AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
@@ -165,7 +172,7 @@ const Menu = (props) => {
             })
         } else {
             setProfilePic(profile.ProfileImage)
-        }
+        }*/
     }, [props])
     return (
 
