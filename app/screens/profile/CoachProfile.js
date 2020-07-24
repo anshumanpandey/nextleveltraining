@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useRef, useCallback } from 'react'
-import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch } from 'react-native'
+import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, TextInput as RNTextInput } from 'react-native'
 import { CheckBox, Icon, Spinner, Input as TextInput } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
@@ -336,6 +336,10 @@ const TimeInput = ({ onSelected, value }) => {
 
     const hasValue = () => date ? true : false
 
+    useEffect(() => {
+        setDate(value)
+    }, [value])
+
     return (
         <>
             {showPicker && (
@@ -343,14 +347,14 @@ const TimeInput = ({ onSelected, value }) => {
                     isVisible={showPicker}
                     mode="time"
                     onConfirm={(d) => {
-                        setDate(d)
-                        onSelected(d)
                         setShowPicker(false)
+                        //setDate(d)
+                        onSelected(d)
                     }}
                     onCancel={() => setShowPicker(false)}
                 />
             )}
-            <TouchableOpacity style={{ width: '40%', height: '80%' }} onPress={() => setShowPicker(true)}>
+            <TouchableOpacity style={{ width: '70%', height: '80%', justifyContent: 'flex-end' }} onPress={() => setShowPicker(true)}>
                 <View style={[styles.collapsedViewInner]}>
                     <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>{hasValue() ? moment(date).format("hh:mm A") : "12:00 PM"}</Text>
                 </View>
@@ -363,6 +367,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     const [profile] = useGlobalState('profile')
     const [saving, setSaving] = useState(false)
     const [selectedDates, setSelectedDates] = useState({})
+    const [errorsDic, setErrorsDic] = useState({})
     const [enabledDay, setEnabledDay] = useState({})
 
     const [{ data, loading, error }, doPost] = useAxios({
@@ -370,10 +375,21 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         method: 'POST',
     }, { manual: true })
 
+    const setErrorFor = (key, err) => setErrorsDic({ ...errorsDic, [key]: err })
     const setTimeFor = (key, date) => setSelectedDates({ ...selectedDates, [key]: date })
-    const toggleSwitchSundayFor = (key) => {
+    const toggleSwitchSundayFor = (key, extra) => {
         setEnabledDay({ ...enabledDay, [key]: enabledDay[key] == true ? false : true })
+        if (enabledDay[key] == true) {
+            setSelectedDates({ ...selectedDates, [key]: undefined, [extra]: undefined })
+            setErrorsDic({ ...errorsDic, [key]: undefined, [extra]: undefined })
+        }
     }
+
+    useEffect(() => {
+        return () => {
+            setErrorsDic({})
+        }
+    }, [])
 
     useEffect(() => {
         if (profile.Availabilities && profile.Availabilities.length != 0) {
@@ -381,37 +397,37 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
             const newState = {}
             profile.Availabilities.forEach(day => {
                 if (day.Day == "Sunday") {
-                    toggles.push('Sunday')
+                    toggles.push('start_sunday')
                     newState.start_sunday = moment(day.FromTime).toDate()
                     newState.end_sunday = moment(day.ToTime).toDate()
                 }
                 if (day.Day == "Monday") {
-                    toggles.push('Monday')
+                    toggles.push('start_monday')
                     newState.start_monday = moment(day.FromTime).toDate()
                     newState.end_monday = moment(day.ToTime).toDate()
                 }
                 if (day.Day == "Tuesday") {
-                    toggles.push('Tuesday')
+                    toggles.push('start_tuesday')
                     newState.start_tuesday = moment(day.FromTime).toDate()
                     newState.end_tuesday = moment(day.ToTime).toDate()
                 }
                 if (day.Day == "Wednesday") {
-                    toggles.push('Wednesday')
+                    toggles.push('start_wednesday')
                     newState.start_wednesday = moment(day.FromTime).toDate()
                     newState.end_wednesday = moment(day.ToTime).toDate()
                 }
                 if (day.Day == "Thursday") {
-                    toggles.push('Thursday')
+                    toggles.push('start_thursday')
                     newState.start_thursday = moment(day.FromTime).toDate()
                     newState.end_thursday = moment(day.ToTime).toDate()
                 }
                 if (day.Day == "Friday") {
-                    toggles.push('Friday')
+                    toggles.push('start_friday')
                     newState.start_friday = moment(day.FromTime).toDate()
                     newState.end_friday = moment(day.ToTime).toDate()
                 }
                 if (day.Day == "Saturday") {
-                    toggles.push('Saturday')
+                    toggles.push('start_saturday')
                     newState.start_saturday = moment(day.FromTime).toDate()
                     newState.end_saturday = moment(day.ToTime).toDate()
                 }
@@ -429,6 +445,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     }, [profile.Availabilities])
 
     const availabiltySaveFunction = useCallback(() => {
+        if (Object.keys(errorsDic).length == 0) return Promise.reject()
+        if (Object.keys(errorsDic).some(k => errorsDic[k] != undefined)) return Promise.reject()
         setSaving(true)
         const data = []
         if (selectedDates.start_sunday && selectedDates.end_sunday) {
@@ -529,8 +547,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Sunday</Text>
                         <NLToggleButton
-                            active={enabledDay.Sunday}
-                            onPress={() => toggleSwitchSundayFor('Sunday')}
+                            active={enabledDay.start_sunday}
+                            onPress={() => toggleSwitchSundayFor('start_sunday', "end_sunday")}
                         />
                     </View>
                     <View style={{
@@ -538,12 +556,38 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Sunday && (
-                        <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_sunday} onSelected={(d) => setTimeFor("start_sunday", d)} />
-                            <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_sunday} onSelected={(d) => setTimeFor("end_sunday", d)} />
-                        </View>
+                    {enabledDay.start_sunday && (
+                        <>
+                            <View style={[styles.collapsedView]}>
+                                <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                    <TimeInput value={selectedDates.start_sunday} onSelected={(d) => {
+                                        if (selectedDates.end_sunday && moment(selectedDates.end_sunday).isBefore(d)) {
+                                            setErrorFor("start_sunday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_sunday", undefined)
+                                        }
+                                        setTimeFor("start_sunday", d)
+
+                                    }} />
+                                    {errorsDic.start_sunday && <ErrorLabel text={errorsDic.start_sunday} />}
+                                </View>
+
+                                <Text>TO</Text>
+
+                                <View style={{ justifyContent: 'flex-end', width: '50%' }}>
+                                    <TimeInput value={selectedDates.end_sunday} onSelected={(d) => {
+                                        if (selectedDates.start_sunday && moment(selectedDates.start_sunday).isAfter(d)) {
+                                            setErrorFor("end_sunday", "Cannot be before start date")
+                                        } else {
+                                            setErrorFor("end_sunday", undefined)
+                                        }
+                                        setTimeFor("end_sunday", d)
+
+                                    }} />
+                                    {errorsDic.end_sunday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_sunday} />}
+                                </View>
+                            </View>
+                        </>
                     )}
 
                 </View>
@@ -561,8 +605,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Monday</Text>
                         <NLToggleButton
-                            active={enabledDay.Monday}
-                            onPress={() => toggleSwitchSundayFor('Monday')}
+                            active={enabledDay.start_monday}
+                            onPress={() => toggleSwitchSundayFor('start_monday', "end_monday")}
                         />
                     </View>
                     <View style={{
@@ -570,11 +614,39 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Monday && (
+                    {enabledDay.start_monday && (
                         <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_monday} onSelected={(d) => setTimeFor("start_monday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.start_monday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.end_monday && moment(selectedDates.end_monday).isBefore(d)) {
+                                            setErrorFor("start_monday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_monday", undefined)
+                                        }
+                                        setTimeFor("start_monday", d)
+
+                                    }} />
+                                {errorsDic.start_monday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.start_monday} />}
+
+                            </View>
+
                             <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_monday} onSelected={(d) => setTimeFor("end_monday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.end_monday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.start_monday && moment(selectedDates.start_monday).isAfter(d)) {
+                                            setErrorFor("end_monday", "Cannot be before start date")
+                                        } else {
+                                            setErrorFor("end_monday", undefined)
+                                        }
+                                        setTimeFor("end_monday", d)
+
+                                    }}
+                                />
+                                {errorsDic.end_monday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_monday} />}
+                            </View>
+
                         </View>
                     )}
                 </View>
@@ -592,8 +664,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Tuesday</Text>
                         <NLToggleButton
-                            active={enabledDay.Tuesday}
-                            onPress={() => toggleSwitchSundayFor('Tuesday')}
+                            active={enabledDay.start_tuesday}
+                            onPress={() => toggleSwitchSundayFor('start_tuesday', 'end_tuesday')}
                         />
                     </View>
                     <View style={{
@@ -601,11 +673,39 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Tuesday && (
+                    {enabledDay.start_tuesday && (
                         <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_tuesday} onSelected={(d) => setTimeFor("start_tuesday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.start_tuesday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.end_tuesday && moment(selectedDates.end_tuesday).isBefore(d)) {
+                                            setErrorFor("start_tuesday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_tuesday", undefined)
+                                        }
+                                        setTimeFor("start_tuesday", d)
+
+                                    }}
+                                />
+                                {errorsDic.start_tuesday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.start_tuesday} />}
+
+                            </View>
                             <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_tuesday} onSelected={(d) => setTimeFor("end_tuesday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.end_tuesday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.start_tuesday && moment(selectedDates.start_tuesday).isAfter(d)) {
+                                            setErrorFor("end_tuesday", "Cannot be before start date")
+                                        } else {
+                                            setErrorFor("end_tuesday", undefined)
+                                        }
+                                        setTimeFor("end_tuesday", d)
+
+                                    }}
+                                />
+                                {errorsDic.end_tuesday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_tuesday} />}
+                            </View>
+
                         </View>
                     )}
                 </View>
@@ -623,8 +723,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Wednesday</Text>
                         <NLToggleButton
-                            active={enabledDay.Wednesday}
-                            onPress={() => toggleSwitchSundayFor('Wednesday')}
+                            active={enabledDay.start_wednesday}
+                            onPress={() => toggleSwitchSundayFor('start_wednesday', 'end_wednesday')}
                         />
                     </View>
                     <View style={{
@@ -632,11 +732,38 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Wednesday && (
+                    {enabledDay.start_wednesday && (
                         <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_wednesday} onSelected={(d) => setTimeFor("start_wednesday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.start_wednesday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.end_wednesday && moment(selectedDates.end_wednesday).isBefore(d)) {
+                                            setErrorFor("start_wednesday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_wednesday", undefined)
+                                        }
+                                        setTimeFor("start_wednesday", d)
+
+                                    }}
+                                />
+                                {errorsDic.start_wednesday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.start_wednesday} />}
+
+                            </View>
+
                             <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_wednesday} onSelected={(d) => setTimeFor("end_wednesday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.end_wednesday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.start_wednesday && moment(selectedDates.start_wednesday).isAfter(d)) {
+                                            setErrorFor("end_wednesday", "Cannot be before start date")
+                                        } else {
+                                            setErrorFor("end_wednesday", undefined)
+                                        }
+                                        setTimeFor("end_wednesday", d)
+
+                                    }} />
+                                {errorsDic.end_wednesday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_wednesday} />}
+                            </View>
                         </View>
                     )}
                 </View>
@@ -654,8 +781,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Thursday</Text>
                         <NLToggleButton
-                            active={enabledDay.Thursday}
-                            onPress={() => toggleSwitchSundayFor('Thursday')}
+                            active={enabledDay.start_thursday}
+                            onPress={() => toggleSwitchSundayFor('start_thursday', 'end_thursday')}
                         />
                     </View>
                     <View style={{
@@ -663,11 +790,36 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Thursday && (
+                    {enabledDay.start_thursday && (
                         <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_thursday} onSelected={(d) => setTimeFor("start_thursday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.start_thursday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.end_thursday && moment(selectedDates.end_thursday).isBefore(d)) {
+                                            setErrorFor("start_thursday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_thursday", undefined)
+                                        }
+                                        setTimeFor("start_thursday", d)
+
+                                    }} />
+                                {errorsDic.start_thursday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.start_thursday} />}
+                            </View>
                             <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_thursday} onSelected={(d) => setTimeFor("end_thursday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.end_thursday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.start_thursday && moment(selectedDates.start_thursday).isAfter(d)) {
+                                            setErrorFor("end_thursday", "Cannot be before start date")
+                                        } else {
+                                            setErrorFor("end_thursday", undefined)
+                                        }
+                                        setTimeFor("end_thursday", d)
+
+                                    }} />
+                                {errorsDic.end_thursday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_thursday} />}
+                            </View>
+
                         </View>
                     )}
                 </View>
@@ -685,8 +837,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Friday</Text>
                         <NLToggleButton
-                            active={enabledDay.Friday}
-                            onPress={() => toggleSwitchSundayFor('Friday')}
+                            active={enabledDay.start_friday}
+                            onPress={() => toggleSwitchSundayFor('start_friday', 'end_friday')}
                         />
                     </View>
                     <View style={{
@@ -694,11 +846,35 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Friday && (
+                    {enabledDay.start_friday && (
                         <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_friday} onSelected={(d) => setTimeFor("start_friday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.start_friday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.end_friday && moment(selectedDates.end_friday).isBefore(d)) {
+                                            setErrorFor("start_friday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_friday", null)
+                                        }
+                                        setTimeFor("start_friday", d)
+                                    }} />
+                                {errorsDic.start_friday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.start_friday} />}
+
+                            </View>
                             <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_friday} onSelected={(d) => setTimeFor("end_friday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.end_friday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.start_friday && moment(selectedDates.start_friday).isAfter(d)) {
+                                            setErrorFor("end_friday", "Cannot be before start date")
+                                        } else {
+                                            setErrorFor("end_friday", undefined)
+                                        }
+                                        setTimeFor("end_friday", d)
+                                    }} />
+                                {errorsDic.end_friday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_friday} />}
+                            </View>
+
                         </View>
                     )}
                 </View>
@@ -716,8 +892,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                     }}>
                         <Text>Saturday</Text>
                         <NLToggleButton
-                            active={enabledDay.Saturday}
-                            onPress={() => toggleSwitchSundayFor('Saturday')}
+                            active={enabledDay.start_saturday}
+                            onPress={() => toggleSwitchSundayFor('start_saturday', 'end_saturday')}
                         />
                     </View>
                     <View style={{
@@ -725,11 +901,35 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                         height: 1,
                         marginHorizontal: 15
                     }} />
-                    {enabledDay.Saturday && (
+                    {enabledDay.start_saturday && (
                         <View style={styles.collapsedView}>
-                            <TimeInput value={selectedDates.start_saturday} onSelected={(d) => setTimeFor("start_saturday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.start_saturday}
+                                    onSelected={(d) => {
+                                        if (selectedDates.end_saturday && moment(selectedDates.end_saturday).isBefore(d)) {
+                                            setErrorFor("start_saturday", "Cannot be after end date")
+                                        } else {
+                                            setErrorFor("start_saturday", undefined)
+                                        }
+                                        setTimeFor("start_saturday", d)
+
+                                    }} />
+                                {errorsDic.start_saturday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.start_saturday} />}
+
+                            </View>
                             <Text>TO</Text>
-                            <TimeInput value={selectedDates.end_saturday} onSelected={(d) => setTimeFor("end_saturday", d)} />
+                            <View style={{ justifyContent: 'flex-start', width: '40%' }}>
+                                <TimeInput value={selectedDates.end_saturday} onSelected={(d) => {
+                                    if (selectedDates.start_saturday && moment(selectedDates.start_saturday).isAfter(d)) {
+                                        setErrorFor("end_saturday", "Cannot be before end date")
+                                    } else {
+                                        setErrorFor("end_saturday", undefined)
+                                    }
+                                    setTimeFor("end_saturday", d)
+                                }} />
+                                {errorsDic.end_saturday && <ErrorLabel style={{ fontSize: 12 }} text={errorsDic.end_saturday} />}
+                            </View>
+
                         </View>
                     )}
                 </View>
@@ -838,7 +1038,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                     <>
                         <View style={styles.containerCommon}>
                             <View style={styles.inputContainer}>
-                                <TextInput
+                                <RNTextInput
+                                    style={{ height: 50 }}
                                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                                     placeholder={"Location Name"}
                                     onChangeText={handleChange('locationName')}
@@ -857,7 +1058,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                     })
                             }}>
                                 <View style={[styles.inputContainer]}>
-                                    <TextInput
+                                    <RNTextInput
+                                        style={{ height: 50 }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         editable={false}
                                         placeholder="Upload Location Picture"
@@ -936,7 +1138,7 @@ export const AboutMeCoachForm = () => {
                         const source = await pickImage();
                         setProfilePic(source.uri)
                         AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
-                        syncProfilePic(source)
+                        // syncProfilePic(source)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                     <Image

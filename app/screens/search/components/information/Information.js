@@ -22,14 +22,16 @@ const Information = (props) => {
   const inActiveColor = 'gray';
 
   useEffect(() => {
-   console.log(profile,'ppp')
     const focusListener = props.navigation.addListener('didFocus', () => {
+<<<<<<< HEAD
       const meters = getDistance(
         { latitude: 52.518611, longitude: 13.408056},
         { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
       )
     setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
 
+=======
+>>>>>>> ff531c6220b0ca4868abded9698baf3611ed2af3
 
       console.log(profile.Lat)
       console.log(profile.Lng)

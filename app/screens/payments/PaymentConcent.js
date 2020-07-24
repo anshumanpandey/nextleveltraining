@@ -10,6 +10,7 @@ import { GET_PAYPAL_JSON } from "./PaypalUtils"
 import base64 from 'react-native-base64'
 import { makeUseAxios } from 'axios-hooks'
 import { WebView } from 'react-native-webview';
+import moment from 'moment'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 var qs = require('qs');
@@ -47,6 +48,8 @@ const PaymentConcentScreen = (props) => {
   }, { manual: true })
 
   const isLoading = () => loading || paymentReq.loading
+
+  const [startDate, endDate] = props.navigation.getParam('selectedTime').split('-')
 
   return (
     <ScrollView hide style={{ flex: 1, backgroundColor: 'white' }}>
@@ -111,7 +114,7 @@ const PaymentConcentScreen = (props) => {
           }}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white' }}>Save</Text>
+            <Text style={{ color: 'white' }}>Pay Now</Text>
             {isLoading() && <Spinner color={Colors.s_yellow} />}
           </View>
         </TouchableOpacity>
@@ -133,11 +136,10 @@ const PaymentConcentScreen = (props) => {
                 console.log('success')
                 const data = {
                   "playerID": profile.Id,
-                  "bookingNumber": 1,
                   "coachID": props.navigation.getParam('coach').Id,
-                  "fromTime": "2020-07-23T22:21:51.005Z",
-                  "toTime": "2020-07-23T22:21:51.005Z",
-                  "sentDate": "2020-07-23T22:21:51.005Z",
+                  "fromTime": startDate.trim(),
+                  "toTime": endDate.trim(),
+                  "sentDate": new Date(),
                   "trainingLocationID": props.navigation.getParam('selectedLocation').id,
                   "amount": 1,
                   "paymentStatus": "Processed",

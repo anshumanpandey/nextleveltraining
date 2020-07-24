@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         color: Colors.s_blue,
     },
     collapsedView: {
-        height: 45,
+        height: 75,
         width: '100%',
         paddingHorizontal: 15,
         flexDirection: 'row',
@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: "lightgrey",
         borderBottomWidth: 0.5,
-        height: '100%',
         justifyContent: 'center'
     },
     modal: {

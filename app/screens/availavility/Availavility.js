@@ -27,6 +27,7 @@ const AvailavilityScreen = (props) => {
                                     if (submitFn) {
                                         submitFn()
                                             .then(() => setIsSaving(false))
+                                            .catch(() => setIsSaving(false))
                                     }
                                 }}>
                                 <Text style={{ color: 'black', opacity: isSaving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
