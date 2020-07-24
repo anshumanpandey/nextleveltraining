@@ -1,8 +1,7 @@
 import Upload from 'react-native-background-upload'
-import RNFetchBlob from 'rn-fetch-blob'
 import { getGlobalState } from '../state/GlobalState'
 
-const FileSyncher = (fileObject, idToAttach) => {
+const FileSyncher = (fileObject, idToAttach, fileType="Post") => {
     const profile = getGlobalState('profile')
     const token = getGlobalState('token')
     const { uri } = fileObject
@@ -19,7 +18,7 @@ const FileSyncher = (fileObject, idToAttach) => {
             'Authorization': `Bearer ${token}`
         },
         parameters: {
-            Type: 'Post',
+            Type: fileType,
             Id: idToAttach
         },
         // Below are options only supported on Android
@@ -30,7 +29,7 @@ const FileSyncher = (fileObject, idToAttach) => {
     }
 
 
-    Upload.startUpload(options).then((uploadId) => {
+    return Upload.startUpload(options).then((uploadId) => {
         console.log('Upload started')
         Upload.addListener('progress', uploadId, (data) => {
             console.log(`[${uri}] Progress: ${data.progress}%`)

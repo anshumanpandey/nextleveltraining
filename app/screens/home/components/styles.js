@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   post_comment: {
     fontSize: 20,
     color: Colors.s_blue,
-    marginRight: 10,
+    marginRight: 0,
   },
   more_icon: {
     width: 20,

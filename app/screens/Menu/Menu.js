@@ -19,7 +19,7 @@ const Menu = (props) => {
             icon: `${Images.LogoutIcon}`,
             path: 'Login',
             onPress: () => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
+                NavigationService.navigate('Logout')
             }
         }
     ]
@@ -46,7 +46,7 @@ const Menu = (props) => {
         {
             id: 10,
             title: 'Training Locations',
-            icon: `${Images.LogoutIcon}`,
+            icon: `${Images.HomeTrainingIcon}`,
             path: 'TrainingLocation',
             onPress: (props, profile) => {
                 NavigationService.navigate('TrainingLocation')
@@ -82,19 +82,19 @@ const Menu = (props) => {
             id: 2,
             title: 'My Bookings',
             icon: `${Images.MyBookingIcon}`,
-            path: 'BookEvent'
-        },
-        {
-            id: 3,
-            title: 'Payment Methods',
-            icon: `${Images.PaymentMethodIcon}`,
-            path: 'Profile'
+            path: 'BookEvent',
+            onPress: (props, profile) => {
+                NavigationService.navigate('Booking')
+            }
         },
         {
             id: 4,
-            title: 'Training Area',
+            title: 'Training Locations',
             icon: `${Images.HomeTrainingIcon}`,
-            path: 'PaymentMethod'
+            path: 'PaymentMethod',
+            onPress: (props, profile) => {
+                NavigationService.navigate('TrainingLocation')
+            }
         },
         {
             id: 5,
@@ -122,7 +122,12 @@ const Menu = (props) => {
             id: 7,
             title: 'Help',
             icon: `${Images.HelpIcon}`,
-            path: ''
+            path: '',
+            onPress: (props, profile) => {
+                NavigationService.navigate("Help", {
+                    navigation: props.navigation,
+                })
+            }
         },
     ]
 
@@ -155,14 +160,25 @@ const Menu = (props) => {
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
-                setProfilePic(JSON.parse(s))
+                setProfilePic(JSON.parse(s).uri)
             })
+            //TODO: fix on path from server
+
+        /*if (!profile.ProfileImage) {
+            AsyncStorage.getItem('ProfilePic')
+            .then((s) => {
+                if (!s) return
+                setProfilePic(JSON.parse(s).uri)
+            })
+        } else {
+            setProfilePic(profile.ProfileImage)
+        }*/
     }, [props])
     return (
 
         <View style={styles.menu_view}>
             <View style={styles.menu_avatar}>
-                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder} />
+                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />
                 <Text style={styles.avatar_title}>{profile?.FullName}</Text>
             </View>
             <FlatList

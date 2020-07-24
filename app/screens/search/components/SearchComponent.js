@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { View, FlatList, TextInput, Image } from 'react-native';
 import { Icon, Spinner } from 'native-base';
 import PostSearchCard from './subcomponents/PostSearchCard';
@@ -7,7 +7,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
 
-const SearchComponent = () => {
+const SearchComponent = (props) => {
   const [profile] = useGlobalState('profile')
   const [keyword, setKeyword] = useState('')
   const [coaches, setCoaches] = useState([])
@@ -16,6 +16,27 @@ const SearchComponent = () => {
     url: `/Users/GetCoaches`,
     method: 'POST',
   }, { manual: true })
+
+  useEffect(() => {
+    searchCoaches({
+      data: {
+        playerId: profile.Id,
+        search: keyword
+      }
+    })
+    .then((r) => setCoaches([...r.data]))
+    const unsubscribe = props.navigation.addListener('tabPress', e => {
+      searchCoaches({
+        data: {
+          playerId: profile.Id,
+          search: keyword
+        }
+      })
+        .then((r) => setCoaches([...r.data]))
+    });
+
+    return unsubscribe;
+  }, [props.navigation]);
 
   return (
     <View style={{ height: '100%', width: '100%', backgroundColor: 'white' }}>
@@ -34,7 +55,7 @@ const SearchComponent = () => {
             paddingHorizontal: 7,
             marginHorizontal: 10,
             borderRadius: 10,
-            width: '70%',
+            width: '95%',
           }}>
           <TextInput
             onChangeText={(txt) => setKeyword(txt)}
@@ -69,7 +90,7 @@ const SearchComponent = () => {
                       search: keyword
                     }
                   })
-                    .then((r) => setCoaches(r.data))
+                    .then((r) => setCoaches([...r.data]))
                 }}
                 type="EvilIcons"
                 name="search"
@@ -94,7 +115,7 @@ const SearchComponent = () => {
         renderItem={({ item }) => (
           <PostSearchCard
             {...item}
-            onPress={() => NavigationService.navigate('Information', {...item})}
+            onPress={() => NavigationService.navigate('Information', { ...item })}
             refreshCb={() => {
               searchCoaches({
                 data: {
@@ -102,7 +123,7 @@ const SearchComponent = () => {
                   search: keyword
                 }
               })
-                .then((r) => setCoaches(r.data))
+                .then((r) => setCoaches([...r.data]))
             }}
           />
         )}

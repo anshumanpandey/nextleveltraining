@@ -24,15 +24,17 @@ import { useGlobalState } from '../../state/GlobalState'
 import screen from '../../utils/screen'
 import Video from 'react-native-video';
 import Colors from '../../constants/color';
+import SyncProfileAssets from '../../utils/SyncProfileAssets';
 
 
 const Home = (props) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [dataToShow, setDataToShow] = useState([]);
   const [token] = useGlobalState('token')
+  const [profile] = useGlobalState('profile')
 
   const [{ data, loading, error }, refetch] = useAxios({
-    url: '/Users/GetPostsByUser',
+    url: '/Users/GetAllPosts',
   })
 
   useEffect(() => {
@@ -41,12 +43,15 @@ const Home = (props) => {
   }, [])
 
   useEffect(() => {
+    SyncProfileAssets();
+  }, [profile])
+
+  useEffect(() => {
     if (!data) return
     if (!data.length) return
 
-    const dateFormat = 'DD MMM YYYY HH:mm'
+    const dateFormat = 'DD MMM HH:mm'
     const posts = data.map(p => {
-      console.log(p)
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
           const j = {
@@ -54,6 +59,8 @@ const Home = (props) => {
             name: p.Header,
             time: moment(p.CreatedDate).format(dateFormat),
             description: p.Body,
+            createdBy: p.CreatedBy,
+            profileImage: p.ProfileImage,
             comments: p.Comments || [],
             likes: p.Likes || [],
           }
@@ -63,12 +70,14 @@ const Home = (props) => {
             if (p.MediaURL.includes('MOV')) {
               j.fileType = "video"
             }
-            j.imageUri = `http://44.233.116.105/NextLevelTrainingApi${p.MediaURL}`
+            j.imageUri = p.MediaURL
           } else if (fileString) {
+            console.log("no media url")
             const jsonFile = JSON.parse(fileString)
             j.imageUri = jsonFile.file.uri
             j.fileType = jsonFile.file.type
             SyncPosts(jsonFile.file, p.Id)
+            .then(() => AsyncStorage.removeItem(`post-${p.Id}-file`))
           }
           return j
         })
@@ -132,6 +141,10 @@ const Home = (props) => {
 const MediaPreview = ({ visibleModal, setVisibleModal }) => {
   const [videoIsReady, setVideoIsReady] = useState(false);
 
+  useEffect(() => {
+    if (visibleModal == false) setVideoIsReady(false)
+  }, [visibleModal])
+
   return (
     <Modal
       visible={visibleModal != false}
@@ -179,15 +192,11 @@ const MediaPreview = ({ visibleModal, setVisibleModal }) => {
                 setVideoIsReady(true)
               }}
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                display: videoIsReady ? 'flex' : "none"
+                width: Dimensions.get('screen').width, height: Dimensions.get('screen').height,
+                opacity: videoIsReady ? 1 : 0,
               }} />
             {!videoIsReady && (
-              <View style={{  backgroundColor: 'black', opacity: 0.8 ,justifyContent: 'center', alignItems: 'center',idth: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
+              <View style={{  backgroundColor: 'black', opacity: 0.8 ,justifyContent: 'center', alignItems: 'center',width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
                 <Spinner color={Colors.s_yellow} size={100} />
                 <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
               </View>

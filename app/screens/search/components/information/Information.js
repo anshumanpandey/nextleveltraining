@@ -24,11 +24,14 @@ const Information = (props) => {
   useEffect(() => {
    console.log(profile,'ppp')
     const focusListener = props.navigation.addListener('didFocus', () => {
+<<<<<<< HEAD
       const meters = getDistance(
         { latitude: 52.518611, longitude: 13.408056},
         { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
       )
     setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
+=======
+>>>>>>> cdabef6d8e914450cd8344af007ebb23ebc50324
 
       console.log(profile.Lat)
       console.log(profile.Lng)
@@ -62,7 +65,7 @@ const Information = (props) => {
           />
         </View>
         <View style={styles.infoContain}>
-          <Image source={Images.MessiPlayer} style={styles.user_pic} />
+          <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
           <View style={{ position: 'absolute', right: 5 }}>
             <View style={styles.ps_star_view}>
               <Text style={styles.ps_star_point}>{props.navigation.getParam("AverageRating")}</Text>
@@ -103,7 +106,7 @@ const Information = (props) => {
 
           <View style={styles.buttonContain}>
             <TouchableOpacity
-              onPress={() => NavigationService.navigate('BookNow')}
+              onPress={() => NavigationService.navigate('BookNow', { coach: props.navigation.state.params })}
               style={styles.button_view}>
               <Icon
                 type="MaterialIcons"
@@ -136,9 +139,9 @@ const Information = (props) => {
       </View>
 
       {selectedTab === 0 ? (
-        <InformationTab {...props.navigation.state.params} />
+        <InformationTab selectedTab={selectedTab} {...props.navigation.state.params} />
       ) : selectedTab === 1 ? (
-        <MediaTab />
+        <MediaTab selectedTab={selectedTab} posts={props.navigation.state.params.Posts} />
       ) : (
             <ReviewTab />
           )}

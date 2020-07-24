@@ -13,8 +13,20 @@ const TrainingLocationScreen = (props) => {
 
     return (
         <View style={{ backgroundColor: 'white', flexGrow: 1 }}>
-            <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
-            {profile.TrainingLocations.map(t => {
+            <Header
+                customButton={() => {
+                    return (
+                        <TouchableOpacity onPress={() => props.navigation.navigate("TrainingLocationEdit")}>
+                            <Text>Create</Text>
+                        </TouchableOpacity>
+                    );
+                }}
+                hideCreatePost={true}
+                toggleDrawer={props.navigation.toggleDrawer}
+                navigate={props.navigation.navigate}
+            />
+            {profile.TrainingLocations.length == 0 && <Text style={{ textAlign: 'center', fontSize: 20, marginTop: '20%'}}>No training locations created</Text>}
+            {profile.TrainingLocations.length != 0 && profile.TrainingLocations.map(t => {
                 return (
                     <TouchableOpacity onPress={() => {
                         props.navigation.navigate("TrainingLocationEdit", {item: t} )

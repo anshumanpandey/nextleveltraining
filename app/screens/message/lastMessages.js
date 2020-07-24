@@ -49,7 +49,7 @@ const LastMessage = (props) => {
          }, [])
 return (
       <View style={styles.signup_container}>
-        <Header toggleDrawer={props.toggleDrawer}/>
+        <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer}/>
         <View style={styles.fullFlatListContainer}>
         { getUserReq.data && getUserReq.data.length > 0 ?
                 <FlatList

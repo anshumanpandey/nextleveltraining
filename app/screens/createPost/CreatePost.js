@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
 import Header from '../../components/header/Header'
 import { useGlobalState } from '../../state/GlobalState'
 import Dimension from '../../constants/dimensions.js'
-import { Textarea, Icon, Input } from 'native-base'
+import { Textarea, Icon, Input, Spinner } from 'native-base'
 import Modal from 'react-native-modal';
 import DocumentPicker from 'react-native-document-picker';
 import { Formik } from 'formik';
@@ -13,6 +13,7 @@ import ErrorLabel from '../../components/ErrorLabel'
 import Video from 'react-native-video';
 
 const Profile = (props) => {
+  const formikRef = useRef()
   const [profile] = useGlobalState('profile')
   const [showModal, setShowModal] = useState(false)
 
@@ -20,6 +21,14 @@ const Profile = (props) => {
     url: '/Users/CreatePost',
     method: 'POST'
   }, { manual: true })
+
+  useEffect(() => {
+    const focusListener = props.navigation.addListener('didBlur', () => {
+      formikRef?.current?.setFieldValue("bodyText", "")
+      formikRef?.current?.setFieldValue("file", null)
+    });
+    return () => focusListener?.remove();
+  }, [])
 
   return (
     <View style={{ flex: 1 }}>
@@ -32,21 +41,35 @@ const Profile = (props) => {
               barStyle="light-content"
           />
       </View> */}
-      <Header hideCreatePost={true} toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate} />
+      <Header
+        customButton={() => {
+          return (
+            <View style={{ justifyContent: 'flex-end', flexDirection: 'row', flexGrow: 1, opacity: postReq.loading ? 0.5 : 1 }}>
+              {postReq.loading && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
+              <TouchableOpacity disabled={postReq.loading} onPress={formikRef?.current?.handleSubmit}>
+                <Text style={{ fontSize: 18 }}>Post</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+        hideCreatePost={true}
+        toggleDrawer={props.navigation.toggleDrawer}
+        navigate={props.navigation.navigate}
+      />
       <Formik
-        initialValues={{ file: null, bodyText: '', title: '' }}
+        innerRef={(r) => formikRef.current = r}
+        initialValues={{ file: null, bodyText: '' }}
         validate={(values) => {
           const errors = {}
 
-          if (!values.title) errors.title = "Required"
           if (!values.bodyText) errors.bodyText = "Required"
 
           return errors;
         }}
         onSubmit={(values, { resetForm }) => {
           const data = {
-            "header": values.title,
             "body": values.bodyText,
+            "header": "sss",
             "numberOfLikes": 0
           }
 
@@ -65,30 +88,6 @@ const Profile = (props) => {
           <>
             <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.post_view}>
-                <View style={{ padding: Dimension.pro5 }}>
-                  <View style={{ justifyContent: 'space-between', flexDirection: 'row', flexGrow: 1 }}>
-                    <View style={{ flexDirection: 'column', height: 60, width: '90%' }}>
-                      <Input
-                        placeholderTextColor="gray"
-                        style={{ height: '90%', width: '100%', }}
-                        onChangeText={handleChange('title')}
-                        onBlur={handleBlur('title')}
-                        value={values.title}
-                        placeholder="Title..."
-                      />
-                      {errors.title && touched.title && <ErrorLabel text={errors.title} />}
-                    </View>
-                    <TouchableOpacity onPress={handleSubmit}>
-                      <Text style={{ fontSize: 18 }}>Post</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <TouchableOpacity onPress={() => setShowModal(true)}>
-                    <View style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: '5%', width: '30%', marginTop: '3%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text>Upload</Text>
-                      <Icon type="AntDesign" name="upload" style={{ fontSize: 18 }} />
-                    </View>
-                  </TouchableOpacity>
-                </View>
                 <Textarea
                   onChangeText={handleChange('bodyText')}
                   onBlur={handleBlur('bodyText')}
@@ -98,6 +97,14 @@ const Profile = (props) => {
                 />
                 {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
 
+                <View style={{ padding: Dimension.pro5, marginTop: 'auto' }}>
+                  <TouchableOpacity onPress={() => setShowModal(true)}>
+                    <View style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: '5%', width: '30%', marginTop: '3%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text>Upload</Text>
+                      <Icon type="AntDesign" name="upload" style={{ fontSize: 18 }} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
                 {values.file && !values.file.type.includes('video') && (
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -107,7 +114,7 @@ const Profile = (props) => {
                 )}
 
                 {values.file && values.file.type.includes('video') && (
-                  <Video 
+                  <Video
                     paused={true}
                     currentPosition={10}
                     controls={true}

@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react'
-import { View, Text, Image, Alert, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import { View, Text, Image, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import { GoogleSignin } from 'react-native-google-signin';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import Images from '../../constants/image'
@@ -11,7 +11,7 @@ import GlobalStyles from '../../constants/GlobalStyles';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Spinner } from 'native-base';
+import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
 
 const Login = (props) => {
@@ -42,21 +42,27 @@ const Login = (props) => {
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId: '682593494821-mfc7dg2076o471fsq0v8sktjrqv6g8pn.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      webClientId: '682593494821-0pkvvshud13mpk5q3l3bork71bsm4fed.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
       hostedDomain: '', // specifies a hosted domain restriction
       loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
       forceConsentPrompt: false, // [Android] if you want to show the authorization prompt at each login.
       accountName: '', // [Android] specifies an account name on the device that should be used
-      iosClientId: '634112134799-ron6nkiu8tf6vrg1hiuojnuls9l8ddp1.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+      iosClientId: '682593494821-0pkvvshud13mpk5q3l3bork71bsm4fed.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
-    AsyncStorage.getItem('role')
-      .then((r) => {
-        if (!r) return
-        setRole(r)
-      })
 
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      AsyncStorage.getItem('role')
+        .then((r) => {
+          if (!r) return
+          setRole(r)
+        })
+    });
+
+    return () => focusListener.remove()
   }, [])
+
+
 
   return (
     <ScrollView style={styles.login_layout}>
@@ -94,6 +100,7 @@ const Login = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
+                    placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Email ID"
                     keyboardType="email-address"
                     onChangeText={handleChange('emailID')}
@@ -104,6 +111,7 @@ const Login = (props) => {
                 {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
                 <View style={styles.login_info_view}>
                   <TextInput
+                    placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Password"
                     secureTextEntry={true}
                     onChangeText={handleChange('password')}
@@ -141,7 +149,7 @@ const Login = (props) => {
             <TouchableOpacity
               disabled={isLoginDisabled()}
               onPress={() => {
-                if (!role) return
+                if (!role && props.navigation.getParam('role', null) == null) return
                 console.log(role)
                 if (Platform.OS === "android") {
                   LoginManager.setLoginBehavior("web_only")
@@ -181,15 +189,15 @@ const Login = (props) => {
                       "authenticationToken": userInfo.serverAuthCode
                     }
                   })
-                  .then((r) => {
-                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
-                    return getUserData()
-                  })
-                  .then((r) => {
-                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                    props.navigation.navigate(Screen.LandingPage)
-                  })
-                  .catch(err => console.log(err))
+                    .then((r) => {
+                      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+                      return getUserData()
+                    })
+                    .then((r) => {
+                      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                      props.navigation.navigate(Screen.LandingPage)
+                    })
+                    .catch(err => console.log(err))
                 } catch (e) {
                   console.log(e)
                 }

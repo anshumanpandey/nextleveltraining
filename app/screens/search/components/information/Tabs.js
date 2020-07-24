@@ -4,7 +4,7 @@ import styles from './information-style';
 
 const tabs = [
   {id: 1, title: 'INFORMATION'},
-  {id: 2, title: 'MEDIA'},
+  {id: 2, title: 'POSTS'},
   {id: 3, title: 'REVIEW'},
 ];
 const Tabs = ({

@@ -119,7 +119,9 @@ const styles = StyleSheet.create({
     collapsedViewInner: {
         width: '100%',
         borderBottomColor: "lightgrey",
-        borderBottomWidth: 0.5
+        borderBottomWidth: 0.5,
+        height: '100%',
+        justifyContent: 'center'
     },
     modal: {
         margin: 0,

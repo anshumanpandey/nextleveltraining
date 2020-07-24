@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect, useRef, useCallback } from 'react'
-import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
-import { CheckBox, Icon, Spinner } from 'native-base';
+import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch } from 'react-native'
+import { CheckBox, Icon, Spinner, Input as TextInput } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
 import Images from "../../constants/image";
@@ -9,7 +9,7 @@ import NavigationService from '../../navigation/NavigationService';
 import NLToggleButton from '../../components/NLToggleButton';
 import { getGlobalState, useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import { axiosInstance } from '../../api/AxiosBootstrap';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment'
 import { Formik, FieldArray } from 'formik';
 import useAxios from 'axios-hooks'
@@ -25,6 +25,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview
 import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
+import { syncProfilePic } from '../../utils/SyncProfileAssets';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -333,27 +334,25 @@ const TimeInput = ({ onSelected, value }) => {
     const [showPicker, setShowPicker] = useState();
     const [date, setDate] = useState(value);
 
+    const hasValue = () => date ? true : false
+
     return (
         <>
             {showPicker && (
-                <DateTimePicker
+                <DateTimePickerModal
+                    isVisible={showPicker}
                     mode="time"
-                    value={date || new Date()}
-                    format="DD-MM-YYYY"
-                    placeholder={'Select Date'}
-                    showIcon={false}
-                    cancelBtnText="Cancel"
-                    confirmBtnText="Confirm"
-                    onChange={(_, d) => {
-                        setShowPicker(false)
+                    onConfirm={(d) => {
                         setDate(d)
                         onSelected(d)
+                        setShowPicker(false)
                     }}
+                    onCancel={() => setShowPicker(false)}
                 />
             )}
-            <TouchableOpacity style={{ width: '40%' }} onPress={() => setShowPicker(true)}>
-                <View style={styles.collapsedViewInner}>
-                    <TextInput style={{ color: 'black' }} editable={false} value={date ? moment(date).format("hh:mm A") : undefined} placeholder={"12:00 PM"}></TextInput>
+            <TouchableOpacity style={{ width: '40%', height: '80%' }} onPress={() => setShowPicker(true)}>
+                <View style={[styles.collapsedViewInner]}>
+                    <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>{hasValue() ? moment(date).format("hh:mm A") : "12:00 PM"}</Text>
                 </View>
             </TouchableOpacity>
         </>
@@ -439,7 +438,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_sunday,
                 "isWorking": true
             })
-        } 
+        }
 
         if (selectedDates.start_monday && selectedDates.end_monday) {
             data.push({
@@ -448,7 +447,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_monday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_wednesday && selectedDates.end_wednesday) {
             data.push({
@@ -457,7 +456,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_wednesday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_tuesday && selectedDates.end_tuesday) {
             data.push({
@@ -466,7 +465,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_tuesday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_thursday && selectedDates.end_thursday) {
             data.push({
@@ -475,7 +474,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_thursday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_friday && selectedDates.end_friday) {
             data.push({
@@ -484,7 +483,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_friday,
                 "isWorking": true,
             })
-        } 
+        }
 
         if (selectedDates.start_saturday && selectedDates.end_saturday) {
             data.push({
@@ -493,14 +492,14 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "toTime": selectedDates.end_saturday,
                 "isWorking": true,
             })
-        } 
+        }
 
         return doPost({ data })
-        .then(() => axiosInstance({ url: '/Users/GetUser' }))
-        .then((r) => {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-            setSaving(false)
-        })
+            .then(() => axiosInstance({ url: '/Users/GetUser' }))
+            .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                setSaving(false)
+            })
 
     }, [selectedDates]);
 
@@ -755,7 +754,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 }
 
 
-export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
+export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...params }) => {
     const formikRef = useRef()
     const [image, setImage] = useState()
     const [profile] = useGlobalState('profile')
@@ -768,13 +767,22 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
         url: '/Users/GetUser',
     }, { manual: true })
 
-    useEffect(() => {
+    const initFn = () => {
         setSubmitFn && setSubmitFn(formikRef.current.submitForm)
         AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
             .then(img => {
                 if (!img) return
                 formikRef.current.setFieldValue('file', JSON.parse(img).file)
             })
+    }
+
+
+    useEffect(() => {
+        initFn()
+        if (navigation) {
+            const focusListener = navigation.addListener('didFocus', initFn);
+            return () => focusListener?.remove();
+        }
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
@@ -788,15 +796,14 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                     locationName: params.LocationName || "",
                     address: params.LocationAddress || "",
                     file: null,
-                    lat: 0,
-                    lng: 0
+                    lat: params.Lat || 0,
+                    lng: params.Lng || 0
                 }}
                 validate={(values) => {
                     const errors = {}
 
                     if (!values.locationName) errors.locationName = 'Required'
                     if (!values.address) errors.address = 'Required'
-                    if (!values.file) errors.file = 'Required'
 
                     return errors
                 }}
@@ -819,7 +826,11 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                         })
                         .then(r => getUserData())
                         .then((r) => {
-                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                            if (onCreate) {
+                                onCreate(() => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }));
+                            } else {
+                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                            }
                         })
                 }}
             >
@@ -828,6 +839,7 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                         <View style={styles.containerCommon}>
                             <View style={styles.inputContainer}>
                                 <TextInput
+                                    placeholderTextColor={'rgba(0,0,0,0.3)'}
                                     placeholder={"Location Name"}
                                     onChangeText={handleChange('locationName')}
                                     onBlur={handleBlur('locationName')}
@@ -835,16 +847,6 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                                 />
                             </View>
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
-
-                            <NLGooglePlacesAutocomplete
-                                defaultValue={values.address}
-                                onPress={(data, details = null) => {
-                                    setFieldValue("address", data.description)
-                                    setFieldValue("lat", details.geometry.location.lat)
-                                    setFieldValue("lng", details.geometry.location.lng)
-                                }} />
-
-                            {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
                             <TouchableOpacity onPress={() => {
                                 DocumentPicker.pick({
@@ -856,6 +858,7 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                             }}>
                                 <View style={[styles.inputContainer]}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         editable={false}
                                         placeholder="Upload Location Picture"
                                         keyboardType="email-address"
@@ -867,6 +870,17 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
                             {errors.file && touched.file && <ErrorLabel text={errors.file} />}
+
+                            <NLGooglePlacesAutocomplete
+                                defaultValue={values.address}
+                                onPress={(data, details = null) => {
+                                    setFieldValue("address", data.description)
+                                    setFieldValue("lat", details.geometry.location.lat)
+                                    setFieldValue("lng", details.geometry.location.lng)
+                                }} />
+
+                            {errors.address && touched.address && <ErrorLabel text={errors.address} />}
+
                             {!setSubmitFn && (
                                 <View style={styles.signup_btn_view}>
                                     <TouchableOpacity
@@ -890,7 +904,7 @@ export const TrainingLocationForm = ({ setSubmitFn, ...params }) => {
 }
 
 export const AboutMeCoachForm = () => {
-    const [profilePic, setProfilePic] = useState('profile');
+    const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile');
 
     const handleOnCardPress = ({ title, data, screen = "EditInput", keyboardType }) => {
@@ -902,18 +916,31 @@ export const AboutMeCoachForm = () => {
         })
     }
 
+    useEffect(() => {
+        AsyncStorage.getItem('ProfilePic')
+            .then((s) => {
+                if (!s) return
+                setProfilePic(JSON.parse(s).uri)
+            })
+        //TODO: fix on path from server
+        /*if (profile.ProfileImage) {
+            setProfilePic(profile.ProfileImage)
+        }*/
+    }, [])
+
     return (
         <ScrollView>
             <View style={styles.containerAbout}>
                 <TouchableOpacity
                     onPress={async () => {
                         const source = await pickImage();
-                        setProfilePic(source)
+                        setProfilePic(source.uri)
                         AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
+                        syncProfilePic(source)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                     <Image
-                        source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
+                        source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
                         style={styles.profileImage}
                     />
                     <View style={{
@@ -1187,6 +1214,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Bank Name"}
                                         onChangeText={handleChange('bankName')}
                                         onBlur={handleBlur('bankName')}
@@ -1198,6 +1226,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 <TouchableOpacity onPress={() => setShowModal(true)}>
                                     <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                         <TextInput
+                                            placeholderTextColor={'rgba(0,0,0,0.3)'}
                                             style={{ color: values.role ? 'black' : 'gray' }}
                                             editable={false}
                                             placeholder={"Select account type"}
@@ -1209,6 +1238,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account Holder Name"}
                                         onChangeText={handleChange('holderName')}
                                         onBlur={handleBlur('holderName')}
@@ -1219,6 +1249,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Sort code "}
                                         onChangeText={handleChange('sortCode')}
                                         onBlur={handleBlur('sortCode')}
@@ -1229,6 +1260,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account number"}
                                         onChangeText={handleChange('accountNumber')}
                                         onBlur={handleBlur('accountNumber')}

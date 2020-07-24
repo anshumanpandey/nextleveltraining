@@ -18,7 +18,7 @@ const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.ps_container}>
       <View style={{ marginTop: 15, marginLeft: 10 }}>
-        <Image source={Images.MessiPlayer} style={styles.ps_image} />
+        <Image source={{ uri: props.ProfileImage }} style={styles.ps_image} />
         <View style={styles.ps_star_view}>
           <Text style={styles.ps_star_point}>{props.AverageRating}</Text>
           {Number.isInteger(props.AverageRating) && (
@@ -66,13 +66,13 @@ const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '85%', marginTop: 10 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.ps_dbs_check}>Valid ID</Text>
-            {props.VerificationDocument.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
-            {!props.VerificationDocument.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
+            {props?.VerificationDocument?.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
+            {!props?.VerificationDocument?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.ps_dbs_check}>DBS Checked</Text>
-            {props.DBSCeritificate.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
-            {!props.DBSCeritificate.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
+            {props?.DBSCeritificate?.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
+            {!props?.DBSCeritificate?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
           </View>
         </View>
         {props.Qualifications.length != 0 && (
