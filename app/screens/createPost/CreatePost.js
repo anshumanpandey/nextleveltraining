@@ -146,7 +146,7 @@ const Profile = (props) => {
                     },
                   };
 
-                  ImagePicker.launchCamera(options, (file) => {
+                  ImagePicker.launchImageLibrary(options, (file) => {
 
                     if (response.didCancel) {
                       console.log('User cancelled image picker');
