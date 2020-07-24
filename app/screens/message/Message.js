@@ -10,13 +10,15 @@ const Message =(props) =>{
   const [messages, setMessages] = useState([]); 
 
   const [value, setValue] = useState("");
-  const [profile] = useGlobalState('profile')
+  const [profile] = useGlobalState('profile');
+  
   useEffect(() => {
+    
     const intervalId = setInterval(() => {
       getMessages()
-    }, 1000);
+   }, 1000);
 
-    return () => clearInterval(intervalId);
+   return () => clearInterval(intervalId);
   
   }, [])
 
@@ -34,12 +36,12 @@ const Message =(props) =>{
             "senderId": props.navigation.getParam("SenderId") ? props.navigation.getParam("SenderId") : profile.Id 
         }
       }).then((r) => {
-        console.log(r,'sssss')
+       // console.log(r,'sssss')
           if(r.data && r.data.length !== 0){
             var message = []
             r.data.map((item) => {
                       messages.push({
-                        _id: parseInt(item.ReceiverId),
+                        _id: parseInt(item.Id),
                         text: item.Text + '',
                         createdAt: item.SentDate,
                         user: {
@@ -156,7 +158,8 @@ const Message =(props) =>{
        )
       }
       user={{
-        _id: profile.Id,
+        _id: parseInt(profile.Id),
+        avatar:profile.ProfileImage
       }}
       alwaysShowSend={true}
     />
