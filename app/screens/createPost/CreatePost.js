@@ -148,12 +148,12 @@ const Profile = (props) => {
 
                   ImagePicker.launchImageLibrary(options, (file) => {
 
-                    if (response.didCancel) {
+                    if (file.didCancel) {
                       console.log('User cancelled image picker');
-                    } else if (response.error) {
-                      console.log('ImagePicker Error: ', response.error);
-                    } else if (response.customButton) {
-                      console.log('User tapped custom button: ', response.customButton);
+                    } else if (file.error) {
+                      console.log('ImagePicker Error: ', file.error);
+                    } else if (file.customButton) {
+                      console.log('User tapped custom button: ', file.customButton);
                     } else {
                       console.log(file)
                       setShowModal(false)
