@@ -69,7 +69,7 @@ const Profile = (props) => {
         onSubmit={(values, { resetForm }) => {
           const data = {
             "body": values.bodyText,
-            "header": "",
+            "header": "sss",
             "numberOfLikes": 0
           }
 
