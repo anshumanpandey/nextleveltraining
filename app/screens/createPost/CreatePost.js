@@ -53,7 +53,7 @@ const Profile = (props) => {
           );
         }}
         hideCreatePost={true}
-        toggleDrawer={props.toggleDrawer}
+        toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
       />
       <Formik
