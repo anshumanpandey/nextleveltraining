@@ -3,7 +3,7 @@ import { View, StatusBar, FlatList } from 'react-native'
 import Header from '../../components/header/Header'
 import BookCard from './components/BookCard'
 import useAxios from 'axios-hooks'
-import { Spinner } from 'native-base'
+import { Spinner, Text } from 'native-base'
 import Colors from '../../constants/color'
 import { useGlobalState } from '../../state/GlobalState'
 
@@ -36,6 +36,7 @@ const Booking = (props) => {
     <View style={{ flex: 1 }}>
       <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
       {loading && <Spinner size={80} color={Colors.s_yellow} />}
+      {!loading && data && data.length == 0 && <Text style={{ textAlign: 'center', fontSize: 24 }}>No Bookings Yet.</Text>}
       {!loading && (
         <FlatList
           horizontal={false}
