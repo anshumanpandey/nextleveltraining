@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect, useRef, useCallback } from 'react'
-import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native'
-import { CheckBox, Icon, Spinner } from 'native-base';
+import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, Switch } from 'react-native'
+import { CheckBox, Icon, Spinner, Input as TextInput } from 'native-base';
 import Header from '../../components/header/Header'
 import { Picker } from '@react-native-community/picker';
 import Images from "../../constants/image";
