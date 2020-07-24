@@ -9,7 +9,7 @@ import TeamMatchCard from './TeamMatchCard';
 import TeamUpComingCard from './TeamUpComingCard';
 import NavigationService from '../../navigation/NavigationService';
 import { pickImage } from '../../helpers/ImagePicker';
-import { useGlobalState } from '../../state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
 import { axiosInstance } from '../../api/AxiosBootstrap';
 import Upload from 'react-native-background-upload'
@@ -86,6 +86,7 @@ const PlayerProfile = (props) => {
                       return axiosInstance({ url: '/Users/GetUser' })
                       .then((r) => {
                         console.log(r.data)
+                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                         console.log("new profile")
                       })
                     })

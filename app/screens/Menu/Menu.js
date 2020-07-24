@@ -166,7 +166,7 @@ const Menu = (props) => {
         } else {
             setProfilePic(profile.ProfileImage)
         }
-    }, [props])
+    }, [props, profile])
 
     return (
 
