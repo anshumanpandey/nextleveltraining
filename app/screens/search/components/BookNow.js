@@ -68,8 +68,9 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
               style={{ fontSize: 25, color: 'white', padding: 10 }}
             />
             <TouchableOpacity
+              disabled={selectedLocation == undefined}
               onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation })}>
-              <Text style={{ color: 'white', fontSize: 18, padding: 10 }}>
+              <Text style={{ color: 'white', fontSize: 18, padding: 10, opacity: selectedLocation ? 1 : 0.5 }}>
                 Save
               </Text>
             </TouchableOpacity>
