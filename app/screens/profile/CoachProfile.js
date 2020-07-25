@@ -26,6 +26,7 @@ import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { syncProfilePic } from '../../utils/SyncProfileAssets';
+import ImagePicker from 'react-native-image-picker';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -1050,24 +1051,30 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
                             <TouchableOpacity onPress={() => {
-                                DocumentPicker.pick({
-                                    type: [DocumentPicker.types.images],
-                                })
-                                    .then((file) => {
+                                const options = {
+                                    title: 'Select picture',
+                                    chooseFromLibraryButtonTitle: '',
+                                    storageOptions: {
+                                        skipBackup: true,
+                                        path: 'images',
+                                    },
+                                };
+
+                                ImagePicker.launchImageLibrary(options, (file) => {
+
+                                    if (file.didCancel) {
+                                        console.log('User cancelled image picker');
+                                    } else if (file.error) {
+                                        console.log('ImagePicker Error: ', file.error);
+                                    } else if (file.customButton) {
+                                        console.log('User tapped custom button: ', file.customButton);
+                                    } else {
                                         setFieldValue('file', file)
-                                    })
+                                    }
+                                });
                             }}>
                                 <View style={[styles.inputContainer]}>
-                                    <RNTextInput
-                                        style={{ height: 50 }}
-                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                        editable={false}
-                                        placeholder="Upload Location Picture"
-                                        keyboardType="email-address"
-                                        onChangeText={handleChange('file')}
-                                        onBlur={handleBlur('file')}
-                                        value={values.file?.name}
-                                    />
+                                    <Text style={{ color: values.file?.name ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{values.file?.name ? values.file?.name : "Upload Location Picture"}</Text>
                                 </View>
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
@@ -1119,7 +1126,7 @@ export const AboutMeCoachForm = () => {
     }
 
     useEffect(() => {
-        AsyncStorage.getItem('ProfilePic')
+        AsyncStorage.getItem(`ProfilePic-${profile.Id}`)
             .then((s) => {
                 if (!s) return
                 setProfilePic(JSON.parse(s).uri)
@@ -1137,7 +1144,7 @@ export const AboutMeCoachForm = () => {
                     onPress={async () => {
                         const source = await pickImage();
                         setProfilePic(source.uri)
-                        AsyncStorage.setItem('ProfilePic', JSON.stringify(source))
+                        AsyncStorage.setItem(`ProfilePic-${profile.Id}`, JSON.stringify(source))
                         // syncProfilePic(source)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>

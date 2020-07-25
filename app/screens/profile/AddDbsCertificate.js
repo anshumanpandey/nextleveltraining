@@ -11,7 +11,7 @@ import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
 import moment from 'moment'
 import Menu, { MenuItem } from 'react-native-material-menu';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import ImagePicker from 'react-native-image-picker';
 
 const options = [
@@ -22,6 +22,7 @@ const options = [
 ]
 
 const AddTeam = (props) => {
+  const [profile] = useGlobalState('profile')
   const [file, setFile] = useState();
   const formikRef = useRef()
   const menuRef = useRef()
@@ -36,10 +37,10 @@ const AddTeam = (props) => {
   }, { manual: true })
 
   useEffect(() => {
-    AsyncStorage.getItem(`DbsCert-file`)
+    AsyncStorage.getItem(`DbsCert-file-${profile.Id}`)
       .then(file => {
         if (!file) return
-        setFile(JSON.parse(file))
+        setFile(JSON.parse(file).file)
         formikRef.current.setFieldValue("file", JSON.parse(file).file)
       })
   }, [])
@@ -64,7 +65,10 @@ const AddTeam = (props) => {
           "file": values.file || '',
         }
         postDbsCertificate({ data })
-          .then(r => AsyncStorage.setItem(`DbsCert-file`, JSON.stringify({ file: values.file, uploaded: false })))
+          .then(r => {
+            delete values.file.data
+            AsyncStorage.setItem(`DbsCert-file-${profile.Id}`, JSON.stringify({ file: values.file, uploaded: false }))
+          })
           .then(r => getUserData())
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
@@ -116,21 +120,14 @@ const AddTeam = (props) => {
                   } else if (file.customButton) {
                     console.log('User tapped custom button: ', file.customButton);
                   } else {
+                    console.log(Object.keys(file))
                     setFieldValue('file', file)
                   }
                 });
 
               }}>
                 <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
-                  <TextInput
-                    editable={false}
-                    style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15 }}
-                    placeholder="Upload DBS Certificate"
-                    keyboardType="email-address"
-                    onChangeText={handleChange('file')}
-                    onBlur={handleBlur('file')}
-                    value={values.file?.name}
-                  />
+                  <Text style={{ color: values.file?.fileName ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{values.file?.fileName ? values.file?.fileName : "Upload DBS Certificate"}</Text>
                 </View>
               </TouchableOpacity>
               {values.file && <Image style={{ height: '80%', width: Dimensions.get("screen").width, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
