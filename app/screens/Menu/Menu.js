@@ -132,6 +132,7 @@ const Menu = (props) => {
     ]
 
     const [profilePic, setProfilePic] = useState();
+    const [triggerChange, setTriggerChange] = useState(true);
     const [profile] = useGlobalState('profile')
     let finalMenu = []
 
@@ -168,11 +169,16 @@ const Menu = (props) => {
         }
     }, [props, profile])
 
+    useEffect(() => {
+        setTriggerChange(o => !o)
+    }, [profilePic])
+
     return (
 
         <View style={styles.menu_view}>
             <View style={styles.menu_avatar}>
-                <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />
+                {triggerChange == true && <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />}
+                {triggerChange == false && <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />}
                 <Text style={styles.avatar_title}>{profile?.FullName}</Text>
             </View>
             <FlatList
