@@ -28,6 +28,7 @@ import GlobalStyles from '../../constants/GlobalStyles';
 import { syncProfilePic } from '../../utils/SyncProfileAssets';
 import ImagePicker from 'react-native-image-picker';
 import Menu, { MenuItem } from 'react-native-material-menu';
+import Upload from 'react-native-background-upload'
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -1119,6 +1120,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 export const AboutMeCoachForm = () => {
     const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile');
+    const [token] = useGlobalState('token')
 
     const handleOnCardPress = ({ title, data, screen = "EditInput", keyboardType }) => {
         NavigationService.navigate(screen, {
