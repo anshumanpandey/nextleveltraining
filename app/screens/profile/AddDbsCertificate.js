@@ -78,27 +78,29 @@ const AddTeam = (props) => {
     >
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <>
-          <View>
+          <View style={{ borderWidth: 0}}>
             <HeaderClosePlus
               isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}
             />
-            {/* eslint-disable-next-line react-native/no-inline-styles */}
             <View>
-              <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
                 <Menu
                   ref={(r) => menuRef.current = r}
-                  button={<Text style={{ color: values.type ? "black": 'gray', paddingVertical: '4%' }} onPress={() => menuRef.current?.show()}>{values.type ? values.type: "Select DBS Certificate Type"}</Text>}
+                  style={{ width: '95%' }}
+                  button={
+                    <TouchableOpacity onPress={() => menuRef.current?.show()} style={[styles.inputContain, { height: 50, justifyContent: 'center' }]}>
+                        <Text style={{ color: values.type ? "black": 'gray', paddingLeft: 30 }}>{values.type ? values.type: "Select DBS Certificate Type"}</Text>
+                    </TouchableOpacity>
+                  }
                 >
                   {options.map(o => {
-                    return <MenuItem onPress={() => {
+                    return <MenuItem style={{ maxWidth: 'auto', width: '200%' }} onPress={() => {
                       setFieldValue('type', o)
                       menuRef.current?.hide()
                     }}>{o}</MenuItem>;
                   })}
                 </Menu>
-              </View>
               {errors.type && touched.type && <ErrorLabel text={errors.type} />}
 
               <TouchableOpacity onPress={() => {

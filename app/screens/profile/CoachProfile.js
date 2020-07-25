@@ -27,6 +27,7 @@ import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocompl
 import GlobalStyles from '../../constants/GlobalStyles';
 import { syncProfilePic } from '../../utils/SyncProfileAssets';
 import ImagePicker from 'react-native-image-picker';
+import Menu, { MenuItem } from 'react-native-material-menu';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -1130,10 +1131,10 @@ export const AboutMeCoachForm = () => {
             setProfilePic(profile.ProfileImage)
         } else {
             AsyncStorage.getItem(`ProfilePic-${profile.Id}`)
-            .then((s) => {
-                if (!s) return
-                setProfilePic(JSON.parse(s).uri)
-            })
+                .then((s) => {
+                    if (!s) return
+                    setProfilePic(JSON.parse(s).uri)
+                })
         }
     }, [])
 
@@ -1357,6 +1358,7 @@ export const AboutMeCoachForm = () => {
 export const BankAccountForm = ({ setSubmitFn }) => {
     const [showModal, setShowModal] = useState(false)
     const formikRef = useRef()
+    const menuRef = useRef()
     const [profile] = useGlobalState("profile")
     const [{ data, loading, error }, doPost] = useAxios({
         url: '/Users/SaveBankAccount',
@@ -1372,6 +1374,11 @@ export const BankAccountForm = ({ setSubmitFn }) => {
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
+
+    const options = [
+        "Current",
+        "Saving"
+    ]
 
     return (
         <>
@@ -1432,17 +1439,25 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 </View>
                                 {errors.bankName && touched.bankName && <ErrorLabel text={errors.bankName} />}
 
-                                <TouchableOpacity onPress={() => setShowModal(true)}>
-                                    <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
-                                        <TextInput
-                                            placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                            style={{ color: values.role ? 'black' : 'gray' }}
-                                            editable={false}
-                                            placeholder={"Select account type"}
-                                            value={values.role}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
+                                <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
+                                    <Menu
+                                        ref={(r) => menuRef.current = r}
+                                        style={{ width: '95%', position: 'absolute', marginLeft: Dimensions.get('window').width * 0.12 }}
+                                        button={
+                                            <TouchableOpacity onPress={() => menuRef.current?.show()} style={[styles.inputContain, { height: 50, justifyContent: 'center' }]}>
+                                                <Text style={{ color: values.role ? "black" : 'rgba(0,0,0,0.3)', fontSize: 16}}>{values.role ? values.role : "Select Account Type"}</Text>
+                                            </TouchableOpacity>
+                                        }
+                                    >
+                                        {options.map(o => {
+                                            return <MenuItem style={{ maxWidth: 'auto', width: '200%' }} onPress={() => {
+                                                setFieldValue('role', o)
+                                                menuRef.current?.hide()
+                                            }}>{o}</MenuItem>;
+                                        })}
+                                    </Menu>
+                                </View>
+
                                 {errors.role && touched.role && <ErrorLabel text={errors.role} />}
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
@@ -1492,28 +1507,6 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                     </TouchableOpacity>
                                 </View>
                             )}
-                            <Modal
-                                onBackdropPress={() => setShowModal(false)}
-                                isVisible={showModal}
-                                style={styles.modal}>
-                                <View style={{ backgroundColor: 'white' }}>
-                                    <View style={{ marginBottom: '5%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                        <Text onPress={() => setShowModal(false)} style={{ fontSize: 20, paddingHorizontal: '5%' }}>X</Text>
-                                    </View>
-                                    <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => {
-                                        setFieldValue('role', "Current")
-                                        setShowModal(false)
-                                    }}>
-                                        <Text style={{ fontSize: 22, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Current</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => {
-                                        setFieldValue('role', "Saving")
-                                        setShowModal(false)
-                                    }}>
-                                        <Text style={{ fontSize: 22, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)', paddingHorizontal: '5%' }}>Saving</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </Modal>
                         </>
                     )}
                 </Formik>

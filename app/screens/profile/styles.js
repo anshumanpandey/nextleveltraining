@@ -55,8 +55,6 @@ const styles = {
   },
   inputContain: {
     marginTop: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: 'lightgray',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },

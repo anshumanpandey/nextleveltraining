@@ -84,19 +84,22 @@ const AddTeam = (props) => {
             />
             {/* eslint-disable-next-line react-native/no-inline-styles */}
             <View>
-              <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
                 <Menu
                   ref={(r) => menuRef.current = r}
-                  button={<Text style={{ color: values.type ? "black" : 'gray', paddingVertical: '4%' }} onPress={() => menuRef.current?.show()}>{values.type ? values.type : "Select ID Type"}</Text>}
+                  style={{ width: '95%' }}
+                  button={
+                    <TouchableOpacity onPress={() => menuRef.current?.show()} style={[styles.inputContain, { height: 50, justifyContent: 'center' }]}>
+                        <Text style={{ color: values.type ? "black": 'gray', paddingLeft: 30 }}>{values.type ? values.type: "Select ID Type"}</Text>
+                    </TouchableOpacity>
+                  }
                 >
                   {options.map(o => {
-                    return <MenuItem onPress={() => {
+                    return <MenuItem style={{ maxWidth: 'auto', width: '200%' }} onPress={() => {
                       setFieldValue('type', o)
                       menuRef.current?.hide()
                     }}>{o}</MenuItem>;
                   })}
                 </Menu>
-              </View>
               {errors.type && touched.type && <ErrorLabel text={errors.type} />}
 
               <TouchableOpacity onPress={() => {
