@@ -529,6 +529,9 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 
     const signupIsDisabled = () => saving
 
+    const startTimeErrorMsg = "Cannot be after end time"
+    const endTimeErrorMsg = "Cannot be before start time"
+
     return (
 
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexg: 1 }}>
@@ -564,7 +567,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <View style={{ justifyContent: 'flex-start', width: '40%' }}>
                                     <TimeInput value={selectedDates.start_sunday} onSelected={(d) => {
                                         if (selectedDates.end_sunday && moment(selectedDates.end_sunday).isBefore(d)) {
-                                            setErrorFor("start_sunday", "Cannot be after end date")
+                                            setErrorFor("start_sunday", startTimeErrorMsg)
                                         } else {
                                             setErrorFor("start_sunday", undefined)
                                         }
@@ -579,7 +582,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <View style={{ justifyContent: 'flex-end', width: '50%' }}>
                                     <TimeInput value={selectedDates.end_sunday} onSelected={(d) => {
                                         if (selectedDates.start_sunday && moment(selectedDates.start_sunday).isAfter(d)) {
-                                            setErrorFor("end_sunday", "Cannot be before start date")
+                                            setErrorFor("end_sunday", endTimeErrorMsg)
                                         } else {
                                             setErrorFor("end_sunday", undefined)
                                         }
@@ -622,7 +625,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.start_monday}
                                     onSelected={(d) => {
                                         if (selectedDates.end_monday && moment(selectedDates.end_monday).isBefore(d)) {
-                                            setErrorFor("start_monday", "Cannot be after end date")
+                                            setErrorFor("start_monday", startTimeErrorMsg)
                                         } else {
                                             setErrorFor("start_monday", undefined)
                                         }
@@ -638,7 +641,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.end_monday}
                                     onSelected={(d) => {
                                         if (selectedDates.start_monday && moment(selectedDates.start_monday).isAfter(d)) {
-                                            setErrorFor("end_monday", "Cannot be before start date")
+                                            setErrorFor("end_monday", endTimeErrorMsg)
                                         } else {
                                             setErrorFor("end_monday", undefined)
                                         }
@@ -681,7 +684,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.start_tuesday}
                                     onSelected={(d) => {
                                         if (selectedDates.end_tuesday && moment(selectedDates.end_tuesday).isBefore(d)) {
-                                            setErrorFor("start_tuesday", "Cannot be after end date")
+                                            setErrorFor("start_tuesday", startTimeErrorMsg)
                                         } else {
                                             setErrorFor("start_tuesday", undefined)
                                         }
@@ -697,7 +700,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.end_tuesday}
                                     onSelected={(d) => {
                                         if (selectedDates.start_tuesday && moment(selectedDates.start_tuesday).isAfter(d)) {
-                                            setErrorFor("end_tuesday", "Cannot be before start date")
+                                            setErrorFor("end_tuesday", endTimeErrorMsg)
                                         } else {
                                             setErrorFor("end_tuesday", undefined)
                                         }
@@ -740,7 +743,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.start_wednesday}
                                     onSelected={(d) => {
                                         if (selectedDates.end_wednesday && moment(selectedDates.end_wednesday).isBefore(d)) {
-                                            setErrorFor("start_wednesday", "Cannot be after end date")
+                                            setErrorFor("start_wednesday", startTimeErrorMsg)
                                         } else {
                                             setErrorFor("start_wednesday", undefined)
                                         }
@@ -757,7 +760,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.end_wednesday}
                                     onSelected={(d) => {
                                         if (selectedDates.start_wednesday && moment(selectedDates.start_wednesday).isAfter(d)) {
-                                            setErrorFor("end_wednesday", "Cannot be before start date")
+                                            setErrorFor("end_wednesday", endTimeErrorMsg)
                                         } else {
                                             setErrorFor("end_wednesday", undefined)
                                         }
@@ -798,7 +801,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.start_thursday}
                                     onSelected={(d) => {
                                         if (selectedDates.end_thursday && moment(selectedDates.end_thursday).isBefore(d)) {
-                                            setErrorFor("start_thursday", "Cannot be after end date")
+                                            setErrorFor("start_thursday", startTimeErrorMsg)
                                         } else {
                                             setErrorFor("start_thursday", undefined)
                                         }
@@ -812,7 +815,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.end_thursday}
                                     onSelected={(d) => {
                                         if (selectedDates.start_thursday && moment(selectedDates.start_thursday).isAfter(d)) {
-                                            setErrorFor("end_thursday", "Cannot be before start date")
+                                            setErrorFor("end_thursday", endTimeErrorMsg)
                                         } else {
                                             setErrorFor("end_thursday", undefined)
                                         }
@@ -854,7 +857,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.start_friday}
                                     onSelected={(d) => {
                                         if (selectedDates.end_friday && moment(selectedDates.end_friday).isBefore(d)) {
-                                            setErrorFor("start_friday", "Cannot be after end date")
+                                            setErrorFor("start_friday", startTimeErrorMsg)
                                         } else {
                                             setErrorFor("start_friday", null)
                                         }
@@ -868,7 +871,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                                 <TimeInput value={selectedDates.end_friday}
                                     onSelected={(d) => {
                                         if (selectedDates.start_friday && moment(selectedDates.start_friday).isAfter(d)) {
-                                            setErrorFor("end_friday", "Cannot be before start date")
+                                            setErrorFor("end_friday", endTimeErrorMsg)
                                         } else {
                                             setErrorFor("end_friday", undefined)
                                         }
