@@ -86,7 +86,7 @@ const AddTeam = (props) => {
               <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
                 <Menu
                   ref={(r) => menuRef.current = r}
-                  button={<Text style={{ color: values.type ? "black" : 'gray' }} onPress={() => menuRef.current?.show()}>{values.type ? values.type : "Select ID Type"}</Text>}
+                  button={<Text style={{ color: values.type ? "black" : 'gray', paddingVertical: '4%' }} onPress={() => menuRef.current?.show()}>{values.type ? values.type : "Select ID Type"}</Text>}
                 >
                   {options.map(o => {
                     return <MenuItem onPress={() => {
