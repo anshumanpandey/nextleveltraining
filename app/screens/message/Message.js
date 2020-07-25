@@ -137,7 +137,7 @@ const Message =(props) =>{
                 barStyle="light-content"
             />
         </View> */}
-        <Header toggleDrawer={props.toggleDrawer} navigate={props.navigation.navigate}/>
+        <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}/>
      <GiftedChat
       messages={messages}
       onSend={messages => onSend(messages)}
