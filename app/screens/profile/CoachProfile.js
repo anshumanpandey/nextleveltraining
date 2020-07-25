@@ -1084,8 +1084,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                     }
                                 });
                             }}>
-                                <View style={[styles.inputContainer]}>
-                                    <Text style={{ color: values.file?.name ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{values.file?.name ? values.file?.name : "Upload Location Picture"}</Text>
+                                <View style={[styles.inputContainer, { marginTop: '2%'}]}>
+                                <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload DBS Certificate"}</Text>
                                 </View>
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
