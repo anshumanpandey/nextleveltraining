@@ -22,7 +22,7 @@ const JobDetails = (props) => {
     url: '/Users/GetCoaches',
     method: 'POST',
     data
-  }, {manual: true })
+  }, { manual: true })
 
   useEffect(() => {
     getCoach({ data })
@@ -31,15 +31,17 @@ const JobDetails = (props) => {
       })
     const focusListener = props.navigation.addListener('didFocus', () => {
       getCoach({ data })
-      .then(r => {
-        setCurrentCoach(r.data.find(c => c.Id == props.navigation.getParam("CoachID")))
-      })
+        .then(r => {
+          setCurrentCoach(r.data.find(c => c.Id == props.navigation.getParam("CoachID")))
+        })
     });
     return () => {
       focusListener?.remove();
       setCurrentCoach(undefined)
     }
   }, [])
+
+  console.log(props.navigation.state)
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -69,17 +71,17 @@ const JobDetails = (props) => {
 
           <View style={[styles.orderView, { flexDirection: 'row' }]}>
             <View>
-              <Text style={styles.headText}>Season for</Text>
-              <Text style={styles.headText1}>{moment(props.navigation.getParam("FromTime")).format("Do MMM, HH:mm")} - {moment(props.navigation.getParam("ToTime")).format("HH:mm")}</Text>
+              <Text style={styles.headText}>Session Date/Time</Text>
+              <Text style={styles.headText1}>{moment(props.navigation.getParam("FromTime")).format("HH:mm")} - {moment(props.navigation.getParam("ToTime")).format("HH:mm")}</Text>
             </View>
             <View>
-              <Text style={styles.headText}>Job fees</Text>
-              <Text style={styles.headText1}>&euro; 200 per hour</Text>
+              <Text style={styles.headText}>Cost</Text>
+              <Text style={styles.headText1}>£ {props.navigation.getParam("CoachRate")} per hour</Text>
             </View>
           </View>
 
           <View style={styles.orderView}>
-            <Text style={styles.headText}>Address</Text>
+            <Text style={styles.headText}>Training Location Address</Text>
             <Text style={styles.headText1}>{props.navigation.getParam("Location").LocationAddress}</Text>
           </View>
         </View>
@@ -102,8 +104,8 @@ const JobDetails = (props) => {
           />
           <Text style={styles.btnText}>Reschedule</Text>
         </View>
-        <TouchableOpacity disabled={currentCoach == undefined} style={{ width: '100%'}} onPress={() => NavigationService.navigate("Information", currentCoach)}>
-          <View style={[styles.btnTab, { opacity: currentCoach == undefined ? 0.5 : 1}]}>
+        <TouchableOpacity disabled={currentCoach == undefined} style={{ width: '100%' }} onPress={() => NavigationService.navigate("Information", currentCoach)}>
+          <View style={[styles.btnTab, { opacity: currentCoach == undefined ? 0.5 : 1 }]}>
             <Icon
               name="user"
               type="Feather"
@@ -122,10 +124,12 @@ const JobDetails = (props) => {
             <Dash dashGap={0} dashColor={'gray'} style={{ marginTop: 5, width: 1, height: 75, flexDirection: 'column' }} />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: -20 }}>
-            <View style={[styles.triangle, { borderRightColor: 'rgb(244,247,248)' }]} />
-            <View style={[styles.details, { backgroundColor: 'rgb(244,247,248)', borderBottomWidth: 0 }]}>
+            <View style={[styles.triangle]} />
+            <View style={[styles.details]}>
               <Text style={[styles.btnText, { fontSize: 18, color: 'black', paddingVertical: 8 }]}>Booking Completed</Text>
-              <Text style={[styles.btnText, { fontSize: 12, fontWeight: '300', }]}>Booking request sent on 18th Jan, 08:56</Text>
+              <Text style={[styles.btnText, { fontSize: 12, fontWeight: '300', }]}>
+                Booking request sent on {moment(props.navigation.getParam("SentDate")).format("Do MMM, hh:mm A")}
+              </Text>
             </View>
           </View>
         </View>
@@ -138,10 +142,12 @@ const JobDetails = (props) => {
             <Dash dashGap={0} dashColor={'gray'} style={{ marginTop: 5, width: 1, height: 60, flexDirection: 'column' }} />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: -45 }}>
-            <View style={styles.triangle} />
-            <View style={styles.details}>
+            <View style={[styles.triangle, { borderRightColor: 'rgb(244,247,248)' }]} />
+            <View style={[styles.details, { backgroundColor: 'rgb(244,247,248)', borderBottomWidth: 0 }]}>
               <Text style={[styles.btnText, { fontSize: 18, color: 'black', paddingVertical: 8 }]}>Session In Progress</Text>
-              <Text style={[styles.btnText, { fontSize: 12, fontWeight: '300', }]}>Booking request sent on 18th Jan, 08:56</Text>
+              <Text style={[styles.btnText, { fontSize: 12, fontWeight: '300', }]}>
+                Booking request sent on {moment(props.navigation.getParam("SentDate")).format("Do MMM, hh:mm A")}
+              </Text>
             </View>
           </View>
         </View>

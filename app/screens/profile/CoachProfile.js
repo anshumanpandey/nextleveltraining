@@ -397,44 +397,45 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     }, [])
 
     useEffect(() => {
+        const formatDate = (d) => moment(d, 'hh: mm A')
         if (profile.Availabilities && profile.Availabilities.length != 0) {
             const toggles = []
             const newState = {}
             profile.Availabilities.forEach(day => {
                 if (day.Day == "Sunday") {
                     toggles.push('start_sunday')
-                    newState.start_sunday = moment(day.FromTime).toDate()
-                    newState.end_sunday = moment(day.ToTime).toDate()
+                    newState.start_sunday = formatDate(day.FromTime).toDate()
+                    newState.end_sunday = formatDate(day.ToTime).toDate()
                 }
                 if (day.Day == "Monday") {
                     toggles.push('start_monday')
-                    newState.start_monday = moment(day.FromTime).toDate()
-                    newState.end_monday = moment(day.ToTime).toDate()
+                    newState.start_monday = formatDate(day.FromTime).toDate()
+                    newState.end_monday = formatDate(day.ToTime).toDate()
                 }
                 if (day.Day == "Tuesday") {
                     toggles.push('start_tuesday')
-                    newState.start_tuesday = moment(day.FromTime).toDate()
-                    newState.end_tuesday = moment(day.ToTime).toDate()
+                    newState.start_tuesday = formatDate(day.FromTime).toDate()
+                    newState.end_tuesday = formatDate(day.ToTime).toDate()
                 }
                 if (day.Day == "Wednesday") {
                     toggles.push('start_wednesday')
-                    newState.start_wednesday = moment(day.FromTime).toDate()
-                    newState.end_wednesday = moment(day.ToTime).toDate()
+                    newState.start_wednesday = formatDate(day.FromTime).toDate()
+                    newState.end_wednesday = formatDate(day.ToTime).toDate()
                 }
                 if (day.Day == "Thursday") {
                     toggles.push('start_thursday')
-                    newState.start_thursday = moment(day.FromTime).toDate()
-                    newState.end_thursday = moment(day.ToTime).toDate()
+                    newState.start_thursday = formatDate(day.FromTime).toDate()
+                    newState.end_thursday = formatDate(day.ToTime).toDate()
                 }
                 if (day.Day == "Friday") {
                     toggles.push('start_friday')
-                    newState.start_friday = moment(day.FromTime).toDate()
-                    newState.end_friday = moment(day.ToTime).toDate()
+                    newState.start_friday = formatDate(day.FromTime).toDate()
+                    newState.end_friday = formatDate(day.ToTime).toDate()
                 }
                 if (day.Day == "Saturday") {
                     toggles.push('start_saturday')
-                    newState.start_saturday = moment(day.FromTime).toDate()
-                    newState.end_saturday = moment(day.ToTime).toDate()
+                    newState.start_saturday = formatDate(day.FromTime).toDate()
+                    newState.end_saturday = formatDate(day.ToTime).toDate()
                 }
             })
 
@@ -450,6 +451,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     }, [profile.Availabilities])
 
     const availabiltySaveFunction = useCallback(() => {
+        const formatDate = (d) => moment(d).utcOffset(0,true).format('hh:mm A')
         if (Object.keys(errorsDic).length == 0) return Promise.reject()
         if (Object.keys(errorsDic).some(k => errorsDic[k] != undefined)) return Promise.reject()
         setSaving(true)
@@ -457,8 +459,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_sunday && selectedDates.end_sunday) {
             data.push({
                 "day": "Sunday",
-                "fromTime": selectedDates.start_sunday,
-                "toTime": selectedDates.end_sunday,
+                "fromTime": formatDate(selectedDates.start_sunday),
+                "toTime": formatDate(selectedDates.end_sunday),
                 "isWorking": true
             })
         }
@@ -466,8 +468,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_monday && selectedDates.end_monday) {
             data.push({
                 "day": "Monday",
-                "fromTime": selectedDates.start_monday,
-                "toTime": selectedDates.end_monday,
+                "fromTime": formatDate(selectedDates.start_monday),
+                "toTime": formatDate(selectedDates.end_monday),
                 "isWorking": true,
             })
         }
@@ -475,8 +477,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_wednesday && selectedDates.end_wednesday) {
             data.push({
                 "day": "Wednesday",
-                "fromTime": selectedDates.start_wednesday,
-                "toTime": selectedDates.end_wednesday,
+                "fromTime": formatDate(selectedDates.start_wednesday),
+                "toTime": formatDate(selectedDates.end_wednesday),
                 "isWorking": true,
             })
         }
@@ -484,8 +486,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_tuesday && selectedDates.end_tuesday) {
             data.push({
                 "day": "Tuesday",
-                "fromTime": selectedDates.start_tuesday,
-                "toTime": selectedDates.end_tuesday,
+                "fromTime": formatDate(selectedDates.start_tuesday),
+                "toTime": formatDate(selectedDates.end_tuesday),
                 "isWorking": true,
             })
         }
@@ -493,8 +495,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_thursday && selectedDates.end_thursday) {
             data.push({
                 "day": "Thursday",
-                "fromTime": selectedDates.start_thursday,
-                "toTime": selectedDates.end_thursday,
+                "fromTime": formatDate(selectedDates.start_thursday),
+                "toTime": formatDate(selectedDates.end_thursday),
                 "isWorking": true,
             })
         }
@@ -502,8 +504,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_friday && selectedDates.end_friday) {
             data.push({
                 "day": "Friday",
-                "fromTime": selectedDates.start_friday,
-                "toTime": selectedDates.end_friday,
+                "fromTime": formatDate(selectedDates.start_friday),
+                "toTime": formatDate(selectedDates.end_friday),
                 "isWorking": true,
             })
         }
@@ -511,8 +513,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
         if (selectedDates.start_saturday && selectedDates.end_saturday) {
             data.push({
                 "day": "Saturday",
-                "fromTime": selectedDates.start_saturday,
-                "toTime": selectedDates.end_saturday,
+                "fromTime": formatDate(selectedDates.start_saturday),
+                "toTime": formatDate(selectedDates.end_saturday),
                 "isWorking": true,
             })
         }

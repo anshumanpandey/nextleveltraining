@@ -13,6 +13,7 @@ import { WebView } from 'react-native-webview';
 import moment from 'moment'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
+import { NavigationActions } from 'react-navigation';
 var qs = require('qs');
 
 const simpleAxiosHook = makeUseAxios()
@@ -139,7 +140,7 @@ const PaymentConcentScreen = (props) => {
                   "coachID": props.navigation.getParam('coach').Id,
                   "fromTime": startDate.trim(),
                   "toTime": endDate.trim(),
-                  "sentDate": new Date(),
+                  "sentDate": props.navigation.getParam('selectedDate'),
                   "trainingLocationID": props.navigation.getParam('selectedLocation').id,
                   "amount": 1,
                   "paymentStatus": "Processed",
@@ -147,11 +148,17 @@ const PaymentConcentScreen = (props) => {
                   "bookingStatus": "Done"
                 }
                 saveBooking({ data })
-                .then(r => console.log(r.data))
-                .finally(() => {
-                  setOpenModal(false)
-                  NavigationService.navigate("Booking")
-                })
+                  .then(r => console.log(r.data))
+                  .finally(() => {
+                    setOpenModal(false)
+                    const resetAction = props.navigation.reset({
+                      index: 0,
+                      actions: [
+                        props.navigation.navigate({ routeName: 'Booking' })
+                      ]
+                    })
+                    props.navigation.dispatch(resetAction);
+                  })
               }
               if (url.includes('PAYMENT_CANCELLED')) {
                 console.log('cancelled')
