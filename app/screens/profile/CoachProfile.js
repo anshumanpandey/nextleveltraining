@@ -1338,7 +1338,7 @@ export const AboutMeCoachForm = () => {
                             />
                         </View>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>{profile.TravelMile ? profile.TravelMile.travelDistance : ""}</Text>
+                            <Text style={styles.profileDescription}>{profile.TravelMile ? profile.TravelMile.TravelDistance : ""}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
