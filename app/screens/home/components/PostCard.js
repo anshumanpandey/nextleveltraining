@@ -16,6 +16,7 @@ import Video from 'react-native-video';
 import Colors from '../../../constants/color';
 
 const PostCard = ({ item, onClickItem, onPressOfComment }) => {
+  const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
   const [profile] = useGlobalState('profile')
@@ -32,11 +33,17 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
     setLikes(item.likes)
   }, [])
 
+  useEffect(() => {
+    setTriggerChange(o => !o)
+  }, [item.profileImage])
+
+
   return (
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
         <View style={{ flexDirection: 'row', paddingHorizontal: '5%' }}>
-          <Image source={item.profileImage ? { uri: item.profileImage }: Images.MessiPlayer} style={styles.post_image_size} />
+          {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage }: Images.MessiPlayer} style={styles.post_image_size} />}
+          {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage }: Images.MessiPlayer} style={styles.post_image_size} />}
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100 }}>
               <View style={styles.post_title}>
