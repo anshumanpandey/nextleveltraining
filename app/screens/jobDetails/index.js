@@ -74,7 +74,7 @@ const JobDetails = (props) => {
             </View>
             <View>
               <Text style={styles.headText}>Job fees</Text>
-              <Text style={styles.headText1}>&euro; 200 per hour</Text>
+              <Text style={styles.headText1}>£ {props.navigation.getParam("Rate")} per hour</Text>
             </View>
           </View>
 
