@@ -1135,7 +1135,6 @@ export const AboutMeCoachForm = () => {
     }
 
     const profileChecker = () => {
-        setTriggerChange(o => !o)
         if (profile.ProfileImage) {
             setProfilePic(profile.ProfileImage)
         } else {
@@ -1150,6 +1149,10 @@ export const AboutMeCoachForm = () => {
     useEffect(() => {
         profileChecker()
     }, [])
+
+    useEffect(() => {
+        setTriggerChange(o => !o)
+    }, [profilePic])
 
     useEffect(() => {
         profileChecker()
