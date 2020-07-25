@@ -15,13 +15,16 @@ const BookCard = (item) => {
           <Icon type="AntDesign" name="arrowright" style={{ fontSize: 20, color: 'white' }} />
         </View>
         <View style={{ marginLeft: 10 }}>
-          <Text style={{ fontSize: 16, color: '#0F2F80' }}>Oder Paid</Text>
+          <Text style={{ fontSize: 16, color: '#0F2F80' }}>Order Paid</Text>
           <Text style={{ fontWeight: '500', marginTop: 5 }}>{item.FullName}</Text>
           <View style={{ marginTop: 5 }}>
             <Text>{item.Location.LocationAddress}</Text>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
-              <Text style={{ marginLeft: 5 }}>{moment(item.ToTime).format("MMM DD HH:mm")}</Text>
+              <Text style={{ marginLeft: 5 }}>
+                {moment(item.SentDate).format("MMM DD, ")}
+                {moment(item.ToTime).format("HH:mm")}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Job fees:</Text>

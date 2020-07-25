@@ -79,17 +79,18 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.userView}>
-            <Image source={{ uri: coach.ProfileImage }} style={styles.userImg} />
+            <Image source={coach.ProfileImage ? { uri: coach.ProfileImage }: Images.PlayerPlaceholder} style={styles.userImg} />
             <Text style={{ color: 'white', fontSize: 18, marginLeft: 15 }}>
               {coach.FullName}
             </Text>
           </View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
+            date={date.toDate()}
             mode="date"
             onConfirm={(d) => {
               setIsDatePickerVisible(false)
-              setDate(moment(d))
+              setDate(moment(d).startOf('day'))
             }}
             onCancel={() => setIsDatePickerVisible(false)}
           />
@@ -194,13 +195,13 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
                 subTitle: i.LocationAddress,
               }))} />
             )}
-            {coach.TrainingLocations.length == 0 && <Text style={{ color: Colors.s_blue, fontSize: 14 }}>Where?</Text>}
+            {coach.TrainingLocations.length == 0 && <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Training Locations</Text>}
           </>
         )}
 
         {selectedTab === 1 && (
           <>
-            {coach.TrainingLocations.length != 0 && (
+            {profile.TrainingLocations.length != 0 && (
               <TeachingCard selectedItem={selectedLocation} onPress={(i) => setSelectedLocation(i)} data={profile.TrainingLocations.length == 0 ? [] : profile.TrainingLocations.map(i => ({
                 id: i.Id,
                 title: i.LocationName,

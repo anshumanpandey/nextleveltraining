@@ -72,7 +72,7 @@ class LandingPage extends Component {
             name="Booking"
             component={props => <Booking {...props} toggleDrawer={this.props.navigation.toggleDrawer} />}
             options={{
-              tabBarLabel: 'BOOKING',
+              tabBarLabel: 'BOOKINGS',
               tabBarIcon: () => (
                 <Icon type="Feather" name="shopping-cart" style={{ color: '#0F2F80', fontSize: 20 }} />
               ),
@@ -81,7 +81,7 @@ class LandingPage extends Component {
             name="Message"
             component={props => <Message {...props} toggleDrawer={this.props.navigation.toggleDrawer} />}
             options={{
-              tabBarLabel: 'MESSAGE',
+              tabBarLabel: 'Inbox',
               tabBarIcon: () => (
                 <Icon type="Feather" name="message-square" style={{ color: '#0F2F80', fontSize: 20 }} />
               ),
