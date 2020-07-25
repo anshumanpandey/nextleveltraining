@@ -1132,7 +1132,7 @@ export const AboutMeCoachForm = () => {
         })
     }
 
-    useEffect(() => {
+    const profileChecker = () => {
         if (profile.ProfileImage) {
             setProfilePic(profile.ProfileImage)
         } else {
@@ -1142,6 +1142,14 @@ export const AboutMeCoachForm = () => {
                     setProfilePic(JSON.parse(s).uri)
                 })
         }
+    }
+
+    useEffect(() => {
+        setInterval(() => profileChecker(), 1000)
+    }, [])
+
+    useEffect(() => {
+        profileChecker()
     }, [profile])
 
     return (
