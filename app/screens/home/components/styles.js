@@ -5,6 +5,8 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   post_container: {
     width: Dimension.pro100,
+    backgroundColor: 'white',
+    marginBottom: '1%'
   },
   post_card_container: {
     paddingTop: 10,
@@ -66,6 +68,9 @@ const styles = StyleSheet.create({
   },
   post_news_content: {
     marginLeft: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.3)',
+    marginBottom: '0.5%'
     // width:'90%'
   },
   post_news_image: {

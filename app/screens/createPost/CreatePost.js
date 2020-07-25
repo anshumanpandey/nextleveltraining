@@ -76,6 +76,7 @@ const Profile = (props) => {
 
           doPost({ data })
             .then(r => {
+              delete values.file.data
               AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
             })
             .then(() => {

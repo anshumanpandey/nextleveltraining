@@ -1126,15 +1126,15 @@ export const AboutMeCoachForm = () => {
     }
 
     useEffect(() => {
-        AsyncStorage.getItem(`ProfilePic-${profile.Id}`)
+        if (profile.ProfileImage) {
+            setProfilePic(profile.ProfileImage)
+        } else {
+            AsyncStorage.getItem(`ProfilePic-${profile.Id}`)
             .then((s) => {
                 if (!s) return
                 setProfilePic(JSON.parse(s).uri)
             })
-        //TODO: fix on path from server
-        /*if (profile.ProfileImage) {
-            setProfilePic(profile.ProfileImage)
-        }*/
+        }
     }, [])
 
     return (
