@@ -1132,7 +1132,7 @@ export const AboutMeCoachForm = () => {
         })
     }
 
-    const profileChecker = () => {
+    const profileChecker = useCallback(() => {
         if (profile.ProfileImage) {
             setProfilePic(profile.ProfileImage)
         } else {
@@ -1142,7 +1142,7 @@ export const AboutMeCoachForm = () => {
                     setProfilePic(JSON.parse(s).uri)
                 })
         }
-    }
+    }, [profile])
 
     useEffect(() => {
         setInterval(() => profileChecker(), 1000)
