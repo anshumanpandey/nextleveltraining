@@ -1090,8 +1090,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                     }
                                 });
                             }}>
-                                <View style={[styles.inputContainer, { marginTop: '2%'}]}>
-                                <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload DBS Certificate"}</Text>
+                                <View style={[styles.inputContainer, { marginTop: '2%' }]}>
+                                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload DBS Certificate"}</Text>
                                 </View>
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
@@ -1120,6 +1120,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 }
 
 export const AboutMeCoachForm = () => {
+    const [triggerChange, setTriggerChange] = useState(true);
     const [profilePic, setProfilePic] = useState();
     const [profile] = useGlobalState('profile');
     const [token] = useGlobalState('token')
@@ -1153,7 +1154,7 @@ export const AboutMeCoachForm = () => {
         profileChecker()
     }, [profile])
 
-    console.log("profile",profilePic ? { uri: profilePic } : Images.PlayerPlaceholder)
+    console.log("profile", profilePic ? { uri: profilePic } : Images.PlayerPlaceholder)
 
     return (
         <ScrollView>
@@ -1171,49 +1172,57 @@ export const AboutMeCoachForm = () => {
                             maxRetries: 2, // set retry count (Android only). Default 2
                             field: "File",
                             headers: {
-                              'content-type': 'multipart/form-data', // Customize content-type
-                              'Authorization': `Bearer ${token}`
+                                'content-type': 'multipart/form-data', // Customize content-type
+                                'Authorization': `Bearer ${token}`
                             },
                             parameters: {
-                              Type: "profile",
-                              Id: profile.Id
+                                Type: "profile",
+                                Id: profile.Id
                             },
                             // Below are options only supported on Android
                             notification: {
-                              enabled: false
+                                enabled: false
                             },
                             useUtf8Charset: true
-                          }
-        
-        
-                          return Upload.startUpload(options).then((uploadId) => {
+                        }
+
+
+                        return Upload.startUpload(options).then((uploadId) => {
                             console.log('Upload started')
                             Upload.addListener('progress', uploadId, (data) => {
-                              console.log(`[${source.uri}] Progress: ${data.progress}%`)
+                                console.log(`[${source.uri}] Progress: ${data.progress}%`)
                             })
                             Upload.addListener('error', uploadId, (data) => {
-                              console.log(`[${source.uri}] Error: ${JSON.stringify(data)}`)
+                                console.log(`[${source.uri}] Error: ${JSON.stringify(data)}`)
                             })
                             Upload.addListener('cancelled', uploadId, (data) => {
-                              console.log(`[${source.uri}] Cancelled!`)
+                                console.log(`[${source.uri}] Cancelled!`)
                             })
                             Upload.addListener('completed', uploadId, (data) => {
-                              // data includes responseCode: number and responseBody: Object
-                              console.log(`[${source.uri}] Completed!`)
-                              return axiosInstance({ url: '/Users/GetUser' })
-                              .then((r) => {
-                                console.log(r.data)
-                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                                console.log("new profile")
-                              })
+                                // data includes responseCode: number and responseBody: Object
+                                console.log(`[${source.uri}] Completed!`)
+                                return axiosInstance({ url: '/Users/GetUser' })
+                                    .then((r) => {
+                                        console.log(r.data)
+                                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                                        console.log("new profile")
+                                    })
                             })
-                          })         
+                        })
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
-                    <Image
-                        source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
-                        style={styles.profileImage}
-                    />
+                    {triggerChange == true && (
+                        <Image
+                            source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
+                            style={styles.profileImage}
+                        />
+                    )}
+                    {triggerChange == false && (
+                        <Image
+                            source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
+                            style={styles.profileImage}
+                        />
+                    )}
                     <View style={{
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1506,7 +1515,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                         style={{ width: '95%', position: 'absolute', marginLeft: Dimensions.get('window').width * 0.12 }}
                                         button={
                                             <TouchableOpacity onPress={() => menuRef.current?.show()} style={[styles.inputContain, { height: 50, justifyContent: 'center' }]}>
-                                                <Text style={{ color: values.role ? "black" : 'rgba(0,0,0,0.3)', fontSize: 16}}>{values.role ? values.role : "Select Account Type"}</Text>
+                                                <Text style={{ color: values.role ? "black" : 'rgba(0,0,0,0.3)', fontSize: 16 }}>{values.role ? values.role : "Select Account Type"}</Text>
                                             </TouchableOpacity>
                                         }
                                     >
