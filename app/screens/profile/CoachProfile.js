@@ -198,6 +198,7 @@ class MultiStep extends Component {
                                                     console.log(r)
                                                     this.setState({ saving: false })
                                                 })
+                                                .catch(() => this.setState({ saving: false }))
                                         }
                                         if (this.state.selectedSegmentIndex == 3) {
                                             this.setState({ saving: true })
