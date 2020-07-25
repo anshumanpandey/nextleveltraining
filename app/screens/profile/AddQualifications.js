@@ -88,7 +88,6 @@ const AddTeam = (props) => {
                         </View>
                       </TouchableOpacity>
                       <CheckBox
-                        style={{ width: '5%' }}
                         checked={values.qualifications.find(i => i.Qualification == option.Qualification) != null}
                         onPress={fn} />
                     </View>
