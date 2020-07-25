@@ -38,8 +38,8 @@ const AddTeam = (props) => {
   useEffect(() => {
     AsyncStorage.getItem(`Verification-file`)
       .then(file => {
-        console.log(JSON.parse(file).file)
         if (!file) return
+        console.log(JSON.parse(file).file)
         setFile(JSON.parse(file))
         formikRef.current.setFieldValue("file", JSON.parse(file).file)
       })
