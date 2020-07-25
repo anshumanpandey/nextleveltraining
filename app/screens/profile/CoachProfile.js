@@ -347,6 +347,7 @@ const TimeInput = ({ onSelected, value }) => {
         <>
             {showPicker && (
                 <DateTimePickerModal
+                    headerTextIOS={"Pick a Time"}
                     isVisible={showPicker}
                     mode="time"
                     onConfirm={(d) => {
