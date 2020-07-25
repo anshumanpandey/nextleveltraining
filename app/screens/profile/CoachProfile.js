@@ -1136,7 +1136,7 @@ export const AboutMeCoachForm = () => {
                     setProfilePic(JSON.parse(s).uri)
                 })
         }
-    }, [])
+    }, [profile])
 
     return (
         <ScrollView>
