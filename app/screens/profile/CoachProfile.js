@@ -1135,6 +1135,7 @@ export const AboutMeCoachForm = () => {
     }
 
     const profileChecker = () => {
+        setTriggerChange(o => !o)
         if (profile.ProfileImage) {
             setProfilePic(profile.ProfileImage)
         } else {
