@@ -126,7 +126,7 @@ const AddTeam = (props) => {
                 });
               }}>
                 <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
-                  <Text style={{ color: values.file?.fileName ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{values.file?.fileName ? values.file?.fileName : "Upload Valid ID"}</Text>
+                  <Text style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Valid ID"}</Text>
                 </View>
               </TouchableOpacity>
               {values.file && <Image style={{ height: '80%', width: Dimensions.get("screen").width, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
