@@ -117,7 +117,7 @@ const Home = (props) => {
   }
 
   return (
-    <View style={styles.home_container}>
+    <View style={[styles.home_container, { backgroundColor: !loading && data && dataToShow.length == 0 ? 'white': 'rgba(0,0,0,0.1)' }]}>
       {/* <View style={{
           width: "100%",
           height: STATUS_BAR_HEIGHT,

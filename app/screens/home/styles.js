@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     // flex: 1,
     // width: '100%',
     // height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.1)'
   },
   home_modal_image: {
     height: Dimension.deviceHeight,
