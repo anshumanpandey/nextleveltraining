@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   btnTab: {
-    width: Dimension.pro33,
+    width: Dimension.pro100,
     borderWidth: 0.25,
     flexDirection: 'row',
     borderColor: 'lightgray',

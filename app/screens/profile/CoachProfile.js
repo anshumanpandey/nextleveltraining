@@ -1093,7 +1093,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                 });
                             }}>
                                 <View style={[styles.inputContainer, { marginTop: '2%' }]}>
-                                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload DBS Certificate"}</Text>
+                                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
                                 </View>
                             </TouchableOpacity>
                             {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
@@ -1362,7 +1362,7 @@ export const AboutMeCoachForm = ({ navigation }) => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.TravelMile ? profile.TravelMile.travelDistance : "", screen: "EditInput", keyboardType: "numeric" })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.TravelMile ? profile.TravelMile.TravelDistance : "", screen: "EditInput", keyboardType: "numeric" })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Travel Miles</Text>

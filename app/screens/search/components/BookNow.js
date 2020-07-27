@@ -13,6 +13,7 @@ import Tabs from './information/Tabs';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
+import getDistance from 'geolib/es/getDistance';
 
 const _format = 'ddd, MMM DD, YYYY';
 const _today = new Date();
@@ -48,15 +49,21 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
       "coachID": coach.Id,
       "date": date.toISOString()
     }
-    console.log(data)
     getUserData({ data })
       .then((r) => {
         setDropdownOptions(r.data)
-        if (r.data.length == 0){
+        if (r.data.length == 0) {
           setTime(undefined)
         }
       })
   }, [date])
+
+  const filterLocationCoachCanTravel = (location) => {
+    const startPoint = { latitude: coach.Lat, longitude: coach.Lng }
+    const endPoint = { latitude: location.Lat, longitude: location.Lng }
+    const milesAwayFromLocation = getDistance(startPoint, endPoint)
+    return milesAwayFromLocation <= coach.TravelMile.TravelDistance
+  }
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -79,7 +86,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.userView}>
-            <Image source={coach.ProfileImage ? { uri: coach.ProfileImage }: Images.PlayerPlaceholder} style={styles.userImg} />
+            <Image source={coach.ProfileImage ? { uri: coach.ProfileImage } : Images.PlayerPlaceholder} style={styles.userImg} />
             <Text style={{ color: 'black', fontSize: 18, marginLeft: 15 }}>
               {coach.FullName}
             </Text>
@@ -112,7 +119,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
 
         <View style={styles.whenView}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
-          {availableTimePerCoach.loading && <Spinner color={Colors.s_yellow} />}
+          {availableTimePerCoach.loading && <Spinner color={Colors.g_text} />}
           {!availableTimePerCoach.loading && (
             <Menu
               ref={(ref) => (_menu = ref)}
@@ -124,7 +131,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
                   onPress={() => {
                     showMenu();
                   }}>
-                  <Text style={{ fontSize: 15 }}>
+                  <Text style={{ fontSize: 15, color: !time && dropdownOptions.length == 0 && 'No available hours' ? 'gray': 'black' }}>
                     {time && time}
                     {!time && dropdownOptions.length != 0 && 'Select Time'}
                     {!time && dropdownOptions.length == 0 && 'No available hours'}
@@ -189,11 +196,14 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
         {selectedTab === 0 && (
           <>
             {coach.TrainingLocations.length != 0 && (
-              <TeachingCard selectedItem={selectedLocation} onPress={(i) => setSelectedLocation(i)} data={coach.TrainingLocations.map(i => ({
-                id: i.Id,
-                title: i.LocationName,
-                subTitle: i.LocationAddress,
-              }))} />
+              <TeachingCard
+                selectedItem={selectedLocation}
+                onPress={(i) => setSelectedLocation(i)}
+                data={coach.TrainingLocations.map(i => ({
+                  id: i.Id,
+                  title: i.LocationName,
+                  subTitle: i.LocationAddress,
+                }))} />
             )}
             {coach.TrainingLocations.length == 0 && <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Training Locations</Text>}
           </>
@@ -201,14 +211,17 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
 
         {selectedTab === 1 && (
           <>
-            {profile.TrainingLocations.length != 0 && (
-              <TeachingCard selectedItem={selectedLocation} onPress={(i) => setSelectedLocation(i)} data={profile.TrainingLocations.length == 0 ? [] : profile.TrainingLocations.map(i => ({
-                id: i.Id,
-                title: i.LocationName,
-                subTitle: i.LocationAddress,
-              }))} />
+            {profile.TrainingLocations.filter(filterLocationCoachCanTravel).length != 0 && (
+              <TeachingCard
+                selectedItem={selectedLocation}
+                onPress={(i) => setSelectedLocation(i)}
+                data={profile.TrainingLocations.filter(filterLocationCoachCanTravel).map(i => ({
+                  id: i.Id,
+                  title: i.LocationName,
+                  subTitle: i.LocationAddress,
+                }))} />
             )}
-            {coach.TrainingLocations.length == 0 && <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Training Locations</Text>}
+            {profile.TrainingLocations.filter(filterLocationCoachCanTravel).length == 0 && <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Training Locations</Text>}
           </>
         )}
       </View>

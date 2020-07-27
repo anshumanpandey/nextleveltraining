@@ -17,22 +17,22 @@ const SearchComponent = (props) => {
     method: 'POST',
   }, { manual: true })
 
-  useEffect(() => {
-    searchCoaches({
-      data: {
-        playerId: profile.Id,
-        search: keyword
-      }
-    })
-    .then((r) => setCoaches([...r.data]))
-    const unsubscribe = props.navigation.addListener('tabPress', e => {
+  const fnInit = () => {
+    if (profile.Role == "Player") {
       searchCoaches({
         data: {
           playerId: profile.Id,
           search: keyword
         }
       })
-        .then((r) => setCoaches([...r.data]))
+      .then((r) => setCoaches([...r.data]))
+    }
+  }
+
+  useEffect(() => {
+    fnInit()
+    const unsubscribe = props.navigation.addListener('tabPress', e => {
+      fnInit()
     });
 
     return unsubscribe;

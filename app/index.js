@@ -32,7 +32,7 @@ import Comment from './screens/home/Comments';
 import Information from './screens/search/components/information/Information';
 import BookNow from './screens/search/components/BookNow';
 import Payments from './screens/payments';
-import JobDetails from './screens/jobDetails';
+import JobDetails from './screens/bookingDetails';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
 import './api/AxiosBootstrap';
 import hasFullProfile from './utils/perType/profileResolver';
@@ -50,6 +50,7 @@ import LogoutScreen from './screens/logoutScreen/LogoutScreen';
 import PaymentConcentScreen from './screens/payments/PaymentConcent';
 import HelpScreen from './screens/help/HelpScreen';
 import ProfilePicScreen from './screens/profilePic/ProfilePic';
+import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
 
 let initialRouteName = null
 
@@ -338,6 +339,15 @@ const AppMain = () => {
         ),
       }),
     }
+
+    tabs.PlayerInfo = {
+      screen: PlayerInfoScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
   }
 
   if (initialRouteName == null) {
@@ -347,7 +357,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

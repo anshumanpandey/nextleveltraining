@@ -17,16 +17,23 @@ const SavedComponent = (props) => {
       "playerId": profile.Id,
       "search": ""
     }
-  })
+  }, { manual: true })
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener('tabPress', e => {
+  const initFn = () => {
+    if (profile.Role == "Player") {
       searchCoaches({
         data: {
           "playerId": profile.Id,
           "search": ""
         }
       })
+    }
+  }
+
+  useEffect(() => {
+    initFn();
+    const unsubscribe = props.navigation.addListener('tabPress', e => {
+      initFn()
     });
 
     return unsubscribe;

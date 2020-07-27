@@ -24,16 +24,19 @@ const JobDetails = (props) => {
     data
   }, { manual: true })
 
-  useEffect(() => {
-    getCoach({ data })
+  const initFn = () => {
+    if (profile.Role == "Player") {
+      getCoach({ data })
       .then(r => {
         setCurrentCoach(r.data.find(c => c.Id == props.navigation.getParam("CoachID")))
       })
+    }
+  }
+
+  useEffect(() => {
+    initFn()
     const focusListener = props.navigation.addListener('didFocus', () => {
-      getCoach({ data })
-        .then(r => {
-          setCurrentCoach(r.data.find(c => c.Id == props.navigation.getParam("CoachID")))
-        })
+      initFn()
     });
     return () => {
       focusListener?.remove();
@@ -41,7 +44,8 @@ const JobDetails = (props) => {
     }
   }, [])
 
-  console.log(props.navigation.state)
+  const canCancel = () => moment(props.navigation.getParam("SentDate"))
+  const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -50,7 +54,7 @@ const JobDetails = (props) => {
       <View style={styles.detailsView}>
         <View style={styles.userView}>
           <Image
-            // resizeMode={'contain'}
+            // TODO: replace coach profile image here
             source={Images.MessiPlayer}
             style={styles.userImg}
           />
@@ -88,24 +92,39 @@ const JobDetails = (props) => {
       </View>
 
       <View style={styles.btnView}>
-        <View style={[styles.btnTab, { opacity: 0.5 }]}>
-          <Icon
-            name="close"
-            type="MaterialIcons"
-            style={styles.btn_menu_icon}
-          />
-          <Text style={styles.btnText}>Cancel</Text>
-        </View>
-        <View style={[styles.btnTab, { opacity: 0.5 }]}>
-          <Icon
-            name="restore"
-            type="MaterialIcons"
-            style={styles.btn_menu_icon}
-          />
-          <Text style={styles.btnText}>Reschedule</Text>
-        </View>
-        <TouchableOpacity disabled={currentCoach == undefined} style={{ width: '100%' }} onPress={() => NavigationService.navigate("Information", currentCoach)}>
-          <View style={[styles.btnTab, { opacity: currentCoach == undefined ? 0.5 : 1 }]}>
+        <TouchableOpacity style={{ width: '33%' }}>
+          <View style={[styles.btnTab, { opacity: 0.5 }]}>
+            <Icon
+              name="close"
+              type="MaterialIcons"
+              style={styles.btn_menu_icon}
+            />
+            <Text style={styles.btnText}>Cancel</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ width: '33%' }}>
+          <View style={[styles.btnTab, { opacity: 0.5 }]}>
+            <Icon
+              name="restore"
+              type="MaterialIcons"
+              style={styles.btn_menu_icon}
+            />
+            <Text style={styles.btnText}>Reschedule</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          disabled={viewProfileIsDisabled()}
+          style={{ width: '33%' }}
+          onPress={() => {
+            console.log(profile.Role)
+            if (profile.Role == 'Coach') {
+              NavigationService.navigate("PlayerInfo", { player: {...props.navigation.getParam("Player"), Role: 'Player'}})
+            } else {
+              NavigationService.navigate("Information", currentCoach)
+            }
+          }}>
+          <View style={[styles.btnTab, { opacity: viewProfileIsDisabled() ? 0.5 : 1 }]}>
             <Icon
               name="user"
               type="Feather"
