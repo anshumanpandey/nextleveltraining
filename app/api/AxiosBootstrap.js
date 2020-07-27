@@ -36,9 +36,9 @@ axiosInstance.interceptors.response.use(
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.ERROR, state: errors });
 
             }
-            /*if (error.response.status === 401) {
-                dispatchGlobalState({ type: 'logout' });
-            }*/
+            if (error.response.status === 401) {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT });
+            }
             console.log('error.response');
             console.log(error.response.headers);
             console.log(error.response.data);
