@@ -67,7 +67,7 @@ const PaymentConcentScreen = (props) => {
           You will be redirected to PayPal's website to acess your account and submit your payment.\nThen you will be return to Right Cars App to obtain your booking confirmation
         </Text>
         <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', marginTop: '5%' }}>
-          <CheckBox color={Colors.s_yellow} checked={checked} onPress={() => setChecked(p => !p)} />
+          <CheckBox color={Colors.g_text} checked={checked} onPress={() => setChecked(p => !p)} />
           <TouchableWithoutFeedback onPress={() => setChecked(p => !p)}>
             <View style={{ width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
               <Text style={{ fontSize: 16 }}>
@@ -76,13 +76,13 @@ const PaymentConcentScreen = (props) => {
               <Text style={{ fontSize: 16 }}>
                 {' '}Next Level{' '}
               </Text>
-              <Text onPress={() => navigation.navigate('TermsConditions')} style={{ color: Colors.s_yellow, fontSize: 16 }}>
+              <Text onPress={() => navigation.navigate('TermsConditions')} style={{ color: Colors.g_text, fontSize: 16 }}>
                 Terms & Conditions
           </Text>
               <Text style={{ fontSize: 16 }}>
                 {' '}and{' '}
               </Text>
-              <Text onPress={() => navigation.navigate('Policy')} style={{ color: Colors.s_yellow, fontSize: 16 }}>
+              <Text onPress={() => navigation.navigate('Policy')} style={{ color: Colors.g_text, fontSize: 16 }}>
                 Privacy Policy.
           </Text>
             </View>

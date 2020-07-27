@@ -1,7 +1,7 @@
 import Upload from 'react-native-background-upload'
 import { getGlobalState } from '../state/GlobalState'
 
-const FileSyncher = (fileObject, idToAttach, fileType="Post") => {
+const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
     const profile = getGlobalState('profile')
     const token = getGlobalState('token')
     const { uri } = fileObject
@@ -29,25 +29,31 @@ const FileSyncher = (fileObject, idToAttach, fileType="Post") => {
     }
 
 
-    return Upload.startUpload(options).then((uploadId) => {
-        console.log('Upload started')
-        Upload.addListener('progress', uploadId, (data) => {
-            console.log(`[${uri}] Progress: ${data.progress}%`)
+    return Upload.startUpload(options)
+        .then((uploadId) => {
+            return new Promise((resolve, rejected) => {
+                console.log('Upload started')
+                Upload.addListener('progress', uploadId, (data) => {
+                    console.log(`[${uri}] Progress: ${data.progress}%`)
+                })
+                Upload.addListener('error', uploadId, (data) => {
+                    console.log(`[${uri}] Error: ${JSON.stringify(data)}`)
+                    rejected()
+                })
+                Upload.addListener('cancelled', uploadId, (data) => {
+                    console.log(`[${uri}] Cancelled!`)
+                })
+                Upload.addListener('completed', uploadId, (data) => {
+                    // data includes responseCode: number and responseBody: Object
+                    console.log(`[${uri}] Completed!`)
+                    console.log(data)
+                    resolve()
+                })
+            })
+        }).catch((err) => {
+            console.log('Upload error!', err)
+            throw err
         })
-        Upload.addListener('error', uploadId, (data) => {
-            console.log(`[${uri}] Error: ${JSON.stringify(data)}`)
-        })
-        Upload.addListener('cancelled', uploadId, (data) => {
-            console.log(`[${uri}] Cancelled!`)
-        })
-        Upload.addListener('completed', uploadId, (data) => {
-            // data includes responseCode: number and responseBody: Object
-            console.log(`[${uri}] Completed!`)
-            console.log(data)
-        })
-    }).catch((err) => {
-        console.log('Upload error!', err)
-    })
 }
 
 export default FileSyncher;

@@ -6,6 +6,7 @@ import styles from './styles.js';
 import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
+import Colors from '../../constants/color';
 
 const Level = (props) => {
   const [role, setRole] = useState();
@@ -47,7 +48,7 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.level_btn_coach}
+          style={[styles.level_btn_coach, { backgroundColor: Colors.g_text}]}
           onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Coach" })}
         >
           <View style={styles.level_btn_player_view}>

@@ -7,7 +7,7 @@ import Colors from '../../../../constants/color';
 
 const TeachingCard = ({ data, onPress, selectedItem }) => {
   const normalStyles = { }
-  const selectedStyles = { backgroundColor: `${Colors.s_yellow}50` }
+  const selectedStyles = { backgroundColor: `${Colors.g_text}50` }
 
   let currentStyles = normalStyles
 
