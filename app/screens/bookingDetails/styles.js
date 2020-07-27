@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignSelf: 'center',
     backgroundColor: 'rgb(244,247,248)',
+    flexGrow: 1
   },
   dashView: {
     marginTop: 40,
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dontFilled: {
+    marginTop: '25%',
     width: Dimension.px14,
     height: Dimension.px14,
     borderColor: 'rgba(29,181,56,1)',
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
   triangle: {
     width: 0,
     height: 0,
-    marginTop: -25,
+    marginTop: '2%',
     backgroundColor: 'transparent',
     borderStyle: 'solid',
     borderTopWidth: 7,
@@ -115,9 +117,8 @@ const styles = StyleSheet.create({
   details: {
     width: Dimension.pro80,
     backgroundColor: 'white',
-    borderBottomColor: 'lightgray',
-    borderBottomWidth: 0.75,
-    padding: 12,
+    borderBottomWidth: 0,
+    padding: '5%'
   }
 });
 export default styles;
