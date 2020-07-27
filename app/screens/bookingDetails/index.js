@@ -90,6 +90,14 @@ const JobDetails = (props) => {
         status: 'Active'
       }
     )
+  } else {
+    steps.push(
+      {
+        title: "Session in progress",
+        details: `Booking request sent on ${moment(props.navigation.getParam("SentDate")).format("Do MMM, hh:mm A")}`,
+        status: 'Active'
+      }
+    )
   }
 
   return (
@@ -121,7 +129,7 @@ const JobDetails = (props) => {
           <View style={[styles.orderView, { flexDirection: 'row' }]}>
             <View>
               <Text style={styles.headText}>Session Date/Time</Text>
-              <Text style={styles.headText1}>{moment(props.navigation.getParam("FromTime")).format("HH:mm")} - {moment(props.navigation.getParam("ToTime")).format("HH:mm")}</Text>
+              <Text style={styles.headText1}>{moment.utc(props.navigation.getParam("FromTime")).format("hh:mm A")} - {moment.utc(props.navigation.getParam("ToTime")).format("hh:mm A")}</Text>
             </View>
             <View>
               <Text style={styles.headText}>Cost</Text>
@@ -165,7 +173,21 @@ const JobDetails = (props) => {
             )}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity disabled={canReschedule()} style={{ width: '33%' }}>
+        <TouchableOpacity
+          onPress={() => {
+            const params = {
+              coach: profile,
+              BookingId: props.navigation.getParam("Id"),
+              FromTime: moment(props.navigation.getParam("FromTime")).utc().format('hh:mm A'),
+              ToTime: moment(props.navigation.getParam("ToTime")).utc().format('hh:mm A'),
+              Location: props.navigation.getParam("Location"),
+              SentDate: props.navigation.getParam("SentDate"),
+              isEditing: true,
+            }
+            NavigationService.navigate("BookNow", params)
+          }}
+          disabled={!canReschedule()}
+          style={{ width: '33%' }}>
           <View style={[styles.btnTab, { opacity: canReschedule() ? 1 : 0.5 }]}>
             <Icon
               name="restore"

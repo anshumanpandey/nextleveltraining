@@ -26,7 +26,7 @@ const hideMenu = () => {
 };
 
 
-const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
+const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingId, FromTime, ToTime, Location, SentDate, isEditing = false } } } }) => {
   const activeColor = Colors.s_blue;
   const inActiveColor = 'gray';
 
@@ -44,6 +44,34 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
     method: 'POST',
   }, { manual: true })
 
+  const [rescheduleBookingReq, doRescheduleBooking] = useAxios({
+    url: '/Users/RescheduleBooking',
+    method: 'POST',
+  }, { manual: true })
+
+  const [{ data, loading, error }, getBookings] = useAxios({
+    url: '/Users/GetBookings',
+    method: 'POST',
+  }, { manual: true })
+
+  const initFn = () => {
+    SentDate && setDate(moment(SentDate).toDate())
+    FromTime && ToTime && setTime(`${FromTime}-${ToTime}`)
+    Location && setSelectedLocation({
+      id: Location.Id,
+      title: Location.LocationName,
+      subTitle: Location.LocationAddress,
+    })
+  }
+
+  useEffect(() => {
+    initFn()
+    const focusListener = addListener('didFocus', () => {
+      initFn()
+    });
+    return () => focusListener?.remove();
+  }, [])
+
   useEffect(() => {
     const data = {
       "coachID": coach.Id,
@@ -58,6 +86,10 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
       })
   }, [date])
 
+  const isLoading = () => {
+    return loading || rescheduleBookingReq.loading
+  }
+
   const filterLocationCoachCanTravel = (location) => {
     const startPoint = { latitude: coach.Lat, longitude: coach.Lng }
     const endPoint = { latitude: location.Lat, longitude: location.Lng }
@@ -68,21 +100,49 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
-        <View style={[styles.orgView, { height: Dimension.px200 - 25 }]}>
+        <View style={[styles.orgView ]}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Icon
               onPress={() => NavigationService.goBack()}
               name="close"
               type="MaterialIcons"
-              style={{ fontSize: 25, color: 'white', padding: 10 }}
+              style={{ fontSize: 25, color: Colors.g_text, padding: 10 }}
             />
             <TouchableOpacity
-              disabled={selectedLocation == undefined || time == undefined}
-              onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation, selectedTime: time, selectedDate: date })}>
-              <Text style={{ color: 'black', fontSize: 18, padding: 10, opacity: selectedLocation && time ? 1 : 0.5 }}>
-                Save
+              style={{ width: '40%'}}
+              disabled={selectedLocation == undefined || time == undefined || rescheduleBookingReq.loading}
+              onPress={() => {
+                if (isEditing == true) {
+                  const [startDate, endDate] = time.split('-')
+                  doRescheduleBooking({
+                    data: {
+                      "bookingId": BookingId,
+                      "fromTime": startDate,
+                      "toTime": endDate
+                    }
+                  })
+                    .then(r => {
+                      return getBookings({
+                        data: {
+                          "userID": profile.Id,
+                          "role": profile.Role
+                        }
+                      })
+                    })
+                    .then(({ data }) => {
+                      NavigationService.navigate("JobDetails", data.find(i => i.Id == BookingId))
+                    })
+                } else {
+                  NavigationService.navigate('PaymentConcent', { coach, selectedLocation, selectedTime: time, selectedDate: date })
+                }
+              }}>
+              <View style={{ flex: 1,flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%'}}>
+                {isLoading() && <Spinner color="black" style={{ marginRight: '10%' }} />}
+                <Text style={{ color: 'black', fontSize: 18, opacity: (selectedLocation && time) || !isLoading() ? 1 : 0.5 }}>
+                  Save
               </Text>
+              </View>
             </TouchableOpacity>
           </View>
           <View style={styles.userView}>
@@ -117,13 +177,13 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.whenView}>
+        <View style={[styles.whenView, { marginTop: "5%" }]}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
           {availableTimePerCoach.loading && <Spinner color={Colors.g_text} />}
           {!availableTimePerCoach.loading && (
             <Menu
               ref={(ref) => (_menu = ref)}
-              style={{ maxHeight: 225 }}
+              style={{ maxHeight: 225, marginRight: 'auto', marginLeftL:'auto' }}
               button={
                 <TouchableOpacity
                   style={styles.menuContainer}
@@ -131,7 +191,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
                   onPress={() => {
                     showMenu();
                   }}>
-                  <Text style={{ fontSize: 15, color: !time && dropdownOptions.length == 0 && 'No available hours' ? 'gray': 'black' }}>
+                  <Text style={{ fontSize: 15, color: !time && dropdownOptions.length == 0 && 'No available hours' ? 'gray' : 'black' }}>
                     {time && time}
                     {!time && dropdownOptions.length != 0 && 'Select Time'}
                     {!time && dropdownOptions.length == 0 && 'No available hours'}
