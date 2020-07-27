@@ -54,7 +54,6 @@ const styles =StyleSheet.create({
         marginLeft:Dimension.px40,
         fontWeight:'500'
     },
-
     level_btn_coach:{
         width:Dimension.pro80,
         height:Dimension.px50,

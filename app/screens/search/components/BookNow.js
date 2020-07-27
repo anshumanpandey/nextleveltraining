@@ -15,7 +15,7 @@ import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
 
 const _format = 'ddd, MMM DD, YYYY';
-const _today = moment();
+const _today = new Date();
 let _menu = null;
 const showMenu = () => {
   _menu.show();
@@ -46,7 +46,7 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
   useEffect(() => {
     const data = {
       "coachID": coach.Id,
-      "date": date.utc().startOf('day').toDate().toISOString()
+      "date": date.toISOString()
     }
     console.log(data)
     getUserData({ data })
@@ -73,24 +73,24 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
             <TouchableOpacity
               disabled={selectedLocation == undefined || time == undefined}
               onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation, selectedTime: time, selectedDate: date })}>
-              <Text style={{ color: 'white', fontSize: 18, padding: 10, opacity: selectedLocation && time ? 1 : 0.5 }}>
+              <Text style={{ color: 'black', fontSize: 18, padding: 10, opacity: selectedLocation && time ? 1 : 0.5 }}>
                 Save
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.userView}>
             <Image source={coach.ProfileImage ? { uri: coach.ProfileImage }: Images.PlayerPlaceholder} style={styles.userImg} />
-            <Text style={{ color: 'white', fontSize: 18, marginLeft: 15 }}>
+            <Text style={{ color: 'black', fontSize: 18, marginLeft: 15 }}>
               {coach.FullName}
             </Text>
           </View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
-            date={date.toDate()}
+            date={date}
             mode="date"
             onConfirm={(d) => {
               setIsDatePickerVisible(false)
-              setDate(moment(d).startOf('day'))
+              setDate(d)
             }}
             onCancel={() => setIsDatePickerVisible(false)}
           />
@@ -101,11 +101,11 @@ const BookNow = ({ navigation: { state: { params: { coach } } } }) => {
               flexDirection: 'row',
               justifyContent: 'center',
             }}>
-            <Text style={{ color: 'white', fontSize: 18 }}>{date.format(_format)}</Text>
+            <Text style={{ color: 'black', fontSize: 18 }}>{moment(date).format(_format)}</Text>
             <Icon
               name="keyboard-arrow-right"
               type="MaterialIcons"
-              style={{ fontSize: 30, color: 'white' }}
+              style={{ fontSize: 30, color: 'black' }}
             />
           </TouchableOpacity>
         </View>

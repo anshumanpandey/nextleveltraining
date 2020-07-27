@@ -41,10 +41,20 @@ export const syncProfilePic = (file) => {
     console.log('uploading profile pic')
 }
 
+export const syncDbs = (file) => {
+    const profile = getGlobalState('profile')
+    console.log('uploading DBS pic')
+
+    return FileSyncher(file, profile.Id, "dbs")
+    .then(() => axiosInstance({ url: '/Users/GetUser'}))
+    .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }))
+}
+
 export const syncVerifyDocument = (file) => {
     const profile = getGlobalState('profile')
-    FileSyncher(file, profile.Id, "profile")
+    console.log('uploading verification pic')
+
+    return FileSyncher(file, profile.Id, "verification")
     .then(() => axiosInstance({ url: '/Users/GetUser'}))
-    .then(() => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }))
-    console.log('uploading profile pic')
+    .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }))
 }

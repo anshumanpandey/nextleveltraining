@@ -49,6 +49,7 @@ import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen';
 import LogoutScreen from './screens/logoutScreen/LogoutScreen';
 import PaymentConcentScreen from './screens/payments/PaymentConcent';
 import HelpScreen from './screens/help/HelpScreen';
+import ProfilePicScreen from './screens/profilePic/ProfilePic';
 
 let initialRouteName = null
 
@@ -117,6 +118,7 @@ const AppMain = () => {
     {
       Profile: { screen: Profile },
       EditInput: { screen: EditInput },
+      ProfilePic: { screen: ProfilePicScreen },
       AddTeam: { screen: AddTeam },
       AddExperience: { screen: AddExperience },
       AddDbsCertificate: { screen: AddDbsCertificate },
