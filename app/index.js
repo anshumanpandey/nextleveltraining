@@ -49,6 +49,7 @@ import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen';
 import LogoutScreen from './screens/logoutScreen/LogoutScreen';
 import PaymentConcentScreen from './screens/payments/PaymentConcent';
 import HelpScreen from './screens/help/HelpScreen';
+import ProfilePicScreen from './screens/profilePic/ProfilePic';
 
 let initialRouteName = null
 
@@ -117,6 +118,7 @@ const AppMain = () => {
     {
       Profile: { screen: Profile },
       EditInput: { screen: EditInput },
+      ProfilePic: { screen: ProfilePicScreen },
       AddTeam: { screen: AddTeam },
       AddExperience: { screen: AddExperience },
       AddDbsCertificate: { screen: AddDbsCertificate },
@@ -345,7 +347,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help","ProfilePic"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
