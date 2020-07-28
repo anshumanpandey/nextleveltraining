@@ -5,7 +5,7 @@ import Header from '../../components/header/Header'
 
 const AboutMeScreen = (props) => {
     let [profile] = useGlobalState('profile')
-    if (props.navigation.state.params.player) profile = props.navigation.state.params.player
+    if (props?.navigation?.state?.params?.player) profile = props.navigation.state.params.player
 
     return (
         <>
