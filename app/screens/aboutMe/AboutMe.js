@@ -10,7 +10,7 @@ const AboutMeScreen = (props) => {
     return (
         <>
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
-            {resolveRoleForm(profile, "AboutMe", { player: profile, navigation: props.navigation })}
+            {resolveRoleForm(profile, "AboutMe", { player: profile })}
         </>
     );
 }
