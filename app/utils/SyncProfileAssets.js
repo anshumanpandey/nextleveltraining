@@ -58,3 +58,11 @@ export const syncVerifyDocument = (file) => {
     .then(() => axiosInstance({ url: '/Users/GetUser'}))
     .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }))
 }
+
+export const syncTrainingLocationImage = (file, locationId) => {
+    console.log('uploading location pic')
+
+    return FileSyncher(file, locationId, "location")
+    .then(() => axiosInstance({ url: '/Users/GetUser'}))
+    .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }))
+}

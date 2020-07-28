@@ -25,7 +25,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview
 import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
-import { syncProfilePic } from '../../utils/SyncProfileAssets';
+import { syncProfilePic, syncTrainingLocationImage } from '../../utils/SyncProfileAssets';
 import ImagePicker from 'react-native-image-picker';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import Upload from 'react-native-background-upload'
@@ -978,26 +978,32 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
     }, { manual: true })
 
     useEffect(() => {
-        setSubmitFn && setSubmitFn(formikRef.current.submitForm)
-        formikRef.current.setFieldValue("trainingLocationId", params?.Id || undefined)
-        formikRef.current.setFieldValue("locationName", params?.LocationName || "")
-        formikRef.current.setFieldValue("address", params?.LocationAddress || "")
-        formikRef.current.setFieldValue("lat", params?.Lat || 0)
-        formikRef.current.setFieldValue("lng", params?.Lng || 0)
-        AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
+        setSubmitFn && setSubmitFn(formikRef?.current?.submitForm)
+        formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
+        formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
+        formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
+        formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
+        formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
+
+        if (params?.Path) {
+            formikRef?.current?.setFieldValue('file', { uri: params?.Path })
+        } else {
+            AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
             .then(img => {
                 if (!img) return
-                formikRef.current.setFieldValue('file', JSON.parse(img).file)
+                formikRef?.current?.setFieldValue('file', JSON.parse(img).file)
             })
+        }
+        
     }, [params])
 
     useEffect(() => {
         const focusListener = navigation.addListener('didBlur', () => {
-            formikRef.current.setFieldValue("trainingLocationId", undefined)
-            formikRef.current.setFieldValue("locationName", "")
-            formikRef.current.setFieldValue("address", "")
-            formikRef.current.setFieldValue("lat", 0)
-            formikRef.current.setFieldValue("lng", 0)
+            formikRef?.current?.setFieldValue("trainingLocationId", undefined)
+            formikRef?.current?.setFieldValue("locationName", "")
+            formikRef?.current?.setFieldValue("address", "")
+            formikRef?.current?.setFieldValue("lat", 0)
+            formikRef?.current?.setFieldValue("lng", 0)
         });
 
         return () => focusListener.remove()
@@ -1039,7 +1045,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                         }
                     })
                         .then((r) => {
-                            console.log(r.data)
+                            syncTrainingLocationImage(values.file, r.data.Id)
+                            delete values.file.data
                             return AsyncStorage.setItem(`Location-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
                         })
                         .then(r => getUserData())
