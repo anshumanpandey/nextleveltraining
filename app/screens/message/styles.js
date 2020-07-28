@@ -49,7 +49,7 @@ const styles =StyleSheet.create({
     },
     signup_container:{
         backgroundColor:'white',
-        height:Dimension.pro100,
+        height:Dimension.pro100, 
         width:Dimension.pro100
     } ,
 
