@@ -160,7 +160,7 @@ const JobDetails = (props) => {
           ],
             { cancelable: true })
         }} style={{ width: '33%', justifyContent: 'center' }}>
-          <View style={[styles.btnTab, { maxHeight: '50%', opacity: canCancel() ? 1 : 0.5 }]}>
+          <View style={[styles.btnTab, { opacity: canCancel() ? 1 : 0.5 }]}>
             {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
             {!cancelBookingReq.loading && (
               <>
