@@ -249,7 +249,7 @@ const AppMain = () => {
               name="shopping-cart"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>BOOKING</Text>
+            <Text style={[styles.textTab, { color: tintColor }]}>BOOKINGS</Text>
           </View>
         ),
       }),
@@ -264,7 +264,7 @@ const AppMain = () => {
               name="message-square"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>MESSAGE</Text>
+            <Text style={[styles.textTab, { color: tintColor }]}>Inbox</Text>
           </View>
         ),
       }),

@@ -995,7 +995,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             })
         }
         
-    }, [params])
+    }, [params.Id])
 
     useEffect(() => {
         const focusListener = navigation?.addListener('didBlur', () => {
