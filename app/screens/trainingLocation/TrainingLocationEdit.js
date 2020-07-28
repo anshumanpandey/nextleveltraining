@@ -39,7 +39,7 @@ const TrainingLocationEdit = (props) => {
                 hideCreatePost={true}
                 toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}
             />
-            <TrainingLocationForm navigation={props.navigation} setSubmitFn={(fn) => {
+            <TrainingLocationForm navigation={props.navigation} isSaving={isSaving} setSubmitFn={(fn) => {
                 setSubmitFunction(() => fn)
             }} {...props.navigation.state.params.item} />
         </View>

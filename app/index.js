@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -62,6 +62,7 @@ const AppMain = () => {
   const [success] = useGlobalState('success')
   const [token] = useGlobalState('token')
   const [profile] = useGlobalState('profile')
+  const [toggle] = useGlobalState('toggle')
 
   useEffect(() => {
     SplashScreen.hide();
@@ -429,6 +430,11 @@ const AppMain = () => {
   if (!Apps) {
     Apps = createAppContainer(AuthStack);
   }
+
+  useEffect(() => {
+    console.log("generationg")
+    Apps = createAppContainer(AuthStack);
+  },[token,Object.keys(profile), toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

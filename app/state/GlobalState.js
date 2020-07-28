@@ -14,7 +14,8 @@ const initialState = {
     error: null,
     success: null,
     token: null,
-    profile: null,
+    profile: {},
+    toggle: false,
     currentAchivemenSelected: null,
 };
 
@@ -25,16 +26,24 @@ const reducer = (state, action) => {
       case GLOBAL_STATE_ACTIONS.SUCCESS: return { ...state, ...{success: action.state} };
       case GLOBAL_STATE_ACTIONS.TOKEN: {
         AsyncStorage.setItem('token', action.state)
-        return { ...state, ...{token: action.state} };
+        return { ...state, ...{token: action.state}, toggle: !state.toggle };
       }
       case GLOBAL_STATE_ACTIONS.PROFILE: {
+        let toggle = state.toggle
         AsyncStorage.setItem('profile', JSON.stringify(action.state))
-        return { ...state, ...{profile: action.state} };
+        if (state.profile == null && action?.state?.Id) {
+          console.log('setting profile first tinme')
+          toggle = !state.toggle
+        }
+        if (action?.state?.Id && action?.state?.Id != state?.profile?.Id) {
+          toggle = !state.toggle
+        }
+        return { ...state, ...{profile: action.state}, toggle: toggle };
       }
       case GLOBAL_STATE_ACTIONS.LOGOUT: {
         AsyncStorage.removeItem('token')
         AsyncStorage.removeItem('profile')
-        return { ...state, ...{profile: null, token: null} };
+        return { ...state, ...{profile: {}, token: null}, toggle: !state.toggle };
       }
       default: return state;
     }

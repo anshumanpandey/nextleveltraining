@@ -995,18 +995,35 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             })
         }
         
-    }, [params.Id])
+    }, [params.Id, params.LocationName, params.LocationAddress, params.isSaving ])
 
     useEffect(() => {
-        const focusListener = navigation?.addListener('didBlur', () => {
+        const focusListener = navigation?.addListener('didFocus', () => {
+            console.log(params?.Id)
+            formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
+            formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
+            formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
+            formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
+            formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
+            formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
+        })
+
+        const blurListener = navigation?.addListener('didBlur', () => {
             formikRef?.current?.setFieldValue("trainingLocationId", undefined)
             formikRef?.current?.setFieldValue("locationName", "")
             formikRef?.current?.setFieldValue("address", "")
             formikRef?.current?.setFieldValue("lat", 0)
             formikRef?.current?.setFieldValue("lng", 0)
+            formikRef?.current?.setErrors({
+                locationName: undefined,
+                address: undefined,
+            })
         });
 
-        return () => focusListener?.remove()
+        return () => {
+            focusListener?.remove()
+            blurListener?.remove()
+        }
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
@@ -1042,7 +1059,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                         lng: values.lng
                     }
 
-                    doPost({ data })
+                    return doPost({ data })
                         .then((r) => {
                             if (values?.file?.fileSize) {
                                 syncTrainingLocationImage(values.file, r.data.Id)
