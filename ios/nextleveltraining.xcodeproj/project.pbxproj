@@ -37,6 +37,7 @@
 		C15B0D8396C146C4A245A46B /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63E12047F5544DE5B8A5E7C5 /* rubicon-icon-font.ttf */; };
 		D1FB038AC1CC4D7191634CF7 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 202ECB27385746D099CED759 /* AntDesign.ttf */; };
 		D3F1AB036F6449E68D0C6EC4 /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48930E505B6D4E4883B04CE8 /* Roboto_medium.ttf */; };
+		D6F635F824D07ABA00C79709 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D6F635F624D07ABA00C79709 /* GoogleService-Info.plist */; };
 		F88FE1B53C5B4DC485A18614 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9759992D47A445A6843CCBFF /* Ionicons.ttf */; };
 		FBDA356DCB0C4C9D8A3190FA /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9070CCEE144F2C87CF179A /* Roboto.ttf */; };
 /* End PBXBuildFile section */
@@ -105,6 +106,7 @@
 		B7232393A29348C2BEE0370A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		BD304460AFD3AA4E744A9CB6 /* Pods-nextleveltraining-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-nextleveltraining-tvOS/Pods-nextleveltraining-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D657259A24CA799100E82E92 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
+		D6F635F624D07ABA00C79709 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E388662C3D0164980B432098 /* libPods-nextleveltraining-nextleveltrainingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-nextleveltrainingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB0606CC56EE6A4DB9E38D65 /* libPods-nextleveltraining-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9070CCEE144F2C87CF179A /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				D6F635F624D07ABA00C79709 /* GoogleService-Info.plist */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -458,6 +461,7 @@
 				D3F1AB036F6449E68D0C6EC4 /* Roboto_medium.ttf in Resources */,
 				FBDA356DCB0C4C9D8A3190FA /* Roboto.ttf in Resources */,
 				C15B0D8396C146C4A245A46B /* rubicon-icon-font.ttf in Resources */,
+				D6F635F824D07ABA00C79709 /* GoogleService-Info.plist in Resources */,
 				216C99188DD64D53BE86EBBB /* SimpleLineIcons.ttf in Resources */,
 				266DC05E3E6542FA8BEDA1F5 /* Zocial.ttf in Resources */,
 			);

@@ -78,7 +78,8 @@ target 'nextleveltraining' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-
+  pod 'RNFBDatabase', :path => '../node_modules/@react-native-firebase/database'
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
   target 'nextleveltrainingTests' do
     inherit! :complete
     # Pods for testing
