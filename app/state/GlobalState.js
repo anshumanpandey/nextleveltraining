@@ -7,6 +7,7 @@ export const GLOBAL_STATE_ACTIONS = {
     TOKEN: 'TOKEN',
     PROFILE: 'PROFILE',
     LOGOUT: 'LOGOUT',
+    TOGGLE: 'TOGGLE',
     ACHIVEMEN_SELECTED: 'ACHIVEMEN_SELECTED',
 }
 
@@ -44,6 +45,9 @@ const reducer = (state, action) => {
         AsyncStorage.removeItem('token')
         AsyncStorage.removeItem('profile')
         return { ...state, ...{profile: null, token: null}, toggle: !state.toggle };
+      }
+      case GLOBAL_STATE_ACTIONS.TOGGLE: {
+        return { ...state, toggle: !state.toggle };
       }
       default: return state;
     }
