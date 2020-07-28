@@ -15,7 +15,7 @@ const styles =StyleSheet.create({
          justifyContent:'center',
          alignItems:'center',
          display:'flex',
-         marginTop:Dimension.px50
+         flex: 0.65,
     },
     level_logo_text:{
          fontSize:18,
@@ -27,8 +27,6 @@ const styles =StyleSheet.create({
         width:Dimension.pro100,
         justifyContent:'center',
         alignItems:'center',
-        display:'flex',
-        marginTop:Dimension.px40
     },
     level_btn_player:{
         width:Dimension.pro80,
