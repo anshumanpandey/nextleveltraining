@@ -1,6 +1,8 @@
 import Upload from 'react-native-background-upload'
 import { getGlobalState } from '../state/GlobalState'
 
+const fileUploaderMap = new Map()
+
 const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
     const profile = getGlobalState('profile')
     const token = getGlobalState('token')
@@ -26,6 +28,12 @@ const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
             enabled: false
         },
         useUtf8Charset: true
+    }
+
+    if (!fileUploaderMap.has(uri)) {
+        fileUploaderMap.set(uri)
+    } else {
+        return Promise.reject("Upload already started")
     }
 
 
