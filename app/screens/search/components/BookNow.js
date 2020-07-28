@@ -100,14 +100,14 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
-        <View style={[styles.orgView ]}>
+        <View style={[styles.orgView, { height: '36%'} ]}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Icon
               onPress={() => NavigationService.goBack()}
               name="close"
               type="MaterialIcons"
-              style={{ fontSize: 25, color: Colors.g_text, padding: 10 }}
+              style={{ fontSize: 25, color: 'white', padding: 10 }}
             />
             <TouchableOpacity
               style={{ width: '40%'}}
@@ -138,8 +138,8 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
                 }
               }}>
               <View style={{ flex: 1,flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%'}}>
-                {isLoading() && <Spinner color="black" style={{ marginRight: '10%' }} />}
-                <Text style={{ color: 'black', fontSize: 18, opacity: (selectedLocation && time) || !isLoading() ? 1 : 0.5 }}>
+                {isLoading() && <Spinner color="white" style={{ marginRight: '10%' }} />}
+                <Text style={{ color: 'white', fontSize: 18, opacity: (selectedLocation && time) || !isLoading() ? 1 : 0.5 }}>
                   Save
               </Text>
               </View>
@@ -147,7 +147,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
           </View>
           <View style={styles.userView}>
             <Image source={coach.ProfileImage ? { uri: coach.ProfileImage } : Images.PlayerPlaceholder} style={styles.userImg} />
-            <Text style={{ color: 'black', fontSize: 18, marginLeft: 15 }}>
+            <Text style={{ color: 'white', fontSize: 18, marginLeft: 15 }}>
               {coach.FullName}
             </Text>
           </View>
@@ -168,18 +168,18 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               flexDirection: 'row',
               justifyContent: 'center',
             }}>
-            <Text style={{ color: 'black', fontSize: 18 }}>{moment(date).format(_format)}</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>{moment(date).format(_format)}</Text>
             <Icon
               name="keyboard-arrow-right"
               type="MaterialIcons"
-              style={{ fontSize: 30, color: 'black' }}
+              style={{ fontSize: 30, color: 'white' }}
             />
           </TouchableOpacity>
         </View>
 
         <View style={[styles.whenView, { marginTop: "5%" }]}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
-          {availableTimePerCoach.loading && <Spinner color={Colors.g_text} />}
+          {availableTimePerCoach.loading && <Spinner color={'white'} />}
           {!availableTimePerCoach.loading && (
             <Menu
               ref={(ref) => (_menu = ref)}

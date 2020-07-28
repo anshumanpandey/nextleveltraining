@@ -985,8 +985,8 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
         formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
         formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
 
-        if (params?.Path) {
-            formikRef?.current?.setFieldValue('file', { uri: params?.Path })
+        if (params?.ImageUrl) {
+            formikRef?.current?.setFieldValue('file', { uri: params?.ImageUrl })
         } else {
             AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
             .then(img => {
@@ -998,7 +998,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
     }, [params])
 
     useEffect(() => {
-        const focusListener = navigation.addListener('didBlur', () => {
+        const focusListener = navigation?.addListener('didBlur', () => {
             formikRef?.current?.setFieldValue("trainingLocationId", undefined)
             formikRef?.current?.setFieldValue("locationName", "")
             formikRef?.current?.setFieldValue("address", "")
@@ -1032,22 +1032,23 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                     return errors
                 }}
                 onSubmit={values => {
-                    doPost({
-                        data: {
-                            "trainingLocationId": values.trainingLocationId || undefined,
-                            "locationName": values.locationName,
-                            "locationAddress": values.address,
-                            "role": profile.Role,
-                            "imageUrl": "",
-                            "playerOrCoachID": profile.Id,
-                            lat: values.lat,
-                            lng: values.lng
-                        }
-                    })
+                    const data = {
+                        "trainingLocationId": values.trainingLocationId || undefined,
+                        "locationName": values.locationName,
+                        "locationAddress": values.address,
+                        "role": profile.Role,
+                        "playerOrCoachID": profile.Id,
+                        lat: values.lat,
+                        lng: values.lng
+                    }
+
+                    doPost({ data })
                         .then((r) => {
-                            syncTrainingLocationImage(values.file, r.data.Id)
-                            delete values.file.data
-                            return AsyncStorage.setItem(`Location-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
+                            if (values.file.fileSize) {
+                                syncTrainingLocationImage(values.file, r.data.Id)
+                                delete values.file.data
+                                return AsyncStorage.setItem(`Location-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
+                            }
                         })
                         .then(r => getUserData())
                         .then((r) => {

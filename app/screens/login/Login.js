@@ -138,13 +138,12 @@ const Login = (props) => {
                 </TouchableOpacity>
               </View>
               <View style={[styles.login_btn_view, { marginTop: 0 }]}>
-                <TouchableOpacity onPress={() => props.navigation.navigate("SignUp", { role: props.navigation.getParam('role', "Player") })}>
+                <TouchableOpacity onPress={() => props.navigation.navigate("Level")}>
                   <View style={[styles.signup_other_view, { paddingTop: '5%', paddingBottom: '5%' }]}>
                     <Text style={styles.login_forgot_title}>Don’t have an account Sign Up</Text>
                   </View>
                 </TouchableOpacity>
               </View>
-
             </>
           )}
         </Formik>
