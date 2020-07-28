@@ -12,6 +12,7 @@ import Tabs from './Tabs';
 import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
 import { useGlobalState } from '../../../../state/GlobalState';
+import dimensions from '../../../../constants/dimensions';
 var convert = require('convert-units')
 
 const Information = (props) => {
@@ -36,9 +37,9 @@ const Information = (props) => {
           { latitude: profile.Lat, longitude: profile.Lng, },
           { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
         )
-  
+
         setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
-      }      
+      }
 
     });
     return () => focusListener?.remove();
@@ -57,23 +58,6 @@ const Information = (props) => {
         </View>
         <View style={styles.infoContain}>
           <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
-          <View style={{ position: 'absolute', right: 5 }}>
-            <View style={styles.ps_star_view}>
-              <Text style={styles.ps_star_point}>{props.navigation.getParam("AverageRating")}</Text>
-              {Number.isInteger(props.AverageRating) && (
-                <StarRating
-                  disabled={false}
-                  maxStars={1}
-                  rating={2}
-                  fullStarColor={'#38A663'}
-                  starSize={12}
-                />
-              )}
-              {Number.isInteger(props.AverageRating) && (
-                <Text style={styles.ps_star_total}> ({props.navigation.getParam("Rate")})</Text>
-              )}
-            </View>
-          </View>
           <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
 
           <View style={styles.rate_miles}>
@@ -81,8 +65,25 @@ const Information = (props) => {
               <Text style={styles.headText}>£ {props.navigation.getParam("Rate")}</Text>
               <Text style={{ fontSize: 12, color: 'gray' }}>per hour</Text>
             </View>
+            <View style={styles.rate_miles_view}>
+              <View style={styles.ps_star_view}>
+                <Text style={styles.ps_star_point}>{props.navigation.getParam("AverageRating")}</Text>
+                {Number.isInteger(props.AverageRating) && (
+                  <StarRating
+                    disabled={false}
+                    maxStars={1}
+                    rating={2}
+                    fullStarColor={'#38A663'}
+                    starSize={12}
+                  />
+                )}
+                {Number.isInteger(props.AverageRating) && (
+                  <Text style={styles.ps_star_total}> ({props.navigation.getParam("Rate")})</Text>
+                )}
+              </View>
+            </View>
             {milesAway && milesAway != -1 && (
-              <View style={styles.rate_miles_view}>
+              <View style={[styles.rate_miles_view, { width: dimensions.pro40}]}>
                 <Text style={[styles.headText, { textAlign: 'right' }]}>
                   {`${milesAway} miles`}
                 </Text>
@@ -91,14 +92,14 @@ const Information = (props) => {
                 </Text>
               </View>
             )}
-            {milesAway == undefined && ( <Spinner color={Colors.s_yellow} /> )}
+            {milesAway == undefined && (<Spinner color={Colors.s_yellow} />)}
             {milesAway == -1 && (<Text></Text>)}
           </View>
 
           <View style={styles.buttonContain}>
             <TouchableOpacity
               onPress={() => NavigationService.navigate('BookNow', { coach: props.navigation.state.params })}
-              style={[styles.button_view, { width: '99%'}]}>
+              style={[styles.button_view, { width: '99%' }]}>
               <Icon
                 type="MaterialIcons"
                 name="check-circle"

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: -Dimension.px60,
   },
-  orgView: {height: Dimension.px160, backgroundColor: Colors.s_yellow},
+  orgView: {height: Dimension.px160, backgroundColor: Colors.s_blue},
   user_pic: {
     marginTop: -Dimension.px50,
     height: Dimension.px100,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   rate_miles_view: {
-    width: Dimension.pro50,
+    width: Dimension.pro33,
     paddingHorizontal: 15,
     paddingVertical: 5,
   },

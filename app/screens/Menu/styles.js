@@ -17,7 +17,7 @@ const styles=StyleSheet.create({
        alignItems:  'center',
        width:Dimension.pro100,
        height:200,
-       backgroundColor:Colors.s_yellow
+       backgroundColor:Colors.s_blue
     },
     avatar_title:{
         color:'white',
