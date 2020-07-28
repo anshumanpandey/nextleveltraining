@@ -107,8 +107,7 @@ const JobDetails = (props) => {
       <View style={styles.detailsView}>
         <View style={styles.userView}>
           <Image
-            // TODO: replace coach profile image here
-            source={Images.MessiPlayer}
+            source={props.navigation.getParam("ProfileImage") ? {uri: props.navigation.getParam("ProfileImage") }:Images.MessiPlayer}
             style={styles.userImg}
           />
         </View>
