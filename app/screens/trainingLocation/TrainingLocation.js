@@ -16,7 +16,7 @@ const TrainingLocationScreen = (props) => {
             <Header
                 customButton={() => {
                     return (
-                        <TouchableOpacity onPress={() => props.navigation.navigate("TrainingLocationEdit")}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate("TrainingLocationEdit", { item: undefined })}>
                             <Text>Create</Text>
                         </TouchableOpacity>
                     );

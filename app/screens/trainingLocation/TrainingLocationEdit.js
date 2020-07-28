@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import resolveRoleForm from '../profile/resolveRoleForm'
 import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
@@ -41,7 +41,7 @@ const TrainingLocationEdit = (props) => {
             />
             <TrainingLocationForm navigation={props.navigation} setSubmitFn={(fn) => {
                 setSubmitFunction(() => fn)
-            }} {...props.navigation.getParam('item')} />
+            }} {...props.navigation.state.params.item} />
         </View>
     );
 }

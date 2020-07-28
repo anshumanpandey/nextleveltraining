@@ -451,7 +451,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     }, [profile.Availabilities])
 
     const availabiltySaveFunction = useCallback(() => {
-        const formatDate = (d) => moment(d).utcOffset(0,true).format('hh:mm A')
+        const formatDate = (d) => moment(d).utcOffset(0, true).format('hh:mm A')
         if (Object.keys(errorsDic).length == 0) return Promise.reject()
         if (Object.keys(errorsDic).some(k => errorsDic[k] != undefined)) return Promise.reject()
         setSaving(true)
@@ -977,22 +977,30 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
         url: '/Users/GetUser',
     }, { manual: true })
 
-    const initFn = () => {
+    useEffect(() => {
         setSubmitFn && setSubmitFn(formikRef.current.submitForm)
+        formikRef.current.setFieldValue("trainingLocationId", params?.Id || undefined)
+        formikRef.current.setFieldValue("locationName", params?.LocationName || "")
+        formikRef.current.setFieldValue("address", params?.LocationAddress || "")
+        formikRef.current.setFieldValue("lat", params?.Lat || 0)
+        formikRef.current.setFieldValue("lng", params?.Lng || 0)
         AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
             .then(img => {
                 if (!img) return
                 formikRef.current.setFieldValue('file', JSON.parse(img).file)
             })
-    }
-
+    }, [params])
 
     useEffect(() => {
-        initFn()
-        if (navigation) {
-            const focusListener = navigation.addListener('didFocus', initFn);
-            return () => focusListener?.remove();
-        }
+        const focusListener = navigation.addListener('didBlur', () => {
+            formikRef.current.setFieldValue("trainingLocationId", undefined)
+            formikRef.current.setFieldValue("locationName", "")
+            formikRef.current.setFieldValue("address", "")
+            formikRef.current.setFieldValue("lat", 0)
+            formikRef.current.setFieldValue("lng", 0)
+        });
+
+        return () => focusListener.remove()
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
@@ -1024,7 +1032,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             "locationName": values.locationName,
                             "locationAddress": values.address,
                             "role": profile.Role,
-                            "imageUrl": "string",
+                            "imageUrl": "",
                             "playerOrCoachID": profile.Id,
                             lat: values.lat,
                             lng: values.lng
@@ -1044,78 +1052,80 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                         })
                 }}
             >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
-                    <>
-                        <View style={styles.containerCommon}>
-                            <View style={styles.inputContainer}>
-                                <RNTextInput
-                                    style={{ height: 50 }}
-                                    placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                    placeholder={"Location Name"}
-                                    onChangeText={handleChange('locationName')}
-                                    onBlur={handleBlur('locationName')}
-                                    value={values.locationName}
-                                />
+                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
+                    return (
+                        <>
+                            <View style={styles.containerCommon}>
+                                <View style={styles.inputContainer}>
+                                    <RNTextInput
+                                        style={{ height: 50 }}
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
+                                        placeholder={"Location Name"}
+                                        onChangeText={handleChange('locationName')}
+                                        onBlur={handleBlur('locationName')}
+                                        value={values.locationName}
+                                    />
+                                </View>
+                                {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
+
+                                <NLGooglePlacesAutocomplete
+                                    defaultValue={values.address}
+                                    onPress={(data, details = null) => {
+                                        setFieldValue("address", data.description)
+                                        setFieldValue("lat", details.geometry.location.lat)
+                                        setFieldValue("lng", details.geometry.location.lng)
+                                    }} />
+
+                                {errors.address && touched.address && <ErrorLabel text={errors.address} />}
+
+                                <TouchableOpacity onPress={() => {
+                                    const options = {
+                                        title: 'Select picture',
+                                        chooseFromLibraryButtonTitle: '',
+                                        storageOptions: {
+                                            skipBackup: true,
+                                            path: 'images',
+                                        },
+                                    };
+
+                                    ImagePicker.launchImageLibrary(options, (file) => {
+
+                                        if (file.didCancel) {
+                                            console.log('User cancelled image picker');
+                                        } else if (file.error) {
+                                            console.log('ImagePicker Error: ', file.error);
+                                        } else if (file.customButton) {
+                                            console.log('User tapped custom button: ', file.customButton);
+                                        } else {
+                                            setFieldValue('file', file)
+                                        }
+                                    });
+                                }}>
+                                    <View style={[styles.inputContainer, { marginTop: '2%' }]}>
+                                        <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
+                                {errors.file && touched.file && <ErrorLabel text={errors.file} />}
+
+                                {!setSubmitFn && (
+                                    <View style={styles.signup_btn_view}>
+                                        <TouchableOpacity
+                                            disabled={signupIsDisabled()}
+                                            style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
+                                            onPress={handleSubmit}
+                                        >
+                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ color: 'white' }}>Save</Text>
+                                                {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </View>
-                            {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
-
-                            <NLGooglePlacesAutocomplete
-                                defaultValue={values.address}
-                                onPress={(data, details = null) => {
-                                    setFieldValue("address", data.description)
-                                    setFieldValue("lat", details.geometry.location.lat)
-                                    setFieldValue("lng", details.geometry.location.lng)
-                                }} />
-
-                            {errors.address && touched.address && <ErrorLabel text={errors.address} />}
-
-                            <TouchableOpacity onPress={() => {
-                                const options = {
-                                    title: 'Select picture',
-                                    chooseFromLibraryButtonTitle: '',
-                                    storageOptions: {
-                                        skipBackup: true,
-                                        path: 'images',
-                                    },
-                                };
-
-                                ImagePicker.launchImageLibrary(options, (file) => {
-
-                                    if (file.didCancel) {
-                                        console.log('User cancelled image picker');
-                                    } else if (file.error) {
-                                        console.log('ImagePicker Error: ', file.error);
-                                    } else if (file.customButton) {
-                                        console.log('User tapped custom button: ', file.customButton);
-                                    } else {
-                                        setFieldValue('file', file)
-                                    }
-                                });
-                            }}>
-                                <View style={[styles.inputContainer, { marginTop: '2%' }]}>
-                                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
-                                </View>
-                            </TouchableOpacity>
-                            {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
-                            {errors.file && touched.file && <ErrorLabel text={errors.file} />}
-
-                            {!setSubmitFn && (
-                                <View style={styles.signup_btn_view}>
-                                    <TouchableOpacity
-                                        disabled={signupIsDisabled()}
-                                        style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
-                                        onPress={handleSubmit}
-                                    >
-                                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Text style={{ color: 'white' }}>Save</Text>
-                                            {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        </View>
-                    </>
-                )}
+                        </>
+                    )
+                }}
             </Formik>
         </ScrollView>
     );

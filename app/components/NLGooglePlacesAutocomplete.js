@@ -12,7 +12,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = un
     useEffect(() => {
         setInputValue(defaultValue)
         inputRef.current?.setAddressText(defaultValue)
-    }, [])
+    }, [defaultValue])
 
     return (
         <>
