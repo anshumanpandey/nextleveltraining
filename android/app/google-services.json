@@ -1,0 +1,40 @@
+{
+    "project_info": {
+      "project_number": "981975510723",
+      "firebase_url": "https://nextlevel-b6900.firebaseio.com",
+      "project_id": "nextlevel-b6900",
+      "storage_bucket": "nextlevel-b6900.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:981975510723:android:306ce3793e2fa1f95c7c76",
+          "android_client_info": {
+            "package_name": "com.nextleveltraining"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "981975510723-068urnq98ab357j3nn3ul25537amvrgh.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyBQWblbRiJlXmxMGqZQavNnaG0mpkd3qQk"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "981975510723-068urnq98ab357j3nn3ul25537amvrgh.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
