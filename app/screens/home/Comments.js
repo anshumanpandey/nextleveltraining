@@ -25,6 +25,11 @@ const CommentsScreen = (props) => {
     url: `/Users/GetComments/${post.id}`,
   }, { manual: true })
 
+  // TODO: need fix on backend 
+  /*const [getLikesReq, getThisLikes] = useAxios({
+    url: `/Users/GetLikesbyPost/${post.id}`,
+  })*/
+
   useEffect(() => {
     setThisComments(post.comments)
     const focusListener = props.navigation.addListener('didFocus', () => {
@@ -53,7 +58,7 @@ const CommentsScreen = (props) => {
     <>
       <ScrollView innerRef={(r) => listRef.current = r} style={styles.home_container}>
         <Header hideCreatePost={true} navigation={props.navigation} navigate={props.navigation.navigate} />
-        <PostComment item={post} />
+        <PostComment item={{...post }} />
         {commentBody}
       </ScrollView>
       <View style={[styles.inputContainer, { height: Dimensions.get('screen').height * 0.1 }]}>

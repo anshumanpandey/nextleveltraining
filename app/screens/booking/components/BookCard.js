@@ -7,7 +7,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import NavigationService from '../../../navigation/NavigationService';
 
 const BookCard = (item) => {
-  console.log(item)
   return (
     <TouchableOpacity onPress={() => NavigationService.navigate("JobDetails", item)}>
       <View style={{ flexDirection: 'row', padding: 10, borderBottomColor: '#DEDEDE', borderBottomWidth: 1, backgroundColor: 'white' }}>

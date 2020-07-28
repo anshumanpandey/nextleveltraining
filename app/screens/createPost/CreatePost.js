@@ -76,8 +76,10 @@ const Profile = (props) => {
 
           doPost({ data })
             .then(r => {
-              delete values.file.data
-              AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
+              if (values?.file?.data){
+                delete values.file.data
+                AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
+              }
             })
             .then(() => {
               props.navigation.navigate('Home')
@@ -156,7 +158,6 @@ const Profile = (props) => {
                     } else if (file.customButton) {
                       console.log('User tapped custom button: ', file.customButton);
                     } else {
-                      console.log(file)
                       setShowModal(false)
                       setFieldValue('file', file)
                     }

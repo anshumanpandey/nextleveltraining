@@ -4,11 +4,13 @@ import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
 
 const AboutMeScreen = (props) => {
-    const [profile] = useGlobalState('profile')
+    let [profile] = useGlobalState('profile')
+    if (props.navigation.state.params.player) profile = props.navigation.state.params.player
+
     return (
         <>
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
-            {resolveRoleForm(profile)}
+            {resolveRoleForm(profile, "AboutMe", { player: profile, navigation: props.navigation })}
         </>
     );
 }

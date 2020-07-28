@@ -20,7 +20,6 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
   const [likes, setLikes] = useState([]);
   const [profile] = useGlobalState('profile')
 
-
   const [{ loading }, postLike] = useAxios({
     url: '/Users/SaveLikebyPost',
     method: 'POST',
@@ -52,12 +51,14 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
           </View>
         </View>
       </View>
-      <View style={{ backgroundColor: 'blue'}}>
-        <Image
-          source={{ uri: item.imageUri }}
-          style={[styles.comment_news_image, { width: Dimensions.get('screen').width }]}
-        />
-      </View>
+      {item.imageUri && (
+        <View>
+          <Image
+            source={{ uri: item.imageUri }}
+            style={[styles.comment_news_image, { width: Dimensions.get('screen').width }]}
+          />
+        </View>
+      )}
       <View style={styles.news_comment}>
         <TouchableOpacity
           disabled={loading}
@@ -67,10 +68,9 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
               "userID": profile.Id
             }
             postLike({ data })
-            .then((r) => {
-              console.log(r.data)
-              setLikes(r.data.Likes)
-            })
+              .then((r) => {
+                setLikes(r.data.Likes)
+              })
           }}
         >
           <View style={styles.post_news_like}>

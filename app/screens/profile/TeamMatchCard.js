@@ -4,12 +4,13 @@ import Colors from '../../constants/color.js';
 import styles from './styles';
 import { Icon } from 'native-base';
 import moment from 'moment';
+import { useGlobalState } from '../../state/GlobalState.js';
 
-const TeamMatchCard = ({ title, data, onEditPress }) => {
+const TeamMatchCard = ({ title, data, disableEdit = false, onEditPress }) => {
   return (
     <View
       style={styles.cardContainer}>
-      <TouchableOpacity onPress={() => onEditPress()}>
+      <TouchableOpacity disabled={disableEdit} onPress={() => onEditPress()}>
         <View
           style={{
             justifyContent: 'space-between',
@@ -26,23 +27,25 @@ const TeamMatchCard = ({ title, data, onEditPress }) => {
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => onEditPress(item)}>
+            <TouchableOpacity disabled={disableEdit} onPress={() => onEditPress(item)}>
               <View style={styles.cardContain}>
-              <View>
-                <Text style={styles.arrdataText}>{item.title}</Text>
-                <Text style={[styles.dataText, { paddingBottom: 4 }]}>
-                  {moment(item.StartDate).format('ll')} {moment(item.EndDate).isBefore(100, "year") ? "Till Date" : `To ${moment(item.EndDate).format('ll')}`}
-                </Text>
-                <Text style={styles.dataText}>
-                  {item.TeamName}
-                </Text>
+                <View>
+                  <Text style={styles.arrdataText}>{item.title}</Text>
+                  <Text style={[styles.dataText, { paddingBottom: 4 }]}>
+                    {moment(item.StartDate).format('ll')} {moment(item.EndDate).isBefore(100, "year") ? "Till Date" : `To ${moment(item.EndDate).format('ll')}`}
+                  </Text>
+                  <Text style={styles.dataText}>
+                    {item.TeamName}
+                  </Text>
+                </View>
+                {!disableEdit && (
+                  <Icon
+                    type="EvilIcons"
+                    name="pencil"
+                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                  />
+                )}
               </View>
-              <Icon
-                type="EvilIcons"
-                name="pencil"
-                style={{ color: Colors.s_blue, fontSize: 25 }}
-              />
-            </View>
             </TouchableOpacity>
           )}
         />

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   home_container: {
     // flex: 1,
     // width: '100%',
-    // height: '100%',
+    height: '100%',
   },
   home_modal_image: {
     height: Dimension.deviceHeight,

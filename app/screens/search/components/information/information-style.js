@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: Dimension.px25,
   },
   whenView: {
-    marginTop: 25,
+    marginTop: '10%',
     width: Dimension.pro85,
     alignSelf: 'center',
   },

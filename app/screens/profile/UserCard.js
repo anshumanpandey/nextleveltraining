@@ -1,11 +1,14 @@
 import React from 'react';
-import {View, TouchableOpacity, Text} from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import styles from './styles';
-import {Icon} from 'native-base';
+import { Icon } from 'native-base';
+import { useGlobalState } from '../../state/GlobalState';
 
-const UserCard = ({title, data, onEditPress}) => {
+const UserCard = ({ title, data, disabledEdit = false, onEditPress }) => {
+
   return (
     <TouchableOpacity
+      disabled={disabledEdit}
       onPress={() => onEditPress()}
       style={styles.cardContainer}>
       <View
@@ -15,13 +18,13 @@ const UserCard = ({title, data, onEditPress}) => {
           flexDirection: 'row',
         }}>
         <Text style={styles.titleText}>{title}</Text>
-        <Icon
+        {!disabledEdit && <Icon
           type="EvilIcons"
           name="pencil"
-          style={{color: '#0F2F80', fontSize: 25}}
-        />
+          style={{ color: '#0F2F80', fontSize: 25 }}
+        />}
       </View>
-      <View style={{marginTop: data ? 10 : 20, marginRight: 15}}>
+      <View style={{ marginTop: data ? 10 : 20, marginRight: 15 }}>
         <Text style={styles.dataText}>{data}</Text>
       </View>
     </TouchableOpacity>

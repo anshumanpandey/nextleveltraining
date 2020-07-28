@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, version } from 'react';
 import Header from '../../components/header/Header';
 import {
   View,
@@ -67,13 +67,14 @@ const Home = (props) => {
               j.fileType = "video"
             }
             j.imageUri = p.MediaURL
-          } else if (fileString) {
-            console.log("no media url")
+          } else if (fileString && fileString.file) {
+            console.log("no media url", fileString)
             const jsonFile = JSON.parse(fileString)
             j.imageUri = jsonFile.file.uri
             j.fileType = jsonFile.file.type
             SyncPosts(jsonFile.file, p.Id)
-            .then(() => AsyncStorage.removeItem(`post-${p.Id}-file`))
+              .then(() => AsyncStorage.removeItem(`post-${p.Id}-file`))
+              .catch((err) => console.log(err))
           }
           return j
         })
@@ -146,7 +147,7 @@ const MediaPreview = ({ visibleModal, setVisibleModal }) => {
       visible={visibleModal != false}
       transparent={true}
     >
-      <View style={[{ flexGrow: 1 } && videoIsReady == false && { backgroundColor: 'black', opacity: 0.8 }]}>
+      <>
         <View style={[{ position: 'absolute', top: 20, right: 20, zIndex: 100 }]}>
           <TouchableOpacity
             onPress={() => setVisibleModal(false)}
@@ -155,52 +156,54 @@ const MediaPreview = ({ visibleModal, setVisibleModal }) => {
           </TouchableOpacity>
 
         </View>
-        {visibleModal && (!visibleModal.fileType || !visibleModal.fileType.includes('video')) && (
-          <ImageView
-            images={[
-              {
-                source: { uri: visibleModal.imageUri },
-                title: 'Paris',
-                width: Dimensions.get('screen').width,
-                height: Dimensions.get('screen').height,
-              },
-            ]}
-            isPinchZoomEnabled
-            imageIndex={0}
-            isVisible={visibleModal != false}
-            onClose={() => setVisibleModal(false)}
-          />
-        )}
+        <View style={[{ flexGrow: 1 } && videoIsReady == false && { backgroundColor: 'black', opacity: 0.8 }]}>
+          {visibleModal && (!visibleModal.fileType || !visibleModal.fileType.includes('video')) && (
+            <ImageView
+              images={[
+                {
+                  source: { uri: visibleModal.imageUri },
+                  title: 'Paris',
+                  width: Dimensions.get('screen').width,
+                  height: Dimensions.get('screen').height,
+                },
+              ]}
+              isPinchZoomEnabled
+              imageIndex={0}
+              isVisible={visibleModal != false}
+              onClose={() => setVisibleModal(false)}
+            />
+          )}
 
-        {visibleModal && (!visibleModal.fileType || visibleModal.fileType.includes('video')) && (
-          <>
-            <Video
-              controls={true}
-              source={{ uri: visibleModal.imageUri }}   // Can be a URL or a local file.
-              onError={() => {
-                Alert.alert('Error', 'We could not load the video')
-              }}               // Callback when video cannot be loaded
-              onLoadStart={(d) => {
-                console.log('onLoadStart')
-              }}
-              onLoad={(d) => {
-                console.log('onLoad')
-                setVideoIsReady(true)
-              }}
-              style={{
-                width: Dimensions.get('screen').width, height: Dimensions.get('screen').height,
-                opacity: videoIsReady ? 1 : 0,
-              }} />
-            {!videoIsReady && (
-              <View style={{  backgroundColor: 'black', opacity: 0.8 ,justifyContent: 'center', alignItems: 'center',width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
-                <Spinner color={Colors.s_yellow} size={100} />
-                <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
-              </View>
-            )}
-          </>
-        )}
+          {visibleModal && (!visibleModal.fileType || visibleModal.fileType.includes('video')) && (
+            <>
+              <Video
+                controls={true}
+                source={{ uri: visibleModal.imageUri }}   // Can be a URL or a local file.
+                onError={() => {
+                  Alert.alert('Error', 'We could not load the video')
+                }}               // Callback when video cannot be loaded
+                onLoadStart={(d) => {
+                  console.log('onLoadStart')
+                }}
+                onLoad={(d) => {
+                  console.log('onLoad')
+                  setVideoIsReady(true)
+                }}
+                style={{
+                  width: Dimensions.get('screen').width, height: Dimensions.get('screen').height,
+                  opacity: videoIsReady ? 1 : 0,
+                }} />
+              {!videoIsReady && (
+                <View style={{ backgroundColor: 'black', opacity: 0.8, justifyContent: 'center', alignItems: 'center', width: Dimensions.get('screen').width, height: Dimensions.get('screen').height, }}>
+                  <Spinner color={Colors.s_yellow} size={100} />
+                  <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
+                </View>
+              )}
+            </>
+          )}
 
-      </View>
+        </View>
+      </>
     </Modal>
   );
 }

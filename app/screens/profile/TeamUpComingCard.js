@@ -4,14 +4,15 @@ import styles from './styles';
 import { Icon } from 'native-base';
 import Colors from '../../constants/color.js';
 import moment from 'moment';
+import { useGlobalState } from '../../state/GlobalState';
 
-const TeamUpComingCard = ({ title, data, onEditPress }) => {
-  console.log(data)
+const TeamUpComingCard = ({ title, data, disableEdit, onEditPress }) => {
+
   return (
     <View
       onPress={() => onEditPress()}
       style={styles.cardContainer}>
-      <TouchableOpacity onPress={() => onEditPress()}>
+      <TouchableOpacity disabled={disableEdit} onPress={() => onEditPress()}>
         <View
           style={{
             justifyContent: 'space-between',
@@ -28,7 +29,7 @@ const TeamUpComingCard = ({ title, data, onEditPress }) => {
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => onEditPress(item)}>
+            <TouchableOpacity disabled={disableEdit} onPress={() => onEditPress(item)}>
               <View style={styles.cardContain}>
                 <View>
                   <Text style={[styles.dataText, { paddingBottom: 4 }]}>
@@ -36,11 +37,13 @@ const TeamUpComingCard = ({ title, data, onEditPress }) => {
                   </Text>
                   <Text style={styles.dataText}>Vs {item.TeamName}</Text>
                 </View>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{ color: Colors.s_blue, fontSize: 25 }}
-                />
+                {!disableEdit && (
+                  <Icon
+                    type="EvilIcons"
+                    name="pencil"
+                    style={{ color: Colors.s_blue, fontSize: 25 }}
+                  />
+                )}
               </View>
             </TouchableOpacity>
           )}
