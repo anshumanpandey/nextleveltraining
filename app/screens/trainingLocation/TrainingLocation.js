@@ -7,6 +7,7 @@ import { Text, View, Icon } from 'native-base'
 import Images from '../../constants/image'
 import Colors from '../../constants/color'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import ImageProgress from 'react-native-image-progress';
 
 const TrainingLocationScreen = (props) => {
     const [profile] = useGlobalState('profile')
@@ -34,7 +35,11 @@ const TrainingLocationScreen = (props) => {
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', padding: '5%', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,.2)' }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <View>
-                                    <Image style={{ width: 50, height: 50, borderRadius: 25 }} source={t.ImageUrl ? {uri: t.ImageUrl}: Images.PlayerPlaceholder} />
+                                    <ImageProgress
+                                        style={{ width: 50, height: 50, borderRadius: 25 }}
+                                        imageStyle={{ width: 50, height: 50, borderRadius: 25 }}
+                                        source={t.ImageUrl ? {uri: t.ImageUrl}: Images.PlayerPlaceholder}
+                                    />
                                 </View>
                                 <View>
                                     <Text style={{ fontWeight: 'bold', fontSize: 12 }}>{t.LocationName}</Text>

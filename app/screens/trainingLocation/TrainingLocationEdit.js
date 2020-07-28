@@ -27,7 +27,7 @@ const TrainingLocationEdit = (props) => {
                                         submitFn()
                                             .then(() => {
                                                 setIsSaving(false)
-                                                //setTimeout(() => NavigationService.navigate('TrainingLocation'), 1000)
+                                                NavigationService.navigate('TrainingLocation')
                                             })
                                     }
                                 }}>
