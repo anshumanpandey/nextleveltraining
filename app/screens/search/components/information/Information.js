@@ -99,7 +99,7 @@ const Information = (props) => {
           <View style={styles.buttonContain}>
             <TouchableOpacity
               onPress={() => NavigationService.navigate('BookNow', { coach: props.navigation.state.params })}
-              style={[styles.button_view, { width: '99%' }]}>
+              style={[styles.button_view]}>
               <Icon
                 type="MaterialIcons"
                 name="check-circle"
@@ -107,8 +107,8 @@ const Information = (props) => {
               />
               <Text style={styles.btn_text}>Book now</Text>
             </TouchableOpacity>
-            {/*<TouchableOpacity
-              onPress={() => NavigationService.navigate('Chat',{ReceiverId:props.navigation.getParam("Id")})}
+            <TouchableOpacity
+              onPress={() => NavigationService.navigate('Chat',{RecieverId:props.navigation.getParam("Id"), SenderId: profile.Id})}
               style={styles.button_view}>
               <Icon
                 type="MaterialIcons"
@@ -116,7 +116,7 @@ const Information = (props) => {
                 style={styles.post_comment}
               />
               <Text style={styles.btn_text}>{'Message'}</Text>
-            </TouchableOpacity>*/}
+            </TouchableOpacity>
           </View>
         </View>
       </View>

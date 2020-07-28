@@ -34,7 +34,7 @@ const TrainingLocationScreen = (props) => {
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', padding: '5%', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,.2)' }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <View>
-                                    <Image style={{ width: 50, height: 50, borderRadius: 25 }} source={Images.PlayerPlaceholder} />
+                                    <Image style={{ width: 50, height: 50, borderRadius: 25 }} source={t.ImageUrl ? {uri: t.ImageUrl}: Images.PlayerPlaceholder} />
                                 </View>
                                 <View>
                                     <Text style={{ fontWeight: 'bold', fontSize: 12 }}>{t.LocationName}</Text>
