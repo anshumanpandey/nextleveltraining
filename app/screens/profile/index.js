@@ -18,7 +18,7 @@ const ProfileFactory = (props) => {
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flexGrow: 1}}>
-      <Spinner size={140} color={Colors.s_yellow} />
+      <Spinner size={140} color={Colors.s_blue} />
     </View>
   );
 
