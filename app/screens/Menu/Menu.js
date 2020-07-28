@@ -152,9 +152,9 @@ const Menu = (props) => {
                 ]
                 menulist.unshift(...coachMenulist)
             }
+        } else {
+            finalMenu = menulist
         }
-
-        finalMenu = menulist
     }
 
     useEffect(() => {
