@@ -46,9 +46,6 @@ const PostComment = ({ item, onClickItem, onPressOfComment }) => {
             </View>
             <Text style={styles.comment_description}>{item.description}</Text>
           </View>
-          <View style={{ marginTop: 22 }}>
-            <Image source={Images.MoreIcon} style={styles.more_icon} />
-          </View>
         </View>
       </View>
       {item.imageUri && (
