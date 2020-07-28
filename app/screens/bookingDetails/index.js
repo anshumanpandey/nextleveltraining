@@ -107,18 +107,20 @@ const JobDetails = (props) => {
       <View style={styles.detailsView}>
         <View style={styles.userView}>
           <Image
-            source={props.navigation.getParam("ProfileImage") ? {uri: props.navigation.getParam("ProfileImage") }:Images.MessiPlayer}
+            source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.MessiPlayer}
             style={styles.userImg}
           />
         </View>
         <View style={styles.userInfoView}>
           <View style={styles.headView}>
             <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
-            <Icon
-              name="message"
-              type="MaterialIcons"
-              style={styles.header_menu_icon}
-            />
+            <TouchableOpacity onPress={() => props.navigation.navigate('Chat',{RecieverId:props.navigation.getParam("CoachID"), SenderId: profile.Id})}>
+              <Icon
+                name="message"
+                type="MaterialIcons"
+                style={styles.header_menu_icon}
+              />
+            </TouchableOpacity>
           </View>
           <View style={[styles.orderView, { marginTop: 25 }]}>
             <Text style={styles.headText}>Order Number</Text>
@@ -252,7 +254,7 @@ const StepsComponent = ({ steps, ...props }) => {
                 <View style={[styles.dontFilled, { ...dashWrapperStatusStyles }]} />
                 <View style={{ width: '10%', flex: 1, height: '100%', backgroundColor: status == 'Disabled' || idx == arr.length - 1 ? 'transparent' : 'gray' }} />
               </View>
-              <View style={{ flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View style={[styles.triangle, triangleStatusStyles]} />
                 <View style={[styles.details, cardStatusStyles]}>
                   <Text style={[styles.btnText, { fontSize: 18, color: 'black' }]}>{title}</Text>
