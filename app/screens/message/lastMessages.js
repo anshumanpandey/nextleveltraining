@@ -17,6 +17,7 @@ const LastMessage = (props) => {
     
     function Item({ item, key,id }) {
        // alert(id)
+       console.log(item.ReceiverProfilePic)
         return (
             <View style={styles.flatList} key={key}>
                 <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic ? placeholder : { uri: item.ReceiverProfilePic ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
@@ -60,16 +61,16 @@ const LastMessage = (props) => {
         <View style={styles.signup_container}>
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} />
             <View style={styles.fullFlatListContainer}>
-                {getUserReq.data && getUserReq.data.length > 0 ?
+                {!getUserReq.loading && getUserReq.data && getUserReq.data.length > 0 &&
                     <FlatList
                         data={getUserReq.data}
                         renderItem={({ item, key }) => <Item item={item} key={key} id={profile.Id}/>}
                         temSeparatorComponent={() => <ItemSeparator />}
                         keyExtractor={item => item.id}
                     />
-                    :
-                    <Text style={styles.notFoundText}>No messages found</Text>
                 }
+                {!getUserReq.loading && getUserReq.data && getUserReq.data.length == 0 &&<Text style={styles.notFoundText}>No messages found</Text>}
+                {getUserReq.loading && <Text style={styles.notFoundText}>Loading...</Text>}
             </View>
 
         </View>

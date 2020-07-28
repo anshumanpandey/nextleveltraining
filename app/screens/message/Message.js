@@ -247,7 +247,7 @@ export default class Message extends React.Component {
             }}
               onPress={() => {
                 // AsyncStorage.setItem('isChat', 'false')
-                this.props.navigation.goBack()
+                this.props.navigation.navigate('Message')
               }}>
               <Image style={{
                 height: 26,
