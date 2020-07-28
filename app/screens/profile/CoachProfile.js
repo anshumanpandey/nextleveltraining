@@ -1006,7 +1006,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             formikRef?.current?.setFieldValue("lng", 0)
         });
 
-        return () => focusListener.remove()
+        return () => focusListener?.remove()
     }, [])
 
     const signupIsDisabled = () => loading || getUserReq.loading
