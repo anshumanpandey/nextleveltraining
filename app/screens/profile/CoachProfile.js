@@ -1044,7 +1044,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
                     doPost({ data })
                         .then((r) => {
-                            if (values.file.fileSize) {
+                            if (values?.file?.fileSize) {
                                 syncTrainingLocationImage(values.file, r.data.Id)
                                 delete values.file.data
                                 return AsyncStorage.setItem(`Location-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))

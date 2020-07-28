@@ -53,6 +53,7 @@ import ProfilePicScreen from './screens/profilePic/ProfilePic';
 import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
 
 let initialRouteName = null
+let Apps = null
 
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
@@ -425,7 +426,9 @@ const AppMain = () => {
   },
   );
 
-  const Apps = createAppContainer(AuthStack);
+  if (!Apps) {
+    Apps = createAppContainer(AuthStack);
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
