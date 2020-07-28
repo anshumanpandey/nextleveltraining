@@ -11,10 +11,10 @@ import NavigationService from '../../navigation/NavigationService';
 import { pickImage } from '../../helpers/ImagePicker';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
-import { axiosInstance } from '../../api/AxiosBootstrap';
-
+import ImageProgress from 'react-native-image-progress';
 
 const PlayerProfile = (props) => {
+  const [triggerChange, setTriggerChange] = useState(true);
   const [profilePic, setProfilePic] = useState();
   const [profile] = useGlobalState('profile')
   const [token] = useGlobalState('token')
@@ -22,7 +22,7 @@ const PlayerProfile = (props) => {
 
   useEffect(() => {
     if (profile.ProfileImage) {
-      setProfilePic({ uri: profile.ProfileImage})
+      setProfilePic({ uri: profile.ProfileImage })
     } else {
       AsyncStorage.getItem('ProfilePic')
         .then((s) => {
@@ -31,6 +31,10 @@ const PlayerProfile = (props) => {
         })
     }
   }, [])
+
+  useEffect(() => {
+    setTriggerChange(o => !o)
+  }, [profile.ProfileImage])
 
   return (
     <View style={{ flex: 1 }}>
@@ -44,10 +48,20 @@ const PlayerProfile = (props) => {
                   NavigationService.navigate('ProfilePic')
                 }}
                 style={{ position: 'relative' }}>
-                <Image
-                  source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
-                  style={styles.userImg}
-                />
+                {triggerChange == true && (
+                  <ImageProgress
+                    source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
+                    style={styles.userImg}
+                    imageStyle={styles.userImg}
+                  />
+                )}
+                {triggerChange == false && (
+                  <ImageProgress
+                    source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
+                    style={styles.userImg}
+                    imageStyle={styles.userImg}
+                  />
+                )}
                 <View style={styles.editView}>
                   <Icon
                     type="EvilIcons"

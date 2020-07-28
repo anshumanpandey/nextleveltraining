@@ -16,7 +16,7 @@ import { axiosInstance } from '../../api/AxiosBootstrap';
 const ProfilePicScreen = (props) => {
     const [profile] = useGlobalState('profile')
     const [token] = useGlobalState('token')
-    const [uploading, setUploading] = useState()
+    const [uploading, setUploading] = useState(false)
     const formikRef = useRef()
 
     const [getUserReq, getUserData] = useAxios({
@@ -38,6 +38,12 @@ const ProfilePicScreen = (props) => {
             }}
             onSubmit={values => {
                 const data = { "file": values.file || '' }
+                if (uploading) return true                
+
+                console.log({
+                    Type: "profile",
+                    Id: profile.Id
+                })
 
                 const options = {
                     url: 'http://44.233.116.105/NextLevelTrainingApi/api/Users/UploadFile',
@@ -72,6 +78,7 @@ const ProfilePicScreen = (props) => {
                     })
                     Upload.addListener('cancelled', uploadId, (data) => {
                         console.log(`[${values.file.uri}] Cancelled!`)
+                        setUploading(false)
                     })
                     Upload.addListener('completed', uploadId, (data) => {
                         // data includes responseCode: number and responseBody: Object
@@ -98,7 +105,8 @@ const ProfilePicScreen = (props) => {
                             />
                             <View>
     
-                                <TouchableOpacity onPress={async() => {
+                                <TouchableOpacity disabled={uploading} onPress={async() => {
+                                    if (uploading) return true
                                     const source = await pickImage();
                                     setFieldValue('file', source)
                                 }}>

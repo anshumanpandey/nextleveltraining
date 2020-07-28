@@ -35,7 +35,7 @@ const Home = (props) => {
 
   const [{ data, loading, error }, refetch] = useAxios({
     url: '/Users/GetAllPosts',
-  })
+  }, { manual: true })
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', refetch);
@@ -67,7 +67,7 @@ const Home = (props) => {
               j.fileType = "video"
             }
             j.imageUri = p.MediaURL
-          } else if (fileString && fileString.file) {
+          } else if (fileString && JSON.parse(fileString).file) {
             console.log("no media url", fileString)
             const jsonFile = JSON.parse(fileString)
             j.imageUri = jsonFile.file.uri

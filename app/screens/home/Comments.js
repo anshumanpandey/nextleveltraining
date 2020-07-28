@@ -56,7 +56,7 @@ const CommentsScreen = (props) => {
   return (
     <>
       <ScrollView innerRef={(r) => listRef.current = r} style={styles.home_container}>
-        <Header hideCreatePost={true} navigation={props.navigation} navigate={props.navigation.navigate} />
+        <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigation={props.navigation} navigate={props.navigation.navigate} />
         <PostComment item={{...post, likes: getLikesReq.data ? getLikesReq.data: [] }} />
         {commentBody}
       </ScrollView>

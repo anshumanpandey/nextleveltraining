@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -53,6 +53,7 @@ import ProfilePicScreen from './screens/profilePic/ProfilePic';
 import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
 
 let initialRouteName = null
+let Apps = null
 
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
@@ -61,6 +62,7 @@ const AppMain = () => {
   const [success] = useGlobalState('success')
   const [token] = useGlobalState('token')
   const [profile] = useGlobalState('profile')
+  const [toggle] = useGlobalState('toggle')
 
   useEffect(() => {
     SplashScreen.hide();
@@ -425,7 +427,14 @@ const AppMain = () => {
   },
   );
 
-  const Apps = createAppContainer(AuthStack);
+  if (!Apps) {
+    Apps = createAppContainer(AuthStack);
+  }
+
+  useEffect(() => {
+    console.log("generationg", screens)
+    Apps = createAppContainer(AuthStack);
+  },[token,profile, toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
