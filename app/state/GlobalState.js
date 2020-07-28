@@ -14,7 +14,7 @@ const initialState = {
     error: null,
     success: null,
     token: null,
-    profile: {},
+    profile: null,
     toggle: false,
     currentAchivemenSelected: null,
 };
@@ -43,7 +43,7 @@ const reducer = (state, action) => {
       case GLOBAL_STATE_ACTIONS.LOGOUT: {
         AsyncStorage.removeItem('token')
         AsyncStorage.removeItem('profile')
-        return { ...state, ...{profile: {}, token: null}, toggle: !state.toggle };
+        return { ...state, ...{profile: null, token: null}, toggle: !state.toggle };
       }
       default: return state;
     }

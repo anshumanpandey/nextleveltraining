@@ -434,7 +434,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg")
     Apps = createAppContainer(AuthStack);
-  },[token,Object.keys(profile), toggle])
+  },[token,Object.keys(profile || {}), toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
