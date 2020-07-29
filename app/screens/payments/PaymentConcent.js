@@ -13,7 +13,7 @@ import { WebView } from 'react-native-webview';
 import moment from 'moment'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 var qs = require('qs');
 
 const simpleAxiosHook = makeUseAxios()
@@ -151,11 +151,10 @@ const PaymentConcentScreen = (props) => {
                   .then(r => console.log(r.data))
                   .finally(() => {
                     setOpenModal(false)
-                    const resetAction = props.navigation.reset({
+                    const resetAction = StackActions.reset({
                       index: 0,
-                      actions: [
-                        props.navigation.navigate({ routeName: 'Booking' })
-                      ]
+                      key: null,
+                      actions: [ NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Booking' }) }) ]
                     })
                     props.navigation.dispatch(resetAction);
                   })

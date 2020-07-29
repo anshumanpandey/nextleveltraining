@@ -1,11 +1,11 @@
-import React, { Component, useEffect,useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { View, Text, Image, FlatList, TouchableHighlight, TouchableOpacity, ScrollView, TextInput } from 'react-native'
 import styles from './styles.js';
 import Header from '../../components/header/Header'
 import useAxios from 'axios-hooks'
 import placeholder from '../../assets/images/player-placeholder.jpeg'
 
-import {useGlobalState} from "../../state/GlobalState"
+import { useGlobalState } from "../../state/GlobalState"
 
 const LastMessage = (props) => {
 
@@ -13,22 +13,22 @@ const LastMessage = (props) => {
         url: '/Users/GetLastMessages',
     }, { manual: true })
     const [profile] = useGlobalState('profile')
-    const [profileId,setProfileId] = useState('')
-    
-    function Item({ item, key,id }) {
-       // alert(id)
-       console.log(item.ReceiverProfilePic)
+    const [profileId, setProfileId] = useState('')
+
+    function Item({ item, key, id }) {
+        // alert(id)
+        console.log(item.ReceiverProfilePic)
         return (
             <View style={styles.flatList} key={key}>
-                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic ? placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic  : item.SenderProfilePic }} style={styles.userImage} />
+                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic ? placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
                 <TouchableOpacity style={styles.container_text} onPress={() => props.navigation.navigate('Chat', {
-                    RecieverId:  item.RecieverID === profileId ? item.SenderID : item.RecieverID, 
-                    SenderId: profileId ,
-                    friendName:item.SenderID === profileId ? item.ReceiverName  : item.SenderName
+                    RecieverId: item.RecieverID === profileId ? item.SenderID : item.RecieverID,
+                    SenderId: profileId,
+                    friendName: item.SenderID === profileId ? item.ReceiverName : item.SenderName
                 })}>
                     <View style={styles.innerRow}>
                         <Text style={styles.screenTitle}>
-                            {item.SenderID === profileId ? item.ReceiverName  : item.SenderName}
+                            {item.SenderID === profileId ? item.ReceiverName : item.SenderName}
                         </Text>
                         <Text style={styles.description}>
                             {new Date(item.SentDate).toLocaleDateString()}
@@ -50,14 +50,20 @@ const LastMessage = (props) => {
     }
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
+        getUserData()
+        const focusListener = props.navigation.addListener('didFocus', () => {
+            getUserData()
+        });
+
+        return () => focusListener.remove()
+        /*const intervalId = setInterval(() => {
         getUserData()
         setProfileId(profile.Id)
        // alert(profileId)
         console.log(getUserReq,'sss')
            }, 5000);
 
-           return () => clearInterval(intervalId);
+           return () => clearInterval(intervalId);*/
     }, [])
     return (
         <View style={styles.signup_container}>
@@ -66,12 +72,12 @@ const LastMessage = (props) => {
                 {!getUserReq.loading && getUserReq.data && getUserReq.data.length > 0 &&
                     <FlatList
                         data={getUserReq.data}
-                        renderItem={({ item, key }) => <Item item={item} key={key} id={profile.Id}/>}
+                        renderItem={({ item, key }) => <Item item={item} key={key} id={profile.Id} />}
                         temSeparatorComponent={() => <ItemSeparator />}
                         keyExtractor={item => item.id}
                     />
                 }
-                {!getUserReq.loading && getUserReq.data && getUserReq.data.length == 0 &&<Text style={styles.notFoundText}>No messages found</Text>}
+                {!getUserReq.loading && getUserReq.data && getUserReq.data.length == 0 && <Text style={styles.notFoundText}>No messages found</Text>}
                 {getUserReq.loading && <Text style={styles.notFoundText}>Loading...</Text>}
             </View>
 

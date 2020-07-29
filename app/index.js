@@ -266,7 +266,7 @@ const AppMain = () => {
               name="message-square"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>Inbox</Text>
+            <Text style={[styles.textTab, { color: tintColor }]}>INBOX</Text>
           </View>
         ),
       }),

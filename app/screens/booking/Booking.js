@@ -15,7 +15,7 @@ const Booking = (props) => {
     method: 'POST',
     data: {
       "userID": profile?.Id,
-      "role": profile.Role
+      "role": profile?.Role
     }
   })
 
@@ -24,7 +24,7 @@ const Booking = (props) => {
       getBookings({
         data: {
           "userID": profile?.Id,
-          "role": profile.Role
+          "role": profile?.Role
         }
       })
     });

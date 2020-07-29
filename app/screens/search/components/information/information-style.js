@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   topContain: {
-    width: Dimension.pro100,
+    flex: 1,
   },
   infoContain: {
     backgroundColor: 'white',
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: -Dimension.px60,
   },
-  orgView: {height: Dimension.px160, backgroundColor: Colors.s_blue},
+  orgView: { backgroundColor: Colors.s_blue},
   user_pic: {
     marginTop: -Dimension.px50,
     height: Dimension.px100,

@@ -18,13 +18,13 @@ const BookCard = (item) => {
           <Text style={{ fontWeight: '500', marginTop: 5 }}>{item.FullName}</Text>
           <View style={{ marginTop: 5 }}>
             <Text>{item.Location.LocationAddress}</Text>
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            {/*TODO: FIX when booking date is being return from backend <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>
-                {moment(item.BookingDate).format("MMM DD, ")}
+                {moment.utc(item.BookingDate).format("MMM DD, ")}
                 {moment(item.ToTime).format("HH:mm")}
               </Text>
-            </View>
+            </View>*/}
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Job fees:</Text>
               <View style={{ flexDirection: 'row', marginLeft: 5 }}>
