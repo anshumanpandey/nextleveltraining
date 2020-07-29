@@ -46,7 +46,7 @@ const Information = (props) => {
   }, [])
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
         <View style={styles.orgView}>
           <Icon
@@ -56,6 +56,7 @@ const Information = (props) => {
             style={{ fontSize: 25, color: 'white', padding: 10 }}
           />
         </View>
+        <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2}}></View>
         <View style={styles.infoContain}>
           <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
           <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>

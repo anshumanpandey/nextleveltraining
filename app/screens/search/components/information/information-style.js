@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     width: Dimension.pro80,
     alignSelf: 'center',
     alignItems: 'center',
-    marginTop: -Dimension.px60,
   },
   orgView: { backgroundColor: Colors.s_blue},
   user_pic: {
