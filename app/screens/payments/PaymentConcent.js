@@ -140,7 +140,7 @@ const PaymentConcentScreen = (props) => {
                   "coachID": props.navigation.getParam('coach').Id,
                   "fromTime": startDate.trim(),
                   "toTime": endDate.trim(),
-                  "sentDate": props.navigation.getParam('selectedDate'),
+                  "bookingDate": props.navigation.getParam('selectedDate'),
                   "trainingLocationID": props.navigation.getParam('selectedLocation').id,
                   "amount": 1,
                   "paymentStatus": "Processed",

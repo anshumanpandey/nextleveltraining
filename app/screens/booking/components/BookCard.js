@@ -21,7 +21,7 @@ const BookCard = (item) => {
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>
-                {moment(item.SentDate).format("MMM DD, ")}
+                {moment(item.BookingDate).format("MMM DD, ")}
                 {moment(item.ToTime).format("HH:mm")}
               </Text>
             </View>

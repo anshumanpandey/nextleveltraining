@@ -14,7 +14,7 @@ const Booking = (props) => {
     url: '/Users/GetBookings',
     method: 'POST',
     data: {
-      "userID": profile.Id,
+      "userID": profile?.Id,
       "role": profile.Role
     }
   })
@@ -23,7 +23,7 @@ const Booking = (props) => {
     const focusListener = props.navigation.addListener('didFocus', () => {
       getBookings({
         data: {
-          "userID": profile.Id,
+          "userID": profile?.Id,
           "role": profile.Role
         }
       })
