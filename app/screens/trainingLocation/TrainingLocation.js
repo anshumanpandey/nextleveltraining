@@ -6,14 +6,14 @@ import { Image } from "react-native"
 import { Text, View, Icon } from 'native-base'
 import Images from '../../constants/image'
 import Colors from '../../constants/color'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import ImageProgress from 'react-native-image-progress';
 
 const TrainingLocationScreen = (props) => {
     const [profile] = useGlobalState('profile')
 
     return (
-        <View style={{ backgroundColor: 'white', flexGrow: 1 }}>
+        <ScrollView contentContainerStyle={{ backgroundColor: 'white', flexGrow: 1 }}>
             <Header
                 customButton={() => {
                     return (
@@ -57,7 +57,7 @@ const TrainingLocationScreen = (props) => {
                     </TouchableOpacity>
                 );
             })}
-        </View>
+        </ScrollView>
     );
 }
 
