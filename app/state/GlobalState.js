@@ -62,11 +62,9 @@ const reducer = (state, action) => {
           } else if (action?.state?.Availabilities && action?.state?.Availabilities.length != state?.profile?.Availabilities.length) {
             console.log('no full profile, Availabilities')
             toggle = !state.toggle
-          } else if (action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
-            if (!hasFullProfile(state?.profile)) {
-              console.log('no full profile, TrainingLocations')
-              toggle = !state.toggle
-            }
+          } else if (!hasFullProfile(state?.profile) && action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
+            console.log('no full profile, TrainingLocations')
+            toggle = !state.toggle
           }
         }
         console.log("2", toggle)
