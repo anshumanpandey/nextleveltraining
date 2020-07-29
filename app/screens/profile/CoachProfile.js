@@ -53,16 +53,6 @@ class MultiStep extends Component {
         this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
         setTimeout(this.resolveCurrentStep, 1000)
 
-        if (
-            this.stepOneIsComplete(profile) &&
-            this.stepTwoIsComplete(profile) &&
-            this.stepThreeIsComplete(profile) &&
-            this.stepFourIsComplete(profile) &&
-            !hasFullProfile(profile)
-        ) {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
-        }
-
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
@@ -110,6 +100,15 @@ class MultiStep extends Component {
             this.setState({ selectedSegmentIndex: 4 })
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
+            if (
+                this.stepOneIsComplete(profile) &&
+                this.stepTwoIsComplete(profile) &&
+                this.stepThreeIsComplete(profile) &&
+                this.stepFourIsComplete(profile) &&
+                !hasFullProfile(profile)
+            ) {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
+            }
             return
         }
 
