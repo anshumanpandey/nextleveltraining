@@ -114,7 +114,7 @@ const JobDetails = (props) => {
         <View style={styles.userInfoView}>
           <View style={styles.headView}>
             <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
-            <TouchableOpacity onPress={() => props.navigation.navigate('Chat',{RecieverId:props.navigation.getParam("CoachID"), SenderId: profile.Id})}>
+            <TouchableOpacity onPress={() => props.navigation.navigate('Chat', { RecieverId: props.navigation.getParam("CoachID"), SenderId: profile.Id })}>
               <Icon
                 name="message"
                 type="MaterialIcons"
@@ -146,34 +146,55 @@ const JobDetails = (props) => {
       </View>
 
       <View style={[styles.btnView, { height: '8%' }]}>
-        <TouchableOpacity disabled={!canCancel()} onPress={() => {
-          Alert.alert("", "Are you sure you want to Cancel the booking?", [
-            {
-              text: 'Yes', onPress: () => {
-                cancelBooking()
-                  .then(() => {
-                    props.navigation.navigate("Booking")
-                  })
-              }
-            },
-            { text: 'No', style: 'cancel' },
-          ],
-            { cancelable: true })
-        }} style={{ width: '33%', justifyContent: 'center' }}>
-          <View style={[styles.btnTab, { opacity: canCancel() ? 1 : 0.5 }]}>
-            {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
-            {!cancelBookingReq.loading && (
-              <>
-                <Icon
-                  name="close"
-                  type="MaterialIcons"
-                  style={styles.btn_menu_icon}
-                />
-                <Text style={styles.btnText}>Cancel</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
+        {!moment(props.navigation.getParam("CurrentTime")).isAfter(moment(props.navigation.getParam("SentDate"))) && (
+          <TouchableOpacity disabled={!canCancel()} onPress={() => {
+            Alert.alert("", "Are you sure you want to Cancel the booking?", [
+              {
+                text: 'Yes', onPress: () => {
+                  cancelBooking()
+                    .then(() => {
+                      props.navigation.navigate("Booking")
+                    })
+                }
+              },
+              { text: 'No', style: 'cancel' },
+            ],
+              { cancelable: true })
+          }} style={{ width: '33%', justifyContent: 'center' }}>
+            <View style={[styles.btnTab, { opacity: canCancel() ? 1 : 0.5 }]}>
+              {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
+              {!cancelBookingReq.loading && (
+                <>
+                  <Icon
+                    name="close"
+                    type="MaterialIcons"
+                    style={styles.btn_menu_icon}
+                  />
+                  <Text style={styles.btnText}>Cancel</Text>
+                </>
+              )}
+            </View>
+          </TouchableOpacity>
+        )}
+        {moment(props.navigation.getParam("CurrentTime")).isAfter(moment(props.navigation.getParam("SentDate"))) && profile.Role == "Player" && (
+          <TouchableOpacity disabled={!canCancel()} onPress={() => {
+            
+          }} style={{ width: '33%', justifyContent: 'center' }}>
+            <View style={[styles.btnTab]}>
+              {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
+              {!cancelBookingReq.loading && (
+                <>
+                  <Icon
+                    name="done"
+                    type="MaterialIcons"
+                    style={styles.btn_menu_icon}
+                  />
+                  <Text style={styles.btnText}>Complete</Text>
+                </>
+              )}
+            </View>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => {
             const params = {

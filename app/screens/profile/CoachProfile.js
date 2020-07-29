@@ -100,6 +100,7 @@ class MultiStep extends Component {
             this.setState({ selectedSegmentIndex: 4 })
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
             return
         }
 
