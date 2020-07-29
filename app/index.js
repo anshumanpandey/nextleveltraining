@@ -434,7 +434,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  },[token,profile?.Id, profile?.AboutUs,profile?.Achievements,profile?.Teams?.length,profile?.UpcomingMatches?.length, profile?.BankAccount,toggle])
+  },[token,profile?.Id, profile?.AboutUs,profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance,profile?.Teams?.length,profile?.UpcomingMatches?.length, profile?.Availabilities?.length,profile?.BankAccount,toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

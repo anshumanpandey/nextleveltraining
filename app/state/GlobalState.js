@@ -44,6 +44,12 @@ const reducer = (state, action) => {
           if (action?.state?.AboutUs && action?.state?.AboutUs != state?.profile?.AboutUs) {
             console.log('no full profile, new aboutUs')
             toggle = !state.toggle
+          } else if (action?.state?.TravelMile && action?.state?.TravelMile?.TravelDistance != state?.profile?.TravelMile?.TravelDistance) {
+            console.log('no full profile, Rate')
+            toggle = !state.toggle
+          } else if (action?.state?.Rate && action?.state?.Rate != state?.profile?.Rate) {
+            console.log('no full profile, Rate')
+            toggle = !state.toggle
           } else if (action?.state?.Achievements && action?.state?.Achievements != state?.profile?.Achievements) {
             console.log('no full profile, Achievements')
             toggle = !state.toggle
@@ -52,6 +58,12 @@ const reducer = (state, action) => {
             toggle = !state.toggle
           } else if (action?.state?.UpcomingMatches && action?.state?.UpcomingMatches.length != state?.profile?.UpcomingMatches.length) {
             console.log('no full profile, UpcomingMatches')
+            toggle = !state.toggle
+          } else if (action?.state?.Availabilities && action?.state?.Availabilities.length != state?.profile?.Availabilities.length) {
+            console.log('no full profile, Availabilities')
+            toggle = !state.toggle
+          } else if (action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
+            console.log('no full profile, TrainingLocations')
             toggle = !state.toggle
           }
         }

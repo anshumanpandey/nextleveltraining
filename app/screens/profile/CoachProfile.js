@@ -203,6 +203,11 @@ class MultiStep extends Component {
                                         if (this.state.selectedSegmentIndex == 3) {
                                             this.setState({ saving: true })
                                             this.state.traininLocationSubmitFn()
+                                            .then((r) => {
+                                                console.log(r)
+                                                this.setState({ saving: false })
+                                            })
+                                            .catch(() => this.setState({ saving: false }))
                                         }
 
                                     }}>
@@ -1080,7 +1085,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                         })
                 }}
             >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
+                {({ handleChange, handleBlur, handleSubmit, setFieldValue, validateForm,values, errors, touched }) => {
                     return (
                         <>
                             <View style={styles.containerCommon}>
