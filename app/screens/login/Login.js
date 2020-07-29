@@ -62,8 +62,6 @@ const Login = (props) => {
     return () => focusListener.remove()
   }, [])
 
-
-
   return (
     <ScrollView style={styles.login_layout}>
       <View style={styles.login_container}>
@@ -166,7 +164,7 @@ const Login = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role', "Player"), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role' ), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -193,7 +191,7 @@ const Login = (props) => {
                       "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
                       "email": userInfo.user.email,
                       "picture": userInfo.user.photo,
-                      "role": role,
+                      "role": props.navigation.getParam('role'),
                       "authenticationToken": userInfo.serverAuthCode
                     }
                   })

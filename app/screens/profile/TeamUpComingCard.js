@@ -20,7 +20,7 @@ const TeamUpComingCard = ({ title, data, disableEdit, onEditPress }) => {
             flexDirection: 'row',
           }}>
           <Text style={styles.titleText}>{title}</Text>
-          <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_yellow }} />
+          <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_blue }} />
         </View>
       </TouchableOpacity>
       <View style={{ marginTop: data && data.length <= 0 ? 20 : 10, marginRight: 15 }}>

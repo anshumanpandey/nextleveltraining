@@ -80,13 +80,13 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role', "Player"), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
                   })
                   .then((r) => {
-                    AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
+                    AsyncStorage.setItem('role', props.navigation.getParam('role'))
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                     setSocialLogin(false)
                     props.navigation.navigate(Screen.LandingPage)
@@ -112,7 +112,7 @@ const Signup = (props) => {
                       "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
                       "email": userInfo.user.email,
                       "picture": userInfo.user.photo,
-                      "role": props.navigation.getParam('role', "Player"),
+                      "role": props.navigation.getParam('role'),
                       "authenticationToken": userInfo.serverAuthCode
                     }
                   })
@@ -121,7 +121,7 @@ const Signup = (props) => {
                       return getUserData()
                     })
                     .then((r) => {
-                      AsyncStorage.setItem('role', props.navigation.getParam('role', "Player"))
+                      AsyncStorage.setItem('role', props.navigation.getParam('role'))
                       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                       setSocialLogin(false)
                       props.navigation.navigate(Screen.LandingPage)
