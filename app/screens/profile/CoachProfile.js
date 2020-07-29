@@ -982,6 +982,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
         formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
         formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
         formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
+        formikRef?.current?.setFieldValue("file", null)
         formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
         formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
 
@@ -995,7 +996,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             })
         }
         
-    }, [params.Id, params.LocationName, params.LocationAddress, params.isSaving ])
+    }, [params.Id, params.LocationName, params.LocationAddress ])
 
     useEffect(() => {
         const focusListener = navigation?.addListener('didFocus', () => {
@@ -1004,6 +1005,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
             formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
             formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
+            formikRef?.current?.setFieldValue("file", null)
             formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
             formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
         })
@@ -1012,6 +1014,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             formikRef?.current?.setFieldValue("trainingLocationId", undefined)
             formikRef?.current?.setFieldValue("locationName", "")
             formikRef?.current?.setFieldValue("address", "")
+            formikRef?.current?.setFieldValue("file", null)
             formikRef?.current?.setFieldValue("lat", 0)
             formikRef?.current?.setFieldValue("lng", 0)
             formikRef?.current?.setErrors({
