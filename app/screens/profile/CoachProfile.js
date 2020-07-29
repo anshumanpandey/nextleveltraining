@@ -96,19 +96,20 @@ class MultiStep extends Component {
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
 
+        if (
+            this.stepOneIsComplete(profile) &&
+            this.stepTwoIsComplete(profile) &&
+            this.stepThreeIsComplete(profile) &&
+            this.stepFourIsComplete(profile) &&
+            !hasFullProfile(profile)
+        ) {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
+        }
+
         if (this.stepFourIsComplete(profile) && hasFullProfile(profile)) {
             this.setState({ selectedSegmentIndex: 4 })
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
-            if (
-                this.stepOneIsComplete(profile) &&
-                this.stepTwoIsComplete(profile) &&
-                this.stepThreeIsComplete(profile) &&
-                this.stepFourIsComplete(profile) &&
-                !hasFullProfile(profile)
-            ) {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
-            }
             return
         }
 
