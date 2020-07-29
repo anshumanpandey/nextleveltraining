@@ -3,7 +3,7 @@ import Axios from 'axios'
 import { getGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../state/GlobalState';
 
 export const axiosInstance = Axios.create({
-    baseURL: "https://44.233.116.105/NextLevelTrainingApi/api"
+    baseURL: "http://44.233.116.105/NextLevelTrainingApi/api"
 })
 
 axiosInstance.interceptors.request.use(
