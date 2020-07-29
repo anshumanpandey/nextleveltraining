@@ -92,6 +92,7 @@ const Login = (props) => {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                 props.navigation.navigate(Screen.LandingPage)
               })
+              .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, }))
               .catch((r) => console.log(r))
           }}
         >
