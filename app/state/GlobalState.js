@@ -63,7 +63,7 @@ const reducer = (state, action) => {
             console.log('no full profile, Availabilities')
             toggle = !state.toggle
           } else if (action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
-            if (!hasFullProfile(action?.state)) {
+            if (!hasFullProfile(state?.profile)) {
               console.log('no full profile, TrainingLocations')
               toggle = !state.toggle
             }
