@@ -20,14 +20,15 @@ const LastMessage = (props) => {
        console.log(item.ReceiverProfilePic)
         return (
             <View style={styles.flatList} key={key}>
-                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic ? placeholder : { uri: item.ReceiverProfilePic ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
+                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic ? placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic  : item.SenderProfilePic }} style={styles.userImage} />
                 <TouchableOpacity style={styles.container_text} onPress={() => props.navigation.navigate('Chat', {
                     RecieverId:  item.RecieverID === profileId ? item.SenderID : item.RecieverID, 
-                    SenderId: profileId 
+                    SenderId: profileId ,
+                    friendName:item.SenderID === profileId ? item.ReceiverName  : item.SenderName
                 })}>
                     <View style={styles.innerRow}>
                         <Text style={styles.screenTitle}>
-                            {item.ReceiverName ? item.ReceiverName : item.SenderName}
+                            {item.SenderID === profileId ? item.ReceiverName  : item.SenderName}
                         </Text>
                         <Text style={styles.description}>
                             {new Date(item.SentDate).toLocaleDateString()}
@@ -52,6 +53,7 @@ const LastMessage = (props) => {
         const intervalId = setInterval(() => {
         getUserData()
         setProfileId(profile.Id)
+       // alert(profileId)
         console.log(getUserReq,'sss')
            }, 5000);
 

@@ -108,7 +108,7 @@ const Information = (props) => {
               <Text style={styles.btn_text}>Book now</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => NavigationService.navigate('Chat',{RecieverId:props.navigation.getParam("Id"), SenderId: profile.Id})}
+              onPress={() => NavigationService.navigate('Chat',{RecieverId:props.navigation.getParam("Id"), SenderId: profile.Id,friendName:props.navigation.getParam("FullName")})}
               style={styles.button_view}>
               <Icon
                 type="MaterialIcons"

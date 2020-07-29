@@ -16,10 +16,11 @@ export default class Message extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user1_id: props.navigation.getParam("SenderId"),
-      user2_id: props.navigation.getParam("RecieverId"),
-      chat_id: props.navigation.getParam("SenderId") > props.navigation.getParam("RecieverId") ? props.navigation.getParam("SenderId") + props.navigation.getParam("RecieverId") : props.navigation.getParam("RecieverId") + props.navigation.getParam("SenderId"),
+      user1_id: this.props.navigation.getParam("SenderId"),
+      user2_id: this.props.navigation.getParam("RecieverId"),
+      chat_id: this.props.navigation.getParam("SenderId") > this.props.navigation.getParam("RecieverId") ? this.props.navigation.getParam("SenderId") + this.props.navigation.getParam("RecieverId") : this.props.navigation.getParam("RecieverId") + this.props.navigation.getParam("SenderId"),
       data: {},
+      friendName:this.props.navigation.getParam("friendName"),
       messages: [],
       text: '',
       _isTyping:false,
@@ -31,6 +32,8 @@ export default class Message extends React.Component {
   }
 
   componentDidMount() {
+    alert(this.props.navigation.getParam("SenderId"))
+    alert(this.props.navigation.getParam("RecieverId"))
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this._keyboardDidShow,
@@ -127,7 +130,7 @@ export default class Message extends React.Component {
            ...config,
            data: {
              "text": this.state.textMessage,
-             "receiverId": this.props.navigation.getParam("ReceiverId")  ===  this.props.navigation.getParam("SenderId") ? this.props.navigation.getParam("SenderId") : this.props.navigation.getParam("ReceiverId"),
+             "receiverId": this.props.navigation.getParam("RecieverId")  ===  this.props.navigation.getParam("SenderId") ? this.props.navigation.getParam("SenderId") : this.props.navigation.getParam("RecieverId"),
              "senderId":  this.props.navigation.getParam("SenderId"),
              "sentDate": new Date()
          }
@@ -265,7 +268,7 @@ export default class Message extends React.Component {
              // marginRight: 40,
              // flex: 1..
             }}>Chat   </Text>
-            {this.state._isTyping &&  <Text style={{color:"black"}}>Typing.. </Text>}
+            
           
          
           </View>
@@ -298,7 +301,7 @@ export default class Message extends React.Component {
 
               }} />
           </View>
-
+          {this.state._isTyping &&  <Text style={{color:"gray"}}>   {this.state.friendName+' is typing..'} </Text>}
          
 
           <View style={{
