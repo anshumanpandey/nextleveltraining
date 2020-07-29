@@ -352,9 +352,7 @@ const AppMain = () => {
     }
   }
 
-  if (initialRouteName == null) {
-    initialRouteName = hasFullProfile(profile) == true && token ? 'Home' : 'Profile'
-  }
+  initialRouteName = hasFullProfile(profile) == true && token ? 'Home' : 'Profile'
 
   const TabNavigator = createBottomTabNavigator(tabs,
     {

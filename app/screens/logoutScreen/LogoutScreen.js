@@ -5,6 +5,7 @@ import Colors from '../../constants/color'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState'
 
 const LogoutScreen = (props) => {
+    const [profile] = useGlobalState("profile")
     const [, setToggle] = useGlobalState("toggle")
 
     useEffect(() => {
@@ -19,6 +20,12 @@ const LogoutScreen = (props) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE })
         }
     }, [])
+
+    useEffect(() => {
+        if (profile == null) {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE })
+        }
+    }, [profile])
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>

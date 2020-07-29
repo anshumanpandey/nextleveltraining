@@ -53,6 +53,16 @@ class MultiStep extends Component {
         this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
         setTimeout(this.resolveCurrentStep, 1000)
 
+        if (
+            this.stepOneIsComplete(profile) &&
+            this.stepTwoIsComplete(profile) &&
+            this.stepThreeIsComplete(profile) &&
+            this.stepFourIsComplete(profile) &&
+            !hasFullProfile(profile)
+        ) {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
+        }
+
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
                 if (!s) return
@@ -96,17 +106,7 @@ class MultiStep extends Component {
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
 
-        if (
-            this.stepOneIsComplete(profile) &&
-            this.stepTwoIsComplete(profile) &&
-            this.stepThreeIsComplete(profile) &&
-            this.stepFourIsComplete(profile) &&
-            !hasFullProfile(profile)
-        ) {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
-        }
-
-        if (this.stepFourIsComplete(profile)) {
+        if (this.stepFourIsComplete(profile) && hasFullProfile(profile)) {
             this.setState({ selectedSegmentIndex: 4 })
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
@@ -213,11 +213,11 @@ class MultiStep extends Component {
                                         if (this.state.selectedSegmentIndex == 3) {
                                             this.setState({ saving: true })
                                             this.state.traininLocationSubmitFn()
-                                            .then((r) => {
-                                                console.log(r)
-                                                this.setState({ saving: false })
-                                            })
-                                            .catch(() => this.setState({ saving: false }))
+                                                .then((r) => {
+                                                    console.log(r)
+                                                    this.setState({ saving: false })
+                                                })
+                                                .catch(() => this.setState({ saving: false }))
                                         }
 
                                     }}>
@@ -1005,20 +1005,19 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             formikRef?.current?.setFieldValue('file', { uri: params?.ImageUrl })
         } else {
             AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
-            .then(img => {
-                if (!img) return
-                formikRef?.current?.setFieldValue('file', JSON.parse(img).file)
-            })
+                .then(img => {
+                    if (!img) return
+                    formikRef?.current?.setFieldValue('file', JSON.parse(img).file)
+                })
         }
-        
-    }, [params.Id, params.LocationName, params.LocationAddress ])
+
+    }, [params.Id, params.LocationName, params.LocationAddress])
 
     useEffect(() => {
         const focusListener = navigation?.addListener('didFocus', () => {
             console.log(params?.Id)
             formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
             formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
-            formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
             formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
             formikRef?.current?.setFieldValue("file", null)
             formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
@@ -1066,7 +1065,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
                     return errors
                 }}
-                onSubmit={values => {
+                onSubmit={(values, { setFieldValue, setErrors, setTouched}) => {
                     const data = {
                         "trainingLocationId": values.trainingLocationId || undefined,
                         "locationName": values.locationName,
@@ -1092,10 +1091,27 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             } else {
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                             }
+                            setErrors({
+                                locationName: undefined,
+                                address: undefined,
+                                file: undefined,
+                            })
+                            setTouched({
+                                locationName: undefined,
+                                address: undefined,
+                                file: undefined,
+                            })
+                            
+                            setFieldValue("trainingLocationId", undefined)
+                            setFieldValue("locationName", "")
+                            setFieldValue("address", "")
+                            setFieldValue("file", null)
+                            setFieldValue("lat", 0)
+                            setFieldValue("lng", 0)
                         })
                 }}
             >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, validateForm,values, errors, touched }) => {
+                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
                     return (
                         <>
                             <View style={styles.containerCommon}>

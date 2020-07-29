@@ -43,15 +43,6 @@ const Menu = (props) => {
                 NavigationService.navigate('Availavility')
             }
         },
-        {
-            id: 10,
-            title: 'Training Locations',
-            icon: `${Images.HomeTrainingIcon}`,
-            path: 'TrainingLocation',
-            onPress: (props, profile) => {
-                NavigationService.navigate('TrainingLocation')
-            }
-        },
     ]
 
     const fullProfileMenu = [

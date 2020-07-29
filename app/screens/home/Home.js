@@ -35,7 +35,7 @@ const Home = (props) => {
 
   const [{ data, loading, error }, refetch] = useAxios({
     url: '/Users/GetAllPosts',
-  })
+  }, { manual: true })
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', refetch);
