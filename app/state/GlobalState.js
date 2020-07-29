@@ -40,7 +40,7 @@ const reducer = (state, action) => {
         } else if (action?.state?.Id && action?.state?.Id != state?.profile?.Id) {
           console.log('new ID')
           toggle = !state.toggle
-        } else if(state?.profile) {
+        } else if(!hasFullProfile(state?.profile)) {
           if (action?.state?.AboutUs && action?.state?.AboutUs != state?.profile?.AboutUs) {
             console.log('no full profile, new aboutUs')
             toggle = !state.toggle
