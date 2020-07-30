@@ -4,7 +4,7 @@ import {Icon, Spinner} from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 
-const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading}) => {
+const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading = false}) => {
   return (
     <View style={styles.header_layout}>
       <View style={styles.header_item_container}>
