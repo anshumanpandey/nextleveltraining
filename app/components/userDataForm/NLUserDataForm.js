@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screens from '../../utils/screen';
 
-const NLUserDataForm = ({ action = "register",...props}) => {
+const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
     const formikRef = useRef()
 
     const [{ data, loading, error }, register] = useAxios({
@@ -44,6 +44,7 @@ const NLUserDataForm = ({ action = "register",...props}) => {
                 mobileNo: props.navigation.getParam('MobileNo') || "",
                 role: props.navigation.getParam('role', "Player"),
                 password: "",
+                confirmPassword: "",
                 lat: props.navigation.getParam('Lat'),
                 lng: props.navigation.getParam('Lng'),
             }}
@@ -57,6 +58,16 @@ const NLUserDataForm = ({ action = "register",...props}) => {
 
                 if (props.hidePasswordInput != true) {
                     if (!values.password) errors.password = 'Required'
+                }
+
+                if (showsConfirmPassword) {
+                    if (!values.confirmPassword) {
+                        errors.confirmPassword = 'Required'
+                    } else if(props.hidePasswordInput != true && values.password) {
+                        if (values.password != values.confirmPassword) {
+                            errors.confirmPassword = 'Password and confirmpassword must be the same'
+                        }
+                    }
                 }
 
                 console.log('validation done')
@@ -154,6 +165,21 @@ const NLUserDataForm = ({ action = "register",...props}) => {
                                     />
                                 </View>
                                 {errors.password && touched.password && <ErrorLabel text={errors.password} />}
+                            </>
+                        )}
+                        {showsConfirmPassword == true && (
+                            <>
+                                <View style={styles.signup_info_view}>
+                                    <TextInput
+                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
+                                        placeholder="Confirm Password"
+                                        secureTextEntry={true}
+                                        onChangeText={handleChange('confirmPassword')}
+                                        onBlur={handleBlur('confirmPassword')}
+                                        value={values.confirmPassword}
+                                    />
+                                </View>
+                                {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
                             </>
                         )}
 

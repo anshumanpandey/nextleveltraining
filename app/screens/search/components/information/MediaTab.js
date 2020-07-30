@@ -48,7 +48,7 @@ const MediaTab = ({ posts, selectedTab }) => {
       })
   }, [selectedTab])
 
-  let body = <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Reviews for this coach yet.</Text>
+  let body = <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Post for this coach yet.</Text>
 
   if (parsed && postToShow.length != 0) {
     body = (

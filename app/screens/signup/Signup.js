@@ -58,7 +58,7 @@ const Signup = (props) => {
         <View style={styles.signup_logo_view}>
           <Image source={Images.Mlogo} />
         </View>
-        <NLUserDataForm {...props} />
+        <NLUserDataForm {...props} showsConfirmPassword={true} />
         <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player") })}>
           <View style={[styles.signup_other_view, { color: 'black', paddingTop: '5%', paddingBottom: '5%' }]}>
             <Text style={styles.signup_continue}>Go to Login</Text>

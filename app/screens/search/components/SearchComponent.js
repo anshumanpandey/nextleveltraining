@@ -12,6 +12,7 @@ const SearchComponent = (props) => {
   const [keyword, setKeyword] = useState('')
   const [coaches, setCoaches] = useState([])
 
+  //TODO: add missing data for post for each coach
   const [searchCoachesReq, searchCoaches] = useAxios({
     url: `/Users/GetCoaches`,
     method: 'POST',
