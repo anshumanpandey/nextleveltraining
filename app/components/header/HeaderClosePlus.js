@@ -20,7 +20,7 @@ const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading}) => {
           {isSaveButton ? (
             <>
             {isLoading && <Spinner color="black" style={{ marginRight: '10%'}} />}
-            <TouchableOpacity onPress={() => saveOnPress()}>
+            <TouchableOpacity disabled={isLoading} onPress={() => saveOnPress()}>
               <Text style={{ fontSize: 18, color: 'black', opacity: isLoading ? 0.5 : 1,fontWeight: 'bold'}}>Save</Text>
             </TouchableOpacity>
             </>
