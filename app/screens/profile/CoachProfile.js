@@ -479,7 +479,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
             })
 
         }
-    }, [profile.Availabilities])
+    }, [profile?.Availabilities])
 
     const availabiltySaveFunction = useCallback(() => {
         const formatDate = (d) => moment(d).utcOffset(0, true).format('hh:mm A')
