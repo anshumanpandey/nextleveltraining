@@ -429,7 +429,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 
     useEffect(() => {
         const formatDate = (d) => moment(d, 'hh: mm A')
-        if (profile.Availabilities && profile.Availabilities.length != 0) {
+        if (profile?.Availabilities && profile.Availabilities.length != 0) {
             const toggles = []
             const newState = {}
             profile.Availabilities.forEach(day => {
