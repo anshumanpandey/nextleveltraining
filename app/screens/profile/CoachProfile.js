@@ -96,9 +96,9 @@ class MultiStep extends Component {
     resolveDisabledElementsOnTopMenu = (item, index) => {
         const profile = getGlobalState('profile')
 
-        if (index == 1 && !this.stepOneIsComplete(profile)) return true
-        if (index == 2 && !this.stepTwoIsComplete(profile)) return true
-        if (index == 3 && !this.stepThreeIsComplete(profile)) return true
+        if (this.state.selectedSegmentIndex == 0 && !this.stepOneIsComplete(profile)) return true
+        if (this.state.selectedSegmentIndex == 1 && !this.stepTwoIsComplete(profile)) return true
+        if (this.state.selectedSegmentIndex == 2 && !this.stepThreeIsComplete(profile)) return true
     }
 
     resolveCurrentStep = () => {
@@ -245,6 +245,7 @@ class MultiStep extends Component {
     }
 
     handleContainerScroll = async (event) => {
+        if (this.resolveDisabledElementsOnTopMenu()) return
         let _index = event.nativeEvent.contentOffset.x / Dimensions.get('window').width
         if (_index == Math.round(_index)) {
             this.setState({
@@ -285,6 +286,7 @@ class MultiStep extends Component {
                     showsHorizontalScrollIndicator={false}
                     ref={(scrollView) => { this.containerScrollView = scrollView }}
                     onScroll={this.handleContainerScroll}
+                    scrollEnabled={!this.resolveDisabledElementsOnTopMenu()}
                     scrollEventThrottle={16}
                 >
                     <View style={{
