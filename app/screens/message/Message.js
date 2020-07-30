@@ -32,8 +32,6 @@ export default class Message extends React.Component {
   }
 
   componentDidMount() {
-    alert(this.props.navigation.getParam("SenderId"))
-    alert(this.props.navigation.getParam("RecieverId"))
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this._keyboardDidShow,
