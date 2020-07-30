@@ -93,6 +93,14 @@ class MultiStep extends Component {
         this.focusListener?.remove();
     }
 
+    resolveDisabledElementsOnTopMenu = (item, index) => {
+        const profile = getGlobalState('profile')
+
+        if (index == 1 && !this.stepOneIsComplete(profile)) return true
+        if (index == 2 && !this.stepTwoIsComplete(profile)) return true
+        if (index == 3 && !this.stepThreeIsComplete(profile)) return true
+    }
+
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
 
@@ -108,7 +116,9 @@ class MultiStep extends Component {
 
         if (this.stepFourIsComplete(profile)) {
             this.setState({ selectedSegmentIndex: 4 })
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
+            if (hasFullProfile(profile)) {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
+            }
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
             return
@@ -318,11 +328,13 @@ class MultiStep extends Component {
                     data={signupSegments}
                     renderItem={({ item, index }) => {
                         return (
-                            <TouchableOpacity style={{
-                                justifyContent: 'center',
-                                width: Dimensions.get('window').width / 3,
-                                height: 40
-                            }}
+                            <TouchableOpacity
+                                disabled={this.resolveDisabledElementsOnTopMenu(item, index)}
+                                style={{
+                                    justifyContent: 'center',
+                                    width: Dimensions.get('window').width / 3,
+                                    height: 40
+                                }}
                                 onPress={() => {
                                     this.setState({
                                         selectedSegmentIndex: index
@@ -331,6 +343,7 @@ class MultiStep extends Component {
                                 }} >
                                 <Text style={{
                                     color: this.state.selectedSegmentIndex == index ? Colors.s_blue : TEXT_COLOR,
+                                    opacity: this.resolveDisabledElementsOnTopMenu(item, index) ? 0.5: 1,
                                     textAlign: 'center'
                                 }}>{item}</Text>
                                 {this.state.selectedSegmentIndex == index && <View style={{
@@ -1066,7 +1079,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
                     return errors
                 }}
-                onSubmit={(values, { setFieldValue, setErrors, setTouched}) => {
+                onSubmit={(values, { setFieldValue, setErrors, setTouched }) => {
                     const data = {
                         "trainingLocationId": values.trainingLocationId || undefined,
                         "locationName": values.locationName,
@@ -1102,7 +1115,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                 address: undefined,
                                 file: undefined,
                             })
-                            
+
                             setFieldValue("trainingLocationId", undefined)
                             setFieldValue("locationName", "")
                             setFieldValue("address", "")
