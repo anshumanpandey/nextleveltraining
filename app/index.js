@@ -103,7 +103,6 @@ const AppMain = () => {
       Search: { screen: Search },
       Information: { screen: Information },
       BookNow: { screen: BookNow },
-      Chat:{screen:Message},
       Payments: { screen: Payments },
       PaymentConcent: { screen: PaymentConcentScreen },
       JobDetails: { screen: JobDetails },
@@ -271,6 +270,15 @@ const AppMain = () => {
         ),
       }),
     },
+    tabs.Chat = {
+      screen: Message,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
     tabs.AboutMe = {
       screen: AboutMeScreen,
       navigationOptions: () => ({
@@ -357,7 +365,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

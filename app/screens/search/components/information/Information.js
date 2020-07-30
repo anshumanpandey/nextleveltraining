@@ -13,6 +13,7 @@ import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
 import { useGlobalState } from '../../../../state/GlobalState';
 import dimensions from '../../../../constants/dimensions';
+import { StackActions, NavigationActions } from 'react-navigation';
 var convert = require('convert-units')
 
 const Information = (props) => {
@@ -109,7 +110,19 @@ const Information = (props) => {
               <Text style={styles.btn_text}>Book now</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => NavigationService.navigate('Chat',{RecieverId:props.navigation.getParam("Id"), SenderId: profile.Id,friendName:props.navigation.getParam("FullName")})}
+              onPress={() => {
+                const resetAction = StackActions.reset({
+                  index: 0,
+                  key: null,
+                  actions: [
+                    NavigationActions.navigate({
+                      routeName: 'MainStack',
+                      action: NavigationActions.navigate({ routeName: 'Chat', params: {RecieverId:props.navigation.getParam("Id"), SenderId: profile.Id,friendName:props.navigation.getParam("FullName")} })
+                    })
+                  ]
+                })
+                props.navigation.dispatch(resetAction);
+              }}
               style={styles.button_view}>
               <Icon
                 type="MaterialIcons"
