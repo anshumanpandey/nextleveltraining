@@ -1254,7 +1254,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
     }, [profile])
 
     return (
-        <Tabs onChangeTab={(e) => {
+        <Tabs tabBarUnderlineStyle={{ backgroundColor: Colors.s_blue}} onChangeTab={(e) => {
             setCurrentTab(e.i)
             if (e.i == 1) {
                 setSubmitFn(() => submitFn)
@@ -1262,7 +1262,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                 setSubmitFn(null)
             }
         }}>
-            <Tab heading="Tab1">
+            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white'}} activeTabStyle={{ backgroundColor: 'white'}} heading="Details">
                 <ScrollView>
                     <View style={styles.containerAbout}>
                         <TouchableOpacity
@@ -1482,7 +1482,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                     </View>
                 </ScrollView>
             </Tab>
-            <Tab heading="Tab2">
+            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white'}} activeTabStyle={{ backgroundColor: 'white'}} heading="Bank Account">
                 <BankAccountForm setSubmitFn={(fn) => attachSubmitFn(() => fn )} />
             </Tab>
         </Tabs>
