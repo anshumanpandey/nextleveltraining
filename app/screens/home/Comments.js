@@ -39,7 +39,7 @@ const CommentsScreen = (props) => {
   }, [])
 
   let commentBody = (
-    <Text style={{ textAlign: 'center', fontSize: 18 }}>No comments</Text>
+    <Text style={{ textAlign: 'center', fontSize: 18, marginTop: '10%' }}>No comments</Text>
   );
 
   if (thisComments != 0) {
@@ -57,7 +57,6 @@ const CommentsScreen = (props) => {
     <>
       <ScrollView innerRef={(r) => listRef.current = r} style={styles.home_container}>
         <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigation={props.navigation} navigate={props.navigation.navigate} />
-        <PostComment item={{...post, likes: getLikesReq.data ? getLikesReq.data: [] }} />
         {commentBody}
       </ScrollView>
       <View style={[styles.inputContainer, { height: Dimensions.get('screen').height * 0.1 }]}>

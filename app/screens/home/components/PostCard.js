@@ -100,7 +100,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
           )}
 
         </View>
-        <View style={styles.post_news_comment}>
+        <View style={[styles.post_news_comment, { justifyContent: 'center'}]}>
           <TouchableOpacity
             disabled={loading}
             onPress={() => {
@@ -125,6 +125,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
               <Text>{' '}Like</Text>
             </View>
           </TouchableOpacity>
+          <View style={{ backgroundColor: 'gray', width: '1%', marginHorizontal: '3%'}} />
           <TouchableOpacity
             style={styles.post_news_like}
             onPress={onPressOfComment}>

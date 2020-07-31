@@ -130,7 +130,6 @@ const Home = (props) => {
       </View> */}
       <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
       {body}
-      <MediaPreview visibleModal={visibleModal} setVisibleModal={setVisibleModal} />
     </View>
   )
 }
