@@ -132,7 +132,7 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
             style={styles.post_news_like}
             onPress={onPressOfComment}>
             <Icon type="Octicons" name="comment" style={styles.post_comment} />
-            <View style={{ marginLeft: '7%' }}>
+            <View style={{ marginLeft: '7%', flexDirection: 'row' }}>
               {item.comments.length != 0 && <Text style={styles.post_like}>{item.comments.length}</Text>}
               <Text>{' '}Comment</Text>
             </View>

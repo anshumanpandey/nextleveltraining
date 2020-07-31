@@ -19,7 +19,7 @@ const Comments = ({item, onClickItem, onPressOfComment}) => {
   return (
     <View style={[styles.post_container]}>
       <View style={styles.comment_card_container}>
-        <Image source={{ uri: item.ProfileImage }} style={styles.post_image_size} />
+        <Image source={item.ProfileImage ? { uri: item.ProfileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />
         <View style={styles.post_content_view}>
           <View style={{width: Dimension.pro100}}>
             <View style={styles.post_title}>
