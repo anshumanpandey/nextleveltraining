@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel'
 import Video from 'react-native-video';
+import Colors from '../../constants/color'
 
 const Profile = (props) => {
   const formikRef = useRef()
@@ -27,6 +28,9 @@ const Profile = (props) => {
     const focusListener = props.navigation.addListener('didBlur', () => {
       formikRef?.current?.setFieldValue("bodyText", "")
       formikRef?.current?.setFieldValue("file", null)
+      formikRef?.current?.setErrors({
+        bodyText: undefined
+      })
     });
     return () => focusListener?.remove();
   }, [])
@@ -76,7 +80,7 @@ const Profile = (props) => {
 
           doPost({ data })
             .then(r => {
-              if (values?.file?.data){
+              if (values?.file?.data) {
                 delete values.file.data
                 AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
               }
@@ -92,28 +96,20 @@ const Profile = (props) => {
           <>
             <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.post_view}>
-                <Textarea
-                  onChangeText={handleChange('bodyText')}
-                  onBlur={handleBlur('bodyText')}
-                  value={values.bodyText}
-                  style={styles.textArea}
-                  placeholder="What's on your mind"
-                />
-                {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
-
-                <View style={{ padding: Dimension.pro5 }}>
-                  <TouchableOpacity onPress={() => setShowModal(true)}>
-                    <View style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: '5%', width: '30%', marginTop: '3%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text>Upload</Text>
-                      <Icon type="AntDesign" name="upload" style={{ fontSize: 18 }} />
-                    </View>
-                  </TouchableOpacity>
+                <View style={{ padding: '5%' }}>
+                  <Textarea
+                    onChangeText={handleChange('bodyText')}
+                    onBlur={handleBlur('bodyText')}
+                    value={values.bodyText}
+                    style={styles.textArea}
+                    placeholder="Post about training here..."
+                  />
+                  {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
                 </View>
+
                 {values.file && !values.file.type.includes('video') && (
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }} />
-                    </View>
+                  <View style={{ justifyContent: 'center' }}>
+                    <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }} />
                   </View>
                 )}
 
@@ -134,59 +130,76 @@ const Profile = (props) => {
 
               </View>
             </ScrollView>
-            <Modal
-              onBackdropPress={() => setShowModal(false)}
-              isVisible={showModal}
-              style={styles.modal}>
-              <View style={{ backgroundColor: 'white', height: '50%', padding: '8%' }}>
-                <TouchableOpacity onPress={() => {
-                  const options = {
-                    title: 'Select picture',
-                    chooseFromLibraryButtonTitle: '',
-                    storageOptions: {
-                      skipBackup: true,
-                      path: 'images',
-                    },
-                  };
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
 
-                  ImagePicker.launchImageLibrary(options, (file) => {
+              <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
+                const options = {
+                  title: 'Select picture',
+                  chooseFromLibraryButtonTitle: '',
+                  storageOptions: {
+                    skipBackup: true,
+                    path: 'images',
+                  },
+                };
 
-                    if (file.didCancel) {
-                      console.log('User cancelled image picker');
-                    } else if (file.error) {
-                      console.log('ImagePicker Error: ', file.error);
-                    } else if (file.customButton) {
-                      console.log('User tapped custom button: ', file.customButton);
-                    } else {
-                      setShowModal(false)
-                      setFieldValue('file', file)
-                    }
-                  });
-                }}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: 'green' }} />
-                    <Text style={{ fontSize: 24, marginLeft: '8%' }}>Photo</Text>
-                  </View>
-                </TouchableOpacity>
+                ImagePicker.launchCamera(options, (file) => {
 
-                <TouchableOpacity onPress={() => {
-                  DocumentPicker.pick({
-                    type: [DocumentPicker.types.video],
+                  if (file.didCancel) {
+                    console.log('User cancelled image picker');
+                  } else if (file.error) {
+                    console.log('ImagePicker Error: ', file.error);
+                  } else if (file.customButton) {
+                    console.log('User tapped custom button: ', file.customButton);
+                  } else {
+                    setShowModal(false)
+                    setFieldValue('file', file)
+                  }
+                });
+              }}>
+                <Icon type="FontAwesome" name="camera" style={{ fontSize: 28, color: Colors.s_blue }} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
+                const options = {
+                  title: 'Select picture',
+                  chooseFromLibraryButtonTitle: '',
+                  storageOptions: {
+                    skipBackup: true,
+                    path: 'images',
+                  },
+                };
+
+                ImagePicker.launchImageLibrary(options, (file) => {
+
+                  if (file.didCancel) {
+                    console.log('User cancelled image picker');
+                  } else if (file.error) {
+                    console.log('ImagePicker Error: ', file.error);
+                  } else if (file.customButton) {
+                    console.log('User tapped custom button: ', file.customButton);
+                  } else {
+                    setShowModal(false)
+                    setFieldValue('file', file)
+                  }
+                });
+              }}>
+                <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: Colors.s_blue }} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
+                DocumentPicker.pick({
+                  type: [DocumentPicker.types.video],
+                })
+                  .then((file) => {
+                    setShowModal(false)
+                    file.type.includes('video')
+                    setFieldValue('file', file)
                   })
-                    .then((file) => {
-                      setShowModal(false)
-                      file.type.includes('video')
-                      setFieldValue('file', file)
-                    })
-                }}>
-                  <View style={{ flexDirection: 'row', marginTop: '10%' }}>
-                    <Icon type="Entypo" name="video" style={{ fontSize: 28, color: 'steelblue' }} />
-                    <Text style={{ fontSize: 24, marginLeft: '8%' }}>Video</Text>
-                  </View>
-                </TouchableOpacity>
+              }}>
+                <Icon type="Entypo" name="video" style={{ fontSize: 28, color: Colors.s_blue }} />
+              </TouchableOpacity>
 
-              </View>
-            </Modal>
+            </View>
           </>
         )}
       </Formik>
@@ -203,7 +216,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textArea: {
-    flex: 0.3
+    borderWidth: 1,
+    borderColor: Colors.s_blue,
+    borderRadius: 15,
+    textAlignVertical: 'center'
   },
   modal: {
     justifyContent: 'flex-end',

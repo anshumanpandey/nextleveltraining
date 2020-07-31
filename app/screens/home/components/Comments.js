@@ -16,6 +16,8 @@ const Comments = ({item, onClickItem, onPressOfComment}) => {
   const onClickingItem = (item) => {
     onClickItem(item);
   };
+
+  console.log(item)
   return (
     <View style={[styles.post_container]}>
       <View style={styles.comment_card_container}>
