@@ -134,7 +134,7 @@ const Profile = (props) => {
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
+                ImageCropPicker.openCamera({ cropping: true })
                 .then(image => {
                   setFieldValue('file', image)
                 });
@@ -144,7 +144,7 @@ const Profile = (props) => {
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
 
-                ImageCropPicker.openCamera({ cropping: true })
+                ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
                 .then(image => {
                   setFieldValue('file', image)
                 });
