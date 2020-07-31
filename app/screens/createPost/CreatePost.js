@@ -1,12 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
 import Header from '../../components/header/Header'
-import { useGlobalState } from '../../state/GlobalState'
-import Dimension from '../../constants/dimensions.js'
 import { Textarea, Icon, Input, Spinner } from 'native-base'
-import Modal from 'react-native-modal';
 import DocumentPicker from 'react-native-document-picker';
-import ImagePicker from 'react-native-image-picker';
+import TagInput from 'react-native-tags-input';
 import { Formik } from 'formik';
 import AsyncStorage from '@react-native-community/async-storage';
 import useAxios from 'axios-hooks'
@@ -17,8 +14,8 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 
 const Profile = (props) => {
   const formikRef = useRef()
-  const [profile] = useGlobalState('profile')
-  const [showModal, setShowModal] = useState(false)
+  const [tag, setTag] = useState("")
+  const [selectedTags, setSelectedTags] = useState([])
 
   const [postReq, doPost] = useAxios({
     url: '/Users/CreatePost',
@@ -106,6 +103,29 @@ const Profile = (props) => {
                     placeholder="Post about training here..."
                   />
                   {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
+
+                  <TagInput
+                    updateState={(e) => {
+                      setTag(e.tag.replace(/(#)/g, ""))
+                      setSelectedTags([...e.tagsArray])
+                    }}
+                    tags={{tag: `#${tag}`, tagsArray: selectedTags}}
+                    keysForTag="\n"
+                    tagStyle={{ backgroundColor: Colors.s_blue }}
+                    tagTextStyle={{ color: 'white'}}
+                    inputStyle={{
+                      marginTop: '1%',
+                      paddingVertical: 0,
+                      borderWidth: 1,
+                      borderColor: Colors.s_blue,
+                      borderRadius: 15,
+                    }}
+                    deleteElement={
+                      <>
+                      <Icon type="Fontisto" name="close" style={{ color: 'white', fontSize: 16}} />
+                      </>
+                    }
+                  />
                 </View>
 
                 {values.file && !values.file.type.includes('video') && (
@@ -135,9 +155,9 @@ const Profile = (props) => {
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
                 ImageCropPicker.openCamera({ cropping: true })
-                .then(image => {
-                  setFieldValue('file', image)
-                });
+                  .then(image => {
+                    setFieldValue('file', image)
+                  });
               }}>
                 <Icon type="FontAwesome" name="camera" style={{ fontSize: 28, color: Colors.s_blue }} />
               </TouchableOpacity>
@@ -145,9 +165,9 @@ const Profile = (props) => {
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
 
                 ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
-                .then(image => {
-                  setFieldValue('file', image)
-                });
+                  .then(image => {
+                    setFieldValue('file', image)
+                  });
               }}>
                 <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: Colors.s_blue }} />
               </TouchableOpacity>
@@ -157,7 +177,6 @@ const Profile = (props) => {
                   type: [DocumentPicker.types.video],
                 })
                   .then((file) => {
-                    setShowModal(false)
                     file.type.includes('video')
                     setFieldValue('file', file)
                   })
@@ -185,7 +204,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.s_blue,
     borderRadius: 15,
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
   modal: {
     justifyContent: 'flex-end',
