@@ -42,8 +42,8 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
         <View style={{ flexDirection: 'row', paddingHorizontal: '5%' }}>
-          {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage }: Images.MessiPlayer} style={styles.post_image_size} />}
-          {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage }: Images.MessiPlayer} style={styles.post_image_size} />}
+          {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.post_image_size} />}
+          {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.post_image_size} />}
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100 }}>
               <View style={styles.post_title}>
@@ -72,35 +72,35 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
               onPress={() => onClickingItem(item)}
             >
               <Video
-                  source={{ uri: item.imageUri }}
-                  paused={true}
-                  onLoadStart={(d) => {
-                    console.log('onLoadStart')
-                  }}
-                  onLoad={(d) => {
-                    console.log('onLoad')
-                    setVideoIsReady(true)
-                  }}
-                  currentPosition={1}
-                  controls={true}
-                  onError={() => {
-                    Alert.alert('Error', 'We could not load the video')
-                  }}               // Callback when video cannot be loaded
-                  style={{
-                    height: 200,
-                    display: videoIsReady ? 'flex':"none"
-                  }} />
+                source={{ uri: item.imageUri }}
+                paused={true}
+                onLoadStart={(d) => {
+                  console.log('onLoadStart')
+                }}
+                onLoad={(d) => {
+                  console.log('onLoad')
+                  setVideoIsReady(true)
+                }}
+                currentPosition={1}
+                controls={true}
+                onError={() => {
+                  Alert.alert('Error', 'We could not load the video')
+                }}               // Callback when video cannot be loaded
+                style={{
+                  height: 200,
+                  display: videoIsReady ? 'flex' : "none"
+                }} />
               {!videoIsReady && (
                 <>
-                <Spinner color={Colors.s_yellow} size={100} />
-                <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
+                  <Spinner color={Colors.s_yellow} size={100} />
+                  <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
                 </>
               )}
             </TouchableOpacity>
           )}
 
         </View>
-        <View style={[styles.post_news_comment, { justifyContent: 'center'}]}>
+        <View style={[styles.post_news_comment, { justifyContent: 'center' }]}>
           <TouchableOpacity
             disabled={loading}
             onPress={() => {
@@ -121,17 +121,21 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
                 name="thumbs-o-up"
                 style={styles.post_tumb_up}
               />
-              {likes.length != 0 && <Text style={styles.post_like}>{likes.length}</Text>}
-              <Text>{' '}Like</Text>
+              <View>
+                {likes.length != 0 && <Text style={styles.post_like}>{likes.length}</Text>}
+                <Text>{' '}Like</Text>
+              </View>
             </View>
           </TouchableOpacity>
-          <View style={{ backgroundColor: 'gray', width: '1%', marginHorizontal: '3%'}} />
+          <View style={{ backgroundColor: 'gray', width: '1%', marginHorizontal: '1%' }} />
           <TouchableOpacity
             style={styles.post_news_like}
             onPress={onPressOfComment}>
             <Icon type="Octicons" name="comment" style={styles.post_comment} />
-            {item.comments.length != 0 && <Text style={styles.post_like}>{item.comments.length}</Text>}
-            <Text>{' '}Comment</Text>
+            <View style={{ marginLeft: '7%' }}>
+              {item.comments.length != 0 && <Text style={styles.post_like}>{item.comments.length}</Text>}
+              <Text>{' '}Comment</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>

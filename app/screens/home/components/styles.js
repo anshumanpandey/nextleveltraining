@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   post_tumb_up: {
     fontSize: 20,
     color: Colors.s_blue,
+    marginRight: '7%'
   },
   post_like: {
     marginLeft: 10,
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.s_blue,
     marginRight: 0,
+    paddingTop: '1.5%'
   },
   more_icon: {
     width: 20,
