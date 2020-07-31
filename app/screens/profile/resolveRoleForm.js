@@ -8,7 +8,7 @@ const resolveRoleForm = (profile, formName = "AboutMe", params, attachFn) => {
 
     if (formName == "AboutMe") {
         if (profile.Role == "Coach") {
-            return <AboutMeCoachForm />
+            return <AboutMeCoachForm setSubmitFn={attachFn} />
         }
         if (profile.Role == "Player") {
             return <PlayerProfile {...params} />
