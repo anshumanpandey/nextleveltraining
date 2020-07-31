@@ -144,7 +144,19 @@ const Menu = (props) => {
                 menulist.unshift(...coachMenulist)
             }
         } else {
-            finalMenu = menulist
+            finalMenu = [
+                ...menulist.slice(0,3),
+                {
+                    id: 54,
+                    title: 'Add Coach',
+                    icon: `${Images.AboutMeIcon}`,
+                    path: '',
+                    onPress: (props, profile) => {
+                        NavigationService.navigate("Search")
+                    }
+                },
+                ...menulist.slice(3),
+            ]
         }
     }
 
