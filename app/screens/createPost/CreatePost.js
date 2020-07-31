@@ -13,6 +13,7 @@ import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel'
 import Video from 'react-native-video';
 import Colors from '../../constants/color'
+import ImageCropPicker from 'react-native-image-crop-picker';
 
 const Profile = (props) => {
   const formikRef = useRef()
@@ -133,54 +134,19 @@ const Profile = (props) => {
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                const options = {
-                  title: 'Select picture',
-                  chooseFromLibraryButtonTitle: '',
-                  storageOptions: {
-                    skipBackup: true,
-                    path: 'images',
-                  },
-                };
-
-                ImagePicker.launchCamera(options, (file) => {
-
-                  if (file.didCancel) {
-                    console.log('User cancelled image picker');
-                  } else if (file.error) {
-                    console.log('ImagePicker Error: ', file.error);
-                  } else if (file.customButton) {
-                    console.log('User tapped custom button: ', file.customButton);
-                  } else {
-                    setShowModal(false)
-                    setFieldValue('file', file)
-                  }
+                ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
+                .then(image => {
+                  setFieldValue('file', image)
                 });
               }}>
                 <Icon type="FontAwesome" name="camera" style={{ fontSize: 28, color: Colors.s_blue }} />
               </TouchableOpacity>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                const options = {
-                  title: 'Select picture',
-                  chooseFromLibraryButtonTitle: '',
-                  storageOptions: {
-                    skipBackup: true,
-                    path: 'images',
-                  },
-                };
 
-                ImagePicker.launchImageLibrary(options, (file) => {
-
-                  if (file.didCancel) {
-                    console.log('User cancelled image picker');
-                  } else if (file.error) {
-                    console.log('ImagePicker Error: ', file.error);
-                  } else if (file.customButton) {
-                    console.log('User tapped custom button: ', file.customButton);
-                  } else {
-                    setShowModal(false)
-                    setFieldValue('file', file)
-                  }
+                ImageCropPicker.openCamera({ cropping: true })
+                .then(image => {
+                  setFieldValue('file', image)
                 });
               }}>
                 <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: Colors.s_blue }} />
