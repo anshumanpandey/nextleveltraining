@@ -50,7 +50,7 @@ const Profile = (props) => {
   }, [])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       {/* <View style={{
           width: "100%",
           height: STATUS_BAR_HEIGHT,
@@ -82,6 +82,7 @@ const Profile = (props) => {
           const errors = {}
 
           if (!values.bodyText) errors.bodyText = "Required"
+          if (!values.file) errors.file = "Required"
 
           return errors;
         }}
@@ -168,6 +169,7 @@ const Profile = (props) => {
 
               </View>
             </ScrollView>
+            {errors.bodyText && touched.bodyText && <ErrorLabel style={{ textAlign: 'center'}} text={errors.bodyText} />}
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
