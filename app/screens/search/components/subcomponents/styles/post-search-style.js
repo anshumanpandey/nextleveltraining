@@ -8,7 +8,8 @@ const styles =StyleSheet.create({
       flexDirection:'row',
       backgroundColor:'white',
       borderBottomColor:'#DEDEDE',
-      borderBottomWidth:1
+      borderBottomWidth:1,
+      marginBottom: '1%'
     },
     ps_image:{
         width:60,

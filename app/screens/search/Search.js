@@ -8,6 +8,9 @@ import { useGlobalState } from '../../state/GlobalState';
 import SearchResultItem from './SearchResultItem';
 import PostCard from '../home/components/PostCard';
 import moment from 'moment'
+import PostSearchCard from './components/subcomponents/PostSearchCard';
+import { FlatList } from 'react-native-gesture-handler';
+import NavigationService from '../../navigation/NavigationService';
 
 
 const NoResultMessage = () => <Text style={{ textAlign: 'center', fontSize: 22, marginTop: '10%'}}>No results</Text>
@@ -88,32 +91,19 @@ const Search = (props) => {
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Players">
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data.Players.length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data.Players.length != 0 && searchCoachesReq.data.Players.map(r => <SearchResultItem {...r} />)}
+            {searchCoachesReq.data && searchCoachesReq.data.Players.length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data.Players} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("PlayerInfo", { player: item})} {...item} /> } />}
           </View>
 
         </Tab>
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Coach">
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data.Coaches.length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data.Coaches.length != 0 && searchCoachesReq.data.Coaches.map(r => <SearchResultItem {...r} />)}
+            {searchCoachesReq.data && searchCoachesReq.data.Coaches.length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data.Coaches} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("Information", {...item})} {...item} /> } />}
           </View>
         </Tab>
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
           {searchCoachesReq.data && searchCoachesReq.data.Posts.length == 0 && <NoResultMessage />}
-          {searchCoachesReq.data && searchCoachesReq.data.Posts.length != 0 && searchCoachesReq.data.Posts.map(p => {
-            console.log(p)
-            return {
-              id: p.Id,
-              name: p.Header,
-              time: moment(p.CreatedDate).format('DD MMM HH:mm'),
-              description: p.Body,
-              createdBy: p.CreatedBy,
-              profileImage: p.ProfileImage,
-              comments: p.Comments || [],
-              likes: p.Likes || [],
-              imageUri: p.MediaURL ? p.MediaURL : undefined
-            }
-          }).map(r => <PostCard item={r} />)}
+          {searchCoachesReq.data && searchCoachesReq.data.Posts.length != 0 && searchCoachesReq.data.Posts.map(r => <PostSearchCard item={r} />)}
         </Tab>
       </Tabs>
     </View>
