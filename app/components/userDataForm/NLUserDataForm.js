@@ -42,6 +42,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                 address: props.navigation.getParam('Address') || "",
                 emailID: props.navigation.getParam('EmailID') || "",
                 mobileNo: props.navigation.getParam('MobileNo') || "",
+                postCode: props.navigation.getParam('PostCode') || "",
                 role: props.navigation.getParam('role', "Player"),
                 password: "",
                 confirmPassword: "",
@@ -55,6 +56,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                 if (!values.address) errors.address = 'Required'
                 if (!values.emailID) errors.emailID = 'Required'
                 if (!values.mobileNo) errors.mobileNo = 'Required'
+                if (!values.postCode) errors.postCode = 'Required'
 
                 if (props.hidePasswordInput != true) {
                     if (!values.password) errors.password = 'Required'
@@ -151,6 +153,17 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             />
                         </View>
                         {errors.mobileNo && touched.mobileNo && <ErrorLabel text={errors.mobileNo} />}
+
+                        <View style={styles.signup_info_view}>
+                            <TextInput
+                                placeholderTextColor={'rgba(0,0,0,0.3)'}
+                                placeholder="Post Code"
+                                onChangeText={handleChange('postCode')}
+                                onBlur={handleBlur('postCode')}
+                                value={values.postCode}
+                            />
+                        </View>
+                        {errors.postCode && touched.postCode && <ErrorLabel text={errors.postCode} />}
 
                         {props.hidePasswordInput != true && (
                             <>
