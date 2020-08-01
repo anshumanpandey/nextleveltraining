@@ -51,6 +51,7 @@ import PaymentConcentScreen from './screens/payments/PaymentConcent';
 import HelpScreen from './screens/help/HelpScreen';
 import ProfilePicScreen from './screens/profilePic/ProfilePic';
 import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
+import CalendarScreen from './screens/Calendar/CalendarScreen';
 
 let initialRouteName = null
 let Apps = null
@@ -358,6 +359,15 @@ const AppMain = () => {
         ),
       }),
     }
+
+    tabs.Calendar = {
+      screen: CalendarScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
   }
 
   initialRouteName = hasFullProfile(profile) == true && token ? 'Home' : 'Profile'
@@ -365,7 +375,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', 'Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "Calendar",'Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

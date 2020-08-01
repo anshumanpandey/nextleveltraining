@@ -79,6 +79,15 @@ const Menu = (props) => {
             }
         },
         {
+            id: 44,
+            title: 'Calendar',
+            icon: `${Images.MyBookingIcon}`,
+            path: 'Calendar',
+            onPress: (props, profile) => {
+                NavigationService.navigate('Calendar')
+            }
+        },
+        {
             id: 4,
             title: 'Training Locations',
             icon: `${Images.HomeTrainingIcon}`,
