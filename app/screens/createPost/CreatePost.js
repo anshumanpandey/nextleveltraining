@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions
 import Header from '../../components/header/Header'
 import { Textarea, Icon, Input, Spinner } from 'native-base'
 import DocumentPicker from 'react-native-document-picker';
-import TagInput from 'react-native-tags-input';
 import { Formik } from 'formik';
 import AsyncStorage from '@react-native-community/async-storage';
 import useAxios from 'axios-hooks'
@@ -11,26 +10,43 @@ import ErrorLabel from '../../components/ErrorLabel'
 import Video from 'react-native-video';
 import Colors from '../../constants/color'
 import ImageCropPicker from 'react-native-image-crop-picker';
+import MentionInput from 'react-native-mention';
 
 const Profile = (props) => {
+  const inputEl = useRef(null);
   const formikRef = useRef()
-  const [tag, setTag] = useState("")
-  const [selectedTags, setSelectedTags] = useState([])
 
   const [postReq, doPost] = useAxios({
     url: '/Users/CreatePost',
     method: 'POST'
   }, { manual: true })
 
+  const [getconnectedUserReq, refetchConnected] = useAxios({
+    url: '/Users/GetConnectedUsers',
+  })
+
+  const [getHashtags, refetchHashtags] = useAxios({
+    url: '/Users/GetHashTags',
+  })
+
+
   useEffect(() => {
-    const focusListener = props.navigation.addListener('didBlur', () => {
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      refetchConnected()
+      refetchHashtags()
+    });
+
+    const blurListener = props.navigation.addListener('didBlur', () => {
       formikRef?.current?.setFieldValue("bodyText", "")
       formikRef?.current?.setFieldValue("file", null)
       formikRef?.current?.setErrors({
         bodyText: undefined
       })
     });
-    return () => focusListener?.remove();
+    return () => {
+      focusListener?.remove();
+      blurListener?.remove();
+    }
   }, [])
 
   return (
@@ -95,37 +111,38 @@ const Profile = (props) => {
             <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.post_view}>
                 <View style={{ padding: '5%' }}>
-                  <Textarea
-                    onChangeText={handleChange('bodyText')}
-                    onBlur={handleBlur('bodyText')}
-                    value={values.bodyText}
-                    style={styles.textArea}
+                  <MentionInput
+                    inputField={styles.textArea}
+                    ref={(cd) => inputEl.current = cd}
+                    reference={comp => { }}
+                    isLoading={getconnectedUserReq.loading}
+                    loadingComponent={
+                      <Text>Loading...</Text>
+                    }
                     placeholder="Post about training here..."
+                    onChangeText={(e) => {
+                      console.log("onChangeText", e)
+                      console.log(inputEl?.current?.getUser())
+                    }}
+                    mentionData={getconnectedUserReq.data ? getconnectedUserReq.data.map(u => ({ id: u.Id, name: u.FullName.replace(" ", "_")})): []}
+                    hashtagData={getHashtags.data ? getHashtags.data.map(u => ({ id: u.Id, name: u.Tag.replace(" ", "_").replace("#", "")})): []}
+                    mentioningChangeText={(e) => { }}
+                    onMentionSelected={(mnetion) => {
+                      console.log("onMentionSelected", mnetion)
+                    }}
+                    onHashtagSelected={(hashtag) => {
+                      console.log("onHashtagSelected", hashtag)
+                    }}
+                    renderMentionCell={({ item }) => (
+                      <View style={{ padding: '2%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)'}}>
+                        <Text>{item.name}</Text>
+                      </View>
+                    )}
+                    style={styles.inputField}
                   />
                   {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
 
-                  <TagInput
-                    updateState={(e) => {
-                      setTag(e.tag.replace(/(#)/g, ""))
-                      setSelectedTags([...e.tagsArray])
-                    }}
-                    tags={{tag: `#${tag}`, tagsArray: selectedTags}}
-                    keysForTag="\n"
-                    tagStyle={{ backgroundColor: Colors.s_blue }}
-                    tagTextStyle={{ color: 'white'}}
-                    inputStyle={{
-                      marginTop: '1%',
-                      paddingVertical: 0,
-                      borderWidth: 1,
-                      borderColor: Colors.s_blue,
-                      borderRadius: 15,
-                    }}
-                    deleteElement={
-                      <>
-                      <Icon type="Fontisto" name="close" style={{ color: 'white', fontSize: 16}} />
-                      </>
-                    }
-                  />
+
                 </View>
 
                 {values.file && !values.file.type.includes('video') && (

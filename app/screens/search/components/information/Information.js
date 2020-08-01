@@ -8,6 +8,7 @@ import StarRating from 'react-native-star-rating';
 import InformationTab from './informationTab';
 import MediaTab from './MediaTab';
 import ReviewTab from './ReviewTab';
+import useAxios from 'axios-hooks'
 import Tabs from './Tabs';
 import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
@@ -22,6 +23,17 @@ const Information = (props) => {
   const [milesAway, setMilesAway] = useState();
   const activeColor = Colors.s_blue;
   const inActiveColor = 'gray';
+
+  const [getconnectedUserReq, refetch] = useAxios({
+    url: '/Users/GetConnectedUsers',
+  })
+
+  const [connectedUserReq, doConnect] = useAxios({
+    url: '/Users/ConnectUser',
+    method: 'POST'
+  }, { manual: true })
+
+  const isConnectedLoading = () => connectedUserReq.loading || getconnectedUserReq.loading
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
@@ -57,10 +69,29 @@ const Information = (props) => {
             style={{ fontSize: 25, color: 'white', padding: 10 }}
           />
         </View>
-        <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2}}></View>
+        <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2 }}></View>
         <View style={styles.infoContain}>
           <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
-          <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
+          <View style={{ flexDirection: 'row', width: '55%', justifyContent: 'space-between', marginLeft: 'auto' }}>
+            <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
+            {!isConnectedLoading() && (
+              <TouchableOpacity style={{ alignItems: 'center',opacity: isConnectedLoading() ? 0.3 : 1 }} disabled={isConnectedLoading()} onPress={() => {
+                const data = {
+                  "userId": props.navigation.getParam("Id"),
+                  "isConnected": true
+                }
+                doConnect({ data })
+                  .then(() => refetch())
+              }}>
+                <Image style={{ height: 40, width: 40, marginRight: '15%' }} source={Images.ConnectIcon} />
+                {getconnectedUserReq.data && getconnectedUserReq.data.length != 0 && getconnectedUserReq.data.find(u => u.Id == props.navigation.getParam("Id")) != null && <Text style={{ fontSize: 12 }}>Connected</Text>}
+                {getconnectedUserReq.data && getconnectedUserReq.data.length != 0 && getconnectedUserReq.data.find(u => u.Id == props.navigation.getParam("Id")) == null && <Text style={{ fontSize: 12 }}>Connect</Text>}
+              </TouchableOpacity>
+            )}
+            {isConnectedLoading() && (
+              <Spinner color={Colors.s_blue} />
+            )}
+          </View>
 
           <View style={styles.rate_miles}>
             <View style={styles.rate_miles_view}>
@@ -85,7 +116,7 @@ const Information = (props) => {
               </View>
             </View>
             {milesAway && milesAway != -1 && (
-              <View style={[styles.rate_miles_view, { width: dimensions.pro40}]}>
+              <View style={[styles.rate_miles_view, { width: dimensions.pro40 }]}>
                 <Text style={[styles.headText, { textAlign: 'right' }]}>
                   {`${milesAway} miles`}
                 </Text>
@@ -94,7 +125,7 @@ const Information = (props) => {
                 </Text>
               </View>
             )}
-            {milesAway == undefined && (<Spinner color={Colors.s_yellow} />)}
+            {milesAway == undefined && (<Spinner color={Colors.s_blue} />)}
             {milesAway == -1 && (<Text></Text>)}
           </View>
 
@@ -117,7 +148,7 @@ const Information = (props) => {
                   actions: [
                     NavigationActions.navigate({
                       routeName: 'MainStack',
-                      action: NavigationActions.navigate({ routeName: 'Chat', params: {RecieverId:props.navigation.getParam("Id"), SenderId: profile.Id,friendName:props.navigation.getParam("FullName")} })
+                      action: NavigationActions.navigate({ routeName: 'Chat', params: { RecieverId: props.navigation.getParam("Id"), SenderId: profile.Id, friendName: props.navigation.getParam("FullName") } })
                     })
                   ]
                 })

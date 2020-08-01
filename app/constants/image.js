@@ -12,6 +12,7 @@ const Images ={
     SearchIcon:require('../assets/images/search-icon2x.png'),
     BookingIcon:require('../assets/images/booking2x.png'),
     MoreIcon:require('../assets/images/more2x.png'),
+    ConnectIcon:require('../assets/images/connect-icon.png'),
 
     //Menu icon Images
     PersonalDetailIcon:require('../assets/images/personal-details-icon2x.png'),
