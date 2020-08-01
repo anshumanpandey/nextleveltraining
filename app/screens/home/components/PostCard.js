@@ -14,6 +14,7 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../../state/GlobalState';
 import Video from 'react-native-video';
 import Colors from '../../../constants/color';
+import ParsedText from 'react-native-parsed-text';
 
 const PostCard = ({ item, onClickItem, onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
@@ -53,7 +54,21 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
             </View>
           </View>
         </View>
-        <Text style={[styles.post_description, { paddingHorizontal: '5%' }]}>{item.description}</Text>
+        <ParsedText
+          style={[styles.post_description, { paddingHorizontal: '5%' }]}
+          parse={[
+            {
+              pattern: /@[A-Za-z0-9._-]*/,
+              style: { color: Colors.s_blue, fontWeight: 'bold'}
+            },
+            {
+              pattern: /#(\w+)/,
+              style: { color: Colors.s_blue, fontWeight: 'bold'}
+            }
+          ]}
+        >
+          {item.description}
+        </ParsedText>
 
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (

@@ -62,6 +62,7 @@
     "react-native-mention": "git+https://github.com/TheLox95/react-native-mention.git",
     "react-native-modal": "^11.5.6",
     "react-native-modal-datetime-picker": "^8.7.1",
+    "react-native-parsed-text": "0.0.22",
     "react-native-reanimated": "^1.9.0",
     "react-native-safe-area-context": "^3.0.7",
     "react-native-screens": "^2.9.0",
