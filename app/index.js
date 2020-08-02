@@ -231,11 +231,6 @@ const AppMain = () => {
         </View>
       )
     }
-    if (profile.Role == "Coach") {
-      searchMenuItem.tabBarButtonComponent = (p) => {
-        return <></>
-      }
-    }
 
     tabs.Search = {
       screen: SearchStack,
