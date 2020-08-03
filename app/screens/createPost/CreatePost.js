@@ -86,11 +86,12 @@ const Profile = (props) => {
 
           return errors;
         }}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values, { resetForm, setFieldValue }) => {
           const data = {
             "body": values.bodyText,
             "header": "sss",
-            "numberOfLikes": 0
+            "numberOfLikes": 0,
+            "taggedUserIds": inputEl.current?.getUser().map(u => u.id)
           }
 
           doPost({ data })
@@ -103,13 +104,14 @@ const Profile = (props) => {
             .then(() => {
               props.navigation.navigate('Home')
               resetForm({ values: {} })
+              inputEl.current?.clearInput()
             })
 
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
           <>
-            <ScrollView contentContainerStyle={styles.scrollView}>
+            <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollView}>
               <View style={styles.post_view}>
                 <View style={{ padding: '5%' }}>
                   <MentionInput
@@ -123,7 +125,7 @@ const Profile = (props) => {
                     placeholder="Post about training here..."
                     onChangeText={(e) => {
                       console.log("onChangeText", e)
-                      console.log(inputEl?.current?.getUser())
+                      setFieldValue("bodyText", e)
                     }}
                     mentionData={getconnectedUserReq.data ? getconnectedUserReq.data.map(u => ({ id: u.Id, name: u.FullName.replace(" ", "_")})): []}
                     hashtagData={getHashtags.data ? getHashtags.data.map(u => ({ id: u.Id, name: u.Tag.replace(" ", "_").replace("#", "")})): []}
@@ -175,6 +177,8 @@ const Profile = (props) => {
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
                 ImageCropPicker.openCamera({ cropping: true })
                   .then(image => {
+                    image.type = image.mime
+                    image.uri = image.path
                     setFieldValue('file', image)
                   });
               }}>
@@ -185,6 +189,8 @@ const Profile = (props) => {
 
                 ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
                   .then(image => {
+                    image.type = image.mime
+                    image.uri = image.path
                     setFieldValue('file', image)
                   });
               }}>
