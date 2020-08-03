@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions, Platform } from 'react-native'
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions, Platform, Alert } from 'react-native'
 import Header from '../../components/header/Header'
 import { Textarea, Icon, Input, Spinner } from 'native-base'
 import DocumentPicker from 'react-native-document-picker';
@@ -11,6 +11,7 @@ import Video from 'react-native-video';
 import Colors from '../../constants/color'
 import ImageCropPicker from 'react-native-image-crop-picker';
 import MentionInput from 'react-native-mention';
+import LoadableVideo from '../../components/LoadableVideo';
 
 const Profile = (props) => {
   const inputEl = useRef(null);
@@ -160,18 +161,10 @@ const Profile = (props) => {
                 )}
 
                 {values.file && values.file.type.includes('video') && (
-                  <Video
-                    paused={true}
-                    currentPosition={10}
-                    controls={true}
+                  <LoadableVideo
                     source={{ uri: values.file.uri, }}   // Can be a URL or a local file.
-                    onError={() => {
-                      Alert.alert('Error', 'We could not load the video')
-                    }}               // Callback when video cannot be loaded
-                    style={{
-                      flex: 2,
-                      height: '50%'
-                    }} />
+                    style={{ flex: 2, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50}}
+                  />
                 )}
 
               </View>

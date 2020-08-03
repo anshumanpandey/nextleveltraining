@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header_item_container: {
-    width: Dimension.pro100,
+    width: Dimension.pro95,
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexDirection: 'row',
