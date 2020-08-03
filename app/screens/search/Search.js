@@ -35,6 +35,14 @@ const Search = (props) => {
     }
   }, [])
 
+  let TabsName = ["Player", "Coach"]
+  let propsToIterate = ["Players", "Coaches"]
+
+  if (profile.Role == "Player") {
+    TabsName = ["Coach", "Player"]
+    propsToIterate = ["Coaches", "Players"]
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
@@ -97,40 +105,18 @@ const Search = (props) => {
         </View>
       </View>
       <Tabs tabBarUnderlineStyle={{ backgroundColor: Colors.s_blue }}>
-        {profile.Role == "Player" && (
-          <>
-            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Coach">
-              <View style={{ padding: '2%' }}>
-                {searchCoachesReq.data && searchCoachesReq.data.Coaches.length == 0 && <NoResultMessage />}
-                {searchCoachesReq.data && searchCoachesReq.data.Coaches.length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data.Coaches} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("Information", { ...item })} {...item} />} />}
-              </View>
-            </Tab>
-            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Players">
-              <View style={{ padding: '2%' }}>
-                {searchCoachesReq.data && searchCoachesReq.data.Players.length == 0 && <NoResultMessage />}
-                {searchCoachesReq.data && searchCoachesReq.data.Players.length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data.Players} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("PlayerInfo", { player: item })} {...item} />} />}
-              </View>
-
-            </Tab>
-          </>
-        )}
-        {profile.Role == "Role" && (
-          <>
-            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Players">
-              <View style={{ padding: '2%' }}>
-                {searchCoachesReq.data && searchCoachesReq.data.Players.length == 0 && <NoResultMessage />}
-                {searchCoachesReq.data && searchCoachesReq.data.Players.length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data.Players} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("PlayerInfo", { player: item })} {...item} />} />}
-              </View>
-
-            </Tab>
-            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Coach">
-              <View style={{ padding: '2%' }}>
-                {searchCoachesReq.data && searchCoachesReq.data.Coaches.length == 0 && <NoResultMessage />}
-                {searchCoachesReq.data && searchCoachesReq.data.Coaches.length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data.Coaches} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("Information", { ...item })} {...item} />} />}
-              </View>
-            </Tab>
-          </>
-        )}
+        <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[0]}>
+          <View style={{ padding: '2%' }}>
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length == 0 && <NoResultMessage />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[0]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("Information", { ...item })} {...item} />} />}
+          </View>
+        </Tab>
+        <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[1]}>
+          <View style={{ padding: '2%' }}>
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length == 0 && <NoResultMessage />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[1]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("PlayerInfo", { player: item })} {...item} />} />}
+          </View>
+        </Tab>
 
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
           {searchCoachesReq.data && searchCoachesReq.data.Posts.length == 0 && <NoResultMessage />}
