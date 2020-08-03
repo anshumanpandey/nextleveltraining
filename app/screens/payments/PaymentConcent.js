@@ -25,6 +25,7 @@ const PaymentConcentScreen = (props) => {
   const webview = useRef(null)
   const [profile] = useGlobalState('profile')
 
+  const [apiCalled, setApiCalled] = useState(false);
   const [checked, setChecked] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
@@ -135,6 +136,7 @@ const PaymentConcentScreen = (props) => {
 
               if (url.includes('PAYMENT_SUCCESS')) {
                 console.log('success')
+                if (apiCalled == true) return
                 const data = {
                   "playerID": profile.Id,
                   "coachID": props.navigation.getParam('coach').Id,
@@ -148,7 +150,10 @@ const PaymentConcentScreen = (props) => {
                   "bookingStatus": "Done"
                 }
                 saveBooking({ data })
-                  .then(r => console.log(r.data))
+                  .then(r => {
+                    setApiCalled(true)
+                    console.log(r.data)
+                  })
                   .finally(() => {
                     setOpenModal(false)
                     const resetAction = StackActions.reset({
