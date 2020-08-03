@@ -136,7 +136,7 @@ const PaymentConcentScreen = (props) => {
 
               if (url.includes('PAYMENT_SUCCESS')) {
                 console.log('success')
-                if (apiCalled == true) return
+                if (apiCalled == true || saveBookingReq.loading == true) return
                 const data = {
                   "playerID": profile.Id,
                   "coachID": props.navigation.getParam('coach').Id,
