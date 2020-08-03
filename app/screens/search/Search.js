@@ -37,10 +37,12 @@ const Search = (props) => {
 
   let TabsName = ["Player", "Coach"]
   let propsToIterate = ["Players", "Coaches"]
+  let screensToNavigate = ["PlayerInfo", "Information"]
 
   if (profile.Role == "Player") {
     TabsName = ["Coach", "Player"]
     propsToIterate = ["Coaches", "Players"]
+    screensToNavigate = ["Information", "PlayerInfo"]
   }
 
   return (
@@ -108,13 +110,13 @@ const Search = (props) => {
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[0]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[0]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("Information", { ...item })} {...item} />} />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[0]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item })} {...item} />} />}
           </View>
         </Tab>
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[1]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[1]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate("PlayerInfo", { player: item })} {...item} />} />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[1]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate(screensToNavigate[1], { player: item })} {...item} />} />}
           </View>
         </Tab>
 

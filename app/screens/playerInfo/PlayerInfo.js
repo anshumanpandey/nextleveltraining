@@ -16,6 +16,7 @@ import ConnectedWidget from '../../components/ConnectedWidget';
 const PlayerInfoScreen = (props) => {
   const [profilePic, setProfilePic] = useState();
   const profile = props.navigation.getParam("player")
+  console.log(profile)
   const { AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   const initFn = () => {
@@ -52,7 +53,7 @@ const PlayerInfoScreen = (props) => {
               />
             </View>
             <View style={{ position: 'absolute', right: '5%', alignSelf: 'flex-end' }}>
-              <ConnectedWidget />
+              <ConnectedWidget userToConnectTo={profile.Id} />
             </View>
           </View>
 
