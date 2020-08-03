@@ -154,7 +154,7 @@ const Menu = (props) => {
             }
         } else {
             finalMenu = [
-                ...menulist.slice(0,3),
+                ...menulist.slice(0, 3),
                 {
                     id: 54,
                     title: 'Coaches',
@@ -172,10 +172,10 @@ const Menu = (props) => {
     useEffect(() => {
         if (!profile?.ProfileImage) {
             AsyncStorage.getItem('ProfilePic')
-            .then((s) => {
-                if (!s) return
-                setProfilePic(JSON.parse(s).uri)
-            })
+                .then((s) => {
+                    if (!s) return
+                    setProfilePic(JSON.parse(s).uri)
+                })
         } else {
             setProfilePic(profile?.ProfileImage)
         }
@@ -188,11 +188,16 @@ const Menu = (props) => {
     return (
 
         <View style={styles.menu_view}>
-            <View style={styles.menu_avatar}>
-                {triggerChange == true && <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />}
-                {triggerChange == false && <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />}
-                <Text style={styles.avatar_title}>{profile?.FullName}</Text>
-            </View>
+            <TouchableOpacity
+                disabled={profile?.Role == "Player"}
+                onPress={() => NavigationService.navigate("CoachSummary")}
+            >
+                <View style={styles.menu_avatar}>
+                    {triggerChange == true && <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />}
+                    {triggerChange == false && <Image style={styles.imageAvatar} source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder} />}
+                    <Text style={styles.avatar_title}>{profile?.FullName}</Text>
+                </View>
+            </TouchableOpacity>
             <FlatList
                 data={finalMenu}
                 keyExtractor={item => item.id}

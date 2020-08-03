@@ -81,11 +81,11 @@ const CalendarScreen = (props) => {
             <FlatList
                 ListEmptyComponent={
                     <>
-                    <Text style={{ color: 'rgba(0,0,0,0.5)', fontSize: 18, textAlign: 'center', marginTop: '15%'}}>No bookings in the selected date range</Text>
+                        <Text style={{ color: 'rgba(0,0,0,0.5)', fontSize: 18, textAlign: 'center', marginTop: '15%' }}>No bookings in the selected date range</Text>
                     </>
                 }
                 refreshing={loading}
-                onRefresh={ () => {
+                onRefresh={() => {
                     const data = {
                         "userID": profile?.Id,
                         "role": profile?.Role
@@ -116,25 +116,29 @@ const BookingGroup = ({ data = [], groupDate }) => {
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.Id}
             renderItem={({ item }) => {
-                return (
-                    <View style={{ flexDirection: 'row', padding: '3%' }}>
-                        <View style={{ marginRight: '5%' }}>
-                            <Text>{moment(item.FromTime).format("HH:mm")}</Text>
-                            <Text>{moment(item.ToTime).format("HH:mm")}</Text>
-                        </View>
-                        <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Icon type="FontAwesome" name="circle" style={{ color: Colors.s_blue, fontSize: 12 }} />
-                                <Text>{item.FullName}</Text>
-                            </View>
-                            <View style={{ paddingLeft: '3%' }}>
-                                <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{item.Address}</Text>
-                            </View>
-                        </View>
-                    </View>
-                )
+                return (<CalendarListItem {...item} />)
             }}
         />
+    );
+}
+
+export const CalendarListItem = (item) => {
+    return (
+        <View style={{ flexDirection: 'row', padding: '3%' }}>
+            <View style={{ marginRight: '5%' }}>
+                <Text>{moment(item.FromTime).format("HH:mm")}</Text>
+                <Text>{moment(item.ToTime).format("HH:mm")}</Text>
+            </View>
+            <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Icon type="FontAwesome" name="circle" style={{ color: Colors.s_blue, fontSize: 12 }} />
+                    <Text>{item.FullName}</Text>
+                </View>
+                <View style={{ paddingLeft: '3%' }}>
+                    <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{item.Address}</Text>
+                </View>
+            </View>
+        </View>
     );
 }
 
