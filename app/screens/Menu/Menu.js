@@ -157,7 +157,7 @@ const Menu = (props) => {
                 ...menulist.slice(0,3),
                 {
                     id: 54,
-                    title: 'CoachesOption',
+                    title: 'Coaches',
                     icon: `${Images.AboutMeIcon}`,
                     path: '',
                     onPress: (props, profile) => {
