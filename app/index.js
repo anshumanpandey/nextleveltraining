@@ -122,7 +122,6 @@ const AppMain = () => {
     {
       Profile: { screen: Profile },
       EditInput: { screen: EditInput },
-      ProfilePic: { screen: ProfilePicScreen },
       AddTeam: { screen: AddTeam },
       AddExperience: { screen: AddExperience },
       AddDbsCertificate: { screen: AddDbsCertificate },
@@ -211,6 +210,16 @@ const AppMain = () => {
         ),
       }),
     }
+
+    tabs.ProfilePic = {
+      screen: ProfilePicScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
 
     tabs.CreateComment = {
       screen: CommentsScreen,
@@ -379,7 +388,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "Calendar", 'AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "Calendar", 'ProfilePic','AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
