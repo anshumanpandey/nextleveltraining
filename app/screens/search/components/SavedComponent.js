@@ -45,7 +45,7 @@ const SavedComponent = (props) => {
     <>
       <FlatList
         horizontal={false}
-        data={searchCoachesReq.data ? searchCoachesReq.data.filter(c => c.Status == "Saved") : []}
+        data={searchCoachesReq.data ? searchCoachesReq.data.filter(c => c.Status == "Saved").map(i => ({...i, Role: "Coach"})) : []}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostSearchCard
