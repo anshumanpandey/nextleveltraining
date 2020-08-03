@@ -7,7 +7,7 @@ import NavigationService from '../../navigation/NavigationService';
 const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading = false}) => {
   return (
     <View style={styles.header_layout}>
-      <View style={styles.header_item_container}>
+      <View style={[styles.header_item_container, { justifyContent: 'space-between'}]}>
         <TouchableOpacity onPress={() => NavigationService.goBack()}>
           <Icon
             name="close"
