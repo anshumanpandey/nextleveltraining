@@ -21,17 +21,17 @@ const SearchTabs = () => {
       <Tab.Screen
         name="Search"
         component={SearchComponent}
-        options={{tabBarLabel: 'Players'}}
+        options={{tabBarLabel: 'SEARCH'}}
       />
       <Tab.Screen
         name="PreviousCoach"
         component={PreviousComponent}
-        options={{tabBarLabel: 'Coaches'}}
+        options={{tabBarLabel: 'PREVIOUS COACHES'}}
       />
       <Tab.Screen
         name="Saved"
         component={SavedComponent}
-        options={{tabBarLabel: 'Hashtags'}}
+        options={{tabBarLabel: 'SAVED'}}
       />
     </Tab.Navigator>
   );

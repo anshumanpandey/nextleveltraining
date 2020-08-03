@@ -10,7 +10,7 @@ import { Icon } from 'native-base';
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
-    const [agroupedData, setAgroupedData] = useState()
+    const [agroupedData, setAgroupedData] = useState([])
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
 
