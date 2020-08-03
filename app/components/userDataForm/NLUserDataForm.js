@@ -132,6 +132,17 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                         <View style={styles.signup_info_view}>
                             <TextInput
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
+                                placeholder="Post Code"
+                                onChangeText={handleChange('postCode')}
+                                onBlur={handleBlur('postCode')}
+                                value={values.postCode}
+                            />
+                        </View>
+                        {errors.postCode && touched.postCode && <ErrorLabel text={errors.postCode} />}
+
+                        <View style={styles.signup_info_view}>
+                            <TextInput
+                                placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 editable={!props.navigation.getParam('emailIDIsDisabled', false)}
                                 placeholder="Email ID"
                                 keyboardType="email-address"
@@ -153,17 +164,6 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             />
                         </View>
                         {errors.mobileNo && touched.mobileNo && <ErrorLabel text={errors.mobileNo} />}
-
-                        <View style={styles.signup_info_view}>
-                            <TextInput
-                                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                placeholder="Post Code"
-                                onChangeText={handleChange('postCode')}
-                                onBlur={handleBlur('postCode')}
-                                value={values.postCode}
-                            />
-                        </View>
-                        {errors.postCode && touched.postCode && <ErrorLabel text={errors.postCode} />}
 
                         {props.hidePasswordInput != true && (
                             <>
