@@ -24,6 +24,19 @@ const CalendarScreen = (props) => {
     })
 
     useEffect(() => {
+        const focusListener = props.navigation.addListener('didFocus', () => {
+            const data = {
+                "userID": profile?.Id,
+                "role": profile?.Role
+            }
+            getBookings({ data })
+        });
+        return () => {
+            focusListener?.remove();
+        }
+    }, [])
+
+    useEffect(() => {
         if (!data) return
 
         const d = data
@@ -46,7 +59,7 @@ const CalendarScreen = (props) => {
                 bookings: d[date]
             };
         });
-        setAgroupedData(groupArrays)
+        setAgroupedData([...groupArrays])
     }, [data, startDate, endDate])
 
     return (
@@ -116,7 +129,7 @@ const BookingGroup = ({ data = [], groupDate }) => {
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.Id}
             renderItem={({ item }) => {
-                return (<CalendarListItem {...item} />)
+                return (<CalendarListItem {...item} Address={item.Location.LocationAddress} />)
             }}
         />
     );

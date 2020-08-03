@@ -121,6 +121,7 @@ const CoachsummaryScreen = (props) => {
                         const dateB = setHours(parseISO(b.BookingDate), getHours(parseISO(b.ToTime)))
                         return dateB - dateA
                     }).slice(0, 3)}
+                    contentContainerStyle={{ flexGrow: 1 }}
                     keyExtractor={i => i.Id}
                     renderItem={({ item }) => {
                         return (<CalendarListItem {...item} />);
