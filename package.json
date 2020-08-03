@@ -31,6 +31,7 @@
     "axios-hooks": "^2.1.0",
     "color": "^3.1.2",
     "convert-units": "^2.3.4",
+    "date-fns": "^2.14.0",
     "formik": "^2.1.5",
     "fuzzy-search": "^3.2.1",
     "geolib": "^3.3.1",

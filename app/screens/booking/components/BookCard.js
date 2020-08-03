@@ -5,6 +5,7 @@ import { Icon } from 'native-base'
 import moment from 'moment'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import NavigationService from '../../../navigation/NavigationService';
+import { parseISO, format } from 'date-fns'
 
 const BookCard = (item) => {
   return (
@@ -18,13 +19,13 @@ const BookCard = (item) => {
           <Text style={{ fontWeight: '500', marginTop: 5 }}>{item.FullName}</Text>
           <View style={{ marginTop: 5 }}>
             <Text>{item.Location.LocationAddress}</Text>
-            {/*TODO: FIX when booking date is being return from backend <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>
-                {moment.utc(item.BookingDate).format("MMM DD, ")}
-                {moment(item.ToTime).format("HH:mm")}
+                {format(parseISO(item.BookingDate),"MMM, dd ")}
+                {item.FromTime.split('T')[1].slice(0,5)}
               </Text>
-            </View>*/}
+            </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Job fees:</Text>
               <View style={{ flexDirection: 'row', marginLeft: 5 }}>
