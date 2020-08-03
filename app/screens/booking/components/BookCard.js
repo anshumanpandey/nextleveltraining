@@ -23,7 +23,7 @@ const BookCard = (item) => {
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>
                 {format(parseISO(item.BookingDate),"MMM, dd ")}
-                {item.FromTime.split('T')[1].slice(0,5)}
+                {moment(item.FromTime).format("HH:mm")}
               </Text>
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
