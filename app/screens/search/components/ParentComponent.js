@@ -5,9 +5,10 @@ import SavedComponent from './SavedComponent';
 import PreviousComponent from './PreviousComponent';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import { useGlobalState } from '../../../state/GlobalState';
+import Header from '../../../components/header/Header';
 const Tab = createMaterialTopTabNavigator();
 
-const ParentComponent = () => {
+const SearchTabs = () => {
   const [profile] = useGlobalState('profile')
   return (
     <Tab.Navigator
@@ -33,6 +34,15 @@ const ParentComponent = () => {
         options={{tabBarLabel: 'Hashtags'}}
       />
     </Tab.Navigator>
+  );
+}
+
+const ParentComponent = (props) => {
+  return (
+    <>
+    <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+    <SearchTabs />
+    </>
   );
 }
 

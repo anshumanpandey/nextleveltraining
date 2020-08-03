@@ -138,7 +138,6 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
               />
               <View>
                 {likes.length != 0 && <Text style={styles.post_like}>{likes.length}</Text>}
-                <Text>{' '}Like</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -149,7 +148,6 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
             <Icon type="Octicons" name="comment" style={styles.post_comment} />
             <View style={{ marginLeft: '7%', flexDirection: 'row' }}>
               {item.comments.length != 0 && <Text style={styles.post_like}>{item.comments.length}</Text>}
-              <Text>{' '}Comment</Text>
             </View>
           </TouchableOpacity>
         </View>

@@ -6,6 +6,7 @@ import Images from '../../../constants/image';
 import NavigationService from '../../../navigation/NavigationService';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
+import Header from '../../../components/header/Header';
 
 const SearchComponent = (props) => {
   const [profile] = useGlobalState('profile')

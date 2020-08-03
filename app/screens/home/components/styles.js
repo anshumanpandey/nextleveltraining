@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     // width:'90%'
   },
   post_news_image: {
-    height: Dimension.px380,
+    height: Dimension.px440,
     width: Dimension.deviceWidth,
     borderRadius: 0,
   },

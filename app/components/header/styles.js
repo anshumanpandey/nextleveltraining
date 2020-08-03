@@ -11,10 +11,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header_item_container: {
-    paddingHorizontal: 10,
     width: Dimension.pro100,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexDirection: 'row',
     display: 'flex',
   },

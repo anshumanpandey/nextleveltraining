@@ -157,11 +157,11 @@ const Menu = (props) => {
                 ...menulist.slice(0,3),
                 {
                     id: 54,
-                    title: 'Add Coach',
+                    title: 'Coaches',
                     icon: `${Images.AboutMeIcon}`,
                     path: '',
                     onPress: (props, profile) => {
-                        NavigationService.navigate("Search")
+                        NavigationService.navigate("AddCoaches")
                     }
                 },
                 ...menulist.slice(3),
