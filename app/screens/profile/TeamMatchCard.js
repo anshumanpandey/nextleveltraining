@@ -18,7 +18,9 @@ const TeamMatchCard = ({ title, data, disableEdit = false, onEditPress }) => {
             flexDirection: 'row',
           }}>
           <Text style={styles.titleText}>{title}</Text>
-          <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_blue }} />
+          {!disableEdit && (
+            <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_blue }} />
+          )}
         </View>
       </TouchableOpacity>
       <View style={{ marginTop: data && data.length <= 0 ? 20 : 10, marginRight: 15 }}>
