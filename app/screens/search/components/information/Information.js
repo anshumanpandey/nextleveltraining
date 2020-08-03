@@ -15,6 +15,7 @@ import getDistance from 'geolib/es/getDistance';
 import { useGlobalState } from '../../../../state/GlobalState';
 import dimensions from '../../../../constants/dimensions';
 import { StackActions, NavigationActions } from 'react-navigation';
+import ConnectedWidget from '../../../../components/ConnectedWidget';
 var convert = require('convert-units')
 
 const Information = (props) => {
@@ -23,17 +24,6 @@ const Information = (props) => {
   const [milesAway, setMilesAway] = useState();
   const activeColor = Colors.s_blue;
   const inActiveColor = 'gray';
-
-  const [getconnectedUserReq, refetch] = useAxios({
-    url: '/Users/GetConnectedUsers',
-  })
-
-  const [connectedUserReq, doConnect] = useAxios({
-    url: '/Users/ConnectUser',
-    method: 'POST'
-  }, { manual: true })
-
-  const isConnectedLoading = () => connectedUserReq.loading || getconnectedUserReq.loading
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
@@ -74,25 +64,8 @@ const Information = (props) => {
           <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
           <View style={{ flexDirection: 'row', width: '55%', justifyContent: 'space-between', marginLeft: 'auto' }}>
             <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
-            {!isConnectedLoading() && (
-              <TouchableOpacity style={{ alignItems: 'center',opacity: isConnectedLoading() ? 0.3 : 1 }} disabled={isConnectedLoading()} onPress={() => {
-                const data = {
-                  "userId": props.navigation.getParam("Id"),
-                  "isConnected": true
-                }
-                doConnect({ data })
-                  .then(() => refetch())
-              }}>
-                <Image style={{ height: 40, width: 40, marginRight: '15%' }} source={Images.ConnectIcon} />
-                {getconnectedUserReq.data && getconnectedUserReq.data.length != 0 && getconnectedUserReq.data.find(u => u.Id == props.navigation.getParam("Id")) != null && <Text style={{ fontSize: 12 }}>Connected</Text>}
-                {getconnectedUserReq.data && getconnectedUserReq.data.length != 0 && getconnectedUserReq.data.find(u => u.Id == props.navigation.getParam("Id")) == null && <Text style={{ fontSize: 12 }}>Connect</Text>}
-              </TouchableOpacity>
-            )}
-            {isConnectedLoading() && (
-              <Spinner color={Colors.s_blue} />
-            )}
+            <ConnectedWidget userToConnectTo={props.navigation.getParam("Id")} />
           </View>
-
           <View style={styles.rate_miles}>
             <View style={styles.rate_miles_view}>
               <Text style={styles.headText}>£ {props.navigation.getParam("Rate")}</Text>

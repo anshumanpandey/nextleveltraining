@@ -10,6 +10,7 @@ import TeamUpComingCard from '../profile/TeamUpComingCard';
 import NavigationService from '../../navigation/NavigationService';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
+import ConnectedWidget from '../../components/ConnectedWidget';
 
 
 const PlayerInfoScreen = (props) => {
@@ -43,12 +44,15 @@ const PlayerInfoScreen = (props) => {
       {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />}
       <ScrollView>
         <View>
-          <View style={styles.userView}>
+          <View style={[styles.userView, { flexDirection: 'row' }]}>
             <View style={{ marginTop: 50 }}>
               <Image
                 source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                 style={styles.userImg}
               />
+            </View>
+            <View style={{ position: 'absolute', right: '5%', alignSelf: 'flex-end' }}>
+              <ConnectedWidget />
             </View>
           </View>
 

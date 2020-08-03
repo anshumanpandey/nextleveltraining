@@ -1262,7 +1262,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                 setSubmitFn(null)
             }
         }}>
-            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white'}} activeTabStyle={{ backgroundColor: 'white'}} heading="Details">
+            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white'}} activeTabStyle={{ backgroundColor: 'white'}} heading="About Me">
                 <ScrollView>
                     <View style={styles.containerAbout}>
                         <TouchableOpacity
@@ -1482,7 +1482,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                     </View>
                 </ScrollView>
             </Tab>
-            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white'}} activeTabStyle={{ backgroundColor: 'white'}} heading="Bank Account">
+            <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white'}} activeTabStyle={{ backgroundColor: 'white'}} heading="Bank Accounts">
                 <BankAccountForm setSubmitFn={(fn) => attachSubmitFn(() => fn )} />
             </Tab>
         </Tabs>

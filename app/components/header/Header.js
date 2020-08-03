@@ -26,7 +26,7 @@ const Header = (props) => {
         style={{ width: '85%'}}
           onPress={() => props.navigate(screen.CreatePost)}
         >
-          <View style={{ flexDirection: 'row', width: '100%',borderWidth: 1, borderColor: Colors.s_blue, padding: '3%',borderRadius: 25, justifyContent: 'center', alignItems:'center'}}>
+          <View style={{ flexDirection: 'row', width: '100%',borderWidth: 1, borderColor: Colors.s_blue, padding: '3%',borderRadius: 10, justifyContent: 'center', alignItems:'center'}}>
             <Icon name="edit" type="FontAwesome" style={{ fontSize: 20, color: 'gray', marginRight: '2%'}} />
             <Text style={{ color: 'gray'}}>Post about training here...</Text>
           </View>
