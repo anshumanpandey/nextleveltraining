@@ -6,14 +6,14 @@ import NavigationService from '../../navigation/NavigationService';
 import hasFullProfile from '../../utils/perType/profileResolver';
 import { useGlobalState } from '../../state/GlobalState';
 
-const HeaderTitleBack = ({ title }) => {
+const HeaderTitleBack = ({ title, navigate, onBackPress }) => {
   const [profile] = useGlobalState('profile')
   return (
     <View style={styles.header_layout}>
       <View
         style={[styles.header_item_container, { justifyContent: 'flex-start' }]}>
         {hasFullProfile(profile) ? (
-          <TouchableOpacity onPress={() => NavigationService.goBack()}>
+          <TouchableOpacity onPress={() => onBackPress()}>
             <Icon
               name="keyboard-arrow-left"
               type="MaterialIcons"

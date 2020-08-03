@@ -102,7 +102,7 @@ const JobDetails = (props) => {
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }} contentContainerStyle={{ flexGrow: 1 }}>
-      <HeaderTitleBack title={'Job Detail'} navigate={props.navigation.navigate} />
+      <HeaderTitleBack title={'Job Detail'} onBackPress={() => props.navigation.navigate('Booking')} navigate={props.navigation.navigate} />
 
       <View style={styles.detailsView}>
         <View style={styles.userView}>

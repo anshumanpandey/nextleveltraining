@@ -8,6 +8,7 @@ import { Icon, Spinner } from 'native-base';
 import { useGlobalState } from '../../state/GlobalState';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Header from '../../components/header/Header';
+import HeaderTitleBack from '../../components/header/HeaderTitleBack';
 
 const CommentsScreen = (props) => {
   const listRef = useRef()
@@ -56,7 +57,7 @@ const CommentsScreen = (props) => {
   return (
     <>
       <ScrollView innerRef={(r) => listRef.current = r} style={styles.home_container}>
-        <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigation={props.navigation} navigate={props.navigation.navigate} />
+        <HeaderTitleBack onBackPress={() => props.navigation.goBack()} navigation={props.navigation} navigate={props.navigation.navigate} />
         {commentBody}
       </ScrollView>
       <View style={[styles.inputContainer, { height: Dimensions.get('screen').height * 0.1 }]}>
