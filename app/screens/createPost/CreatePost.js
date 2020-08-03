@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions, Platform } from 'react-native'
 import Header from '../../components/header/Header'
 import { Textarea, Icon, Input, Spinner } from 'native-base'
 import DocumentPicker from 'react-native-document-picker';
@@ -96,8 +96,13 @@ const Profile = (props) => {
 
           doPost({ data })
             .then(r => {
-              if (values?.file?.data) {
-                delete values.file.data
+              if (values?.file?.mime) {
+                values.file.type = values.file.mime
+                values.file.uri = values.file.path
+                if (Platform.OS == "android") {
+                  values.file.uri = values.file.uri.replace("file://", "");
+                }
+                console.log(values.file)
                 AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
               }
             })

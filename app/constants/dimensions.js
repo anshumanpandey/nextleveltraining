@@ -60,5 +60,6 @@ export default Dimension = {
   px220: 220 * multiplier,
   px250: 250 * multiplier,
   px300: 300 * multiplier,
-  px340: 340 * multiplier
+  px340: 340 * multiplier,
+  px380: 380 * multiplier,
 }
