@@ -16,7 +16,7 @@ import Video from 'react-native-video';
 import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
 
-const PostCard = ({ item, onClickItem, onPressOfComment }) => {
+const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
@@ -24,6 +24,11 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
 
   const [{ loading }, postLike] = useAxios({
     url: '/Users/SaveLikebyPost',
+    method: 'POST',
+  }, { manual: true })
+
+  const [hidePostReq, hidePost] = useAxios({
+    url: '/Users/HidePost',
     method: 'POST',
   }, { manual: true })
 
@@ -46,11 +51,31 @@ const PostCard = ({ item, onClickItem, onPressOfComment }) => {
           {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.post_image_size} />}
           {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.post_image_size} />}
           <View style={styles.post_content_view}>
-            <View style={{ width: Dimension.pro100 }}>
+            <View style={{ width: Dimension.pro100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={styles.post_title}>
                 <Text style={styles.post_title_name}>{item.createdBy}</Text>
                 <Text style={styles.post_title_time}>{item.time}</Text>
               </View>
+              <TouchableOpacity disabled={hidePostReq.loading} onPress={() => {
+                Alert.alert("", "Are you sure you want to hide this post?", [
+                  {
+                    text: 'Yes', onPress: () => {
+                      const data = {
+                        "userID": profile.Id,
+                        "postId": item.id
+                      }
+                      hidePost({ data })
+                        .then(() => {
+                          refreshCb()
+                        })
+                    }
+                  },
+                  { text: 'No', style: 'cancel' },
+                ],
+                  { cancelable: true })
+              }}>
+                <Icon type="Feather" name="more-horizontal" />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

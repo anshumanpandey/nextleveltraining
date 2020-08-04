@@ -106,6 +106,7 @@ const Home = (props) => {
         keyExtractor={item => item.Id}
         renderItem={({ item }) => (
           <PostCard
+            refreshCb={refetch}
             onPressOfComment={() => props.navigation.navigate(screen.CreateComment, { post: item })}
             item={item}
             onClickItem={(item) => {
