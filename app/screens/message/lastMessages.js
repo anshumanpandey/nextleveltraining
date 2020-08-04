@@ -16,11 +16,10 @@ const LastMessage = (props) => {
     const [profileId, setProfileId] = useState('')
 
     function Item({ item, key, id }) {
-        // alert(id)
-        console.log(item.ReceiverProfilePic)
+       // alert(id)
         return (
             <View style={styles.flatList} key={key}>
-                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic ? placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
+                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic || item.SenderID === profileId && item.ReceiverProfilePic===''  || item.RecieverId === profileId && item.SenderProfilePic==='' ?  placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
                 <TouchableOpacity style={styles.container_text} onPress={() => props.navigation.navigate('Chat', {
                     RecieverId: item.RecieverID === profileId ? item.SenderID : item.RecieverID,
                     SenderId: profileId,
@@ -51,11 +50,13 @@ const LastMessage = (props) => {
 
     useEffect(() => {
         getUserData()
+        setProfileId(profile.Id)
         const focusListener = props.navigation.addListener('didFocus', () => {
             getUserData()
         });
 
         return () => focusListener.remove()
+       
         /*const intervalId = setInterval(() => {
         getUserData()
         setProfileId(profile.Id)
@@ -72,7 +73,7 @@ const LastMessage = (props) => {
                 {!getUserReq.loading && getUserReq.data && getUserReq.data.length > 0 &&
                     <FlatList
                         data={getUserReq.data}
-                        renderItem={({ item, key }) => <Item item={item} key={key} id={profile?.Id} />}
+                        renderItem={({ item, key }) => <Item item={item} key={key} id={profile.Id} />}
                         temSeparatorComponent={() => <ItemSeparator />}
                         keyExtractor={item => item.id}
                     />
