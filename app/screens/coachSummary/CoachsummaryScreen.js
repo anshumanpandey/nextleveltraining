@@ -41,7 +41,7 @@ const CoachsummaryScreen = (props) => {
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
             <View style={{ padding: '5%' }}>
                 <Text style={{ color: Colors.s_blue, fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.2)' }}>
-                    Welcome to {profile.FullName}
+                    Welcome {profile.FullName}
                 </Text>
                 <View style={{ paddingTop: '3%' }}>
                     <Text>Profile Summary</Text>
@@ -88,6 +88,7 @@ const CoachsummaryScreen = (props) => {
                                     <View style={{ width: 62, height: 62, borderRadius: 30, borderColor: Colors.s_blue, borderWidth: 1, }}>
                                         <LoaderImage
                                             style={{ width: 60, height: 60, borderRadius: 30, borderColor: 'white', borderWidth: 1, }}
+                                            imageStyle={{ width: 60, height: 60, borderRadius: 30, borderColor: 'white', borderWidth: 1, }}
                                             source={{ uri: item.ProfileImage }} />
                                     </View>
                                     <Text>{item.FullName}</Text>
