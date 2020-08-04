@@ -5,11 +5,11 @@ import NavigationService from '../../navigation/NavigationService';
 import HeaderTitleBack from '../../components/header/HeaderTitleBack';
 import Images from '../../constants/image';
 import { Icon, Spinner } from 'native-base';
-import Dash from 'react-native-dash';
 import moment from 'moment';
 import { useGlobalState } from '../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
+import { parseISO, format} from 'date-fns';
 
 
 const JobDetails = (props) => {
@@ -130,7 +130,7 @@ const JobDetails = (props) => {
           <View style={[styles.orderView, { flexDirection: 'row' }]}>
             <View>
               <Text style={styles.headText}>Session Date/Time</Text>
-              <Text style={styles.headText1}>{moment.utc(props.navigation.getParam("FromTime")).format("hh:mm A")} - {moment.utc(props.navigation.getParam("ToTime")).format("hh:mm A")}</Text>
+              <Text style={styles.headText1}>{format(parseISO(props.navigation.getParam("BookingDate")), "dd MMM")}, {moment.utc(props.navigation.getParam("FromTime")).format("hh:mm A")} - {moment.utc(props.navigation.getParam("ToTime")).format("hh:mm A")}</Text>
             </View>
             <View>
               <Text style={styles.headText}>Cost</Text>
