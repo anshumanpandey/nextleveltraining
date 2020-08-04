@@ -8,6 +8,8 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../../../state/GlobalState';
 import ImageProgress from 'react-native-image-progress';
 import Colors from '../../../../constants/color';
+import getDistance from 'geolib/es/getDistance';
+var convert = require('convert-units')
 
 const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
   const [profile] = useGlobalState('profile')
@@ -16,6 +18,19 @@ const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
     url: `/Users/SaveCoach`,
     method: 'POST'
   }, { manual: true })
+
+  let milesAway = -1
+
+  if (!profile.Lat || !profile.Lng || !props.Lat || !props.Lng) {
+    milesAway = -1
+  } else {
+    const meters = getDistance(
+      { latitude: profile.Lat, longitude: profile.Lng, },
+      { latitude: parseFloat(props.Lat), longitude: parseFloat(props.Lng) }
+    )
+
+    milesAway = convert(meters).from('m').to("mi").toFixed(2)
+  }
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.ps_container}>
@@ -59,7 +74,11 @@ const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
             </View>
           </TouchableOpacity>}
         </View>
-
+        {milesAway != -1 && (
+          <View>
+            <Text style={{ textAlign: 'right', marginRight: '5%'}}>{milesAway} Miles away</Text>
+          </View>
+        )}
         <View style={{ width: '80%' }}>
           <Text>{props.AboutUs}</Text>
         </View>
