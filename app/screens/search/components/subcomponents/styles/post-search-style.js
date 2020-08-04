@@ -41,7 +41,6 @@ const styles =StyleSheet.create({
     ps_heart_view:{
         width:30,
         height:30,
-        marginRight:10,
         borderRadius:15,
         display:'flex',
         justifyContent:'center',

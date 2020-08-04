@@ -11,7 +11,7 @@ import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
 var convert = require('convert-units')
 
-const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
+const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props }) => {
   const [profile] = useGlobalState('profile')
 
   const [saveCoachReq, saveCoach] = useAxios({
@@ -58,27 +58,30 @@ const PostSearchCard = ({ onPress, refreshCb, ...props }) => {
       <View style={{ marginTop: 15, marginLeft: 10, width: '80%' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={{ marginTop: 10, color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
-          {props.Role == "Coach" && <TouchableOpacity onPress={() => {
-            saveCoach({
-              data: {
-                "playerId": profile.Id,
-                "coachId": props.Id,
-              }
-            })
-              .then(r => refreshCb())
-          }}>
-            <View style={styles.ps_heart_view}>
-              {saveCoachReq.loading && <Spinner size={26} />}
-              {!saveCoachReq.loading && props.Status != 'Saved' && <Icon type="Feather" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
-              {!saveCoachReq.loading && props.Status == 'Saved' && <Icon type="Entypo" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
-            </View>
-          </TouchableOpacity>}
-        </View>
-        {milesAway != -1 && (
-          <View>
-            <Text style={{ textAlign: 'right', marginRight: '5%'}}>{milesAway} Miles away</Text>
+          <View style={{ alignItems: 'flex-end'}}>
+            {props.Role == "Coach" && hideHeartIcon == false && <TouchableOpacity style={{ width: '60%'}} onPress={() => {
+              saveCoach({
+                data: {
+                  "playerId": profile.Id,
+                  "coachId": props.Id,
+                }
+              })
+                .then(r => refreshCb())
+            }}>
+              <View style={styles.ps_heart_view}>
+                {saveCoachReq.loading && <Spinner size={26} />}
+                {!saveCoachReq.loading && props.Status != 'Saved' && <Icon type="Feather" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
+                {!saveCoachReq.loading && props.Status == 'Saved' && <Icon type="Entypo" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
+              </View>
+            </TouchableOpacity>}
+            {milesAway != -1 && (
+              <View>
+                <Text style={{ color: "#38A663", textAlign: 'right', marginRight: '15%' }}>{milesAway}</Text>
+                <Text style={{ color: "#38A663", textAlign: 'right', marginRight: '15%' }}>Miles</Text>
+              </View>
+            )}
           </View>
-        )}
+        </View>
         <View style={{ width: '80%' }}>
           <Text>{props.AboutUs}</Text>
         </View>
