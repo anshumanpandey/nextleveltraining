@@ -81,7 +81,7 @@ const AddTeam = (props) => {
               <View style={styles.inputContain}>
                 <TextInput
                   style={{ textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%' }}
-                  placeholder="Team Name"
+                  placeholder="Job Role"
                   keyboardType="email-address"
                   onChangeText={handleChange('jobPosition')}
                   onBlur={handleBlur('jobPosition')}

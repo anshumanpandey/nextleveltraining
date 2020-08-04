@@ -67,7 +67,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                         errors.confirmPassword = 'Required'
                     } else if(props.hidePasswordInput != true && values.password) {
                         if (values.password != values.confirmPassword) {
-                            errors.confirmPassword = 'Password and confirmpassword must be the same'
+                            errors.confirmPassword = 'Password and Confirm Password does not match'
                         }
                     }
                 }

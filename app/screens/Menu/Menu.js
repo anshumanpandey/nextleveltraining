@@ -26,15 +26,6 @@ const Menu = (props) => {
 
     const coachMenulist = [
         {
-            id: 9,
-            title: 'Bank Account',
-            icon: `${Images.LogoutIcon}`,
-            path: 'BankAccount',
-            onPress: (props, profile) => {
-                NavigationService.navigate('BankAccount')
-            }
-        },
-        {
             id: 12,
             title: 'Availability',
             icon: `${Images.LogoutIcon}`,

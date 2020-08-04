@@ -9,6 +9,7 @@ import { CalendarListItem } from '../Calendar/CalendarScreen'
 import { setHours, parseISO, getHours } from "date-fns"
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import NavigationService from '../../navigation/NavigationService'
+import LoaderImage from 'react-native-image-progress';
 
 
 const CoachsummaryScreen = (props) => {
@@ -39,7 +40,9 @@ const CoachsummaryScreen = (props) => {
         <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
             <View style={{ padding: '5%' }}>
-                <Text style={{ color: Colors.s_blue, fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.2)' }}>Welcome to TRStwo</Text>
+                <Text style={{ color: Colors.s_blue, fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.2)' }}>
+                    Welcome to {profile.FullName}
+                </Text>
                 <View style={{ paddingTop: '3%' }}>
                     <Text>Profile Summary</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingBottom: '2%' }}>
@@ -77,13 +80,13 @@ const CoachsummaryScreen = (props) => {
                                 Currently you dont have players
                         </Text>
                         }
-                        data={[...data.Players, ...data.Players, ...data.Players, ...data.Players, data.Players]}
+                        data={data.Players}
                         keyExtractor={i => i.Id}
                         renderItem={({ item }) => {
                             return (
-                                <View style={{ flexGrow: 1, padding: '5%', flexDirection: 'column' }}>
+                                <View style={{ flexGrow: 1, padding: '5%', flexDirection: 'column', width: '100%' }}>
                                     <View style={{ width: 62, height: 62, borderRadius: 30, borderColor: Colors.s_blue, borderWidth: 1, }}>
-                                        <Image
+                                        <LoaderImage
                                             style={{ width: 60, height: 60, borderRadius: 30, borderColor: 'white', borderWidth: 1, }}
                                             source={{ uri: item.ProfileImage }} />
                                     </View>
@@ -124,7 +127,7 @@ const CoachsummaryScreen = (props) => {
                     contentContainerStyle={{ flexGrow: 1 }}
                     keyExtractor={i => i.Id}
                     renderItem={({ item }) => {
-                        return (<CalendarListItem {...item} />);
+                        return (<CalendarListItem {...item} Address={item.Location.LocationAddress} />);
                     }}
                 />
 
