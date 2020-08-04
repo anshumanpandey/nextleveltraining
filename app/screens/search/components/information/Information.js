@@ -98,7 +98,7 @@ const Information = (props) => {
                   {`${milesAway} miles`}
                 </Text>
                 <Text style={{ fontSize: 12, textAlign: 'right', color: 'gray' }}>
-                  {'away from your'}
+                  {'away'}
                 </Text>
               </View>
             )}
