@@ -75,7 +75,9 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                 {!saveCoachReq.loading && props.Status == 'Saved' && <Icon type="Entypo" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
               </View>
             </TouchableOpacity>}
-            <ConnectedWidget userToConnectTo={props.Id} />
+            <View style={{ marginRight: '8%'}}>
+              <ConnectedWidget userToConnectTo={props.Id} />
+            </View>
             {milesAway != -1 && (
               <View>
                 <Text style={{ color: "#38A663", textAlign: 'right', marginRight: '15%' }}>{milesAway}</Text>
