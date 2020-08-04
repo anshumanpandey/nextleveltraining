@@ -44,8 +44,6 @@ const PlayerInfoScreen = (props) => {
     return () => focusListener.remove()
   }, [])
 
-  console.log(profilePic.uri)
-
   return (
     <View style={{ flex: 1 }}>
       {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />}
