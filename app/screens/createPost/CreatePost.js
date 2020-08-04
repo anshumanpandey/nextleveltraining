@@ -51,7 +51,7 @@ const Profile = (props) => {
   }, [])
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1, backgroundColor: 'white' }}>
       {/* <View style={{
           width: "100%",
           height: STATUS_BAR_HEIGHT,
@@ -211,7 +211,7 @@ const Profile = (props) => {
           </>
         )}
       </Formik>
-    </View>
+    </ScrollView>
   )
 }
 
