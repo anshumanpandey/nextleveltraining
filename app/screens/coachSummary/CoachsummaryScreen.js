@@ -65,11 +65,13 @@ const CoachsummaryScreen = (props) => {
                     Players Quicks View
                 </Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <TouchableWithoutFeedback onPress={() => listRef.current?.scrollToOffset({ offset: -Dimensions.get('window').width, animated: true })}>
-                        <View style={{ justifyContent: 'center' }}>
-                            <Icon type="AntDesign" name="left" />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    {data.Players && data.Players.length != 0 && (
+                        <TouchableWithoutFeedback onPress={() => listRef.current?.scrollToOffset({ offset: -Dimensions.get('window').width, animated: true })}>
+                            <View style={{ justifyContent: 'center' }}>
+                                <Icon type="AntDesign" name="left" />
+                            </View>
+                        </TouchableWithoutFeedback>
+                    )}
                     <FlatList
                         style={{ flex: 1 }}
                         ref={(r) => listRef.current = r}
@@ -96,11 +98,13 @@ const CoachsummaryScreen = (props) => {
                             );
                         }}
                     />
-                    <TouchableWithoutFeedback onPress={() => listRef.current?.scrollToOffset({ offset: Dimensions.get('window').width, animated: true })}>
-                        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-                            <Icon type="AntDesign" name="right" />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    {data.Players && data.Players.length != 0 && (
+                        <TouchableWithoutFeedback onPress={() => listRef.current?.scrollToOffset({ offset: Dimensions.get('window').width, animated: true })}>
+                            <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+                                <Icon type="AntDesign" name="right" />
+                            </View>
+                        </TouchableWithoutFeedback>
+                    )}
                 </View>
 
                 <View style={{ paddingTop: '5%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.2)', justifyContent: 'space-between', flexDirection: 'row' }}>

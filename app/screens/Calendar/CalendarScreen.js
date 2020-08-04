@@ -70,7 +70,7 @@ const CalendarScreen = (props) => {
                 navigate={props.navigation.navigate}
             />
             <DatePicker
-                style={{ width: 350, height: 45 }}
+                style={{ height: 45 }}
                 customStyles={{
                     placeholderText: { fontSize: 20 }, // placeHolder style
                     headerStyle: { backgroundColor: Colors.s_blue },			// title container style
