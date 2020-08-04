@@ -263,6 +263,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
                   id: i.Id,
                   title: i.LocationName,
                   subTitle: i.LocationAddress,
+                  ...i,
                 }))} />
             )}
             {coach.TrainingLocations.length == 0 && <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Training Locations</Text>}

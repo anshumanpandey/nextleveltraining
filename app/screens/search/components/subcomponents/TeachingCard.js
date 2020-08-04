@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import styles from './../information/information-style';
-import Images from '../../../../constants/image';
+import LoaderImage from 'react-native-image-progress';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Colors from '../../../../constants/color';
 
@@ -26,7 +26,11 @@ const TeachingCard = ({ data, onPress, selectedItem }) => {
               onPress(obj)
             }}>
               <View style={[styles.expView, currentStyles]}>
-                <Image source={Images.MessiPlayer} style={styles.expImg} />
+                <LoaderImage
+                  source={{ uri: obj.ImageUrl }}
+                  style={styles.expImg}
+                  imageStyle={styles.expImg}
+                />
                 <View style={{ paddingHorizontal: 10 }}>
                   <Text style={[styles.valueText, { fontWeight: '600' }]}>{obj.title}</Text>
                   <Text style={styles.valueText}>{obj.subTitle}</Text>
