@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useCallback } from 'react';
 import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Images from '../../../../constants/image';
 import styles from './information-style';
@@ -25,25 +25,29 @@ const Information = (props) => {
   const activeColor = Colors.s_blue;
   const inActiveColor = 'gray';
 
+  const calculateMiles = useCallback(() => {
+    console.log(profile.Lat)
+    console.log(profile.Lng)
+    console.log(props.navigation.getParam("Lat"))
+    console.log(props.navigation.getParam("Lng"))
+
+    if (!profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
+      setMilesAway(-1)
+    } else {
+      const meters = getDistance(
+        { latitude: profile.Lat, longitude: profile.Lng, },
+        { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
+      )
+
+      setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
+    }
+
+  }, [profile.Lat, !profile.Lng, props.navigation.getParam("Lat"), props.navigation.getParam("Lng")])
+
   useEffect(() => {
+    calculateMiles()
     const focusListener = props.navigation.addListener('didFocus', () => {
-
-      console.log(profile.Lat)
-      console.log(profile.Lng)
-      console.log(props.navigation.getParam("Lat"))
-      console.log(props.navigation.getParam("Lng"))
-
-      if (!profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
-        setMilesAway(-1)
-      } else {
-        const meters = getDistance(
-          { latitude: profile.Lat, longitude: profile.Lng, },
-          { latitude: parseFloat(props.navigation.getParam("Lat")), longitude: parseFloat(props.navigation.getParam("Lng")) }
-        )
-
-        setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
-      }
-
+      calculateMiles();
     });
     return () => focusListener?.remove();
   }, [])
