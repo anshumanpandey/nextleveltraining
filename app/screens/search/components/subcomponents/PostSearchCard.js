@@ -58,9 +58,20 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
       </View>
       <View style={{ marginTop: 15, marginLeft: 10, width: '80%' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ marginTop: 10, color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
-          <View style={{ alignItems: 'flex-end'}}>
-            {props.Role == "Coach" && hideHeartIcon == false && <TouchableOpacity style={{ width: '60%'}} onPress={() => {
+          <View style={{ flexDirection: 'column', width: '70%' }}>
+            <Text style={{ marginTop: 10, color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
+            <View style={{ width: '80%' }}>
+              <Text>{props.AboutUs}</Text>
+            </View>
+            {props.Role == "Player" && (
+              <View style={{ flexDirection: 'row', width: '80%' }}>
+                <Icon style={{ fontSize: 22 }} type="EvilIcons" name="location" />
+                <Text>{props.Address}</Text>
+              </View>
+            )}
+          </View>
+          <View style={{ alignItems: 'flex-end', width: '28%', marginRight: '10%' }}>
+            {props.Role == "Coach" && hideHeartIcon == false && <TouchableOpacity style={{ width: '60%' }} onPress={() => {
               saveCoach({
                 data: {
                   "playerId": profile.Id,
@@ -75,7 +86,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                 {!saveCoachReq.loading && props.Status == 'Saved' && <Icon type="Entypo" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
               </View>
             </TouchableOpacity>}
-            <View style={{ marginRight: '8%'}}>
+            <View style={{ marginRight: '8%' }}>
               <ConnectedWidget userToConnectTo={props.Id} />
             </View>
             {milesAway != -1 && (
@@ -85,9 +96,6 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               </View>
             )}
           </View>
-        </View>
-        <View style={{ width: '80%' }}>
-          <Text>{props.AboutUs}</Text>
         </View>
         {props.Role == "Coach" && (
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '85%', marginTop: 10 }}>
@@ -109,12 +117,6 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               {props?.DBSCeritificate?.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
               {!props?.DBSCeritificate?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
             </View>
-          </View>
-        )}
-        {props.Role == "Player" && (
-          <View style={{ flexDirection: 'row', width: '80%' }}>
-            <Icon style={{ fontSize: 22 }} type="EvilIcons" name="location" />
-            <Text>{props.Address}</Text>
           </View>
         )}
         {props.Qualifications && props.Qualifications.length != 0 && (
