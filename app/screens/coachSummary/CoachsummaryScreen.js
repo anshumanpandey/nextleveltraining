@@ -98,13 +98,13 @@ const CoachsummaryScreen = (props) => {
                         keyExtractor={i => i.Id}
                         renderItem={({ item }) => {
                             return (
-                                <View style={{ flexGrow: 1, padding: '1%', flexDirection: 'column' }}>
+                                <TouchableOpacity onPress={() => NavigationService.navigate("PlayerInfo", { player: item })} style={{ flexGrow: 1, padding: '1%', flexDirection: 'column' }}>
                                     <LoaderImage
                                         style={{ width: 60, height: 60, borderRadius: 60 / 2, borderColor: Colors.s_blue, borderWidth: 1, }}
                                         imageStyle={{ width: 60, height: 60, borderRadius: 60 / 2, borderColor: Colors.s_blue, borderWidth: 1, }}
                                         source={{ uri: item.ProfileImage }} />
                                     <Text>{item.FullName}</Text>
-                                </View>
+                                </TouchableOpacity>
                             );
                         }}
                     />

@@ -14,9 +14,9 @@ import ConnectedWidget from '../../components/ConnectedWidget';
 
 
 const PlayerInfoScreen = (props) => {
+  const [toggle, setToggle] = useState(false);
   const [profilePic, setProfilePic] = useState();
   const profile = props.navigation.getParam("player")
-  console.log(profile)
   const { AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   const initFn = () => {
@@ -32,6 +32,10 @@ const PlayerInfoScreen = (props) => {
   }
 
   useEffect(() => {
+    setToggle(p => !p)
+  }, [profilePic])
+
+  useEffect(() => {
     initFn()
     const focusListener = props.navigation.addListener('didFocus', () => {
       initFn()
@@ -40,6 +44,8 @@ const PlayerInfoScreen = (props) => {
     return () => focusListener.remove()
   }, [])
 
+  console.log(profilePic.uri)
+
   return (
     <View style={{ flex: 1 }}>
       {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />}
@@ -47,10 +53,18 @@ const PlayerInfoScreen = (props) => {
         <View>
           <View style={[styles.userView, { flexDirection: 'row' }]}>
             <View style={{ marginTop: 50 }}>
-              <Image
-                source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
-                style={styles.userImg}
-              />
+              {toggle == true && (
+                <Image
+                  source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
+                  style={styles.userImg}
+                />
+              )}
+              {toggle == false && (
+                <Image
+                  source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
+                  style={styles.userImg}
+                />
+              )}
             </View>
             <View style={{ position: 'absolute', right: '5%', alignSelf: 'flex-end' }}>
               <ConnectedWidget userToConnectTo={profile.Id} />
