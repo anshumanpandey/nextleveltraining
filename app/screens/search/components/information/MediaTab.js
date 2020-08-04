@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Spinner } from 'native-base';
 import Colors from '../../../../constants/color';
 
-const MediaTab = ({ posts, selectedTab }) => {
+const MediaTab = ({ posts = [], selectedTab }) => {
   const [parsed, setParsed] = useState(false);
   const [postToShow, setPostToShow] = useState([]);
 
