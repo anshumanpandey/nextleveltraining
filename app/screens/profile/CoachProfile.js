@@ -51,7 +51,6 @@ class MultiStep extends Component {
         const profile = getGlobalState('profile')
 
         this.focusListener = this.props.navigation.addListener('didFocus', this.resolveCurrentStep);
-        setTimeout(this.resolveCurrentStep, 1000)
 
         AsyncStorage.getItem('ProfilePic')
             .then((s) => {
@@ -121,6 +120,7 @@ class MultiStep extends Component {
             }
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
+            this.focusListener?.remove();
             return
         }
 
