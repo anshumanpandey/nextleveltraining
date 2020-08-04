@@ -122,19 +122,34 @@ const Search = (props) => {
 
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
           {searchCoachesReq.data && searchCoachesReq.data.Posts.length == 0 && <NoResultMessage />}
-          {searchCoachesReq.data && searchCoachesReq.data.Posts.length != 0 && searchCoachesReq.data.Posts
-            .map(p => ({
-              id: p.Id,
-              name: p.Header,
-              time: moment(p.CreatedDate).format('DD MMM HH:mm'),
-              description: p.Body,
-              createdBy: p.CreatedBy,
-              profileImage: p.ProfileImage,
-              comments: p.Comments || [],
-              likes: p.Likes || [],
-              imageUri: p.MediaURL
-            }))
-            .map(r => <PostCard item={r} />)}
+          {searchCoachesReq.data && searchCoachesReq.data.Posts.length != 0 && (
+            <FlatList
+              keyExtractor={(item) => item.Id}
+              data={searchCoachesReq.data.Posts
+                .map(p => {
+                  const j = {
+                    id: p.Id,
+                    name: p.Header,
+                    time: moment(p.CreatedDate).format('DD MMM HH:mm'),
+                    description: p.Body,
+                    createdBy: p.CreatedBy,
+                    profileImage: p.ProfileImage,
+                    comments: p.Comments || [],
+                    likes: p.Likes || [],
+                    imageUri: p.MediaURL,
+                  }
+
+                  j.fileType = "image"
+                  if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
+                    j.fileType = "video"
+                  }
+                  return j
+
+                })}
+              renderItem={({ item }) => <PostCard item={item} />} />
+          )}
+
+
         </Tab>
       </Tabs>
     </View>
