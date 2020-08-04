@@ -72,7 +72,7 @@ const LastMessage = (props) => {
                 {!getUserReq.loading && getUserReq.data && getUserReq.data.length > 0 &&
                     <FlatList
                         data={getUserReq.data}
-                        renderItem={({ item, key }) => <Item item={item} key={key} id={profile.Id} />}
+                        renderItem={({ item, key }) => <Item item={item} key={key} id={profile?.Id} />}
                         temSeparatorComponent={() => <ItemSeparator />}
                         keyExtractor={item => item.id}
                     />
