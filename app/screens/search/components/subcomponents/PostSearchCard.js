@@ -9,6 +9,7 @@ import { useGlobalState } from '../../../../state/GlobalState';
 import ImageProgress from 'react-native-image-progress';
 import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
+import ConnectedWidget from '../../../../components/ConnectedWidget';
 var convert = require('convert-units')
 
 const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props }) => {
@@ -74,6 +75,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                 {!saveCoachReq.loading && props.Status == 'Saved' && <Icon type="Entypo" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
               </View>
             </TouchableOpacity>}
+            <ConnectedWidget userToConnectTo={props.Id} />
             {milesAway != -1 && (
               <View>
                 <Text style={{ color: "#38A663", textAlign: 'right', marginRight: '15%' }}>{milesAway}</Text>
