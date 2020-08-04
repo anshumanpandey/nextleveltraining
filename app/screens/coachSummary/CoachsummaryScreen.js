@@ -112,7 +112,7 @@ const CoachsummaryScreen = (props) => {
                         <TouchableWithoutFeedback onPress={() => {
                             setIdx(i => {
                                 let newIdx = i + 3
-                                if (newIdx > 11) {
+                                if (newIdx > data?.Players?.length || 0) {
                                     newIdx =  11
                                 }
                                 listRef.current?.scrollToIndex({ index: newIdx, animated: true })
