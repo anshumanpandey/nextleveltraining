@@ -7,12 +7,13 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import Colors from '../../constants/color';
 import { Icon } from 'native-base';
+import { format, addDays } from 'date-fns'
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
     const [agroupedData, setAgroupedData] = useState([])
-    const [startDate, setStartDate] = useState()
-    const [endDate, setEndDate] = useState()
+    const [startDate, setStartDate] = useState(new Date())
+    const [endDate, setEndDate] = useState(addDays(new Date(), 30))
 
     const [{ data, loading, error }, getBookings] = useAxios({
         url: '/Users/GetBookings',
@@ -81,7 +82,7 @@ const CalendarScreen = (props) => {
                 }} // optional 
                 centerAlign // optional text will align center or not
                 allowFontScaling={false} // optional
-                placeholder={'Apr 27, 2018 → Jul 10, 2018'}
+                placeholder={`${format(startDate, 'LLL dd, yyyy')} → ${format(endDate, 'LLL dd, yyyy')}`}
                 mode={'range'}
                 markText="Select a Date Range"
                 ButtonText="Done"
