@@ -7,7 +7,7 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import Colors from '../../constants/color';
 import { Icon } from 'native-base';
-import { format, addDays } from 'date-fns'
+import { format, addDays, parse } from 'date-fns'
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
@@ -87,8 +87,8 @@ const CalendarScreen = (props) => {
                 markText="Select a Date Range"
                 ButtonText="Done"
                 onConfirm={({ endDate, startDate }) => {
-                    setStartDate(moment(startDate, "YYYY/MM/DD"))
-                    setEndDate(moment(endDate, "YYYY/MM/DD"))
+                    setStartDate(parse(startDate, "yyyy/MM/dd", new Date()))
+                    setEndDate(parse(endDate, "yyyy/MM/dd", new Date()))
                 }}
             />
 
