@@ -28,7 +28,7 @@ const Level = (props) => {
         NavigationService.navigate(Screens.Login)
       })
 
-      return () => focusListener.remove()
+    return () => focusListener.remove()
   }, [])
 
   return (
@@ -48,7 +48,7 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.level_btn_coach, { backgroundColor: Colors.g_text}]}
+          style={[styles.level_btn_coach, { backgroundColor: Colors.g_text }]}
           onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Coach" })}
         >
           <View style={styles.level_btn_player_view}>
@@ -58,20 +58,15 @@ const Level = (props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.level_other_view}>
-
-        {role && (
-          <>
-            <View style={styles.level_line}></View>
-            <View style={styles.level_other_check_view}>
-              <Text style={styles.level_check_text}>{CheckText}</Text>
-              <TouchableHighlight
-                onPress={() => NavigationService.navigate(Screens.Login)}
-              >
-                <Text style={styles.level_signin_text}>{SigninText}</Text>
-              </TouchableHighlight>
-            </View>
-          </>
-        )}
+        <View style={styles.level_line}></View>
+        <View style={styles.level_other_check_view}>
+          <Text style={styles.level_check_text}>{CheckText}</Text>
+          <TouchableHighlight
+            onPress={() => NavigationService.navigate(Screens.Login)}
+          >
+            <Text style={styles.level_signin_text}>{SigninText}</Text>
+          </TouchableHighlight>
+        </View>
 
       </View>
     </View>
