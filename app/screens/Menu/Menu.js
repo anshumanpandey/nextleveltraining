@@ -61,6 +61,15 @@ const Menu = (props) => {
             }
         },
         {
+            id: 13,
+            title: 'Notifications',
+            icon: `${Images.AboutMeIcon}`,
+            path: 'Notifications',
+            onPress: (props, profile) => {
+                NavigationService.navigate('Notifications')
+            }
+        },
+        {
             id: 2,
             title: 'My Bookings',
             icon: `${Images.MyBookingIcon}`,

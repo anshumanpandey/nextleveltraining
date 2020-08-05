@@ -54,6 +54,7 @@ import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
 import CalendarScreen from './screens/Calendar/CalendarScreen';
 import ParentComponent from './screens/search/components/ParentComponent';
 import CoachsummaryScreen from './screens/coachSummary/CoachsummaryScreen';
+import Notifications from './screens/notifications/Notifications';
 
 let initialRouteName = null
 let Apps = null
@@ -253,6 +254,21 @@ const AppMain = () => {
         ),
       }),
     }
+    tabs.Notifications = {
+      screen: Notifications,
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="bell"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>NOTIFICATIONS</Text>
+          </View>
+        ),
+      }),
+    }
     tabs.Message = {
       screen: LastMessage,
       navigationOptions: () => ({
@@ -389,7 +405,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "Calendar","CoachSummary",'AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "Calendar", "Notifications","CoachSummary",'AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
