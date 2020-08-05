@@ -10,7 +10,7 @@ const UserCard = ({ title, data, disabledEdit = false, onEditPress }) => {
     <TouchableOpacity
       disabled={disabledEdit}
       onPress={() => onEditPress()}
-      style={styles.cardContainer}>
+      style={[styles.cardContainer, { borderBottomColor: 'lightgray', borderBottomWidth: 0.5 }]}>
       <View
         style={{
           justifyContent: 'space-between',

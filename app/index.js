@@ -264,7 +264,23 @@ const AppMain = () => {
               name="bell"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>NOTIFICATIONS</Text>
+            <Text numberOfLines={1} style={[styles.textTab, { color: tintColor }]}>NOTIFICATIONS</Text>
+          </View>
+        ),
+      }),
+    }
+    tabs.Profile = {
+      screen: profile.Role == "Player" ? PlayerInfoScreen: Information,
+      params: {player: profile, hideConnect: true },
+      navigationOptions: () => ({
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="Feather"
+              name="user"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>PROFILE</Text>
           </View>
         ),
       }),
