@@ -30,6 +30,7 @@ const Information = (props) => {
     console.log(profile.Lng)
     console.log(props.navigation.getParam("Lat"))
     console.log(props.navigation.getParam("Lng"))
+    console.log(props.navigation.getParam("hideConnect"))
 
     if (!profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
       setMilesAway(-1)
@@ -68,7 +69,9 @@ const Information = (props) => {
           <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
           <View style={{ flexDirection: 'row', width: '55%', justifyContent: 'space-between', marginLeft: 'auto' }}>
             <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
-            <ConnectedWidget userToConnectTo={props.navigation.getParam("Id")} />
+            {props.navigation.getParam("hideConnect", false) == false && (
+              <ConnectedWidget userToConnectTo={props.navigation.getParam("Id")} />
+            )}
           </View>
           <View style={styles.rate_miles}>
             <View style={styles.rate_miles_view}>
@@ -92,54 +95,60 @@ const Information = (props) => {
                 )}
               </View>
             </View>
-            {milesAway && milesAway != -1 && (
-              <View style={[styles.rate_miles_view, { width: dimensions.pro40 }]}>
-                <Text style={[styles.headText, { textAlign: 'right' }]}>
-                  {`${milesAway} miles`}
-                </Text>
-                <Text style={{ fontSize: 12, textAlign: 'right', color: 'gray' }}>
-                  {'away'}
-                </Text>
-              </View>
+            {props.navigation.getParam("hideCoachButtons", false) == false && (
+              <>
+                {milesAway && milesAway != -1 && (
+                  <View style={[styles.rate_miles_view, { width: dimensions.pro40 }]}>
+                    <Text style={[styles.headText, { textAlign: 'right' }]}>
+                      {`${milesAway} miles`}
+                    </Text>
+                    <Text style={{ fontSize: 12, textAlign: 'right', color: 'gray' }}>
+                      {'away'}
+                    </Text>
+                  </View>
+                )}
+                {milesAway == undefined && (<Spinner color={Colors.s_blue} />)}
+                {milesAway == -1 && (<Text></Text>)}
+              </>
             )}
-            {milesAway == undefined && (<Spinner color={Colors.s_blue} />)}
-            {milesAway == -1 && (<Text></Text>)}
           </View>
 
-          <View style={styles.buttonContain}>
-            <TouchableOpacity
-              onPress={() => NavigationService.navigate('BookNow', { coach: props.navigation.state.params })}
-              style={[styles.button_view]}>
-              <Icon
-                type="MaterialIcons"
-                name="check-circle"
-                style={styles.post_comment}
-              />
-              <Text style={styles.btn_text}>Book now</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                const resetAction = StackActions.reset({
-                  index: 0,
-                  key: null,
-                  actions: [
-                    NavigationActions.navigate({
-                      routeName: 'MainStack',
-                      action: NavigationActions.navigate({ routeName: 'Chat', params: { RecieverId: props.navigation.getParam("Id"), SenderId: profile.Id, friendName: props.navigation.getParam("FullName") } })
-                    })
-                  ]
-                })
-                props.navigation.dispatch(resetAction);
-              }}
-              style={styles.button_view}>
-              <Icon
-                type="MaterialIcons"
-                name="comment"
-                style={styles.post_comment}
-              />
-              <Text style={styles.btn_text}>{'Message'}</Text>
-            </TouchableOpacity>
-          </View>
+          {props.navigation.getParam("hideCoachButtons", false) == false && (
+            <View style={styles.buttonContain}>
+              <TouchableOpacity
+                onPress={() => NavigationService.navigate('BookNow', { coach: props.navigation.state.params })}
+                style={[styles.button_view]}>
+                <Icon
+                  type="MaterialIcons"
+                  name="check-circle"
+                  style={styles.post_comment}
+                />
+                <Text style={styles.btn_text}>Book now</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  const resetAction = StackActions.reset({
+                    index: 0,
+                    key: null,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: 'MainStack',
+                        action: NavigationActions.navigate({ routeName: 'Chat', params: { RecieverId: props.navigation.getParam("Id"), SenderId: profile.Id, friendName: props.navigation.getParam("FullName") } })
+                      })
+                    ]
+                  })
+                  props.navigation.dispatch(resetAction);
+                }}
+                style={styles.button_view}>
+                <Icon
+                  type="MaterialIcons"
+                  name="comment"
+                  style={styles.post_comment}
+                />
+                <Text style={styles.btn_text}>{'Message'}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
 

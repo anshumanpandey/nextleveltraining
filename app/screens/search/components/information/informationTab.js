@@ -8,6 +8,7 @@ import DetailsCard from './DetailsCard';
 import ExperienceCard from './ExperienceCard';
 
 const InformationTab = (props) => {
+  console.log(props.DBSCeritificate)
   return (
     <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
       <View style={styles.tab1Contain}>

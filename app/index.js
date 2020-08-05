@@ -271,7 +271,7 @@ const AppMain = () => {
     }
     tabs.Profile = {
       screen: profile.Role == "Player" ? PlayerInfoScreen: Information,
-      params: {player: profile, hideConnect: true },
+      params: {player: profile, ...profile, hideConnect: true, hideCoachButtons: true },
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
