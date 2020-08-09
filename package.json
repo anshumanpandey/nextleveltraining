@@ -45,7 +45,7 @@
     "react-native-base64": "^0.1.0",
     "react-native-calendars": "^1.300.0",
     "react-native-dash": "^0.0.11",
-    "react-native-date-ranges": "^2.5.0",
+    "react-native-date-ranges": "git+https://github.com/TheLox95/react-native-date-ranges.git",
     "react-native-datepicker": "^1.7.2",
     "react-native-document-picker": "^3.5.3",
     "react-native-fbsdk": "^2.0.0",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Header from '../../components/header/Header'
 import DatePicker from 'react-native-date-ranges';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, View, Text, TouchableOpacity } from 'react-native';
 import moment from 'moment'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
@@ -11,6 +11,7 @@ import { format, addDays, parse } from 'date-fns'
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
+    const [showCalendar, setShowCalendar] = useState(false)
     const [agroupedData, setAgroupedData] = useState([])
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState(addDays(new Date(), 30))
@@ -89,6 +90,18 @@ const CalendarScreen = (props) => {
                 onConfirm={({ endDate, startDate }) => {
                     setStartDate(parse(startDate, "yyyy/MM/dd", new Date()))
                     setEndDate(parse(endDate, "yyyy/MM/dd", new Date()))
+                }}
+                customButton={(onConfirm, onCancel) => {
+                    return (
+                        <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: '5%'}}>
+                            <TouchableOpacity onPress={onConfirm}>
+                                <Text style={{ fontSize: 18}}>Done</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={onCancel}>
+                                <Text style={{ fontSize: 18}}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    );
                 }}
             />
 
