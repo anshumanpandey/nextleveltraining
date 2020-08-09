@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useGlobalState } from '../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
-import { parseISO, format} from 'date-fns';
+import { parseISO, format, differenceInHours } from 'date-fns';
 
 
 const JobDetails = (props) => {
@@ -50,30 +50,19 @@ const JobDetails = (props) => {
   }, [])
 
   const canCancel = () => {
-    const serverDatetime = moment(props.navigation.getParam("CurrentTime"))
-    const sessionDatetime = moment(props.navigation.getParam("SentDate"))
+    const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
+    const sessionDatetime = parseISO(props.navigation.getParam("SentDate"))
 
-    sessionDatetime.set({
-      hours: moment(props.navigation.getParam("FromTime")).utc().hours(),
-      minutes: 0,
-      seconds: 0,
-    })
-
-    return sessionDatetime.utcOffset(0, true).diff(serverDatetime, 'hours') >= 72 && !cancelBookingReq.loading && props.navigation.getParam("BookingStatus") != "Cancelled"
+    return differenceInHours(serverDatetime, sessionDatetime) >= 72 && !cancelBookingReq.loading && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
   const canReschedule = () => {
-    const serverDatetime = moment(props.navigation.getParam("CurrentTime"))
-    const sessionDatetime = moment(props.navigation.getParam("SentDate"))
+    const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
+    const sessionDatetime = parseISO(props.navigation.getParam("SentDate"))
 
-    sessionDatetime.set({
-      hours: moment(props.navigation.getParam("FromTime")).utc().hours(),
-      minutes: 0,
-      seconds: 0,
-    })
-
-    return sessionDatetime.utcOffset(0, true).diff(serverDatetime, 'hours') >= 48
+    return differenceInHours(serverDatetime, sessionDatetime) >= 48
   }
+
   const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
 
   const steps = [
