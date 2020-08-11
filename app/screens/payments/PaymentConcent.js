@@ -135,7 +135,7 @@ const PaymentConcentScreen = (props) => {
 
               //console.log(new URL(url))
 
-              if (url.includes('PAYMENT_SUCCESS')) {
+              if (url.includes('payment_success')) {
                 console.log('success')
                 if (apiCalled == true || saveBookingReq.loading == true) return
                 const data = {
@@ -165,7 +165,7 @@ const PaymentConcentScreen = (props) => {
                     props.navigation.dispatch(resetAction);
                   })
               }
-              if (url.includes('PAYMENT_CANCELLED')) {
+              if (url.includes('payment_failure')) {
                 console.log('cancelled')
                 setOpenModal(false)
               }

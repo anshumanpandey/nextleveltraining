@@ -13,6 +13,7 @@ import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel'
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import HeaderTitleBack from '../../components/header/HeaderTitleBack'
+import NavigationService from '../../navigation/NavigationService'
 
 const ReviewScreen = (props) => {
   const formikRef = useRef()
@@ -20,7 +21,7 @@ const ReviewScreen = (props) => {
   const [showModal, setShowModal] = useState(false)
 
   const [postReq, doPost] = useAxios({
-    url: '/Users/SaveReview',
+    url: '/Users/SaveBookingReview',
     method: 'POST'
   }, { manual: true })
 
@@ -63,15 +64,16 @@ const ReviewScreen = (props) => {
         }}
         onSubmit={(values, { resetForm }) => {
           const data = {
-            "coachId": props.navigation.getParam("coachId"),
             "playerId": profile.Id,
+            "bookingId": props.navigation.getParam("bookingId"),
             "rating": values.rate,
-            "feedback": values.review
+            "feedback": values.review,
           }
 
-          doPost({ data })
-            .then(() => {
-              props.navigation.goBack()
+          return doPost({ data })
+            .then(() => doPost({ url: `/Users/GetBookingById/${props.navigation.getParam("bookingId")}`}))
+            .then((r) => {
+              NavigationService.navigate("JobDetails", r.data)
               resetForm({ values: {} })
             })
 

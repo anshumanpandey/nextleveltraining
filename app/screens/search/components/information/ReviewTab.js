@@ -18,6 +18,8 @@ const ReviewTab = ({ coachId }) => {
         ListEmptyComponent={
           <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Reviews for this coach yet.</Text>
         }
+        refreshing={reviewReq.loading}
+        onRefresh={() => refetch()}
         horizontal={false}
         style={{width: '100%', height: '100%'}}
         data={reviewReq.data}

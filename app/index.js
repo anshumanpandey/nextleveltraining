@@ -56,6 +56,7 @@ import ParentComponent from './screens/search/components/ParentComponent';
 import CoachsummaryScreen from './screens/coachSummary/CoachsummaryScreen';
 import Notifications from './screens/notifications/Notifications';
 import ReviewScreen from './screens/review/ReviewScreen';
+import ForgotPassword from './screens/forgotPassword/ForgotPassword';
 
 let initialRouteName = null
 let Apps = null
@@ -487,6 +488,7 @@ const AppMain = () => {
   } else {
     screens.Level = { screen: Level }
     screens.Login = { screen: Login }
+    screens.ForgotPassword = { screen: ForgotPassword }
     screens.SignUp = { screen: SignUp }
   }
 

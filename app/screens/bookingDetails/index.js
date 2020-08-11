@@ -64,6 +64,7 @@ const JobDetails = (props) => {
   }
 
   const renderCompletedButton = () => isAfter(parseISO(props.navigation.getParam("SentDate")), parseISO(props.navigation.getParam("CurrentTime")))
+  const canComplete = () => props.navigation.getParam("BookingReviews").find(r => r.PlayerId == profile.Id) == null
 
   const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
 
@@ -90,8 +91,6 @@ const JobDetails = (props) => {
       }
     )
   }
-
-  console.log(props.navigation.state)
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -139,7 +138,7 @@ const JobDetails = (props) => {
       </View>
 
       <View style={[styles.btnView, { height: '8%' }]}>
-        {renderCompletedButton() && (
+        {!renderCompletedButton() && (
           <TouchableOpacity disabled={!canCancel()} onPress={() => {
             Alert.alert("", "Are you sure you want to Cancel the booking?", [
               {
@@ -169,10 +168,10 @@ const JobDetails = (props) => {
             </View>
           </TouchableOpacity>
         )}
-        {!renderCompletedButton() && profile.Role == "Player" && (
-          <TouchableOpacity onPress={() => {
-            NavigationService.navigate("ReviewScreen", { coachId: props.navigation.getParam("CoachID") })
-          }} style={{ width: '33%', justifyContent: 'center' }}>
+        {renderCompletedButton() && profile.Role == "Player" && (
+          <TouchableOpacity disabled={!canComplete()} onPress={() => {
+            NavigationService.navigate("ReviewScreen", { bookingId: props.navigation.getParam("Id") })
+          }} style={{ width: '33%', justifyContent: 'center', opacity: canComplete() ? 1:0.5 }}>
             <View style={[styles.btnTab]}>
               {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
               {!cancelBookingReq.loading && (
