@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useGlobalState } from '../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
-import { parseISO, format, differenceInHours } from 'date-fns';
+import { parseISO, format, differenceInHours, isAfter } from 'date-fns';
 
 
 const JobDetails = (props) => {
@@ -60,8 +60,10 @@ const JobDetails = (props) => {
     const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
     const sessionDatetime = parseISO(props.navigation.getParam("SentDate"))
 
-    return differenceInHours(serverDatetime, sessionDatetime) >= 48
+    return differenceInHours(serverDatetime, sessionDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
+
+  const renderCompletedButton = () => isAfter(parseISO(props.navigation.getParam("SentDate")), parseISO(props.navigation.getParam("CurrentTime")))
 
   const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
 
@@ -88,6 +90,8 @@ const JobDetails = (props) => {
       }
     )
   }
+
+  console.log(props.navigation.state)
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -135,37 +139,39 @@ const JobDetails = (props) => {
       </View>
 
       <View style={[styles.btnView, { height: '8%' }]}>
-        <TouchableOpacity disabled={!canCancel()} onPress={() => {
-          Alert.alert("", "Are you sure you want to Cancel the booking?", [
-            {
-              text: 'Yes', onPress: () => {
-                cancelBooking()
-                  .then(() => {
-                    props.navigation.navigate("Booking")
-                  })
-              }
-            },
-            { text: 'No', style: 'cancel' },
-          ],
-            { cancelable: true })
-        }} style={{ width: '33%', justifyContent: 'center' }}>
-          <View style={[styles.btnTab, { opacity: canCancel() ? 1 : 0.5 }]}>
-            {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
-            {!cancelBookingReq.loading && (
-              <>
-                <Icon
-                  name="close"
-                  type="MaterialIcons"
-                  style={styles.btn_menu_icon}
-                />
-                <Text style={styles.btnText}>Cancel</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
-        {/*moment(props.navigation.getParam("CurrentTime")).isAfter(moment(props.navigation.getParam("SentDate"))) && profile.Role == "Player" && (
+        {renderCompletedButton() && (
           <TouchableOpacity disabled={!canCancel()} onPress={() => {
-            
+            Alert.alert("", "Are you sure you want to Cancel the booking?", [
+              {
+                text: 'Yes', onPress: () => {
+                  cancelBooking()
+                    .then(() => {
+                      props.navigation.navigate("Booking")
+                    })
+                }
+              },
+              { text: 'No', style: 'cancel' },
+            ],
+              { cancelable: true })
+          }} style={{ width: '33%', justifyContent: 'center' }}>
+            <View style={[styles.btnTab, { opacity: canCancel() ? 1 : 0.5 }]}>
+              {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
+              {!cancelBookingReq.loading && (
+                <>
+                  <Icon
+                    name="close"
+                    type="MaterialIcons"
+                    style={styles.btn_menu_icon}
+                  />
+                  <Text style={styles.btnText}>Cancel</Text>
+                </>
+              )}
+            </View>
+          </TouchableOpacity>
+        )}
+        {!renderCompletedButton() && profile.Role == "Player" && (
+          <TouchableOpacity onPress={() => {
+            NavigationService.navigate("ReviewScreen", { coachId: props.navigation.getParam("CoachID") })
           }} style={{ width: '33%', justifyContent: 'center' }}>
             <View style={[styles.btnTab]}>
               {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
@@ -181,7 +187,7 @@ const JobDetails = (props) => {
               )}
             </View>
           </TouchableOpacity>
-              )*/}
+        )}
         <TouchableOpacity
           onPress={() => {
             const params = {

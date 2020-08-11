@@ -55,6 +55,7 @@ import CalendarScreen from './screens/Calendar/CalendarScreen';
 import ParentComponent from './screens/search/components/ParentComponent';
 import CoachsummaryScreen from './screens/coachSummary/CoachsummaryScreen';
 import Notifications from './screens/notifications/Notifications';
+import ReviewScreen from './screens/review/ReviewScreen';
 
 let initialRouteName = null
 let Apps = null
@@ -406,6 +407,15 @@ const AppMain = () => {
       }),
     }
 
+    tabs.ReviewScreen = {
+      screen: ReviewScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
     tabs.Calendar = {
       screen: CalendarScreen,
       navigationOptions: () => ({
@@ -421,7 +431,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "Calendar", "Notifications","CoachSummary",'AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "ReviewScreen","Calendar", "Notifications","CoachSummary",'AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

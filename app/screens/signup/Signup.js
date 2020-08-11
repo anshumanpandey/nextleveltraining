@@ -9,6 +9,7 @@ import { LoginManager, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin } from 'react-native-google-signin';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
+import DeviceInfo from 'react-native-device-info';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
@@ -80,7 +81,7 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
+                .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -113,7 +114,8 @@ const Signup = (props) => {
                       "email": userInfo.user.email,
                       "picture": userInfo.user.photo,
                       "role": props.navigation.getParam('role'),
-                      "authenticationToken": userInfo.serverAuthCode
+                      "authenticationToken": userInfo.serverAuthCode,
+                      deviceId: DeviceInfo.getUniqueId(),
                     }
                   })
                     .then((r) => {
