@@ -14,6 +14,8 @@ import ConnectedWidget from '../../components/ConnectedWidget';
 import Colors from '../../constants/color';
 import useAxios from 'axios-hooks'
 import { FlatList } from 'react-native-gesture-handler';
+import moment from "moment"
+import PostCard from '../home/components/PostCard';
 
 const PlayerInfoScreen = (props) => {
   const [toggle, setToggle] = useState(false);
@@ -22,7 +24,7 @@ const PlayerInfoScreen = (props) => {
   const { AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   const [getPostByUserReq, getPostByUser] = useAxios({
-    url: `/api/Users/GetPostsByUser/${profile.Id}`,
+    url: `/Users/GetPostsByUser/${profile.Id}`,
   })
 
   const initFn = () => {
@@ -169,7 +171,7 @@ const PlayerInfoScreen = (props) => {
               keyExtractor={item => item.Id}
               renderItem={({ item }) => (
                 <PostCard
-                  refreshCb={refetch}
+                  refreshCb={getPostByUser}
                   onPressOfComment={() => props.navigation.navigate(screen.CreateComment, { post: item })}
                   item={item}
                   onClickItem={(item) => {

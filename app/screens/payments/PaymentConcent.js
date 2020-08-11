@@ -40,7 +40,7 @@ const PaymentConcentScreen = (props) => {
     params,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${base64.encode(`AcDoYg60CAk48yIdgpLTKR8h99G9sdv_Xmdg8jzd8HTla_01m29inTc7d-kT5MdRwYcnpq5GmrdXbt4A:ENs8H1feFUXDKdKOf3WZbqpFOempJlLR13ntsM7VwzuaJIzK-aRuRh_z9yVS2zuCldnTDyj19elOdZFO`)}`,
+      'Authorization': `Basic ${base64.encode(`ASzioBXLboxNr1ZU-Il-AYsuFYnElDWfuhBsMUDCpNb3iROIxhI4DEfef99nXwsP7f1dDkTiHwoZshr_:EBKq-fql7wyVuyfuILX--YiFIb0CziLcfU5UiTlC88eqABsKC5YQd47U8BL428Np4s4_zynBgCj0S1NH`)}`,
     },
   }, { manual: true })
 
@@ -97,6 +97,7 @@ const PaymentConcentScreen = (props) => {
             console.log(0)
             getAccessToken()
               .then((res) => {
+                console.log(res.data)
                 return doPayment({
                   headers: {
                     'Authorization': `Bearer ${res.data.access_token}`

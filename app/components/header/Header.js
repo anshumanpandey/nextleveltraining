@@ -21,7 +21,10 @@ const Header = (props) => {
         >
           {hasFullProfile(profile) ? <Icon name="menu" type="Entypo" style={styles.header_menu_icon} color="black" /> : undefined}
         </TouchableOpacity>
-
+        {props.isNotificationScreen &&
+            <Text style={{ fontSize:20,
+            fontWeight:"bold",marginLeft:40}}>Notifications</Text>
+          }
         {props.hideCreatePost != true && hasFullProfile(profile) &&<TouchableOpacity
         style={{ width: '85%'}}
           onPress={() => props.navigate(screen.CreatePost)}

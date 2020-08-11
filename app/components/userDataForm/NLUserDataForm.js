@@ -9,6 +9,7 @@ import styles from './styles.js';
 import useAxios from 'axios-hooks'
 import AsyncStorage from '@react-native-community/async-storage';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import DeviceInfo from 'react-native-device-info';
 import Screens from '../../utils/screen';
 
 const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
@@ -82,6 +83,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                 if (props.hidePasswordInput == true) {
                     delete values.password
                 }
+                values.deviceId = DeviceInfo.getUniqueId()
                 return register({ data: values })
                     .then((r) => {
                         if (action == 'register') {

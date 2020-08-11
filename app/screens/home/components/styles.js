@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
     width: Dimension.pro100,
     backgroundColor: 'white',
     marginBottom: '1%',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)'
+    padding: '2%'
   },
   post_card_container: {
     paddingTop: 10,

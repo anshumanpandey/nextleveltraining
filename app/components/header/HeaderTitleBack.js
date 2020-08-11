@@ -6,7 +6,7 @@ import NavigationService from '../../navigation/NavigationService';
 import hasFullProfile from '../../utils/perType/profileResolver';
 import { useGlobalState } from '../../state/GlobalState';
 
-const HeaderTitleBack = ({ title, navigate, onBackPress }) => {
+const HeaderTitleBack = ({ title, navigate, onBackPress, ...props }) => {
   const [profile] = useGlobalState('profile')
   return (
     <View style={styles.header_layout}>
@@ -23,6 +23,7 @@ const HeaderTitleBack = ({ title, navigate, onBackPress }) => {
           </TouchableOpacity>
         ) : undefined}
         <Text style={styles.headerTitle}>{title}</Text>
+        {props.customButton && props.customButton()}
       </View>
     </View>
   );

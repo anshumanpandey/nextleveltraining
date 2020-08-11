@@ -133,8 +133,8 @@ const Profile = (props) => {
                       console.log("onChangeText", e)
                       setFieldValue("bodyText", e)
                     }}
-                    mentionData={getconnectedUserReq.data ? getconnectedUserReq.data.map(u => ({ id: u.Id, name: u.FullName.replace(" ", "_")})): []}
-                    hashtagData={getHashtags.data ? getHashtags.data.map(u => ({ id: u.Id, name: u.Tag.replace(" ", "_").replace("#", "")})): []}
+                    mentionData={getconnectedUserReq.data ? getconnectedUserReq.data.map(u => ({ id: u.Id, name: u.FullName.replace(" ", "_"), ...u })) : []}
+                    hashtagData={getHashtags.data ? getHashtags.data.map(u => ({ id: u.Id, name: u.Tag.replace(" ", "_").replace("#", "") })) : []}
                     mentioningChangeText={(e) => { }}
                     onMentionSelected={(mnetion) => {
                       console.log("onMentionSelected", mnetion)
@@ -142,11 +142,15 @@ const Profile = (props) => {
                     onHashtagSelected={(hashtag) => {
                       console.log("onHashtagSelected", hashtag)
                     }}
-                    renderMentionCell={({ item }) => (
-                      <View style={{ padding: '2%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)'}}>
-                        <Text>{item.name}</Text>
-                      </View>
-                    )}
+                    renderMentionCell={({ item }) => {
+                      console.log(item)
+                      return (
+                        <View style={{ padding: '2%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)', flexDirection: 'row' }}>
+                          <Image style={{ width: 25, height: 25, borderRadius: 25/2, marginRight: '5%' }} source={{ uri: item.ProfileImage }} />
+                          <Text>{item.name}</Text>
+                        </View>
+                      )
+                    }}
                     style={styles.inputField}
                   />
                   {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
@@ -163,13 +167,13 @@ const Profile = (props) => {
                 {values.file && values.file.type.includes('video') && (
                   <LoadableVideo
                     source={{ uri: values.file.uri, }}   // Can be a URL or a local file.
-                    style={{ flex: 2, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50}}
+                    style={{ flex: 2, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }}
                   />
                 )}
 
               </View>
             </ScrollView>
-            {errors.bodyText && touched.bodyText && <ErrorLabel style={{ textAlign: 'center'}} text={errors.bodyText} />}
+            {errors.bodyText && touched.bodyText && <ErrorLabel style={{ textAlign: 'center' }} text={errors.bodyText} />}
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {

@@ -166,7 +166,7 @@ const Information = (props) => {
       ) : selectedTab === 1 ? (
         <MediaTab selectedTab={selectedTab} posts={props.navigation.state.params.Posts} />
       ) : (
-            <ReviewTab />
+            <ReviewTab coachId={props.navigation.getParam("Id")} />
           )}
     </ScrollView>
   );

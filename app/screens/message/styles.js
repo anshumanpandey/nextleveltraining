@@ -8,14 +8,20 @@ const styles =StyleSheet.create({
       flex:1
     },
     fullFlatListContainer:{
-        margin:10,
-        flex: 1
+        margin:5,
+        flexGrow: 1
     },
     notFoundText:{
     alignSelf:"center",
     fontSize:20
 
     },
+    notifyHeaderText:{
+        alignSelf:"center",
+        fontSize:20,
+        fontWeight:"bold"
+    
+        },
     container_text: {
         flex: 1,
         flexDirection: 'column',
@@ -30,6 +36,12 @@ const styles =StyleSheet.create({
         fontSize: 11,
         fontStyle: 'italic',
         color:"#a9a9a9",
+    },
+    description2: {
+        fontSize: 11,
+        fontStyle: 'italic',
+        color:"#a9a9a9",
+        marginRight:10
     },
     description1: {
         fontSize: 11,
@@ -46,8 +58,17 @@ const styles =StyleSheet.create({
         padding: 10,
         height: 90,
         flexDirection: 'row',
+        
+    },
+    flatListNotification:{
+        padding: 10,
+        height: 65,
+        flexDirection: 'row',
+        borderBottomWidth: 0.5, 
+        borderColor: 'gray'
     },
     signup_container:{
+        flexGrow: 1,
         backgroundColor:'white',
         height:Dimension.pro100, 
         width:Dimension.pro100
