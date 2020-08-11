@@ -21,6 +21,11 @@ function goBack(params) {
   _navigator.dispatch(NavigationActions.back(params));
 }
 
+function replace(routeName) {
+  console.log(_navigator)
+  _navigator.actions.replace(routeName);
+}
+
 function navigateAndReset(routeName) {
   _navigator.dispatch(
     StackActions.reset({
@@ -61,6 +66,7 @@ export default {
   navigateAndResetWithParams,
   setTopLevelNavigator,
   goBack,
+  replace,
   openDrawer,
   closeDrawer,
 };

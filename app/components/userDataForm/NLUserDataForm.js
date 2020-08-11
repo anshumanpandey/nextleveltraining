@@ -60,7 +60,17 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                 if (!values.postCode) errors.postCode = 'Required'
 
                 if (props.hidePasswordInput != true) {
-                    if (!values.password) errors.password = 'Required'
+                    if (!values.password) {
+                        errors.password = 'Required'
+                      } else if (values.password.length < 8) {
+                        errors.password = 'Must be at least 8 characters long'
+                      } else if (/\d/.test(values.password) == false) {
+                        errors.password = 'Must include one number'
+                      } else if (/[A-Z]/.test(values.password) == false) {
+                        errors.password = 'Must include one number'
+                      } else if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.password) == false) {
+                        errors.password = 'Must include one special character'
+                      }
                 }
 
                 if (showsConfirmPassword) {

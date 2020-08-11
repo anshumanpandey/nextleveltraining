@@ -103,6 +103,11 @@ class MultiStep extends Component {
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
 
+        if (profile.IsTempPassword) {
+            this.props.navigation.replace("ForceChangePassword");
+            return
+        }
+
         if (
             this.stepOneIsComplete(profile) &&
             this.stepTwoIsComplete(profile) &&
