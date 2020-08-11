@@ -12,6 +12,7 @@ import { pickImage } from '../../helpers/ImagePicker';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImageProgress from 'react-native-image-progress';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const PlayerProfile = (props) => {
   const [triggerChange, setTriggerChange] = useState(true);
@@ -30,6 +31,18 @@ const PlayerProfile = (props) => {
           setProfilePic(JSON.parse(s))
         })
     }
+
+    if (profile.IsTempPassword) {
+      props.navigation.replace("ForceChangePassword");
+    }
+
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      if (profile.IsTempPassword) {
+        props.navigation.replace("ForceChangePassword");
+      }
+    });
+
+    return () => focusListener.remove()
   }, [])
 
   useEffect(() => {

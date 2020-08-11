@@ -21,7 +21,7 @@ const EditProfile = (props) => {
     const [changePasswordReq, changePassword] = useAxios({
         url: '/Users/ChangePassword',
         method: 'POST',
-      }, { manual: true })
+    }, { manual: true })
 
     return (
         <ScrollView keyboardShouldPersistTaps="handled" style={{
@@ -89,7 +89,19 @@ const EditProfile = (props) => {
                                 const errors = {}
 
                                 if (!values.password) errors.password = 'Required'
-                                if (!values.newPassword) errors.newPassword = 'Required'
+
+                                if (!values.newPassword) {
+                                    errors.newPassword = 'Required'
+                                } else if (values.newPassword.length < 8) {
+                                    errors.newPassword = 'Must be at least 8 characters long'
+                                } else if (/\d/.test(values.newPassword) == false) {
+                                    errors.newPassword = 'Must include one number'
+                                } else if (/[A-Z]/.test(values.newPassword) == false) {
+                                    errors.newPassword = 'Must include one number'
+                                } else if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.newPassword) == false) {
+                                    errors.newPassword = 'Must include one special character'
+                                }
+
                                 if (!values.confirmPassword) {
                                     errors.confirmPassword = 'Required'
                                 } else if (values.newPassword != values.confirmPassword) {
@@ -104,15 +116,15 @@ const EditProfile = (props) => {
                                     "newPassword": values.newPassword
                                 }
                                 return changePassword({ data })
-                                .then(() => {
-                                    Alert.alert("", "Your password has been changed")
-                                    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
-                                })
+                                    .then(() => {
+                                        Alert.alert("", "Your password has been changed")
+                                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
+                                    })
                             }}
                         >
                             {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
                                 return (
-                                    <View style={{ padding: '5%'}}>
+                                    <View style={{ padding: '5%' }}>
                                         <View style={styles.signup_info_view}>
                                             <View style={styles.signup_info_view}>
                                                 <TextInput

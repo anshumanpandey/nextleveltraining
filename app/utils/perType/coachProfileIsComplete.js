@@ -18,6 +18,7 @@ const coachProfileIsComplete = (profile) => {
     profile.VerificationDocument != null &&
     profile.Rate != 0 &&
     profile.BankAccount != null &&
+    profile.IsTempPassword != true &&
     profile.Availabilities != null && profile.Availabilities.length != 0 && 
     profile.TrainingLocations != null && profile.TrainingLocations.length != 0
 

@@ -57,6 +57,7 @@ import CoachsummaryScreen from './screens/coachSummary/CoachsummaryScreen';
 import Notifications from './screens/notifications/Notifications';
 import ReviewScreen from './screens/review/ReviewScreen';
 import ForgotPassword from './screens/forgotPassword/ForgotPassword';
+import ForceChangePassword from './screens/forceChangePassword/ForceChangePassword';
 
 let initialRouteName = null
 let Apps = null
@@ -133,6 +134,7 @@ const AppMain = () => {
       AddQualifications: { screen: AddQualifications },
       VerificationId: { screen: VerificationId },
       UpComingMatch: { screen: UpComingMatch },
+      ForceChangePassword: { screen: ForceChangePassword },
     },
     {
       defaultNavigationOptions: ({ navigation }) => {
@@ -508,7 +510,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  },[token,profile?.Id, profile?.AboutUs,profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance,profile?.Teams?.length,profile?.UpcomingMatches?.length, profile?.Availabilities?.length,profile?.BankAccount?.AccountName,toggle])
+  },[token,profile?.Id, profile?.IsTempPassword,profile?.AboutUs,profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance,profile?.Teams?.length,profile?.UpcomingMatches?.length, profile?.Availabilities?.length,profile?.BankAccount?.AccountName,toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

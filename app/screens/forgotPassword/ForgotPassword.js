@@ -29,7 +29,7 @@ const ForgotPassword = (props) => {
       <View style={styles.login_container}>
         <View style={styles.login_logo_view}>
           <Image source={Images.Mlogo} />
-          <Text style={styles.login_logo_text}>Sign In</Text>
+          <Text style={styles.login_logo_text}>Reset Password</Text>
         </View>
 
         <Formik
@@ -44,7 +44,7 @@ const ForgotPassword = (props) => {
           onSubmit={values => {
             resetPassword({ data: values })
               .then((r) => {
-                Alert.alert("A new password has been sent to this email")
+                Alert.alert("","A new password has been sent to this email")
                 props.navigation.navigate("Login")
               })
           }}
