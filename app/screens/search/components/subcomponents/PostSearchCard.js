@@ -33,8 +33,6 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
     milesAway = convert(meters).from('m').to("mi").toFixed(2)
   }
 
-  console.log(props)
-
   return (
     <TouchableOpacity onPress={onPress} style={styles.ps_container}>
       <View style={{ marginTop: 15, marginLeft: 10 }}>
