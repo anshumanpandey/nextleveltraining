@@ -61,7 +61,7 @@ const ForceChangePassword = (props) => {
               errors.newPassword = 'Must include one number'
             } else if (/[A-Z]/.test(values.newPassword) == false) {
               errors.newPassword = 'Must include one number'
-            } else if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.newPassword) == false) {
+            } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.password) == false) {
               errors.newPassword = 'Must include one special character'
             }
 

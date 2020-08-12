@@ -68,7 +68,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                         errors.password = 'Must include one number'
                       } else if (/[A-Z]/.test(values.password) == false) {
                         errors.password = 'Must include one number'
-                      } else if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.password) == false) {
+                      } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.password) == false) {
                         errors.password = 'Must include one special character'
                       }
                 }
