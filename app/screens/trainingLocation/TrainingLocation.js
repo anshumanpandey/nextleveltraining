@@ -15,6 +15,7 @@ const TrainingLocationScreen = (props) => {
     return (
         <ScrollView contentContainerStyle={{ backgroundColor: 'white', flexGrow: 1 }}>
             <Header
+                title="Training Locations"
                 customButton={() => {
                     return (
                         <TouchableOpacity style={{ marginLeft: '80%'}} onPress={() => props.navigation.navigate("TrainingLocationEdit", { item: undefined })}>

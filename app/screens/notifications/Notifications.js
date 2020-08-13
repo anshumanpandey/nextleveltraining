@@ -5,6 +5,7 @@ import { View } from 'native-base';
 import useAxios from 'axios-hooks'
 import styles from '../message/styles';
 import { Icon } from 'native-base';
+import Colors from '../../constants/color';
 
 const Notifications = (props) => {
 
@@ -32,7 +33,7 @@ const Notifications = (props) => {
                     </View>
                 </TouchableOpacity>
                 {!item.IsRead ?
-                    <Icon type="FontAwesome" name="circle" size={20} style={{ color: "blue" }} />
+                    <Icon type="FontAwesome" name="circle" style={{ color: "blue", fontSize: 12 }} />
                     :
                     <View />
                 }
@@ -57,10 +58,11 @@ const Notifications = (props) => {
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1 }}>
 
-            <Header isNotificationScreen={true} hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+            <Header title={"Notifications"} hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
             <View style={[styles.signup_container]}>
                 <View style={[styles.fullFlatListContainer ]}>
                     {!getUserReq.loading && getUserReq?.data && getUserReq?.data.Notifications.length > 0 &&
+                    <>
                         <FlatList
                             contentContainerStyle={{ flexGrow: 1 }}
                             ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: '10%'}}>No notifications</Text>}
@@ -69,6 +71,16 @@ const Notifications = (props) => {
                             temSeparatorComponent={() => <ItemSeparator />}
                             keyExtractor={item => item.id}
                         />
+                        <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent:'center'}}>
+                            <View>
+                                <View style={{ backgroundColor: Colors.s_blue, zIndex: -2, position: 'absolute', top: '-90%', left: '20%',height: 20, width: 20, borderRadius: 20/2 }}>
+                                    <Text style={{ color: 'white', textAlign: 'center' }}>{getUserReq.data?.Notifications.filter(i => i.IsRead == false).length}</Text>
+                                </View>
+                                <Icon type="Feather" name="bell" style={{ fontSize: 18  }} />
+                            </View>
+                            <Text style={{ textAlign: 'center'}}>Unread notifications</Text>
+                        </View>
+                    </>
                     }
                 </View>
                 {!getUserReq.loading && getUserReq?.data?.Notifications && getUserReq?.data?.Notifications.length === 0 && <Text style={styles.notFoundText}>No Notifications</Text>}

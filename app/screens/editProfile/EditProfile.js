@@ -35,6 +35,7 @@ const EditProfile = (props) => {
                 width: "100%"
             }}>
                 <Header
+                    title="Personal Details"
                     hideCreatePost={true}
                     toggleDrawer={props.navigation.toggleDrawer}
                     navigate={props.navigation.navigate}
@@ -77,7 +78,7 @@ const EditProfile = (props) => {
                             }}
                         />
                     </Tab>
-                    <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Password">
+                    <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Change Password">
                         <Formik
                             innerRef={(r) => paswordFormikRef.current = r}
                             initialValues={{
@@ -98,7 +99,7 @@ const EditProfile = (props) => {
                                     errors.newPassword = 'Must include one number'
                                 } else if (/[A-Z]/.test(values.newPassword) == false) {
                                     errors.newPassword = 'Must include one number'
-                                } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.password) == false) {
+                                } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.newPassword) == false) {
                                     errors.newPassword = 'Must include one special character'
                                 }
 

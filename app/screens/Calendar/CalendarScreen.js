@@ -67,6 +67,7 @@ const CalendarScreen = (props) => {
     return (
         <>
             <Header
+                title="Calendar"
                 hideCreatePost={true}
                 toggleDrawer={props.navigation.toggleDrawer}
                 navigate={props.navigation.navigate}

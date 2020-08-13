@@ -8,7 +8,7 @@ const PrivacyPolicyScreen = (props) => {
 
     return (
         <ScrollView>
-            <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+            <Header title="Privacy Policy" hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
 
             <View style={{ padding: '5%' }}>
                 <Text style={styles.title1}>Privacy Policy</Text>
@@ -65,15 +65,18 @@ const PrivacyPolicyScreen = (props) => {
 
 const styles = StyleSheet.create({
     title1: {
-        fontSize: 24,
-        fontWeight: 'bold'
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: '5%'
     },
     title2: {
-        fontSize: 20,
-        fontWeight: 'bold'
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: '2%'
     },
     text1: {
         fontSize: 18,
+        marginBottom: '5%'
     },
 })
 

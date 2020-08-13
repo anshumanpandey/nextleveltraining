@@ -187,7 +187,6 @@ const AppMain = () => {
               name="home"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>HOME</Text>
           </View>
         ),
       }),
@@ -234,7 +233,6 @@ const AppMain = () => {
             name="search"
             style={[styles.icons, { color: tintColor }]}
           />
-          <Text style={[styles.textTab, { color: tintColor }]}>SEARCH</Text>
         </View>
       )
     }
@@ -253,7 +251,6 @@ const AppMain = () => {
               name="shopping-cart"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>BOOKINGS</Text>
           </View>
         ),
       }),
@@ -268,7 +265,6 @@ const AppMain = () => {
               name="bell"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text numberOfLines={1} style={[styles.textTab, { color: tintColor }]}>NOTIFICATIONS</Text>
           </View>
         ),
       }),
@@ -284,7 +280,6 @@ const AppMain = () => {
               name="user"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>PROFILE</Text>
           </View>
         ),
       }),
@@ -299,7 +294,6 @@ const AppMain = () => {
               name="message-square"
               style={[styles.icons, { color: tintColor }]}
             />
-            <Text style={[styles.textTab, { color: tintColor }]}>INBOX</Text>
           </View>
         ),
       }),

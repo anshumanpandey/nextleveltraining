@@ -97,9 +97,11 @@ const Profile = (props) => {
 
           doPost({ data })
             .then(r => {
-              if (values?.file?.mime) {
-                values.file.type = values.file.mime
-                values.file.uri = values.file.path
+              if (values?.file) {
+                if (values?.file?.mime) {
+                  values.file.type = values.file.mime
+                  values.file.uri = values.file.path
+                }
                 if (Platform.OS == "android") {
                   values.file.uri = values.file.uri.replace("file://", "");
                 }
@@ -205,6 +207,7 @@ const Profile = (props) => {
                 })
                   .then((file) => {
                     file.type.includes('video')
+                    console.log(file.type)
                     setFieldValue('file', file)
                   })
               }}>
@@ -228,10 +231,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textArea: {
-    borderWidth: 1,
     borderColor: Colors.s_blue,
     borderRadius: 15,
-    textAlignVertical: 'center',
+    textAlignVertical: 'top',
+    height: 200
   },
   modal: {
     justifyContent: 'flex-end',

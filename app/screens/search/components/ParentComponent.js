@@ -40,7 +40,7 @@ const SearchTabs = () => {
 const ParentComponent = (props) => {
   return (
     <>
-    <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+    <Header title="Coaches" hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
     <SearchTabs />
     </>
   );

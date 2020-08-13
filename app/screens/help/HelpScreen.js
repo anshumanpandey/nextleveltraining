@@ -8,7 +8,7 @@ const HelpScreen = (props) => {
 
     return (
         <ScrollView>
-            <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+            <Header title="Help" hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
 
             <View style={{ padding: '5%' }}>
                 <Text style={styles.title1}>In case of any questions/issues please email info@nextlevelfootballtraining.co.uk and we shall respond to you within 24 hours.</Text>

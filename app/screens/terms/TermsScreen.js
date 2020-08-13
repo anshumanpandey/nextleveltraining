@@ -8,7 +8,7 @@ const TermsScreen = (props) => {
 
     return (
         <ScrollView>
-            <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+            <Header title="Terms" hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
 
             <View style={{ padding: '5%' }}>
                 <Text style={styles.title1}>Terms and conditions</Text>
@@ -114,14 +114,17 @@ const TermsScreen = (props) => {
 const styles = StyleSheet.create({
     title1: {
         fontSize: 22,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: '5%'
     },
     title2: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: '2%'
     },
     text1: {
         fontSize: 18,
+        marginBottom: '5%'
     },
 })
 

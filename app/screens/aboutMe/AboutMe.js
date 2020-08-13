@@ -21,6 +21,7 @@ const AboutMeScreen = (props) => {
         return (
             <>
                 <Header
+                    title="About Me"
                     hideCreatePost={true}
                     toggleDrawer={props.navigation.toggleDrawer}
                     navigate={props.navigation.navigate}

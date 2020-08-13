@@ -33,16 +33,16 @@ const PlayerProfile = (props) => {
     }
 
     if (profile.IsTempPassword) {
-      props.navigation.replace("ForceChangePassword");
+      props?.navigation?.replace("ForceChangePassword");
     }
 
-    const focusListener = props.navigation.addListener('didFocus', () => {
+    const focusListener = props?.navigation?.addListener('didFocus', () => {
       if (profile.IsTempPassword) {
-        props.navigation.replace("ForceChangePassword");
+        props?.navigation?.replace("ForceChangePassword");
       }
     });
 
-    return () => focusListener.remove()
+    return () => focusListener?.remove()
   }, [])
 
   useEffect(() => {

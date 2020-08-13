@@ -51,16 +51,16 @@ const JobDetails = (props) => {
 
   const canCancel = () => {
     const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
-    const sessionDatetime = parseISO(props.navigation.getParam("SentDate"))
+    const sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
 
-    return differenceInHours(serverDatetime, sessionDatetime) >= 72 && !cancelBookingReq.loading && props.navigation.getParam("BookingStatus") != "Cancelled"
+    return differenceInHours(sessionDatetime, serverDatetime) >= 72 && !cancelBookingReq.loading && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
   const canReschedule = () => {
     const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
-    const sessionDatetime = parseISO(props.navigation.getParam("SentDate"))
+    const sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
 
-    return differenceInHours(serverDatetime, sessionDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
+    return differenceInHours(sessionDatetime,serverDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
   const renderCompletedButton = () => isAfter(parseISO(props.navigation.getParam("SentDate")), parseISO(props.navigation.getParam("CurrentTime")))
