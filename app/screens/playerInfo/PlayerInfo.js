@@ -136,9 +136,9 @@ const PlayerInfoScreen = (props) => {
           </ScrollView>
 
         </Tab>
-        <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Post">
+        <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Posts">
           {getPostByUserReq.loading && <Spinner color={Colors.s_blue} />}
-          {getPostByUserReq.error && <Text style={{ fontSize: 18, textAlign: 'center', marginTop: '15%' }}>No post created</Text>}
+          {getPostByUserReq.error && <Text style={{ fontSize: 18, textAlign: 'center', marginTop: '15%' }}>No Posts Yet</Text>}
           {!getPostByUserReq.loading && getPostByUserReq.data && (
             <FlatList
               horizontal={false}

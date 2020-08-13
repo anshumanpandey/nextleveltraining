@@ -100,6 +100,7 @@ const ForceChangePassword = (props) => {
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                     value={values.password}
+                    secureTextEntry={true}
                   />
                 </View>
                 {errors.password && touched.password && <ErrorLabel text={errors.password} />}
@@ -111,6 +112,7 @@ const ForceChangePassword = (props) => {
                     onChangeText={handleChange('newPassword')}
                     onBlur={handleBlur('newPassword')}
                     value={values.newPassword}
+                    secureTextEntry={true}
                   />
                 </View>
                 {errors.newPassword && touched.newPassword && <ErrorLabel text={errors.newPassword} />}
@@ -122,6 +124,7 @@ const ForceChangePassword = (props) => {
                     onChangeText={handleChange('confirmPassword')}
                     onBlur={handleBlur('confirmPassword')}
                     value={values.confirmPassword}
+                    secureTextEntry={true}
                   />
                 </View>
                 {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}

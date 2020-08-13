@@ -34,7 +34,7 @@ const Booking = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="Booking" hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
+      <Header title="My Bookings" hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
       {loading && <Spinner size={80} color={Colors.s_yellow} />}
       {!loading && data && data.length == 0 && <Text style={{ textAlign: 'center', fontSize: 24 }}>No Bookings Yet.</Text>}
       {!loading && (

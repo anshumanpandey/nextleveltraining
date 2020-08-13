@@ -5,7 +5,6 @@ import { Icon } from 'native-base'
 import moment from 'moment'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import NavigationService from '../../../navigation/NavigationService';
-import { parseISO, format } from 'date-fns'
 
 const BookCard = (item) => {
   return (
@@ -22,7 +21,7 @@ const BookCard = (item) => {
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>
-                {format(parseISO(item.BookingDate),"MMM, dd ")}
+                {item.BookingDate.split('T')[0]}{' '}
                 {moment(item.FromTime).format("HH:mm")}
               </Text>
             </View>

@@ -157,7 +157,8 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             mode="date"
             onConfirm={(d) => {
               setIsDatePickerVisible(false)
-              setDate(d)
+              const userTimezoneOffset = d.getTimezoneOffset() * 60000;
+              setDate(new Date(d.getTime() - userTimezoneOffset))
             }}
             onCancel={() => setIsDatePickerVisible(false)}
           />

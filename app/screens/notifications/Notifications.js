@@ -6,6 +6,7 @@ import useAxios from 'axios-hooks'
 import styles from '../message/styles';
 import { Icon } from 'native-base';
 import Colors from '../../constants/color';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 const Notifications = (props) => {
 
@@ -55,6 +56,12 @@ const Notifications = (props) => {
 
         return () => focusListener.remove()
     }, []);
+
+    useEffect(() => {
+        if (getUserReq.data) {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: getUserReq.data })
+        }
+    }, [getUserReq.data]);
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1 }}>
 
@@ -71,15 +78,6 @@ const Notifications = (props) => {
                             temSeparatorComponent={() => <ItemSeparator />}
                             keyExtractor={item => item.id}
                         />
-                        <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent:'center'}}>
-                            <View>
-                                <View style={{ backgroundColor: Colors.s_blue, zIndex: -2, position: 'absolute', top: '-90%', left: '20%',height: 20, width: 20, borderRadius: 20/2 }}>
-                                    <Text style={{ color: 'white', textAlign: 'center' }}>{getUserReq.data?.Notifications.filter(i => i.IsRead == false).length}</Text>
-                                </View>
-                                <Icon type="Feather" name="bell" style={{ fontSize: 18  }} />
-                            </View>
-                            <Text style={{ textAlign: 'center'}}>Unread notifications</Text>
-                        </View>
                     </>
                     }
                 </View>

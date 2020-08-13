@@ -58,6 +58,7 @@ import Notifications from './screens/notifications/Notifications';
 import ReviewScreen from './screens/review/ReviewScreen';
 import ForgotPassword from './screens/forgotPassword/ForgotPassword';
 import ForceChangePassword from './screens/forceChangePassword/ForceChangePassword';
+import Colors from './constants/color';
 
 let initialRouteName = null
 let Apps = null
@@ -70,6 +71,7 @@ const AppMain = () => {
   const [token] = useGlobalState('token')
   const [profile] = useGlobalState('profile')
   const [toggle] = useGlobalState('toggle')
+  const [notifications] = useGlobalState('notifications')
 
   useEffect(() => {
     SplashScreen.hide();
@@ -127,7 +129,7 @@ const AppMain = () => {
     {
       Profile: { screen: Profile },
       EditInput: { screen: EditInput },
-      ProfilePic: { screen: ProfilePicScreen},
+      ProfilePic: { screen: ProfilePicScreen },
       AddTeam: { screen: AddTeam },
       AddExperience: { screen: AddExperience },
       AddDbsCertificate: { screen: AddDbsCertificate },
@@ -260,18 +262,25 @@ const AppMain = () => {
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
-            <Icon
-              type="Feather"
-              name="bell"
-              style={[styles.icons, { color: tintColor }]}
-            />
+            <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
+              <View>
+                <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '20%', height: 20, width: 20, borderRadius: 20 / 2 }}>
+                  <Text style={{ color: 'white', textAlign: 'center' }}>{notifications.filter(i => i.IsRead == false).length}</Text>
+                </View>
+                <Icon
+                  type="Feather"
+                  name="bell"
+                  style={[styles.icons, { color: tintColor }]}
+                />
+              </View>
+            </View>
           </View>
         ),
       }),
     }
     tabs.Profile = {
-      screen: profile.Role == "Player" ? PlayerInfoScreen: Information,
-      params: {player: profile, ...profile, hideConnect: true, hideCoachButtons: true },
+      screen: profile.Role == "Player" ? PlayerInfoScreen : Information,
+      params: { player: profile, ...profile, hideConnect: true, hideCoachButtons: true },
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
@@ -298,14 +307,14 @@ const AppMain = () => {
         ),
       }),
     },
-    tabs.Chat = {
-      screen: Message,
-      navigationOptions: () => ({
-        tabBarButtonComponent: ({ tintColor }) => (
-          <></>
-        ),
-      }),
-    }
+      tabs.Chat = {
+        screen: Message,
+        navigationOptions: () => ({
+          tabBarButtonComponent: ({ tintColor }) => (
+            <></>
+          ),
+        }),
+      }
 
     tabs.AboutMe = {
       screen: AboutMeScreen,
@@ -428,7 +437,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "ReviewScreen","Calendar", "Notifications","CoachSummary",'AddCoaches','Message', "Chat",'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', 'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
@@ -504,7 +513,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  },[token,profile?.Id, profile?.IsTempPassword,profile?.AboutUs,profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance,profile?.Teams?.length,profile?.UpcomingMatches?.length, profile?.Availabilities?.length,profile?.BankAccount?.AccountName,toggle])
+  }, [token, profile?.Id, profile?.IsTempPassword, profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
