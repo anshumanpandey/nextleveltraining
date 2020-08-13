@@ -60,9 +60,9 @@ const Notifications = (props) => {
     useEffect(() => {
         if (getUserReq.data) {
             console.log('dispaching notigfication')
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: [...getUserReq.data.Notifications] })
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: getUserReq.data.Notifications })
         }
-    }, [getUserReq.data]);
+    }, [getUserReq.loading]);
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1 }}>
 

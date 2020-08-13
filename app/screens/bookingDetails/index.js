@@ -63,7 +63,7 @@ const JobDetails = (props) => {
     return differenceInHours(sessionDatetime,serverDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
-  const renderCompletedButton = () => isAfter(parseISO(props.navigation.getParam("SentDate")), parseISO(props.navigation.getParam("CurrentTime")))
+  const renderCompletedButton = () => isAfter(parseISO(props.navigation.getParam("CurrentTime")), parseISO(props.navigation.getParam("BookingDate")))
   const canComplete = () => props.navigation.getParam("BookingReviews").find(r => r.PlayerId == profile.Id) == null
 
   const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
@@ -122,7 +122,7 @@ const JobDetails = (props) => {
           <View style={[styles.orderView, { flexDirection: 'row' }]}>
             <View>
               <Text style={styles.headText}>Session Date/Time</Text>
-              <Text style={styles.headText1}>{format(parseISO(props.navigation.getParam("BookingDate")), "dd MMM")}, {moment.utc(props.navigation.getParam("FromTime")).format("hh:mm A")} - {moment.utc(props.navigation.getParam("ToTime")).format("hh:mm A")}</Text>
+              <Text style={styles.headText1}>{props.navigation.getParam("BookingDate").split('T')[0]}, {moment.utc(props.navigation.getParam("FromTime")).format("hh:mm A")} - {moment.utc(props.navigation.getParam("ToTime")).format("hh:mm A")}</Text>
             </View>
             <View>
               <Text style={styles.headText}>Cost</Text>

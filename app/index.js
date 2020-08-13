@@ -87,8 +87,14 @@ const AppMain = () => {
 
   useEffect(() => {
     console.log('notifications.length',notifications.length)
+    console.log('readednotifications', notifications.filter(i => i.IsRead == false).length)
+    console.log('currentNotifications', currentNotifications.filter(i => i.IsRead == false).length)
+
+    if (notifications.filter(i => i.IsRead == false).length != currentNotifications.filter(i => i.IsRead == false).length) {
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: undefined })
+    }
     setCurrentNotifications([...notifications])
-  }, [notifications.length])
+  }, [...notifications, toggle])
 
   useEffect(() => {
     console.log('error', error)
@@ -278,7 +284,7 @@ const AppMain = () => {
             <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
               <View>
                 <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '20%', height: 20, width: 20, borderRadius: 20 / 2 }}>
-                  <NotificationCountComponent key={currentNotifications.length} currentNotifications={currentNotifications} />
+                  <NotificationCountComponent key={notifications.filter(n => n.IsRead).length} currentNotifications={notifications} />
                 </View>
                 <Icon
                   type="Feather"
@@ -526,7 +532,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  }, [token, profile?.Id, profile?.IsTempPassword, currentNotifications.length,profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
+  }, [token, profile?.Id, profile?.IsTempPassword, notifications.filter(i => i.IsRead == false).length,profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
