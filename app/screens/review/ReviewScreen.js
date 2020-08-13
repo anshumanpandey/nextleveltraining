@@ -58,7 +58,7 @@ const ReviewScreen = (props) => {
 
           if (!values.review) errors.review = "Required"
 
-          console.log(values.review)
+          console.log(errors)
 
           return errors;
         }}

@@ -14,7 +14,11 @@ const BookCard = (item) => {
           <Icon type="AntDesign" name="arrowright" style={{ fontSize: 20, color: 'white' }} />
         </View>
         <View style={{ marginLeft: 10 }}>
-          <Text style={{ fontSize: 16, color: '#0F2F80' }}>Order Paid</Text>
+          <Text style={{ fontSize: 16, color: '#0F2F80' }}>
+            { item.BookingStatus == "Cancelled" && "Order Cancelled"}
+            { item.BookingStatus == "Done" && "Order Done"}
+            { item.BookingStatus != "Done" && item.BookingStatus != "Cancelled" && "Order Paid"}
+          </Text>
           <Text style={{ fontWeight: '500', marginTop: 5 }}>{item.FullName}</Text>
           <View style={{ marginTop: 5 }}>
             <Text>{item.Location.LocationAddress}</Text>

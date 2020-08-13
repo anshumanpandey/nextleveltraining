@@ -50,28 +50,54 @@ const JobDetails = (props) => {
   }, [])
 
   const canCancel = () => {
-    const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
-    const sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
+    let serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
+    let userTimezoneOffset = serverDatetime.getTimezoneOffset() * 60000;
+    serverDatetime = new Date(serverDatetime.getTime() - userTimezoneOffset)
+
+    let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
+    userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
+    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)    
 
     return differenceInHours(sessionDatetime, serverDatetime) >= 72 && !cancelBookingReq.loading && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
   const canReschedule = () => {
-    const serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
-    const sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
+    let serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
+    let userTimezoneOffset = serverDatetime.getTimezoneOffset() * 60000;
+    serverDatetime = new Date(serverDatetime.getTime() - userTimezoneOffset)
+
+    let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
+    userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
+    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)   
+    
+    console.log('canReschedule BookingDate',props.navigation.getParam("BookingDate"))
+    console.log('canReschedule sessionDatetime', sessionDatetime)
+    console.log('canReschedule serverDatetime',serverDatetime)
+    console.log('canReschedule differenceInHours',differenceInHours(sessionDatetime, serverDatetime))
 
     return differenceInHours(sessionDatetime,serverDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
-  const renderCompletedButton = () => isAfter(parseISO(props.navigation.getParam("CurrentTime")), parseISO(props.navigation.getParam("BookingDate")))
+  const renderCompletedButton = () => {
+    let serverDatetime = parseISO(props.navigation.getParam("CurrentTime"))
+    let userTimezoneOffset = serverDatetime.getTimezoneOffset() * 60000;
+    serverDatetime = new Date(serverDatetime.getTime() - userTimezoneOffset)
+
+    let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
+    userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
+    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)   
+
+    return isAfter(serverDatetime, sessionDatetime)
+  }
   const canComplete = () => props.navigation.getParam("BookingReviews").find(r => r.PlayerId == profile.Id) == null
 
   const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
 
   const steps = [
     {
-      title: "Booking Completed",
+      title: "Session in progress",
       details: `Booking request sent on ${moment(props.navigation.getParam("SentDate")).format("Do MMM, hh:mm A")}`,
+      status: (props.navigation.getParam("BookingStatus") == "Cancelled" || props.navigation.getParam("BookingStatus") == "Done") ? undefined:'Active'
     }
   ]
 
@@ -82,11 +108,10 @@ const JobDetails = (props) => {
         status: 'Active'
       }
     )
-  } else {
+  } else if (props.navigation.getParam("BookingStatus") == "Done"){
     steps.push(
       {
-        title: "Session in progress",
-        details: `Booking request sent on ${moment(props.navigation.getParam("SentDate")).format("Do MMM, hh:mm A")}`,
+        title: "Booking Done",
         status: 'Active'
       }
     )
