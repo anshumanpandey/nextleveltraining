@@ -20,7 +20,7 @@ import ImageView from 'react-native-image-view';
 import moment from 'moment'
 import SyncPosts from '../../utils/PostSyncher'
 import AsyncStorage from '@react-native-community/async-storage';
-import { useGlobalState } from '../../state/GlobalState'
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState'
 import screen from '../../utils/screen'
 import Video from 'react-native-video';
 import Colors from '../../constants/color';
@@ -37,10 +37,24 @@ const Home = (props) => {
     url: '/Users/GetAllPosts',
   }, { manual: true })
 
+  const [notificationsReq, getNotifications] = useAxios({
+    url: '/Users/GetNotifications',
+  }, { manual: true })
+
   useEffect(() => {
-    const focusListener = props.navigation.addListener('didFocus', refetch);
+    const focusListener = props.navigation.addListener('didFocus', () => {
+      refetch();
+      getNotifications();
+    });
     return () => focusListener?.remove();
   }, [])
+
+  useEffect(() => {
+    if (notificationsReq.data) {
+      console.log('dispaching notigfication from home', notificationsReq.data.Notifications.length)
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: [...notificationsReq.data.Notifications] })
+    }
+  }, [notificationsReq.data?.Notifications?.length]);
 
   useEffect(() => {
     if (!data) return

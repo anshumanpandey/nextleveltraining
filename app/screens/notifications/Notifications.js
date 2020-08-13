@@ -59,7 +59,8 @@ const Notifications = (props) => {
 
     useEffect(() => {
         if (getUserReq.data) {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: getUserReq.data })
+            console.log('dispaching notigfication')
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: [...getUserReq.data.Notifications] })
         }
     }, [getUserReq.data]);
     return (

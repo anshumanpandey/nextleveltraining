@@ -63,6 +63,13 @@ import Colors from './constants/color';
 let initialRouteName = null
 let Apps = null
 
+const NotificationCountComponent = ({ currentNotifications }) => {
+  console.log(currentNotifications.length)
+  return <Text style={{ color: 'white', textAlign: 'center' }}>
+    {currentNotifications.filter(i => i.IsRead == false).length}
+  </Text>
+}
+
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 
@@ -72,10 +79,16 @@ const AppMain = () => {
   const [profile] = useGlobalState('profile')
   const [toggle] = useGlobalState('toggle')
   const [notifications] = useGlobalState('notifications')
+  const [currentNotifications, setCurrentNotifications] = useState([]);
 
   useEffect(() => {
     SplashScreen.hide();
   }, [])
+
+  useEffect(() => {
+    console.log('notifications.length',notifications.length)
+    setCurrentNotifications([...notifications])
+  }, [notifications.length])
 
   useEffect(() => {
     console.log('error', error)
@@ -265,7 +278,7 @@ const AppMain = () => {
             <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
               <View>
                 <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '20%', height: 20, width: 20, borderRadius: 20 / 2 }}>
-                  <Text style={{ color: 'white', textAlign: 'center' }}>{notifications.filter(i => i.IsRead == false).length}</Text>
+                  <NotificationCountComponent key={currentNotifications.length} currentNotifications={currentNotifications} />
                 </View>
                 <Icon
                   type="Feather"
@@ -513,7 +526,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  }, [token, profile?.Id, profile?.IsTempPassword, profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
+  }, [token, profile?.Id, profile?.IsTempPassword, currentNotifications.length,profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

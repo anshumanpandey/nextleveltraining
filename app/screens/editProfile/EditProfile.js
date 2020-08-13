@@ -75,6 +75,7 @@ const EditProfile = (props) => {
                             action="update"
                             setSubmitFn={(submitFn) => {
                                 setDetailsSubmitFn(() => submitFn)
+                                setCurrentSubmitFn(() => submitFn)
                             }}
                         />
                     </Tab>
