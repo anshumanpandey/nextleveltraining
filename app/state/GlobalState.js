@@ -10,6 +10,7 @@ export const GLOBAL_STATE_ACTIONS = {
     LOGOUT: 'LOGOUT',
     TOGGLE: 'TOGGLE',
     NOTIFICATIONS: 'NOTIFICATIONS',
+    GOTO: 'GOTO',
     ACHIVEMEN_SELECTED: 'ACHIVEMEN_SELECTED',
 }
 
@@ -19,6 +20,7 @@ const initialState = {
     token: null,
     profile: null,
     toggle: false,
+    goto: null,
     notifications: [],
     currentAchivemenSelected: null,
 };
@@ -29,6 +31,7 @@ const reducer = (state, action) => {
       case GLOBAL_STATE_ACTIONS.ERROR: return { ...state, ...{error: action.state} };
       case GLOBAL_STATE_ACTIONS.SUCCESS: return { ...state, ...{success: action.state} };
       case GLOBAL_STATE_ACTIONS.NOTIFICATIONS: return { ...state, notifications: action.state };
+      case GLOBAL_STATE_ACTIONS.GOTO: return { ...state, goto: action.state };
       case GLOBAL_STATE_ACTIONS.TOKEN: {
         AsyncStorage.setItem('token', action.state)
         return { ...state, ...{token: action.state}, toggle: !state.toggle };

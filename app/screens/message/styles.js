@@ -9,7 +9,6 @@ const styles =StyleSheet.create({
     },
     fullFlatListContainer:{
         margin:5,
-        height: '90%'
     },
     notFoundText:{
     alignSelf:"center",

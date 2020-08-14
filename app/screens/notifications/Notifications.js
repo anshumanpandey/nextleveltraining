@@ -61,6 +61,7 @@ const Notifications = (props) => {
         if (getUserReq.data) {
             console.log('dispaching notigfication')
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: getUserReq.data.Notifications })
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'Notifications' })
         }
     }, [getUserReq.loading]);
     return (

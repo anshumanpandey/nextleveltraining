@@ -79,6 +79,7 @@ const AppMain = () => {
   const [profile] = useGlobalState('profile')
   const [toggle] = useGlobalState('toggle')
   const [notifications] = useGlobalState('notifications')
+  const [goto] = useGlobalState('goto')
   const [currentNotifications, setCurrentNotifications] = useState([]);
 
   useEffect(() => {
@@ -91,10 +92,19 @@ const AppMain = () => {
     console.log('currentNotifications', currentNotifications.filter(i => i.IsRead == false).length)
 
     if (notifications.filter(i => i.IsRead == false).length != currentNotifications.filter(i => i.IsRead == false).length) {
-      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: undefined })
+      setTimeout(() => NavigationService.navigate("Notifications"), 100)
     }
     setCurrentNotifications([...notifications])
   }, [...notifications, toggle])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (goto) {
+        NavigationService.navigate(goto)
+        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: null })
+      }
+    }, 100)
+  }, [goto])
 
   useEffect(() => {
     console.log('error', error)
