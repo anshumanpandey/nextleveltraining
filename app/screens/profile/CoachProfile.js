@@ -29,6 +29,7 @@ import { syncProfilePic, syncTrainingLocationImage } from '../../utils/SyncProfi
 import ImagePicker from 'react-native-image-picker';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import Upload from 'react-native-background-upload'
+import { StackActions, NavigationActions, withNavigation } from 'react-navigation';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -1211,7 +1212,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
     );
 }
 
-export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
+export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
     const [triggerChange, setTriggerChange] = useState(true);
     const [submitFn, attachSubmitFn] = useState(null);
     const [currentTab, setCurrentTab] = useState(0);
@@ -1219,20 +1220,21 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
     const [profile] = useGlobalState('profile');
     const [token] = useGlobalState('token')
 
-    const handleOnCardPress = ({ title, data, screen = "EditInput", keyboardType }) => {
+    const handleOnCardPress = ({ title, data, screen = "EditInput", keyboardType, goBackTo }) => {
         NavigationService.navigate(screen, {
             title,
             data,
+            goBackTo,
             keyboardType,
             cb: (achievements) => { },
         })
     }
 
     const profileChecker = () => {
-        if (profile.ProfileImage) {
-            setProfilePic(profile.ProfileImage)
+        if (profile?.ProfileImage) {
+            setProfilePic(profile?.ProfileImage)
         } else {
-            AsyncStorage.getItem(`ProfilePic-${profile.Id}`)
+            AsyncStorage.getItem(`ProfilePic-${profile?.Id}`)
                 .then((s) => {
                     if (!s) return
                     setProfilePic(JSON.parse(s).uri)
@@ -1263,7 +1265,8 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
             <View style={styles.containerAbout}>
                 <TouchableOpacity
                     onPress={async () => {
-                        NavigationService.navigate('ProfilePic')
+                        const d = NavigationActions.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'AboutMe' } })
+                        props.navigation.dispatch(d)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                     {triggerChange == true && (
@@ -1297,7 +1300,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "About Me", data: profile.AboutUs })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "About Me", data: profile?.AboutUs, goBackTo: 'AboutMe' })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>About me</Text>
@@ -1308,11 +1311,11 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                             />
                         </View>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>{profile.AboutUs}</Text>
+                            <Text style={styles.profileDescription}>{profile?.AboutUs}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Accomplishment", data: profile.Accomplishment })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Accomplishment", data: profile?.Accomplishment, goBackTo: 'AboutMe' })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Accomplishment</Text>
@@ -1324,7 +1327,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                         </View>
                         <View style={styles.cardContainer}>
                             <Text style={styles.profileDescription}>
-                                {profile.Accomplishment}
+                                {profile?.Accomplishment}
                             </Text>
                         </View>
                     </View>
@@ -1333,7 +1336,8 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                     <TouchableOpacity onPress={() => {
                         NavigationService.navigate('AddExperience', {
                             title: 'Add Experience',
-                            cb: (team) => { }
+                            cb: (team) => { },
+                            goBackTo: 'AboutMe'
                         })
                     }}>
                         <View style={styles.cardInner}>
@@ -1342,11 +1346,12 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                         </View>
                     </TouchableOpacity>
                     <View style={styles.cardContainer}>
-                        {profile.Experiences.map(e => {
+                        {profile?.Experiences.map(e => {
                             return (
                                 <TouchableOpacity onPress={() => {
                                     NavigationService.navigate('AddExperience', {
                                         title: 'Add Experience',
+                                        goBackTo: 'AboutMe',
                                         cb: (team) => { },
                                         ...e
                                     })
@@ -1379,13 +1384,14 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                         NavigationService.navigate('AddQualifications', {
                             title: 'Add Experience',
                             cb: (team) => { },
-                            Qualifications: profile.Qualifications
+                            goBackTo: 'AboutMe',
+                            Qualifications: profile?.Qualifications
                         })
                     }}>
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>Qualifications</Text>
-                                {profile.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {profile?.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
                             </View>
                             <Icon
                                 type="EvilIcons"
@@ -1393,9 +1399,9 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                                 style={{ color: Colors.s_blue, fontSize: 25 }}
                             />
                         </View>
-                        {profile.Qualifications && (
+                        {profile?.Qualifications && (
                             <View style={styles.cardContainer}>
-                                {profile.Qualifications.map(q => {
+                                {profile?.Qualifications.map(q => {
                                     return <Text style={styles.profileDescription}>{q.Qualification}</Text>
                                 })}
                             </View>
@@ -1406,6 +1412,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                     <TouchableOpacity onPress={() => {
                         NavigationService.navigate('AddDbsCertificate', {
                             title: 'Add Experience',
+                            goBackTo: 'AboutMe',
                             cb: (team) => { },
                             ...profile.DBSCeritificate
                         })
@@ -1413,7 +1420,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>DBS Certificate</Text>
-                                {profile.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {profile?.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
                             </View>
                             <Icon
                                 type="EvilIcons"
@@ -1427,6 +1434,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                     <TouchableOpacity onPress={() => {
                         NavigationService.navigate('VerificationId', {
                             title: 'Add Experience',
+                            goBackTo: 'AboutMe',
                             cb: (team) => { },
                             ...profile.VerificationDocument
                         })
@@ -1434,7 +1442,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>Valid ID</Text>
-                                {profile.VerificationDocument && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {profile?.VerificationDocument && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
                             </View>
                             <Icon
                                 type="EvilIcons"
@@ -1444,7 +1452,7 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate, screen: "EditInput", keyboardType: "numeric" })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate, screen: "EditInput", keyboardType: "numeric", goBackTo: 'AboutMe' })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Price Per Hour</Text>
@@ -1455,12 +1463,12 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                             />
                         </View>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>£ {profile.Rate}</Text>
+                            <Text style={styles.profileDescription}>£ {profile?.Rate}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.TravelMile ? profile.TravelMile.TravelDistance : "", screen: "EditInput", keyboardType: "numeric" })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.TravelMile ? profile.TravelMile.TravelDistance : "", screen: "EditInput", keyboardType: "numeric", goBackTo: 'AboutMe', })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>Travel Miles</Text>
@@ -1471,14 +1479,14 @@ export const AboutMeCoachForm = ({ navigation, setSubmitFn }) => {
                             />
                         </View>
                         <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>{profile.TravelMile ? profile.TravelMile.TravelDistance : ""}</Text>
+                            <Text style={styles.profileDescription}>{profile?.TravelMile ? profile.TravelMile.TravelDistance : ""}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
             </View>
         </ScrollView>
     );
-}
+})
 
 export const BankAccountForm = ({ setSubmitFn }) => {
     const [showModal, setShowModal] = useState(false)

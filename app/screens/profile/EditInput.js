@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TextInput, Text} from 'react-native';
 import styles from './styles';
 import useAxios from 'axios-hooks'
@@ -28,17 +28,21 @@ const URL_MAP = {
     url: "/Users/SaveTravelMile",
     getParams: (values, profile) => ({ coachId: profile.Id , travelDistance: values })
   },
+  ["NO"]: {
+    url: "",
+    getParams: (values, profile) => ({ })
+  },
 }
 
 const EditInput = (props) => {
-  const title = props.navigation.state.params.title;
-  const data = props.navigation.state.params.data;
-  const cb = props.navigation.state.params.cb;
+  const title = props.navigation.getParam("title", "")
+  const data = props.navigation.getParam("data", {})
+  const cb = props.navigation.getParam("db", () => {})
   const [values, setValues] = useState(data || '');
   const [profile] = useGlobalState('profile')
 
   const [updateDataReq, updateData] = useAxios({
-    url: URL_MAP[props.navigation.state.params.title].url,
+    url: URL_MAP[props.navigation.getParam("title", "NO")].url,
     method: 'POST'
   }, { manual: true })
 
@@ -46,9 +50,12 @@ const EditInput = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
+  useEffect(() => setValues(data),[data])
+
   return (
     <View>
       <HeaderClosePlus
+        onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
         isLoading={updateDataReq.loading || getUserReq.loading}
         isSaveButton={true}
         saveOnPress={() => {
@@ -74,7 +81,7 @@ const EditInput = (props) => {
             numberOfLines={15}
             textAlignVertical={'top'}
             multiline
-            keyboardType={props.navigation.state.params.keyboardType == "numeric" ? "numeric" : "email-address" }
+            keyboardType={props.navigation.getParam("keyboardType", "") == "numeric" ? "numeric" : "email-address" }
           />
         </View>
       </View>

@@ -62,6 +62,7 @@ const AddTeam = (props) => {
         <>
           <View style={{ flex: 1 }}>
             <HeaderClosePlus
+              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
               isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}

@@ -14,16 +14,16 @@ const SavedComponent = (props) => {
     url: `/Users/GetCoaches`,
     method: 'POST',
     data: {
-      "playerId": profile.Id,
+      "playerId": profile?.Id,
       "search": ""
     }
   }, { manual: true })
 
   const initFn = () => {
-    if (profile.Role == "Player") {
+    if (profile?.Role == "Player") {
       searchCoaches({
         data: {
-          "playerId": profile.Id,
+          "playerId": profile?.Id,
           "search": ""
         }
       })
@@ -54,7 +54,7 @@ const SavedComponent = (props) => {
             refreshCb={() => {
               searchCoaches({
                 data: {
-                  playerId: profile.Id,
+                  playerId: profile?.Id,
                   search: ""
                 }
               })

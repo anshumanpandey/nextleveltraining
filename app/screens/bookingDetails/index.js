@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useDebugValue } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View, Alert, Dimensions } from 'react-native';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 import HeaderTitleBack from '../../components/header/HeaderTitleBack';
@@ -16,7 +16,7 @@ const JobDetails = (props) => {
   const [profile] = useGlobalState("profile")
   const [currentCoach, setCurrentCoach] = useState()
   const data = {
-    "playerId": profile.Id,
+    "playerId": profile?.Id,
     "search": ""
   }
   const [getCoachReq, getCoach] = useAxios({
@@ -30,7 +30,7 @@ const JobDetails = (props) => {
   }, { manual: true })
 
   const initFn = () => {
-    if (profile.Role == "Player") {
+    if (profile?.Role == "Player") {
       getCoach({ data })
         .then(r => {
           setCurrentCoach(r.data.find(c => c.Id == props.navigation.getParam("CoachID")))
@@ -89,33 +89,9 @@ const JobDetails = (props) => {
 
     return isAfter(serverDatetime, sessionDatetime)
   }
-  const canComplete = () => props.navigation.getParam("BookingReviews").find(r => r.PlayerId == profile.Id) == null
+  const canComplete = () => props.navigation.getParam("BookingReviews").find(r => r.PlayerId == profile?.Id) == null
 
-  const viewProfileIsDisabled = () => currentCoach == undefined && profile.Role == "Player"
-
-  const steps = [
-    {
-      title: "Session in progress",
-      details: `Booking request sent on ${moment(props.navigation.getParam("SentDate")).format("Do MMM, hh:mm A")}`,
-      status: (props.navigation.getParam("BookingStatus") == "Cancelled" || props.navigation.getParam("BookingStatus") == "Done") ? undefined:'Active'
-    }
-  ]
-
-  if (props.navigation.getParam("BookingStatus") == "Cancelled") {
-    steps.push(
-      {
-        title: "Booking Cancelled",
-        status: 'Active'
-      }
-    )
-  } else if (props.navigation.getParam("BookingStatus") == "Done"){
-    steps.push(
-      {
-        title: "Booking Done",
-        status: 'Active'
-      }
-    )
-  }
+  const viewProfileIsDisabled = () => currentCoach == undefined && profile?.Role == "Player"
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -131,7 +107,7 @@ const JobDetails = (props) => {
         <View style={styles.userInfoView}>
           <View style={styles.headView}>
             <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
-            <TouchableOpacity onPress={() => props.navigation.navigate('Chat', { RecieverId: props.navigation.getParam("CoachID"), SenderId: profile.Id })}>
+            <TouchableOpacity onPress={() => props.navigation.navigate('Chat', { RecieverId: props.navigation.getParam("CoachID"), SenderId: profile?.Id })}>
               <Icon
                 name="message"
                 type="MaterialIcons"
@@ -147,11 +123,11 @@ const JobDetails = (props) => {
           <View style={[styles.orderView, { flexDirection: 'row' }]}>
             <View>
               <Text style={styles.headText}>Session Date/Time</Text>
-              <Text style={styles.headText1}>{props.navigation.getParam("BookingDate").split('T')[0]}, {moment.utc(props.navigation.getParam("FromTime")).format("hh:mm A")} - {moment.utc(props.navigation.getParam("ToTime")).format("hh:mm A")}</Text>
+              <Text style={styles.headText1}>{props.navigation.getParam("BookingDate").split('T')[0]} {props.navigation.getParam("FromTime").split('T')[1].replace(":00Z","")} - {props.navigation.getParam("ToTime").split('T')[1].replace(":00Z","")}</Text>
             </View>
             <View>
               <Text style={styles.headText}>Cost</Text>
-              <Text style={styles.headText1}>£ {props.navigation.getParam("CoachRate")} per hour</Text>
+              <Text style={styles.headText1}>£ {props.navigation.getParam("CoachRate")}</Text>
             </View>
           </View>
 
@@ -162,7 +138,7 @@ const JobDetails = (props) => {
         </View>
       </View>
 
-      <View style={[styles.btnView, { height: '8%' }]}>
+      <View style={[styles.btnView, { height: '8%', width: Dimensions.get("screen").width }]}>
         {!renderCompletedButton() && (
           <TouchableOpacity disabled={!canCancel()} onPress={() => {
             Alert.alert("", "Are you sure you want to Cancel the booking?", [
@@ -177,7 +153,7 @@ const JobDetails = (props) => {
               { text: 'No', style: 'cancel' },
             ],
               { cancelable: true })
-          }} style={{ width: '33%', justifyContent: 'center' }}>
+          }} style={{ flex: 1, justifyContent: 'center' }}>
             <View style={[styles.btnTab, { opacity: canCancel() ? 1 : 0.5 }]}>
               {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
               {!cancelBookingReq.loading && (
@@ -193,7 +169,7 @@ const JobDetails = (props) => {
             </View>
           </TouchableOpacity>
         )}
-        {renderCompletedButton() && profile.Role == "Player" && (
+        {renderCompletedButton() && profile?.Role == "Player" && (
           <TouchableOpacity disabled={!canComplete()} onPress={() => {
             NavigationService.navigate("ReviewScreen", { bookingId: props.navigation.getParam("Id") })
           }} style={{ width: '33%', justifyContent: 'center', opacity: canComplete() ? 1:0.5 }}>
@@ -213,6 +189,7 @@ const JobDetails = (props) => {
           </TouchableOpacity>
         )}
         <TouchableOpacity
+          style={{ flex: 1 }}
           onPress={() => {
             const params = {
               coach: profile,
@@ -225,8 +202,7 @@ const JobDetails = (props) => {
             }
             NavigationService.navigate("BookNow", params)
           }}
-          disabled={!canReschedule()}
-          style={{ width: '33%' }}>
+          disabled={!canReschedule()}>
           <View style={[styles.btnTab, { opacity: canReschedule() ? 1 : 0.5 }]}>
             <Icon
               name="restore"
@@ -239,10 +215,9 @@ const JobDetails = (props) => {
 
         <TouchableOpacity
           disabled={viewProfileIsDisabled()}
-          style={{ width: '33%' }}
+          style={{ flex: 1 }}
           onPress={() => {
-            console.log(profile.Role)
-            if (profile.Role == 'Coach') {
+            if (profile?.Role == 'Coach') {
               NavigationService.navigate("PlayerInfo", { player: { ...props.navigation.getParam("Player"), Role: 'Player' } })
             } else {
               NavigationService.navigate("Information", currentCoach)
@@ -258,7 +233,13 @@ const JobDetails = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      <StepsComponent steps={steps} {...props} />
+      <StepsComponent steps={props.navigation.getParam("Statuses").map((s, idx, arr) => {
+        return {
+          title: s.Status,
+          details: s.Date ? `On ${s.Date.split('T')[0]}` : undefined,
+          status: idx == arr.length - 1 ? 'Active': undefined
+        }
+      })} {...props} />
     </ScrollView>
   );
 };

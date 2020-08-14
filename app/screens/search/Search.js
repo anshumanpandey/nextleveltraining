@@ -22,13 +22,13 @@ const Search = (props) => {
   const [searchCoachesReq, searchCoaches] = useAxios({
     url: `/Users/SearchPost`,
     method: 'POST',
-    data: { playerId: profile.Id, search: keyword }
+    data: { playerId: profile?.Id, search: keyword }
   }, { manual: true })
 
   useEffect(() => {
-    searchCoaches({ data: { playerId: profile.Id, search: keyword } })
+    searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
     const focusListener = props.navigation.addListener('didFocus', () => {
-      searchCoaches({ data: { playerId: profile.Id, search: keyword } })
+      searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
     });
     return () => {
       focusListener?.remove();
@@ -39,7 +39,7 @@ const Search = (props) => {
   let propsToIterate = ["Players", "Coaches"]
   let screensToNavigate = ["PlayerInfo", "Information"]
 
-  if (profile.Role == "Player") {
+  if (profile?.Role == "Player") {
     TabsName = ["Coach", "Player"]
     propsToIterate = ["Coaches", "Players"]
     screensToNavigate = ["Information", "PlayerInfo"]
@@ -86,7 +86,7 @@ const Search = (props) => {
               onPress={() => {
                 searchCoaches({
                   data: {
-                    playerId: profile.Id,
+                    playerId: profile?.Id,
                     search: keyword
                   }
                 })

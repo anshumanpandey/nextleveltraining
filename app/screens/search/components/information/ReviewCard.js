@@ -22,7 +22,8 @@ const ReviewCard = ({item}) => {
                 {item.PlayerName}
               </Text>
               <Text style={[styles.post_title_time, {fontSize: 12}]}>
-                {format(parseISO(item.CreatedDate), "yyyy/MM/dd hh:mm a")}
+                {item.CreatedDate.split('T')[0]}{" "}
+                {item.CreatedDate.split('T')[1].substring(0,5)}
               </Text>
             </View>
             <View style={[styles.ps_star_view, {marginLeft: 0, marginTop: 5}]}>

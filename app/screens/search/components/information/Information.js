@@ -26,13 +26,13 @@ const Information = (props) => {
   const inActiveColor = 'gray';
 
   const calculateMiles = useCallback(() => {
-    console.log(profile.Lat)
-    console.log(profile.Lng)
+    console.log(profile?.Lat)
+    console.log(profile?.Lng)
     console.log(props.navigation.getParam("Lat"))
     console.log(props.navigation.getParam("Lng"))
     console.log(props.navigation.getParam("hideConnect"))
 
-    if (!profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
+    if (!profile || !profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
       setMilesAway(-1)
     } else {
       const meters = getDistance(
@@ -43,7 +43,7 @@ const Information = (props) => {
       setMilesAway(convert(meters).from('m').to("mi").toFixed(2))
     }
 
-  }, [profile.Lat, !profile.Lng, props.navigation.getParam("Lat"), props.navigation.getParam("Lng")])
+  }, [profile?.Lat, !profile?.Lng, props.navigation.getParam("Lat"), props.navigation.getParam("Lng")])
 
   useEffect(() => {
     calculateMiles()
@@ -133,7 +133,7 @@ const Information = (props) => {
                     actions: [
                       NavigationActions.navigate({
                         routeName: 'MainStack',
-                        action: NavigationActions.navigate({ routeName: 'Chat', params: { RecieverId: props.navigation.getParam("Id"), SenderId: profile.Id, friendName: props.navigation.getParam("FullName") } })
+                        action: NavigationActions.navigate({ routeName: 'Chat', params: { RecieverId: props.navigation.getParam("Id"), SenderId: profile?.Id, friendName: props.navigation.getParam("FullName") } })
                       })
                     ]
                   })
@@ -167,7 +167,7 @@ const Information = (props) => {
         <MediaTab selectedTab={selectedTab} posts={props.navigation.state.params.Posts} />
       ) : (
             <ReviewTab reviews={props.navigation.state.params.Bookings.reduce((arr, booking) => {
-              arr.push(...booking.Reviews)
+              arr.push(...booking.BookingReviews)
               return arr
             }, [])} coachId={props.navigation.getParam("Id")} />
           )}

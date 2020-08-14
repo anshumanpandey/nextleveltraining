@@ -16,7 +16,7 @@ const AboutMeScreen = (props) => {
 
     console.log("submitFn", submitFn)
 
-    if (profile.Role == "Player") {
+    if (profile?.Role == "Player") {
 
         return (
             <>
@@ -93,7 +93,7 @@ const AboutMeScreen = (props) => {
                 setCurrentTab(e.i)
             }}>
                 <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="About Me">
-                    {resolveRoleForm(profile, "AboutMe", { player: profile }, (cb) => {
+                    {resolveRoleForm(profile, "AboutMe", { player: profile, navigation: props.navigation }, (cb) => {
                         if (cb == null) {
                             setSubmitFn(null)
                         } else {

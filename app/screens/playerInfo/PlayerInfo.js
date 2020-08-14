@@ -28,7 +28,7 @@ const PlayerInfoScreen = (props) => {
   })
 
   const initFn = () => {
-    if (profile.ProfileImage) {
+    if (profile?.ProfileImage) {
       setProfilePic({ uri: profile.ProfileImage })
     } else {
       AsyncStorage.getItem('ProfilePic')
@@ -144,7 +144,7 @@ const PlayerInfoScreen = (props) => {
               horizontal={false}
               style={{ width: '100%', height: '100%' }}
               ListEmptyComponent={
-                <Text>Not post created</Text>
+                <Text style={{ textAlign: 'center', marginTop: '15%'}}>No post created yet</Text>
               }
               data={getPostByUserReq.data
                 .map(p => {

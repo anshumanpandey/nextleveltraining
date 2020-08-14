@@ -18,7 +18,7 @@ const CoachsummaryScreen = (props) => {
     const listRef = useRef()
     const [profile] = useGlobalState('profile')
     const [{ data, loading, error }, getSummary] = useAxios({
-        url: `/users/GetCoachSummary/${profile.Id}`,
+        url: `/users/GetCoachSummary/${profile?.Id}`,
     })
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const CoachsummaryScreen = (props) => {
             <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
             <View style={{ padding: '5%' }}>
                 <Text style={{ color: Colors.s_blue, fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.2)' }}>
-                    Welcome {profile.FullName}
+                    Welcome {profile?.FullName}
                 </Text>
                 <View style={{ paddingTop: '3%' }}>
                     <Text>Profile Summary</Text>

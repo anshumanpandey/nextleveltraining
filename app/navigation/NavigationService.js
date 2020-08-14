@@ -16,6 +16,10 @@ function navigate(routeName, params) {
   );
 }
 
+function dispatch(action) {
+  _navigator.dispatch(action);
+}
+
 function goBack(params) {
   // params?
   _navigator.dispatch(NavigationActions.back(params));
@@ -69,4 +73,5 @@ export default {
   replace,
   openDrawer,
   closeDrawer,
+  dispatch
 };

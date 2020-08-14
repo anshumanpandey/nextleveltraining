@@ -15,9 +15,7 @@ const BookCard = (item) => {
         </View>
         <View style={{ marginLeft: 10 }}>
           <Text style={{ fontSize: 16, color: '#0F2F80' }}>
-            { item.BookingStatus == "Cancelled" && "Order Cancelled"}
-            { item.BookingStatus == "Done" && "Order Done"}
-            { item.BookingStatus != "Done" && item.BookingStatus != "Cancelled" && "Order Paid"}
+            {item.Statuses[item.Statuses.length - 1].Status}
           </Text>
           <Text style={{ fontWeight: '500', marginTop: 5 }}>{item.FullName}</Text>
           <View style={{ marginTop: 5 }}>
@@ -26,14 +24,14 @@ const BookCard = (item) => {
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>
                 {item.BookingDate.split('T')[0]}{' '}
-                {moment(item.FromTime).format("HH:mm")}
+                {item.FromTime.split('T')[1].replace(":00Z", "")} - {item.ToTime.split('T')[1].replace(":00Z", "")}
               </Text>
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Job fees:</Text>
               <View style={{ flexDirection: 'row', marginLeft: 5 }}>
                 <Text>{'\u00A3'}</Text>
-                <Text>{item.CoachRate}/per hour</Text>
+                <Text>{item.CoachRate}</Text>
               </View>
             </View>
           </View>

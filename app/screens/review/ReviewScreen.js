@@ -40,7 +40,7 @@ const ReviewScreen = (props) => {
           return (
             <View style={{ justifyContent: 'flex-end', flexDirection: 'row', flexGrow: 1, opacity: postReq.loading ? 0.5 : 1 }}>
               {postReq.loading && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
-              <TouchableOpacity disabled={postReq.loading} onPress={formikRef?.current?.handleSubmit}>
+              <TouchableOpacity disabled={postReq.loading} onPress={() => formikRef?.current?.handleSubmit()}>
                 <Text style={{ fontSize: 18 }}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -52,11 +52,12 @@ const ReviewScreen = (props) => {
       />
       <Formik
         innerRef={(r) => formikRef.current = r}
-        initialValues={{ rate: 3, review: '' }}
+        initialValues={{ rate: 0, review: '' }}
         validate={(values) => {
           const errors = {}
 
           if (!values.review) errors.review = "Required"
+          if (values.rate == 0) errors.rate = "Required"
 
           console.log(errors)
 
@@ -74,7 +75,7 @@ const ReviewScreen = (props) => {
             .then(() => doPost({ url: `/Users/GetBookingById/${props.navigation.getParam("bookingId")}`}))
             .then((r) => {
               NavigationService.navigate("JobDetails", r.data)
-              resetForm({ values: {} })
+              resetForm({ values: { rate: 0, review: '' } })
             })
 
         }}
@@ -82,7 +83,8 @@ const ReviewScreen = (props) => {
         {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
           <>
             <ScrollView contentContainerStyle={styles.scrollView}>
-              <AirbnbRating defaultRating={values.rate} onFinishRating={(r) => console.log(r)} />
+              <AirbnbRating reviews={[]} defaultRating={values.rate} onFinishRating={(r) => setFieldValue("rate",r)} />
+              {errors.rate && touched.rate && <ErrorLabel style={{ textAlign: 'center'}} text={errors.rate} />}
               <View style={{ paddingHorizontal: '3%', marginTop: '5%' }}>
                 <TextInput
                   placeholderTextColor={'rgba(0,0,0,0.3)'}

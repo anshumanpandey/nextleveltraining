@@ -22,7 +22,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
 
   let milesAway = -1
 
-  if (!profile.Lat || !profile.Lng || !props.Lat || !props.Lng) {
+  if (!profile || !profile.Lat || !profile.Lng || !props.Lat || !props.Lng) {
     milesAway = -1
   } else {
     const meters = getDistance(
@@ -74,7 +74,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
             {props.Role == "Coach" && hideHeartIcon == false && <TouchableOpacity style={{ width: '60%' }} onPress={() => {
               saveCoach({
                 data: {
-                  "playerId": profile.Id,
+                  "playerId": profile?.Id,
                   "coachId": props.Id,
                 }
               })

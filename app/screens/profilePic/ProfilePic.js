@@ -27,7 +27,7 @@ const ProfilePicScreen = (props) => {
         <Formik
             innerRef={(r) => formikRef.current = r}
             initialValues={{
-                file: profile.ProfileImage || undefined,
+                file: profile?.ProfileImage || undefined,
             }}
             validate={(values) => {
                 const errors = {}
@@ -99,6 +99,7 @@ const ProfilePicScreen = (props) => {
                     <View>
                         <View style={{ borderWidth: 0 }}>
                             <HeaderClosePlus
+                                onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
                                 isLoading={uploading || getUserReq.loading}
                                 isSaveButton={true}
                                 saveOnPress={handleSubmit}

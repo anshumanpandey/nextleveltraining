@@ -90,10 +90,6 @@ const AppMain = () => {
     console.log('notifications.length',notifications.length)
     console.log('readednotifications', notifications.filter(i => i.IsRead == false).length)
     console.log('currentNotifications', currentNotifications.filter(i => i.IsRead == false).length)
-
-    if (notifications.filter(i => i.IsRead == false).length != currentNotifications.filter(i => i.IsRead == false).length) {
-      setTimeout(() => NavigationService.navigate("Notifications"), 100)
-    }
     setCurrentNotifications([...notifications])
   }, [...notifications, toggle])
 
@@ -175,9 +171,47 @@ const AppMain = () => {
       },
     },
   );
+  const ConfirmedProfileStack = createStackNavigator(
+    {
+      ProfilePic: { screen: ProfilePicScreen },
+      EditInput: { screen: EditInput },
+      AddTeam: { screen: AddTeam },
+      AddExperience: { screen: AddExperience },
+      AddDbsCertificate: { screen: AddDbsCertificate },
+      AddQualifications: { screen: AddQualifications },
+      VerificationId: { screen: VerificationId },
+      UpComingMatch: { screen: UpComingMatch },
+    },
+    {
+      defaultNavigationOptions: ({ navigation }) => {
+        return {
+          header: null,
+        };
+      },
+    },
+  );
   const tabs = {
     Profile: {
       screen: ProfileStack,
+      navigationOptions: () => ({
+        tabBarVisible: hasFullProfile(profile),
+        tabBarIcon: ({ tintColor }) => (
+          <View style={styles.tabContain}>
+            <Icon
+              type="MaterialIcons"
+              name="person-outline"
+              style={[styles.icons, { color: tintColor }]}
+            />
+            <Text style={[styles.textTab, { color: tintColor }]}>PROFILE</Text>
+          </View>
+        ),
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    },
+    ProfileStack: {
+      screen: ConfirmedProfileStack,
       navigationOptions: () => ({
         tabBarVisible: hasFullProfile(profile),
         tabBarIcon: ({ tintColor }) => (
@@ -466,7 +500,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', 'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

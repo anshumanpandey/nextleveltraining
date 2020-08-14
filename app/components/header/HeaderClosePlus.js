@@ -4,11 +4,17 @@ import {Icon, Spinner} from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 
-const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading = false}) => {
+const HeaderClosePlus = ({isSaveButton, saveOnPress, isLoading = false, onGoBack = null}) => {
   return (
     <View style={styles.header_layout}>
       <View style={[styles.header_item_container, { justifyContent: 'space-between'}]}>
-        <TouchableOpacity onPress={() => NavigationService.goBack()}>
+        <TouchableOpacity onPress={() => {
+          if (onGoBack) {
+            onGoBack()
+          } else {
+            NavigationService.goBack()
+          }
+        }}>
           <Icon
             name="close"
             type="MaterialIcons"

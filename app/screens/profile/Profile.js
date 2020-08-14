@@ -22,7 +22,7 @@ const PlayerProfile = (props) => {
   const { user, AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   useEffect(() => {
-    if (profile.ProfileImage) {
+    if (profile?.ProfileImage) {
       setProfilePic({ uri: profile.ProfileImage })
     } else {
       AsyncStorage.getItem('ProfilePic')
