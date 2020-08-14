@@ -53,6 +53,8 @@ const Information = (props) => {
     return () => focusListener?.remove();
   }, [])
 
+  console.log(JSON.stringify(props.navigation.state.params))
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
@@ -164,9 +166,9 @@ const Information = (props) => {
       {selectedTab === 0 ? (
         <InformationTab selectedTab={selectedTab} {...props.navigation.state.params} />
       ) : selectedTab === 1 ? (
-        <MediaTab selectedTab={selectedTab} posts={props.navigation.state.params.Posts} />
+        <MediaTab selectedTab={selectedTab} posts={props?.navigation?.getParam("Posts", []) || []} />
       ) : (
-            <ReviewTab reviews={props.navigation.state.params.Bookings.reduce((arr, booking) => {
+            <ReviewTab reviews={(props?.navigation?.getParam("Bookings", []) || []).reduce((arr, booking) => {
               arr.push(...booking.BookingReviews)
               return arr
             }, [])} coachId={props.navigation.getParam("Id")} />
