@@ -5,7 +5,8 @@ import {StyleSheet} from 'react-native'
 
 const styles =StyleSheet.create({
     ps_container:{
-      flexDirection:'row',
+        padding: '5%',
+      flexDirection:'column',
       backgroundColor:'white',
       borderBottomColor:'#DEDEDE',
       borderBottomWidth:1,
