@@ -39,7 +39,7 @@ const ReviewCard = ({ item }) => {
             {item.Feedback}
           </Text>
         </View>
-        <View style={{ flex: 0.5}}>
+        <View style={{ flex: 0.5, marginTop: 'auto'}}>
           <Text style={[styles.post_title_time, { fontSize: 12 }]}>
             {item.CreatedDate.split('T')[0]}{" "}
             {item.CreatedDate.split('T')[1].substring(0, 5)}
