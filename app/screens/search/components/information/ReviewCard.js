@@ -15,7 +15,11 @@ const ReviewCard = ({ item }) => {
         <View style={styles.post_content_view}>
           <View style={{ width: Dimension.pro100 }}>
             <View style={styles.post_title}>
-              <View style={[styles.ps_star_view, { marginLeft: 0, marginTop: 5 }]}>
+              <Text
+                style={[styles.post_title_name, { color: 'black', fontSize: 14, fontWeight: '500', marginLeft: '3%' }]}>
+                {item.PlayerName}
+              </Text>
+              <View style={[styles.ps_star_view, { marginLeft: 0, marginTop: 5, marginLeft: 'auto' }]}>
                 <Text style={styles.ps_star_point}>{item.Rating}</Text>
                 <StarRating
                   disabled={false}
@@ -25,22 +29,22 @@ const ReviewCard = ({ item }) => {
                   starSize={10}
                 />
               </View>
-              <Text
-                style={[styles.post_title_name, { color: 'black', fontSize: 14, fontWeight: '500', marginLeft: '3%' }]}>
-                {item.PlayerName}
-              </Text>
             </View>
           </View>
         </View>
       </View>
       <View style={[styles.post_news_contents, { flexDirection: 'row'}]}>
-        <Text style={[styles.post_description, { marginTop: 0, fontSize: 12, width: 'auto' }]}>
-          {item.Feedback}
-        </Text>
-        <Text style={[styles.post_title_time, { fontSize: 12 }]}>
-          {item.CreatedDate.split('T')[0]}{" "}
-          {item.CreatedDate.split('T')[1].substring(0, 5)}
-        </Text>
+        <View style={{ flex: 1}}>
+          <Text style={[styles.post_description, { marginTop: 0, fontSize: 12, width: 'auto'  }]}>
+            {item.Feedback}
+          </Text>
+        </View>
+        <View style={{ flex: 0.5}}>
+          <Text style={[styles.post_title_time, { fontSize: 12 }]}>
+            {item.CreatedDate.split('T')[0]}{" "}
+            {item.CreatedDate.split('T')[1].substring(0, 5)}
+          </Text>
+        </View>
       </View>
     </View>
   );

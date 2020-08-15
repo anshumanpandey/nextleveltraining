@@ -42,12 +42,12 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
           imageStyle={styles.ps_image}
         />
         <View style={styles.ps_star_view}>
-          <Text style={styles.ps_star_point}>{props.AverageRating}</Text>
-          {Number.isInteger(props.AverageRating) && (
+          <Text style={styles.ps_star_point}>{props.AverageBookingRating}</Text>
+          {Number.isInteger(Number.parseInt(props.AverageBookingRating)) && (
             <StarRating
               disabled={false}
               maxStars={1}
-              rating={props.AverageRating}
+              rating={props.AverageBookingRating}
               fullStarColor={'#38A663'}
               starSize={16}
             // selectedStar={(rating) => this.onStarRatingPress(rating)}
