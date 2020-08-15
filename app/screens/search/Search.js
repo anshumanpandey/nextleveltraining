@@ -139,9 +139,11 @@ const Search = (props) => {
                     imageUri: p.MediaURL,
                   }
 
-                  j.fileType = "image"
-                  if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
-                    j.fileType = "video"
+                  if (p.MediaURL) {
+                    j.fileType = "image"
+                    if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
+                      j.fileType = "video"
+                    }
                   }
                   return j
 

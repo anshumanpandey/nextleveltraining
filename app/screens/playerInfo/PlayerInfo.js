@@ -144,7 +144,7 @@ const PlayerInfoScreen = (props) => {
               horizontal={false}
               style={{ width: '100%', height: '100%' }}
               ListEmptyComponent={
-                <Text style={{ textAlign: 'center', marginTop: '15%'}}>No post created yet</Text>
+                <Text style={{ textAlign: 'center', marginTop: '15%' }}>No post created yet</Text>
               }
               data={getPostByUserReq.data
                 .map(p => {
@@ -160,9 +160,11 @@ const PlayerInfoScreen = (props) => {
                     imageUri: p.MediaURL,
                   }
 
-                  j.fileType = "image"
-                  if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
-                    j.fileType = "video"
+                  if (p.MediaURL) {
+                    j.fileType = "image"
+                    if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
+                      j.fileType = "video"
+                    }
                   }
                   return j
 
