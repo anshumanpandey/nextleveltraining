@@ -202,12 +202,14 @@ const Profile = (props) => {
               </TouchableOpacity>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                DocumentPicker.pick({
-                  type: [DocumentPicker.types.video],
+                ImageCropPicker.openPicker({
+                  mediaType: "video",
                 })
                   .then((file) => {
+                    file.type = file.mime
+                    file.uri = file.path
                     file.type.includes('video')
-                    console.log(file.type)
+                    console.log(file)
                     setFieldValue('file', file)
                   })
               }}>
