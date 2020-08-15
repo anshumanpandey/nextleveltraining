@@ -111,7 +111,7 @@ const Profile = (props) => {
             })
             .then(() => {
               props.navigation.navigate('Home')
-              resetForm({ values: {} })
+              resetForm({ values: {file: null, bodyText: ''} })
               inputEl.current?.clearInput()
             })
 
