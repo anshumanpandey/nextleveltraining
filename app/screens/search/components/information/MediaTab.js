@@ -48,12 +48,14 @@ const MediaTab = ({ posts = [], selectedTab }) => {
       })
   }, [selectedTab])
 
-  let body = <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Post for this coach yet.</Text>
-
-  if (parsed && postToShow.length != 0) {
-    body = (
+  return (
+    <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
+      {!parsed && <Spinner color={Colors.s_yellow} size={48} />}
       <FlatList
         horizontal={false}
+        refreshing={!parsed}
+        onRefresh={() => null}
+        ListEmptyComponent={<Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Post for this coach yet.</Text>}
         style={{ width: '100%', height: '100%' }}
         data={postToShow}
         keyExtractor={(item) => item.id}
@@ -65,13 +67,6 @@ const MediaTab = ({ posts = [], selectedTab }) => {
           />
         )}
       />
-    )
-  }
-
-  return (
-    <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
-      {!parsed && <Spinner color={Colors.s_yellow} size={48} />}
-      {body}
     </View>
   );
 };

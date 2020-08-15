@@ -53,7 +53,7 @@ const Information = (props) => {
     return () => focusListener?.remove();
   }, [])
 
-  console.log(JSON.stringify(props.navigation.state.params))
+  //console.log(JSON.stringify(props.navigation.state.params))
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
@@ -69,10 +69,14 @@ const Information = (props) => {
         <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2 }}></View>
         <View style={styles.infoContain}>
           <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
-          <View style={{ flexDirection: 'row', width: '55%', justifyContent: 'space-between', marginLeft: 'auto' }}>
-            <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
+          <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', height: 60 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
+            </View>
             {props.navigation.getParam("hideConnect", false) == false && (
-              <ConnectedWidget userToConnectTo={props.navigation.getParam("Id")} />
+              <View style={{ position: 'absolute', right: 0 }}>
+                <ConnectedWidget userToConnectTo={props.navigation.getParam("Id")} />
+              </View>
             )}
           </View>
           <View style={styles.rate_miles}>
@@ -82,18 +86,15 @@ const Information = (props) => {
             </View>
             <View style={styles.rate_miles_view}>
               <View style={styles.ps_star_view}>
-                <Text style={styles.ps_star_point}>{props.navigation.getParam("AverageRating")}</Text>
-                {Number.isInteger(props.AverageRating) && (
+                <Text style={styles.ps_star_point}>{props.navigation.getParam("AverageBookingRating")}</Text>
+                {Number.isInteger(Number.parseInt(props.navigation.getParam("AverageBookingRating"))) && (
                   <StarRating
                     disabled={false}
                     maxStars={1}
-                    rating={2}
+                    rating={props.navigation.getParam("AverageBookingRating")}
                     fullStarColor={'#38A663'}
                     starSize={12}
                   />
-                )}
-                {Number.isInteger(props.AverageRating) && (
-                  <Text style={styles.ps_star_total}> ({props.navigation.getParam("Rate")})</Text>
                 )}
               </View>
             </View>

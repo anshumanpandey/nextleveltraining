@@ -65,7 +65,7 @@ let Apps = null
 
 const NotificationCountComponent = ({ currentNotifications }) => {
   console.log(currentNotifications.length)
-  return <Text style={{ color: 'white', textAlign: 'center' }}>
+  return <Text style={{ color: 'white', textAlign: 'center', fontSize: 12 }}>
     {currentNotifications.filter(i => i.IsRead == false).length}
   </Text>
 }
@@ -341,7 +341,7 @@ const AppMain = () => {
           <View style={styles.tabContain}>
             <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
               <View>
-                <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '20%', height: 20, width: 20, borderRadius: 20 / 2 }}>
+                <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '50%', height: 18, width: 18, borderRadius: 18 / 2, alignItems: 'center', justifyContent: 'center' }}>
                   <NotificationCountComponent key={notifications.filter(n => n.IsRead).length} currentNotifications={notifications} />
                 </View>
                 <Icon
