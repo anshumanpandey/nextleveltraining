@@ -20,6 +20,7 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [profile] = useGlobalState('profile')
 
   const [{ loading }, postLike] = useAxios({
@@ -124,17 +125,22 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
                 currentPosition={1}
                 controls={true}
                 onError={() => {
-                  Alert.alert('Error', 'We could not load the video')
+                  setVideoError(true)
                 }}               // Callback when video cannot be loaded
                 style={{
                   height: 200,
                   display: videoIsReady ? 'flex' : "none"
                 }} />
-              {!videoIsReady && (
+              {!videoIsReady && videoError == false && (
                 <>
-                  <Spinner color={Colors.s_yellow} size={100} />
+                  <Spinner color={Colors.s_blue} size={100} />
                   <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
                 </>
+              )}
+              {videoError == true && (
+                <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 50, justifyContent: 'center'}}>
+                  <Text style={{ textAlign: 'center', opacity: 0.8, color: 'white' }}>Error Loading Video :(</Text>
+                </View>
               )}
             </TouchableOpacity>
           )}
