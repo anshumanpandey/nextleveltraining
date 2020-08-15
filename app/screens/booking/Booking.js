@@ -6,6 +6,7 @@ import useAxios from 'axios-hooks'
 import { Spinner, Text } from 'native-base'
 import Colors from '../../constants/color'
 import { useGlobalState } from '../../state/GlobalState'
+import { parseISO } from 'date-fns'
 
 
 const Booking = (props) => {
@@ -40,7 +41,7 @@ const Booking = (props) => {
       {!loading && (
         <FlatList
           horizontal={false}
-          data={data}
+          data={data.sort((a,b) => parseISO(b.SentDate) - parseISO(a.SentDate))}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <BookCard {...item} />

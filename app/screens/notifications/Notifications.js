@@ -7,6 +7,7 @@ import styles from '../message/styles';
 import { Icon } from 'native-base';
 import Colors from '../../constants/color';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { parseISO } from 'date-fns';
 
 const Notifications = (props) => {
 
@@ -75,7 +76,7 @@ const Notifications = (props) => {
                         <FlatList
                             contentContainerStyle={{ flexGrow: 1 }}
                             ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: '10%'}}>No notifications</Text>}
-                            data={getUserReq.data?.Notifications || []}
+                            data={getUserReq.data?.Notifications.sort((a,b) => parseISO(b.CreatedDate) - parseISO(a.CreatedDate)) || []}
                             renderItem={({ item, key }) => <Item item={item} key={key} />}
                             temSeparatorComponent={() => <ItemSeparator />}
                             keyExtractor={item => item.id}
