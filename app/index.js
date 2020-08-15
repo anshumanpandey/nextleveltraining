@@ -150,6 +150,20 @@ const AppMain = () => {
     },
   );
 
+  const BookingStack = createStackNavigator(
+    {
+      Booking: { screen: Booking },
+      JobDetails: { screen: JobDetails },
+    },
+    {
+      defaultNavigationOptions: ({ navigation }) => {
+        return {
+          header: null,
+        };
+      },
+    },
+  );
+
   const ProfileStack = createStackNavigator(
     {
       Profile: { screen: Profile },
@@ -307,7 +321,7 @@ const AppMain = () => {
       navigationOptions: () => searchMenuItem,
     }
     tabs.Booking = {
-      screen: Booking,
+      screen: BookingStack,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
