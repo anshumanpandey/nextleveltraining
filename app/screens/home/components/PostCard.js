@@ -15,6 +15,7 @@ import { useGlobalState } from '../../../state/GlobalState';
 import Video from 'react-native-video';
 import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
+import ModalVideo from '../../../components/ModalVideo';
 
 const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
@@ -109,40 +110,7 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
             </TouchableOpacity>
           )}
           {item.fileType && item.fileType.includes('video') && (
-            <TouchableOpacity
-              onPress={() => onClickingItem(item)}
-            >
-              <Video
-                source={{ uri: item.imageUri }}
-                paused={true}
-                onLoadStart={(d) => {
-                  console.log('onLoadStart')
-                }}
-                onLoad={(d) => {
-                  console.log('onLoad')
-                  setVideoIsReady(true)
-                }}
-                currentPosition={1}
-                controls={true}
-                onError={() => {
-                  setVideoError(true)
-                }}               // Callback when video cannot be loaded
-                style={{
-                  height: 200,
-                  display: videoIsReady ? 'flex' : "none"
-                }} />
-              {!videoIsReady && videoError == false && (
-                <>
-                  <Spinner color={Colors.s_blue} size={100} />
-                  <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
-                </>
-              )}
-              {videoError == true && (
-                <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 50, justifyContent: 'center'}}>
-                  <Text style={{ textAlign: 'center', opacity: 0.8, color: 'white' }}>Error Loading Video :(</Text>
-                </View>
-              )}
-            </TouchableOpacity>
+            <ModalVideo source={item.imageUri} />
           )}
 
         </View>

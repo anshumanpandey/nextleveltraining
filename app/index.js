@@ -59,6 +59,7 @@ import ReviewScreen from './screens/review/ReviewScreen';
 import ForgotPassword from './screens/forgotPassword/ForgotPassword';
 import ForceChangePassword from './screens/forceChangePassword/ForceChangePassword';
 import Colors from './constants/color';
+import VideoScreen from './screens/video/VideoScreen';
 
 let initialRouteName = null
 let Apps = null
@@ -490,6 +491,16 @@ const AppMain = () => {
       }),
     }
 
+    tabs.Video = {
+      screen: VideoScreen,
+      navigationOptions: () => ({
+        tabBarVisible: false,
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
     tabs.ReviewScreen = {
       screen: ReviewScreen,
       navigationOptions: () => ({
@@ -514,7 +525,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', 'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
