@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
 import NavigationService from '../../navigation/NavigationService';
+import InfoLabel from '../../components/InfoLabel';
 
 const ForceChangePassword = (props) => {
   const [{ data, loading, error }, resetPassword] = useAxios({
@@ -60,8 +61,8 @@ const ForceChangePassword = (props) => {
             } else if (/\d/.test(values.newPassword) == false) {
               errors.newPassword = 'Must include one number'
             } else if (/[A-Z]/.test(values.newPassword) == false) {
-              errors.newPassword = 'Must include one number'
-            } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.newPassword) == false) {
+              errors.newPassword = 'Must include one uppercase character'
+            } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?\.!]/g.test(values.newPassword) == false) {
               errors.newPassword = 'Must include one special character'
             }
 
@@ -127,6 +128,7 @@ const ForceChangePassword = (props) => {
                     secureTextEntry={true}
                   />
                 </View>
+                <InfoLabel style={{ width: '85%' }} text={"Password should contain at least 1 number, 1 alphabet in caps and 1 special character."} />
                 {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
 
               </View>

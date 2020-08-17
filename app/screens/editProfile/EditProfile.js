@@ -11,6 +11,7 @@ import { Input as TextInput } from 'native-base';
 import styles from './styles.js';
 import ErrorLabel from '../../components/ErrorLabel'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState'
+import InfoLabel from '../../components/InfoLabel'
 
 const EditProfile = (props) => {
     const [isSaving, setIsSaving] = useState(false);
@@ -99,8 +100,8 @@ const EditProfile = (props) => {
                                 } else if (/\d/.test(values.newPassword) == false) {
                                     errors.newPassword = 'Must include one number'
                                 } else if (/[A-Z]/.test(values.newPassword) == false) {
-                                    errors.newPassword = 'Must include one number'
-                                } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.newPassword) == false) {
+                                    errors.newPassword = 'Must include one uppercase character'
+                                } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?\.!]/g.test(values.newPassword) == false) {
                                     errors.newPassword = 'Must include one special character'
                                 }
 
@@ -159,6 +160,7 @@ const EditProfile = (props) => {
                                                 value={values.confirmPassword}
                                             />
                                         </View>
+                                        <InfoLabel style={{ width: '85%' }} text={"Password should contain at least 1 number, 1 alphabet in caps and 1 special character."} />
                                         {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
                                     </View>
                                 );

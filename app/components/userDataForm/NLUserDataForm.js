@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import DeviceInfo from 'react-native-device-info';
 import Screens from '../../utils/screen';
+import InfoLabel from '../InfoLabel';
 
 const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
     const formikRef = useRef()
@@ -67,8 +68,8 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                       } else if (/\d/.test(values.password) == false) {
                         errors.password = 'Must include one number'
                       } else if (/[A-Z]/.test(values.password) == false) {
-                        errors.password = 'Must include one number'
-                      } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(values.password) == false) {
+                        errors.newPassword = 'Must include one uppercase character'
+                      } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?\.!]/g.test(values.password) == false) {
                         errors.password = 'Must include one special character'
                       }
                 }
@@ -82,9 +83,6 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                         }
                     }
                 }
-
-                console.log('validation done')
-
 
                 return errors
             }}
@@ -204,6 +202,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                                         value={values.confirmPassword}
                                     />
                                 </View>
+                                <InfoLabel style={{ width: '85%' }} text={"Password should contain at least 1 number, 1 alphabet in caps and 1 special character."} />
                                 {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
                             </>
                         )}
