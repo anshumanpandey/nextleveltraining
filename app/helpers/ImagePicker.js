@@ -6,6 +6,7 @@ const options = {
   storageOptions: {
     skipBackup: true,
     path: 'images',
+    privateDirectory: true
   },
 };
 
