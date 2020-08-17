@@ -96,7 +96,7 @@ const EditInput = (props) => {
         <Text style={styles.titleText}>{title}</Text>
         <View style={[styles.inputContain, { borderBottomWidth: 0 }]}>
           <TextInput
-            value={values.toString()}
+            value={values?.toString()}
             onChangeText={(text) => setValues(text)}
             style={{ height: Dimension.px200, width: '100%', textAlign: 'left' }}
             placeholder="Type here..."
