@@ -110,7 +110,41 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
             </TouchableOpacity>
           )}
           {item.fileType && item.fileType.includes('video') && (
-            <ModalVideo source={item.imageUri} />
+            <TouchableOpacity
+              onPress={() => onClickingItem(item)}
+            >
+              <Video
+                source={{ uri: item.imageUri }}
+                paused={true}
+                onLoadStart={(d) => {
+                  console.log('onLoadStart')
+                }}
+                onLoad={(d) => {
+                  console.log('onLoad')
+                  setVideoIsReady(true)
+                }}
+                currentPosition={1}
+                controls={true}
+                resizeMode="contain"
+                onError={() => {
+                  setVideoError(true)
+                }}               // Callback when video cannot be loaded
+                style={{
+                  height: Dimension.px440,
+                  display: videoIsReady && !videoError ? 'flex' : "none"
+                }} />
+              {!videoIsReady && videoError == false && (
+                <>
+                  <Spinner color={Colors.s_blue} size={100} />
+                  <Text style={{ textAlign: 'center', opacity: 0.8 }}>Loading video...</Text>
+                </>
+              )}
+              {videoError == true && (
+                <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 50, justifyContent: 'center'}}>
+                  <Text style={{ textAlign: 'center', opacity: 0.8, color: 'white' }}>Error Loading Video :(</Text>
+                </View>
+              )}
+            </TouchableOpacity>
           )}
 
         </View>
