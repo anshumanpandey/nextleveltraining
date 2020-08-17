@@ -1544,11 +1544,12 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                             "accountNumber": values.accountNumber,
                             "code": values.sortCode,
                         }
-                        doPost({ data })
+                        return doPost({ data })
                             .then((r) => getUserData())
                             .then((r) => {
                                 console.log(r.data)
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: null })
                             })
                     }}
                 >
