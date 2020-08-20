@@ -87,6 +87,16 @@ const Login = (props) => {
 
       if (appleAuthRequestResponse['realUserStatus']) {
         console.log(appleAuthRequestResponse)
+        if (appleAuthRequestResponse.email) {
+          await AsyncStorage.setItem("appleEmail", appleAuthRequestResponse.email)
+        } else if (await AsyncStorage.getItem("appleEmail")){
+          appleAuthRequestResponse.email = await AsyncStorage.getItem("appleEmail")
+        }
+        if (appleAuthRequestResponse.fullName && appleAuthRequestResponse.fullName.givenName) {
+          await AsyncStorage.setItem("appleUserName", appleAuthRequestResponse.fullName.givenName)
+        } else if (await AsyncStorage.getItem("appleUserName")){
+          appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
+        }
         loginWithApple({
           data: {
             "name": appleAuthRequestResponse.fullName.givenName,

@@ -44,7 +44,12 @@ const Signup = (props) => {
     method: 'POST',
   }, { manual: true })
 
-  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading || FBloginReq.loading || socialLogin
+  const [appleReq, loginWithApple] = useAxios({
+    url: '/Account/AppleLogin',
+    method: 'POST'
+  }, { manual: true })
+
+  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading || FBloginReq.loading || socialLogin || appleReq.loading
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -72,13 +77,22 @@ const Signup = (props) => {
 
       if (appleAuthRequestResponse['realUserStatus']) {
         console.log(appleAuthRequestResponse)
-        loginWithGoogle({
+        if (appleAuthRequestResponse.email) {
+          await AsyncStorage.setItem("appleEmail", appleAuthRequestResponse.email)
+        } else if (await AsyncStorage.getItem("appleEmail")){
+          appleAuthRequestResponse.email = await AsyncStorage.getItem("appleEmail")
+        }
+        if (appleAuthRequestResponse.fullName && appleAuthRequestResponse.fullName.givenName) {
+          await AsyncStorage.setItem("appleUserName", appleAuthRequestResponse.fullName.givenName)
+        } else if (await AsyncStorage.getItem("appleUserName")){
+          appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
+        }
+        loginWithApple({
           data: {
-            "name": ``,
+            "name": appleAuthRequestResponse.fullName.givenName,
             "email": appleAuthRequestResponse.email,
-            "picture": "http://44.233.116.105/NextLevelTrainingApi/Upload/Profile/player-placeholder.jpeg",
             "role": props.navigation.getParam('role'),
-            "authenticationToken": ""
+            deviceID: DeviceInfo.getUniqueId()
           }
         })
           .then((r) => {
