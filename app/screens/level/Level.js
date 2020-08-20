@@ -57,18 +57,6 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={styles.level_other_view}>
-        <View style={styles.level_line}></View>
-        <View style={styles.level_other_check_view}>
-          <Text style={styles.level_check_text}>{CheckText}</Text>
-          <TouchableHighlight
-            onPress={() => NavigationService.navigate(Screens.Login)}
-          >
-            <Text style={styles.level_signin_text}>{SigninText}</Text>
-          </TouchableHighlight>
-        </View>
-
-      </View>
     </View>
   )
 }
