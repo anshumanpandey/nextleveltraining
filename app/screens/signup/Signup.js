@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import Images from '../../constants/image'
 import styles from './styles.js';
 import useAxios from 'axios-hooks'
@@ -7,6 +7,12 @@ import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin } from 'react-native-google-signin';
+import appleAuth, {
+  AppleButton,
+  AppleAuthRequestOperation,
+  AppleAuthRequestScope,
+  AppleAuthError
+} from '@invertase/react-native-apple-authentication';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 import DeviceInfo from 'react-native-device-info';
@@ -53,6 +59,55 @@ const Signup = (props) => {
     });
   }, [])
 
+  const handleResponse = async () => {
+    try {
+      // performs login request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: AppleAuthRequestOperation.LOGIN,
+        requestedScopes: [
+          AppleAuthRequestScope.EMAIL,
+          AppleAuthRequestScope.FULL_NAME,
+        ],
+      });
+
+      if (appleAuthRequestResponse['realUserStatus']) {
+        console.log(appleAuthRequestResponse)
+        loginWithGoogle({
+          data: {
+            "name": ``,
+            "email": appleAuthRequestResponse.email,
+            "picture": "http://44.233.116.105/NextLevelTrainingApi/Upload/Profile/player-placeholder.jpeg",
+            "role": props.navigation.getParam('role'),
+            "authenticationToken": ""
+          }
+        })
+          .then((r) => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+            return getUserData()
+          })
+          .then((r) => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+            props.navigation.navigate(Screen.LandingPage)
+          })
+          .catch(err => console.log(err))
+      }
+    } catch (error) {
+      if (error.code === AppleAuthError.CANCELED) {
+      }
+      if (error.code === AppleAuthError.FAILED) {
+        Alert.alert('FAILED Touch ID wrong');
+      }
+      if (error.code === AppleAuthError.INVALID_RESPONSE) {
+        Alert.alert('INVALID_RESPONSE Touch ID wrong');
+      }
+      if (error.code === AppleAuthError.NOT_HANDLED) {
+      }
+      if (error.code === AppleAuthError.UNKNOWN) {
+        Alert.alert('UKNOWN Touch ID wrong');
+      }
+    }
+  }
+
   return (
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.signup_layout}>
       <View style={styles.signup_container}>
@@ -81,7 +136,7 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
+                .then(({ accessToken }) => FBlogin({ data: { deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -138,6 +193,16 @@ const Signup = (props) => {
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>
+            <AppleButton
+              buttonStyle={AppleButton.Style.BLACK}
+              buttonType={AppleButton.Type.SIGN_IN}
+              style={{
+                marginTop: '5%',
+                width: '90%', // You must specify a width
+                height: 45, // You must specify a height
+              }}
+              onPress={() => handleResponse()}
+            />
           </View>
         </View>
       </View>

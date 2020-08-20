@@ -1,6 +1,12 @@
 import React, { Component, useEffect, useState } from 'react'
 import { View, Text, Image, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import { GoogleSignin } from 'react-native-google-signin';
+import appleAuth, {
+  AppleButton,
+  AppleAuthRequestOperation,
+  AppleAuthRequestScope,
+  AppleAuthError
+} from '@invertase/react-native-apple-authentication';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import Images from '../../constants/image'
 import styles from './styles.js';
@@ -13,6 +19,7 @@ import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
+import DeviceInfo from 'react-native-device-info';
 
 const Login = (props) => {
   const [role, setRole] = useState();
@@ -35,8 +42,13 @@ const Login = (props) => {
     method: 'POST'
   }, { manual: true })
 
+  const [appleReq, loginWithApple] = useAxios({
+    url: '/Account/AppleLogin',
+    method: 'POST'
+  }, { manual: true })
+
   const isLoginDisabled = () => {
-    return loading || FBloginReq.loading || getUserReq.loading || googeReq.loading
+    return loading || FBloginReq.loading || getUserReq.loading || googeReq.loading || appleReq.loading
   }
 
   useEffect(() => {
@@ -61,6 +73,54 @@ const Login = (props) => {
 
     return () => focusListener.remove()
   }, [])
+
+  const handleResponse = async () => {
+    try {
+      // performs login request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: AppleAuthRequestOperation.LOGIN,
+        requestedScopes: [
+          AppleAuthRequestScope.EMAIL,
+          AppleAuthRequestScope.FULL_NAME,
+        ],
+      });
+
+      if (appleAuthRequestResponse['realUserStatus']) {
+        console.log(appleAuthRequestResponse)
+        loginWithApple({
+          data: {
+            "name": appleAuthRequestResponse.fullName.givenName,
+            "email": appleAuthRequestResponse.email,
+            "role": props.navigation.getParam('role'),
+            deviceID: DeviceInfo.getUniqueId()
+          }
+        })
+          .then((r) => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
+            return getUserData()
+          })
+          .then((r) => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+            props.navigation.navigate(Screen.LandingPage)
+          })
+          .catch(err => console.log(err))
+      }
+    } catch (error) {
+      if (error.code === AppleAuthError.CANCELED) {
+      }
+      if (error.code === AppleAuthError.FAILED) {
+        Alert.alert('FAILED Touch ID wrong');
+      }
+      if (error.code === AppleAuthError.INVALID_RESPONSE) {
+        Alert.alert('INVALID_RESPONSE Touch ID wrong');
+      }
+      if (error.code === AppleAuthError.NOT_HANDLED) {
+      }
+      if (error.code === AppleAuthError.UNKNOWN) {
+        Alert.alert('UKNOWN Touch ID wrong');
+      }
+    }
+  }
 
   return (
     <ScrollView style={styles.login_layout}>
@@ -164,7 +224,7 @@ const Login = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { role: props.navigation.getParam('role' ), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -192,7 +252,8 @@ const Login = (props) => {
                       "email": userInfo.user.email,
                       "picture": userInfo.user.photo,
                       "role": props.navigation.getParam('role'),
-                      "authenticationToken": userInfo.serverAuthCode
+                      "authenticationToken": userInfo.serverAuthCode,
+                      deviceID: DeviceInfo.getUniqueId()
                     }
                   })
                     .then((r) => {
@@ -212,6 +273,16 @@ const Login = (props) => {
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>
+            <AppleButton
+              buttonStyle={AppleButton.Style.BLACK}
+              buttonType={AppleButton.Type.SIGN_IN}
+              style={{
+                marginTop: '5%',
+                width: '90%', // You must specify a width
+                height: 45, // You must specify a height,
+              }}
+              onPress={() => handleResponse()}
+            />
           </View>
         </View>
       </View>

@@ -120,7 +120,8 @@ const styles =StyleSheet.create({
          width:Dimension.pro100,
          justifyContent:'space-around',
          alignItems:'center',
-         flexDirection:'row'
+         flexDirection:'row',
+         flexWrap: 'wrap'
     },
     login_check_text:{
         fontSize:16,

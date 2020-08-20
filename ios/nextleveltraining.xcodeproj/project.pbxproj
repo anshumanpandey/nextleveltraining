@@ -106,6 +106,8 @@
 		B7232393A29348C2BEE0370A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		BD304460AFD3AA4E744A9CB6 /* Pods-nextleveltraining-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-nextleveltraining-tvOS/Pods-nextleveltraining-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D657259A24CA799100E82E92 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
+		D6849D6824EDCB7E002A51D6 /* NextLevelTrainingRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = NextLevelTrainingRelease.entitlements; path = nextleveltraining/NextLevelTrainingRelease.entitlements; sourceTree = "<group>"; };
+		D684C03A24EEF7290022F1FF /* NextLevelTrainingDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = NextLevelTrainingDebug.entitlements; path = nextleveltraining/NextLevelTrainingDebug.entitlements; sourceTree = "<group>"; };
 		D6F635F624D07ABA00C79709 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E388662C3D0164980B432098 /* libPods-nextleveltraining-nextleveltrainingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-nextleveltrainingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB0606CC56EE6A4DB9E38D65 /* libPods-nextleveltraining-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +201,8 @@
 		13B07FAE1A68108700A75B9A /* nextleveltraining */ = {
 			isa = PBXGroup;
 			children = (
+				D684C03A24EEF7290022F1FF /* NextLevelTrainingDebug.entitlements */,
+				D6849D6824EDCB7E002A51D6 /* NextLevelTrainingRelease.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -380,6 +384,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Y77A2C426U;
 						LastSwiftMigration = 1120;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -804,6 +809,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = nextleveltraining/NextLevelTrainingDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y77A2C426U;
 				ENABLE_BITCODE = NO;
@@ -818,8 +826,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nextleveltraining;
 				PRODUCT_NAME = NextLevelTraining;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -832,6 +841,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = nextleveltraining/NextLevelTrainingRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y77A2C426U;
 				INFOPLIST_FILE = nextleveltraining/Info.plist;
@@ -841,8 +853,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nextleveltraining;
 				PRODUCT_NAME = NextLevelTraining;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
