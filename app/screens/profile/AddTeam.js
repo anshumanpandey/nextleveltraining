@@ -84,6 +84,7 @@ const AddTeam = (props) => {
                   onChangeText={(text) => setTeamName(text)}
                   style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15, width: '100%', color: "black" }}
                   placeholder="Team Name"
+                  placeholderTextColor={'rgba(0,0,0,0.3)'}
                   keyboardType="email-address"
                   onChangeText={handleChange('teamName')}
                   onBlur={handleBlur('teamName')}
