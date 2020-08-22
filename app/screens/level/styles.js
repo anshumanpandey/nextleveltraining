@@ -15,7 +15,7 @@ const styles =StyleSheet.create({
          justifyContent:'center',
          alignItems:'center',
          display:'flex',
-         flex: 0.65,
+         flex: 0.50,
     },
     level_logo_text:{
          fontSize:18,
