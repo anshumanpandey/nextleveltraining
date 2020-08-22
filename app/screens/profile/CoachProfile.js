@@ -1139,7 +1139,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             <View style={styles.containerCommon}>
                                 <View style={styles.inputContainer}>
                                     <RNTextInput
-                                        style={{ height: 50 }}
+                                        style={{ height: 50, color: 'black' }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Location Name"}
                                         onChangeText={handleChange('locationName')}
