@@ -46,6 +46,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = un
                     textInput: {
                         borderWidth: 0,
                         paddingLeft: 0,
+                        color: "black",
                         ...style
                     }
                 }}
