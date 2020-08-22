@@ -60,7 +60,7 @@ const UpComingMatch = (props) => {
               <Text style={styles.titleText}>Playing Against Team Name</Text>
               <View style={[styles.inputContain, { marginTop: 0 }]}>
                 <TextInput
-                  style={{ textAlign: 'left', padding: Dimension.px10, width: '100%',fontSize: 15 }}
+                  style={{ textAlign: 'left', padding: Dimension.px10, width: '100%',fontSize: 15, color: "black" }}
                   onChangeText={handleChange('teamName')}
                   onBlur={handleBlur('teamName')}
                   value={values.teamName}

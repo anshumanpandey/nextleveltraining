@@ -169,6 +169,7 @@ const Login = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
+                    style={{ color: "black"}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Email ID"
                     keyboardType="email-address"
@@ -180,6 +181,7 @@ const Login = (props) => {
                 {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
                 <View style={styles.login_info_view}>
                   <TextInput
+                    style={{ color: "black"}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Password"
                     secureTextEntry={true}

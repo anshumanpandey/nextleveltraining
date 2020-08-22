@@ -82,7 +82,7 @@ const AddTeam = (props) => {
               <View style={styles.inputContain}>
                 <TextInput
                   onChangeText={(text) => setTeamName(text)}
-                  style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15, width: '100%' }}
+                  style={{ textAlign: 'left', padding: Dimension.px10, fontSize: 15, width: '100%', color: "black" }}
                   placeholder="Team Name"
                   keyboardType="email-address"
                   onChangeText={handleChange('teamName')}

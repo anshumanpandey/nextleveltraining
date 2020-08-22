@@ -64,6 +64,7 @@ const Search = (props) => {
           style={{
             fontSize: 14,
             height: 40,
+            color: 'black'
           }}
         />
 

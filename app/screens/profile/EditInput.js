@@ -98,7 +98,7 @@ const EditInput = (props) => {
           <TextInput
             value={(values == null || values == undefined || values == 0) ? "": values.toString()}
             onChangeText={(text) => setValues(text)}
-            style={{ height: Dimension.px200, width: '100%', textAlign: 'left' }}
+            style={{ height: Dimension.px200, width: '100%', textAlign: 'left', color: "black" }}
             placeholder="Type here..."
             numberOfLines={15}
             textAlignVertical={'top'}

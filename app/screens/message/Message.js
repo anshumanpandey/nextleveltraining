@@ -317,6 +317,7 @@ export default class Message extends React.Component {
               flex: 1,
               paddingHorizontal: 10,
               fontSize: 15,
+              color: "black"
             }}
               placeholder='Type your message'
               value={this.state.textMessage}

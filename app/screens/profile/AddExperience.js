@@ -81,7 +81,7 @@ const AddTeam = (props) => {
             <View style={{ padding: 30 }}>
               <View style={styles.inputContain}>
                 <TextInput
-                  style={{ textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%' }}
+                  style={{ color: "black",textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%' }}
                   placeholder="Job Role"
                   keyboardType="email-address"
                   onChangeText={handleChange('jobPosition')}
@@ -93,7 +93,7 @@ const AddTeam = (props) => {
 
               <View style={styles.inputContain}>
                 <TextInput
-                  style={{ textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%' }}
+                  style={{ textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%', color: "black" }}
                   placeholder="Club Name"
                   keyboardType="email-address"
                   onChangeText={handleChange('club')}

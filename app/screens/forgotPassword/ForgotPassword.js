@@ -54,6 +54,7 @@ const ForgotPassword = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
+                    style={{ color: "black"}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Email ID"
                     keyboardType="email-address"

@@ -66,7 +66,7 @@ const CommentsScreen = (props) => {
             value={commentText}
             onChangeText={(r) => setCommentText(r)}
             placeholder="Type your comment"
-            style={{ fontSize: 14, height: 42 }}
+            style={{ fontSize: 14, height: 42, color: "black" }}
           />
         </View>
         <View style={styles.arrow_icon}>

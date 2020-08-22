@@ -118,6 +118,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                     <View style={styles.signup_info_input_view}>
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                style={{ color: "black"}}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Full Name"
                                 keyboardType="default"
@@ -141,6 +142,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                style={{ color: "black"}}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Post Code"
                                 onChangeText={handleChange('postCode')}
@@ -152,6 +154,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                style={{ color: "black"}}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 editable={!props.navigation.getParam('emailIDIsDisabled', false)}
                                 placeholder="Email ID"
@@ -165,6 +168,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                         <View style={styles.signup_info_view}>
                             <TextInput
+                                style={{ color: "black"}}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Mobile Number"
                                 keyboardType='numeric'
@@ -179,6 +183,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             <>
                                 <View style={styles.signup_info_view}>
                                     <TextInput
+                                        style={{ color: "black"}}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder="Password"
                                         secureTextEntry={true}
@@ -194,6 +199,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             <>
                                 <View style={styles.signup_info_view}>
                                     <TextInput
+                                        style={{ color: "black"}}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder="Confirm Password"
                                         secureTextEntry={true}

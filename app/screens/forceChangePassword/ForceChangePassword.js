@@ -96,6 +96,7 @@ const ForceChangePassword = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
+                    style={{ color: "black"}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Current Passsword"
                     onChangeText={handleChange('password')}
@@ -108,6 +109,7 @@ const ForceChangePassword = (props) => {
 
                 <View style={styles.login_info_view}>
                   <TextInput
+                    style={{ color: "black"}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="New Passsword"
                     onChangeText={handleChange('newPassword')}
@@ -120,6 +122,7 @@ const ForceChangePassword = (props) => {
 
                 <View style={styles.login_info_view}>
                   <TextInput
+                    style={{ color: "black"}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Confirm Passsword"
                     onChangeText={handleChange('confirmPassword')}

@@ -131,6 +131,7 @@ const EditProfile = (props) => {
                                         <View style={styles.signup_info_view}>
                                             <View style={styles.signup_info_view}>
                                                 <TextInput
+                                                    style={{ color: "black"}}
                                                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                                                     placeholder="Password"
                                                     secureTextEntry={true}
@@ -141,6 +142,7 @@ const EditProfile = (props) => {
                                             </View>
                                             {errors.password && touched.password && <ErrorLabel text={errors.password} />}
                                             <TextInput
+                                                style={{ color: "black"}}
                                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                                 placeholder="New Password"
                                                 secureTextEntry={true}
@@ -152,6 +154,7 @@ const EditProfile = (props) => {
                                         {errors.newPassword && touched.newPassword && <ErrorLabel text={errors.newPassword} />}
                                         <View style={styles.signup_info_view}>
                                             <TextInput
+                                                style={{ color: "black"}}
                                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                                 placeholder="Confirm Password"
                                                 secureTextEntry={true}

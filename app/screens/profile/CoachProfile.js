@@ -1564,6 +1564,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        style={{ color: "black"}}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Bank Name"}
                                         onChangeText={handleChange('bankName')}
@@ -1596,6 +1597,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        style={{ color: "black"}}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account Holder Name"}
                                         onChangeText={handleChange('holderName')}
@@ -1607,6 +1609,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        style={{ color: "black"}}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Sort code "}
                                         onChangeText={handleChange('sortCode')}
@@ -1618,6 +1621,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
+                                        style={{ color: "black"}}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account number"}
                                         onChangeText={handleChange('accountNumber')}

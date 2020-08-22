@@ -87,6 +87,7 @@ const ReviewScreen = (props) => {
               {errors.rate && touched.rate && <ErrorLabel style={{ textAlign: 'center'}} text={errors.rate} />}
               <View style={{ paddingHorizontal: '3%', marginTop: '5%' }}>
                 <TextInput
+                  style={{ color: "black"}}
                   placeholderTextColor={'rgba(0,0,0,0.3)'}
                   placeholder="Write your review"
                   onChangeText={handleChange('review')}
