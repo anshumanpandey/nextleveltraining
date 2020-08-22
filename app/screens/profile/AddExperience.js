@@ -83,6 +83,7 @@ const AddTeam = (props) => {
                 <TextInput
                   style={{ color: "black",textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%' }}
                   placeholder="Job Role"
+                  placeholderTextColor={'rgba(0,0,0,0.3)'}
                   keyboardType="email-address"
                   onChangeText={handleChange('jobPosition')}
                   onBlur={handleBlur('jobPosition')}
@@ -95,6 +96,7 @@ const AddTeam = (props) => {
                 <TextInput
                   style={{ textAlign: 'left', paddingVertical: Dimension.px10, fontSize: 15, width: '100%', color: "black" }}
                   placeholder="Club Name"
+                  placeholderTextColor={'rgba(0,0,0,0.3)'}
                   keyboardType="email-address"
                   onChangeText={handleChange('club')}
                   onBlur={handleBlur('club')}
