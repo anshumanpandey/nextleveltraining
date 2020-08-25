@@ -206,7 +206,7 @@ const Signup = (props) => {
                 }
               }}
               disabled={signupIsDisabled()}
-              style={[styles.google_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1 }]}
+              style={[styles.google_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1, marginTop: '5%' }]}
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>
@@ -215,7 +215,6 @@ const Signup = (props) => {
                 buttonStyle={AppleButton.Style.BLACK}
                 buttonType={AppleButton.Type.SIGN_IN}
                 style={{
-                  marginTop: '5%',
                   width: '90%', // You must specify a width
                   height: 45, // You must specify a height
                 }}
