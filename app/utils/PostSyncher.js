@@ -30,8 +30,9 @@ const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
         useUtf8Charset: true
     }
 
-    if (!fileUploaderMap.has(idToAttach)) {
-        fileUploaderMap.set(idToAttach)
+    const fileKey = `${idToAttach}-${fileType}`
+    if (!fileUploaderMap.has(fileKey)) {
+        fileUploaderMap.set(fileKey)
     } else {
         return Promise.reject("Upload already started")
     }

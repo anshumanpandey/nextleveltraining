@@ -64,7 +64,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               <View style={{ width: '80%' }}>
                 <Text>{props.AboutUs}</Text>
               </View>
-              {props.Role == "Player" && (
+              {props.Role == "Player" && props.hideAddress != true &&(
                 <View style={{ flexDirection: 'row', width: '80%' }}>
                   <Icon style={{ fontSize: 22 }} type="EvilIcons" name="location" />
                   <Text>{props.Address}</Text>

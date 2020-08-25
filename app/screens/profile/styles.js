@@ -93,17 +93,22 @@ const styles = {
       margin: 0,
       padding: 0,
       alignItems: 'flex-start',
+      color: 'black',
     },
     dateText: {
       fontSize: 17,
       margin: 0,
       padding: 0,
+      color: 'black',
     },
     placeholderText: {
       fontSize: 17,
       margin: 0,
       padding: 0,
     },
+    datePickerCon: {
+      color: 'black',
+    }
   },
 };
 

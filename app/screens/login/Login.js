@@ -7,6 +7,7 @@ import appleAuth, {
   AppleAuthRequestScope,
   AppleAuthError
 } from '@invertase/react-native-apple-authentication';
+var jwtDecode = require('jwt-decode');
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import Images from '../../constants/image'
 import styles from './styles.js';
@@ -20,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
 import DeviceInfo from 'react-native-device-info';
+import JwtDecode from 'jwt-decode';
 
 const Login = (props) => {
   const [role, setRole] = useState();
@@ -89,8 +91,9 @@ const Login = (props) => {
         console.log(appleAuthRequestResponse)
         if (appleAuthRequestResponse.email) {
           await AsyncStorage.setItem("appleEmail", appleAuthRequestResponse.email)
-        } else if (await AsyncStorage.getItem("appleEmail")){
-          appleAuthRequestResponse.email = await AsyncStorage.getItem("appleEmail")
+        } else {
+          const decodedData = JwtDecode(appleAuthRequestResponse.identityToken)
+          appleAuthRequestResponse.email = decodedData.email
         }
         if (appleAuthRequestResponse.fullName && appleAuthRequestResponse.fullName.givenName) {
           await AsyncStorage.setItem("appleUserName", appleAuthRequestResponse.fullName.givenName)
@@ -99,7 +102,7 @@ const Login = (props) => {
         }
         loginWithApple({
           data: {
-            "name": appleAuthRequestResponse.fullName.givenName,
+            "name": "",
             "email": appleAuthRequestResponse.email,
             "role": props.navigation.getParam('role'),
             deviceID: DeviceInfo.getUniqueId()

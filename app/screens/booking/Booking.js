@@ -41,7 +41,7 @@ const Booking = (props) => {
       {!loading && (
         <FlatList
           horizontal={false}
-          data={data.sort((a,b) => parseISO(b.SentDate) - parseISO(a.SentDate))}
+          data={data? data.sort((a,b) => parseISO(b.SentDate) - parseISO(a.SentDate)): []}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <BookCard {...item} />

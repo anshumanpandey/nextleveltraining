@@ -46,7 +46,7 @@ axiosInstance.interceptors.response.use(
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
             // http.ClientRequest in node.js
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.ERROR, state: 'we  could not connect to the server.' });
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.ERROR, state: 'Unable to connect to server, please check your internet connection and try again' });
             console.log('error.request');
             console.log(error.request);
         } else {

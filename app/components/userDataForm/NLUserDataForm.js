@@ -68,7 +68,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                       } else if (/\d/.test(values.password) == false) {
                         errors.password = 'Must include one number'
                       } else if (/[A-Z]/.test(values.password) == false) {
-                        errors.newPassword = 'Must include one uppercase character'
+                        errors.password = 'Must include one uppercase character'
                       } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?\.!]/g.test(values.password) == false) {
                         errors.password = 'Must include one special character'
                       }

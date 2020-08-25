@@ -16,6 +16,8 @@ import appleAuth, {
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 import DeviceInfo from 'react-native-device-info';
+import JwtDecode from 'jwt-decode';
+var jwtDecode = require('jwt-decode');
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
@@ -79,8 +81,9 @@ const Signup = (props) => {
         console.log(appleAuthRequestResponse)
         if (appleAuthRequestResponse.email) {
           await AsyncStorage.setItem("appleEmail", appleAuthRequestResponse.email)
-        } else if (await AsyncStorage.getItem("appleEmail")){
-          appleAuthRequestResponse.email = await AsyncStorage.getItem("appleEmail")
+        } else {
+          const decodedData = JwtDecode(appleAuthRequestResponse.identityToken)
+          appleAuthRequestResponse.email = decodedData.email
         }
         if (appleAuthRequestResponse.fullName && appleAuthRequestResponse.fullName.givenName) {
           await AsyncStorage.setItem("appleUserName", appleAuthRequestResponse.fullName.givenName)
@@ -89,7 +92,7 @@ const Signup = (props) => {
         }
         loginWithApple({
           data: {
-            "name": appleAuthRequestResponse.fullName.givenName,
+            "name": "",
             "email": appleAuthRequestResponse.email,
             "role": props.navigation.getParam('role'),
             deviceID: DeviceInfo.getUniqueId()
