@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react'
-import { View, Text, Image, Alert, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Image, Alert, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import { GoogleSignin } from 'react-native-google-signin';
 import appleAuth, {
   AppleButton,
@@ -97,7 +97,7 @@ const Login = (props) => {
         }
         if (appleAuthRequestResponse.fullName && appleAuthRequestResponse.fullName.givenName) {
           await AsyncStorage.setItem("appleUserName", appleAuthRequestResponse.fullName.givenName)
-        } else if (await AsyncStorage.getItem("appleUserName")){
+        } else if (await AsyncStorage.getItem("appleUserName")) {
           appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
         }
         loginWithApple({
@@ -172,7 +172,7 @@ const Login = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{ color: "black"}}
+                    style={{ color: "black" }}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Email ID"
                     keyboardType="email-address"
@@ -184,7 +184,7 @@ const Login = (props) => {
                 {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{ color: "black"}}
+                    style={{ color: "black" }}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Password"
                     secureTextEntry={true}
@@ -288,16 +288,18 @@ const Login = (props) => {
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>
-            <AppleButton
-              buttonStyle={AppleButton.Style.BLACK}
-              buttonType={AppleButton.Type.SIGN_IN}
-              style={{
-                marginTop: '5%',
-                width: '90%', // You must specify a width
-                height: 45, // You must specify a height,
-              }}
-              onPress={() => handleResponse()}
-            />
+            {Platform.OS != "android" && (
+              <AppleButton
+                buttonStyle={AppleButton.Style.BLACK}
+                buttonType={AppleButton.Type.SIGN_IN}
+                style={{
+                  marginTop: '5%',
+                  width: '90%', // You must specify a width
+                  height: 45, // You must specify a height,
+                }}
+                onPress={() => handleResponse()}
+              />
+            )}
           </View>
         </View>
       </View>

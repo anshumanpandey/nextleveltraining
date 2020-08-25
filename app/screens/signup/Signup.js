@@ -87,7 +87,7 @@ const Signup = (props) => {
         }
         if (appleAuthRequestResponse.fullName && appleAuthRequestResponse.fullName.givenName) {
           await AsyncStorage.setItem("appleUserName", appleAuthRequestResponse.fullName.givenName)
-        } else if (await AsyncStorage.getItem("appleUserName")){
+        } else if (await AsyncStorage.getItem("appleUserName")) {
           appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
         }
         loginWithApple({
@@ -135,7 +135,7 @@ const Signup = (props) => {
         <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player") })}>
           <View style={[styles.signup_other_view, { color: 'black', paddingTop: '5%', paddingBottom: '5%' }]}>
             <Text style={styles.signup_continue}>Go to Login</Text>
-        </View>
+          </View>
         </TouchableOpacity>
         <View style={styles.signup_other_view}>
           <View style={styles.signup_line}>
@@ -153,7 +153,7 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                .then(({ accessToken }) => FBlogin({ data: { deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -210,16 +210,18 @@ const Signup = (props) => {
             >
               <Text style={styles.google_title}>Google +</Text>
             </TouchableOpacity>
-            <AppleButton
-              buttonStyle={AppleButton.Style.BLACK}
-              buttonType={AppleButton.Type.SIGN_IN}
-              style={{
-                marginTop: '5%',
-                width: '90%', // You must specify a width
-                height: 45, // You must specify a height
-              }}
-              onPress={() => handleResponse()}
-            />
+            {Platform.OS != "android" && (
+              <AppleButton
+                buttonStyle={AppleButton.Style.BLACK}
+                buttonType={AppleButton.Type.SIGN_IN}
+                style={{
+                  marginTop: '5%',
+                  width: '90%', // You must specify a width
+                  height: 45, // You must specify a height
+                }}
+                onPress={() => handleResponse()}
+              />
+            )}
           </View>
         </View>
       </View>
