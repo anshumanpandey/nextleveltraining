@@ -30,7 +30,7 @@ const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
         useUtf8Charset: true
     }
 
-    const fileKey = `${idToAttach}-${fileType}`
+    const fileKey = `${idToAttach}-${fileType}-${uri}`
     if (!fileUploaderMap.has(fileKey)) {
         fileUploaderMap.set(fileKey)
     } else {
