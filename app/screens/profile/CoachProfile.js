@@ -113,6 +113,14 @@ class MultiStep extends Component {
             return
         }
 
+        if (this.stepFourIsComplete(profile)) {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
+            NavigationService.navigate('Home')
+            console.log('step four is completed, navigating to home')
+            this.focusListener?.remove();
+            return
+        }
+
         if (this.stepThreeIsComplete(profile)) {
             this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
             console.log('step three is completed, jumping to 4')
