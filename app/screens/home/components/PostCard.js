@@ -50,8 +50,8 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
         <View style={{ flexDirection: 'row', paddingHorizontal: '5%' }}>
-          {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.post_image_size} />}
-          {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.MessiPlayer} style={styles.post_image_size} />}
+          {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+          {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={styles.post_title}>
