@@ -35,7 +35,6 @@ import Payments from './screens/payments';
 import JobDetails from './screens/bookingDetails';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
 import './api/AxiosBootstrap';
-import hasFullProfile from './utils/perType/profileResolver';
 import SplashScreen from 'react-native-splash-screen'
 import EditProfile from './screens/editProfile/EditProfile';
 import AboutMeScreen from './screens/aboutMe/AboutMe';
@@ -60,6 +59,8 @@ import ForgotPassword from './screens/forgotPassword/ForgotPassword';
 import ForceChangePassword from './screens/forceChangePassword/ForceChangePassword';
 import Colors from './constants/color';
 import VideoScreen from './screens/video/VideoScreen';
+import IsPlayer from './utils/perType/IsPlayer';
+import playerProfileIsComplete from './utils/perType/playerProfileIsComplete';
 
 let initialRouteName = null
 let Apps = null
@@ -118,6 +119,10 @@ const AppMain = () => {
       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.SUCCESS, state: null })
     }
   }, [success])
+
+  const hasCompletedVerificationProcess = () => {
+    return (IsPlayer(profile) && playerProfileIsComplete(profile)) || CoachHasCompletedStepFour(profile)
+  }
 
   const HomeStack = createStackNavigator(
     {
@@ -209,7 +214,7 @@ const AppMain = () => {
     Profile: {
       screen: ProfileStack,
       navigationOptions: () => ({
-        tabBarVisible: hasFullProfile(profile),
+        tabBarVisible: hasCompletedVerificationProcess(profile),
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
             <Icon
@@ -228,7 +233,7 @@ const AppMain = () => {
     ProfileStack: {
       screen: ConfirmedProfileStack,
       navigationOptions: () => ({
-        tabBarVisible: hasFullProfile(profile),
+        tabBarVisible: hasCompletedVerificationProcess(profile),
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
             <Icon
@@ -256,7 +261,7 @@ const AppMain = () => {
     },
   }
 
-  if (hasFullProfile(profile) == true && token) {
+  if (hasCompletedVerificationProcess(profile) == true && token) {
     tabs.Home = {
       screen: HomeStack,
       navigationOptions: () => ({
@@ -520,12 +525,12 @@ const AppMain = () => {
     }
   }
 
-  initialRouteName = hasFullProfile(profile) == true && token ? 'Home' : 'Profile'
+  initialRouteName = hasCompletedVerificationProcess(profile) == true && token ? 'Home' : 'Profile'
 
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: hasFullProfile(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: hasCompletedVerificationProcess(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
@@ -568,9 +573,9 @@ const AppMain = () => {
     },
     {
       drawerWidth: Dimensions.deviceWidth * 0.6,
-      contentComponent: hasFullProfile(profile) ? Menu : undefined,
+      contentComponent: hasCompletedVerificationProcess(profile) ? Menu : undefined,
       defaultNavigationOptions: {
-        drawerLockMode: hasFullProfile(profile) ? 'unlocked' : 'locked-closed',
+        drawerLockMode: hasCompletedVerificationProcess(profile) ? 'unlocked' : 'locked-closed',
       }
     },
   );
