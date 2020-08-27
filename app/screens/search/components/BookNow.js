@@ -244,8 +244,8 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
         <View style={styles.tabContain}>
           <Tabs
             tabTitle={[
-              { id: 1, title: 'PITCH AREA' },
-              { id: 2, title: 'HOME AREA' },
+              { id: 1, title: 'Training Pitch Location' },
+              { id: 2, title: 'Home Pitch Location' },
             ]}
             selectedTab={selectedTab}
             activeColor={activeColor}

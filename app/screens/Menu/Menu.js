@@ -12,6 +12,8 @@ import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificatio
 
 
 const Menu = (props) => {
+    const [profile] = useGlobalState('profile')
+
     const menulist = [
         {
             id: 8,
@@ -89,7 +91,7 @@ const Menu = (props) => {
         },
         {
             id: 4,
-            title: 'Training Pitch Location',
+            title: profile.Role == "Player" ? 'Home Pitch Location':'Training Pitch Location',
             icon: `${Images.HomeTrainingIcon}`,
             path: 'PaymentMethod',
             onPress: (props, profile) => {
@@ -133,7 +135,6 @@ const Menu = (props) => {
 
     const [profilePic, setProfilePic] = useState();
     const [triggerChange, setTriggerChange] = useState(true);
-    const [profile] = useGlobalState('profile')
     let finalMenu = []
 
     if (HasCompletedVerificationProcess(profile)) {
