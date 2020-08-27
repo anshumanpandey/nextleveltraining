@@ -57,7 +57,11 @@ const AddTeam = (props) => {
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
             console.log(r.data)
-            NavigationService.goBack()
+            if (HasCompletedVerificationProcess(profile)) {
+              NavigationService.navigate("AboutMe")
+            } else {
+              NavigationService.goBack()
+            }
           })
       }}
     >
