@@ -112,9 +112,7 @@ class MultiStep extends Component {
         }
 
         if (this.stepFourIsComplete(profile)) {
-            if (hasFullProfile(profile)) {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
-            }
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
             this.focusListener?.remove();
