@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TextInput, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { Input as TextInput } from 'native-base';
 import styles from './styles';
 import { CheckBox } from 'native-base';
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
@@ -96,7 +97,7 @@ const AddTeam = (props) => {
                     </View>
                   );
                 })}
-                <TouchableOpacity onPress={() => setFieldValue("addOther", !values.addOther)}>
+                <TouchableOpacity style={{ marginBottom: '3%'}} onPress={() => setFieldValue("addOther", !values.addOther)}>
                   <Text>Other</Text>
                 </TouchableOpacity>
 
