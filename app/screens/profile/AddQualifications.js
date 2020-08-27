@@ -31,13 +31,15 @@ const AddTeam = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
+  console.log(props.navigation.getParam("Qualifications"))
+
   return (
     <Formik
       innerRef={(r) => formikRef.current = r}
       initialValues={{
-        qualifications: props.navigation.getParam("Qualifications"),
-        addOther: props.navigation.getParam("Qualifications") ? props.navigation.getParam("Qualifications").find(q => options.find(o => o.Qualification != q.Qualification)) != null: false,
-        otherQualification: props.navigation.getParam("Qualifications") ? props.navigation.getParam("Qualifications").find(q => options.find(o => o.Qualification != q.Qualification)) : undefined
+        qualifications: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications")?.filter(q => options.map(e => e.Qualification).includes(q.Qualification) == true ) : [],
+        addOther: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false) != null: false,
+        otherQualification: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false).Qualification : undefined
       }}
       validate={(values) => {
         const errors = {}
