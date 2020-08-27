@@ -15,11 +15,11 @@ import DocumentPicker from 'react-native-document-picker';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 
 const options = [
-  {Qualification: "Level 1"},
-  {Qualification: "Level 2-Certificate in Coaching Football"},
-  {Qualification: "Level 3-UEFA B Licence"},
-  {Qualification: "Level 4-UEFA A Licence"},
-  {Qualification: "Level 5-UEFA Pro Licence"},
+  { Qualification: "Level 1" },
+  { Qualification: "Level 2-Certificate in Coaching Football" },
+  { Qualification: "Level 3-UEFA B Licence" },
+  { Qualification: "Level 4-UEFA A Licence" },
+  { Qualification: "Level 5-UEFA Pro Licence" },
 ]
 
 
@@ -49,20 +49,22 @@ const AddTeam = (props) => {
         return errors
       }}
       onSubmit={values => {
-        postQulifications({ data: values.qualifications })
-        .then(() => getUserData())
-        .then((r) => {
-          dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-          console.log(r.data)
-          NavigationService.goBack()
-        })
+        const data = values.qualifications
+        if (values.otherQualification) data.push(values.otherQualification)
+        postQulifications({ data })
+          .then(() => getUserData())
+          .then((r) => {
+            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+            console.log(r.data)
+            NavigationService.goBack()
+          })
       }}
     >
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <>
           <View style={{ flex: 1 }}>
             <HeaderClosePlus
-              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
+              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")) : undefined}
               isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}
@@ -94,6 +96,22 @@ const AddTeam = (props) => {
                     </View>
                   );
                 })}
+                <TouchableOpacity onPress={() => setFieldValue("addOther", values.addOther)}>
+                  <Text>Other</Text>
+                </TouchableOpacity>
+
+                {values.addOther && (
+                  <View style={styles.signup_info_view}>
+                    <TextInput
+                      style={{ color: "black" }}
+                      placeholderTextColor={'rgba(0,0,0,0.3)'}
+                      placeholder="Other Qualification"
+                      onChangeText={handleChange('otherQualification')}
+                      onBlur={handleBlur('otherQualification')}
+                      value={values.otherQualification}
+                    />
+                  </View>
+                )}
               </View>
               {errors.qualifications && touched.qualifications && <ErrorLabel text={errors.qualifications} />}
 

@@ -15,6 +15,13 @@ const styles = {
     width: Dimension.px100,
     borderRadius: Dimension.px100 / 2,
   },
+  signup_info_view:{
+    width:Dimension.pro80,
+    padding:1,
+    borderBottomColor:Colors.g_text,
+    borderBottomWidth:1,
+    marginTop:Dimension.px1
+},
   editView: {
     alignItems: 'center',
     justifyContent: 'center',
