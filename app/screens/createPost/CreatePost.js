@@ -180,7 +180,7 @@ const Profile = (props) => {
 
               </View>
             </ScrollView>
-            {errors.bodyText && touched.bodyText && <ErrorLabel style={{ textAlign: 'center' }} text={errors.bodyText} />}
+            {errors.file && touched.file && <ErrorLabel style={{ textAlign: 'center' }} text={errors.file} />}
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
