@@ -15,6 +15,7 @@ import ImagePicker from 'react-native-image-picker';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import { syncVerifyDocument } from '../../utils/SyncProfileAssets';
 import LoaderImage from 'react-native-image-progress';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const options = [
   "Passport",
