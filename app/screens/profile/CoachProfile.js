@@ -122,16 +122,19 @@ class MultiStep extends Component {
         }
 
         if (this.stepThreeIsComplete(profile)) {
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
             console.log('step three is completed, jumping to 4')
             return
         }
 
         if (this.stepTwoIsComplete(profile)) {
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
             console.log('step two is completed, jumping to 3')
             return
         }
 
         if (this.stepOneIsComplete(profile)) {
+            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
             console.log('step one is completed, jumping to 2')
         }
 
