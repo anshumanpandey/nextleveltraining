@@ -105,7 +105,7 @@ class MultiStep extends Component {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
         }
 
-        if (this.stepFourIsComplete(profile)) {
+        if (HasCompletedVerificationProcess(profile)) {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
