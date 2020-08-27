@@ -12,7 +12,7 @@ import Colors from '../../constants/color'
 import ImageCropPicker from 'react-native-image-crop-picker';
 import MentionInput from 'react-native-mention';
 import LoadableVideo from '../../components/LoadableVideo';
-import { dispatchGlobalState } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 const Profile = (props) => {
   const inputEl = useRef(null);
