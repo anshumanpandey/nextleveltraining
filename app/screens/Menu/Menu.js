@@ -89,7 +89,7 @@ const Menu = (props) => {
         },
         {
             id: 4,
-            title: 'Training Locations',
+            title: 'Training Pitch Location',
             icon: `${Images.HomeTrainingIcon}`,
             path: 'PaymentMethod',
             onPress: (props, profile) => {

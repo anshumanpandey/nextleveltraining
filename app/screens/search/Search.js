@@ -111,7 +111,7 @@ const Search = (props) => {
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[0]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[0]]} renderItem={({ item }) => <PostSearchCard onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[0]]} renderItem={({ item }) => <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
           </View>
         </Tab>
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[1]}>
