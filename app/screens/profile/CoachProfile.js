@@ -1317,7 +1317,7 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                         })
                     }}>
                         <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Experience</Text>
+                            <Text style={styles.textProfile}>Job Role</Text>
                             <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_yellow }} />
                         </View>
                     </TouchableOpacity>
