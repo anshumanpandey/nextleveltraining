@@ -12,7 +12,6 @@ const MediaTab = ({ posts = [], selectedTab }) => {
 
   useEffect(() => {
     const p = posts
-    .sort((a,b) => moment(a.CreatedDate).format('YYYYMMDD') - moment(b.CreatedDate).format('YYYYMMDD'))
     .map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
@@ -45,7 +44,7 @@ const MediaTab = ({ posts = [], selectedTab }) => {
 
     Promise.all(p)
       .then(posts => {
-        setPostToShow(posts)
+        setPostToShow(posts.sort((a,b) => moment(a.time, 'DD MMM HH:mm').format('YYYYMMDD') - moment(b.time, 'DD MMM HH:mm').format('YYYYMMDD')))
         setParsed(true)
       })
   }, [selectedTab])
