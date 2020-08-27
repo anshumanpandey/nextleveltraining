@@ -45,8 +45,9 @@ const AddTeam = (props) => {
         return errors
       }}
       onSubmit={values => {
-        const data = values.qualifications
-        if (values.otherQualification) data.push(values.otherQualification)
+        const data = values.qualifications || []
+        if (values.otherQualification) data.push({Qualification: values.otherQualification})
+        console.log(data)
         postQulifications({ data })
           .then(() => getUserData())
           .then((r) => {
@@ -92,12 +93,12 @@ const AddTeam = (props) => {
                     </View>
                   );
                 })}
-                {/*<TouchableOpacity style={{ marginBottom: '3%'}} onPress={() => setFieldValue("addOther", !values.addOther)}>
-                  <Text>Other</Text>
-              </TouchableOpacity>*/}
+                <View style={{ height: '15%'}}>
+                  <TouchableOpacity style={{ marginBottom: '3%' }} onPress={() => setFieldValue("addOther", !values.addOther)}>
+                    <Text style={{ fontSize: 18}}>Add Other</Text>
+                  </TouchableOpacity>
 
-                {values.addOther && (
-                  <View style={styles.signup_info_view}>
+                  {values.addOther && (
                     <TextInput
                       style={{ color: "black" }}
                       placeholderTextColor={'rgba(0,0,0,0.3)'}
@@ -106,8 +107,8 @@ const AddTeam = (props) => {
                       onBlur={handleBlur('otherQualification')}
                       value={values.otherQualification}
                     />
-                  </View>
-                )}
+                  )}
+                </View>
               </View>
               {errors.qualifications && touched.qualifications && <ErrorLabel text={errors.qualifications} />}
 

@@ -16,7 +16,7 @@ const styles = {
     borderRadius: Dimension.px100 / 2,
   },
   signup_info_view:{
-    width:Dimension.pro80,
+    width:Dimension.pro100,
     padding:1,
     borderBottomColor:Colors.g_text,
     borderBottomWidth:1,
