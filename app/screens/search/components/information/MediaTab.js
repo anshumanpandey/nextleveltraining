@@ -11,7 +11,9 @@ const MediaTab = ({ posts = [], selectedTab }) => {
   const [postToShow, setPostToShow] = useState([]);
 
   useEffect(() => {
-    const p = posts.map(p => {
+    const p = posts
+    .sort((a,b) => new Moment(a.CreatedDate).format('YYYYMMDD') - new Moment(b.CreatedDate).format('YYYYMMDD'))
+    .map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
           console.log(p)
