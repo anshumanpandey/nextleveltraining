@@ -44,7 +44,7 @@ const MediaTab = ({ posts = [], selectedTab }) => {
 
     Promise.all(p)
       .then(posts => {
-        setPostToShow(posts.sort((a,b) => moment(a.time, 'DD MMM HH:mm').format('YYYYMMDD') - moment(b.time, 'DD MMM HH:mm').format('YYYYMMDD')))
+        setPostToShow(posts.sort((a,b) => moment(b.time, 'DD MMM HH:mm').unix() - moment(a.time, 'DD MMM HH:mm').unix()))
         setParsed(true)
       })
   }, [selectedTab])
