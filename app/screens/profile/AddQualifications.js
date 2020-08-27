@@ -96,7 +96,7 @@ const AddTeam = (props) => {
                     </View>
                   );
                 })}
-                <TouchableOpacity onPress={() => setFieldValue("addOther", values.addOther)}>
+                <TouchableOpacity onPress={() => setFieldValue("addOther", !values.addOther)}>
                   <Text>Other</Text>
                 </TouchableOpacity>
 
