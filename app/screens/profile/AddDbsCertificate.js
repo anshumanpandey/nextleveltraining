@@ -15,6 +15,7 @@ import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../..
 import ImagePicker from 'react-native-image-picker';
 import { syncDbs } from '../../utils/SyncProfileAssets';
 import LoaderImage from 'react-native-image-progress';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const options = [
   "Basic DBS Check",
@@ -88,7 +89,11 @@ const AddTeam = (props) => {
           .then(r => getUserData())
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-            NavigationService.goBack()
+            if (HasCompletedVerificationProcess(profile)) {
+              NavigationService.navigate("AboutMe")
+            } else {
+              NavigationService.goBack()
+            }
             return AsyncStorage.getItem(`DbsCert-file-${profile.Id}`)
           })
           .then((fileString) => {
