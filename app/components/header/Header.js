@@ -2,11 +2,10 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, Text } from 'react-native';
 import {Icon} from 'native-base';
 import styles from './styles';
-import NavigationService from '../../navigation/NavigationService';
 import screen from '../../utils/screen'
 import { useGlobalState } from '../../state/GlobalState';
-import hasFullProfile from '../../utils/perType/profileResolver';
 import Colors from '../../constants/color';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const Header = (props) => {
   const [profile] = useGlobalState('profile')
@@ -19,14 +18,14 @@ const Header = (props) => {
           style={{ marginLeft: '3%'}}
           onPress={() => props.toggleDrawer()}
         >
-          {hasFullProfile(profile) ? <Icon name="menu" type="Entypo" style={styles.header_menu_icon} color="black" /> : undefined}
+          {HasCompletedVerificationProcess(profile) ? <Icon name="menu" type="Entypo" style={styles.header_menu_icon} color="black" /> : undefined}
         </TouchableOpacity>
         {props.title &&
             <Text style={{ zIndex: -2,position: 'absolute',fontSize:20, fontWeight:"bold", textAlign: 'center', width: '100%'}}>
               {props.title}
             </Text>
           }
-        {props.hideCreatePost != true && hasFullProfile(profile) &&<TouchableOpacity
+        {props.hideCreatePost != true && HasCompletedVerificationProcess(profile) &&<TouchableOpacity
         style={{ width: '85%'}}
           onPress={() => props.navigate(screen.CreatePost)}
         >

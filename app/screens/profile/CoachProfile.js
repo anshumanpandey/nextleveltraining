@@ -14,15 +14,8 @@ import moment from 'moment'
 import { Formik, FieldArray } from 'formik';
 import useAxios from 'axios-hooks'
 import ErrorLabel from '../../components/ErrorLabel';
-import Modal from 'react-native-modal';
-import FuzzySearch from 'fuzzy-search';
 import Colors from '../../constants/color.js';
-import MapView, { Marker } from 'react-native-maps';
-import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-community/async-storage';
-import { pickImage } from '../../helpers/ImagePicker';
-import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
-import hasFullProfile from '../../utils/perType/profileResolver';
 import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { syncProfilePic, syncTrainingLocationImage } from '../../utils/SyncProfileAssets';
@@ -30,6 +23,7 @@ import ImagePicker from 'react-native-image-picker';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import Upload from 'react-native-background-upload'
 import { StackActions, NavigationActions, withNavigation } from 'react-navigation';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -106,7 +100,7 @@ class MultiStep extends Component {
             this.stepTwoIsComplete(profile) &&
             this.stepThreeIsComplete(profile) &&
             this.stepFourIsComplete(profile) &&
-            !hasFullProfile(profile)
+            !HasCompletedVerificationProcess(profile)
         ) {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
         }

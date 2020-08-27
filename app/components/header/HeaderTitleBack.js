@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'native-base';
 import styles from './styles';
-import NavigationService from '../../navigation/NavigationService';
-import hasFullProfile from '../../utils/perType/profileResolver';
 import { useGlobalState } from '../../state/GlobalState';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const HeaderTitleBack = ({ title, navigate, onBackPress, ...props }) => {
   const [profile] = useGlobalState('profile')
@@ -12,7 +11,7 @@ const HeaderTitleBack = ({ title, navigate, onBackPress, ...props }) => {
     <View style={styles.header_layout}>
       <View
         style={[styles.header_item_container, { justifyContent: 'flex-start' }]}>
-        {hasFullProfile(profile) ? (
+        {HasCompletedVerificationProcess(profile) ? (
           <TouchableOpacity onPress={() => onBackPress()}>
             <Icon
               name="keyboard-arrow-left"

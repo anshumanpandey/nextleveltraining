@@ -9,6 +9,7 @@ import hasFullProfile from '../../utils/perType/profileResolver.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from '../../navigation/NavigationService.js';
 import Screens from '../../utils/screen.js';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess.js';
 
 
 const Menu = (props) => {
@@ -136,7 +137,7 @@ const Menu = (props) => {
     const [profile] = useGlobalState('profile')
     let finalMenu = []
 
-    if (hasFullProfile(profile)) {
+    if (HasCompletedVerificationProcess(profile)) {
         if (!menulist.find(i => i.title == 'Help')) {
             menulist.unshift(...fullProfileMenu)
         }

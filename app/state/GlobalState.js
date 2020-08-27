@@ -1,6 +1,7 @@
 import { createStore } from 'react-hooks-global-state';
 import AsyncStorage from '@react-native-community/async-storage';
 import hasFullProfile from '../utils/perType/profileResolver';
+import HasCompletedVerificationProcess from '../utils/HasCompletedVerificationProcess';
 
 export const GLOBAL_STATE_ACTIONS = {
     ERROR: 'error',
@@ -46,7 +47,7 @@ const reducer = (state, action) => {
         } else if (action?.state?.Id && action?.state?.Id != state?.profile?.Id) {
           console.log('new ID')
           toggle = !state.toggle
-        } else if(!hasFullProfile(state?.profile)) {
+        } else if(!HasCompletedVerificationProcess(state?.profile)) {
           if (action?.state?.AboutUs && action?.state?.AboutUs != state?.profile?.AboutUs) {
             console.log('no full profile, new aboutUs')
             toggle = !state.toggle
@@ -68,7 +69,7 @@ const reducer = (state, action) => {
           } else if (action?.state?.Availabilities && action?.state?.Availabilities.length != state?.profile?.Availabilities.length) {
             console.log('no full profile, Availabilities')
             toggle = !state.toggle
-          } else if (!hasFullProfile(state?.profile) && action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
+          } else if (!HasCompletedVerificationProcess(state?.profile) && action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
             console.log('no full profile, TrainingLocations')
             toggle = !state.toggle
           }
