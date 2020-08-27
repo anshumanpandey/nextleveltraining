@@ -41,6 +41,10 @@ const Home = (props) => {
     url: '/Users/GetNotifications',
   }, { manual: true })
 
+  const [getUserReq, getUserData] = useAxios({
+    url: '/Users/GetUser',
+  }, { manual: true })
+
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
       refetch();
@@ -88,6 +92,11 @@ const Home = (props) => {
             j.fileType = jsonFile.file.type
             SyncPosts(jsonFile.file, p.Id)
               .then(() => AsyncStorage.removeItem(`post-${p.Id}-file`))
+              .then(() => getUserData())
+              .then((r) => {
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: null })
+              })
               .catch((err) => console.log(err))
           }
           return j
