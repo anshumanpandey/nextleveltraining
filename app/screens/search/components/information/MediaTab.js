@@ -15,7 +15,6 @@ const MediaTab = ({ posts = [], selectedTab }) => {
     .map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
-          console.log(p)
           const j = {
             id: p.Id,
             name: p.Header,
@@ -33,6 +32,7 @@ const MediaTab = ({ posts = [], selectedTab }) => {
               j.fileType = "video"
             }
             j.imageUri = p.MediaURL
+            console.log("nmedia yurl from mediatab", j.imageUri)
           } else if (fileString) {
             const jsonFile = JSON.parse(fileString)
             j.imageUri = jsonFile.file.uri
