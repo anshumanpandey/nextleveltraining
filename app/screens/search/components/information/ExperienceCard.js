@@ -11,7 +11,7 @@ const ExperienceCard = ({title, value, data}) => {
         {data.map((obj, index) => {
           return (
             <View style={styles.expView}>
-              <View style={{paddingHorizontal: 10}}>
+              <View>
                 <Text style={styles.valueText}>{obj.title}</Text>
                 <Text style={styles.valueText}>{obj.desig}</Text>
                 <Text style={styles.valueText}>{obj.date}</Text>
