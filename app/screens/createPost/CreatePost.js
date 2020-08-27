@@ -30,6 +30,10 @@ const Profile = (props) => {
     url: '/Users/GetHashTags',
   })
 
+  const [getUserReq, getUserData] = useAxios({
+    url: '/Users/GetUser',
+  }, { manual: true })
+
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
@@ -109,6 +113,7 @@ const Profile = (props) => {
                 AsyncStorage.setItem(`post-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
               }
             })
+            .then(() => getUserData())
             .then(() => {
               props.navigation.navigate('Home')
               resetForm({ values: {file: null, bodyText: ''} })
