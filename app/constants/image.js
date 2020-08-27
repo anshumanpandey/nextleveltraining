@@ -25,7 +25,7 @@ const Images ={
     HelpIcon:require('../assets/images/help-icon-icon2x.png'),
     LogoutIcon:require('../assets/images/logout-icon-2x.png'),
     Filter:require('../assets/images/filter.jpg'),
-    PlayerPlaceholder:require('../assets/images/player-placeholder.jpeg'),
+    PlayerPlaceholder:require('../assets/images/logo3x.jpeg'),
     PaypalLogo:require('../assets/images/paypal_logo.png'),
 
     //other iamges
