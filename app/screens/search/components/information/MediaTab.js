@@ -12,7 +12,7 @@ const MediaTab = ({ posts = [], selectedTab }) => {
 
   useEffect(() => {
     const p = posts
-    .sort((a,b) => new Moment(a.CreatedDate).format('YYYYMMDD') - new Moment(b.CreatedDate).format('YYYYMMDD'))
+    .sort((a,b) => moment(a.CreatedDate).format('YYYYMMDD') - moment(b.CreatedDate).format('YYYYMMDD'))
     .map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`)
         .then(fileString => {
