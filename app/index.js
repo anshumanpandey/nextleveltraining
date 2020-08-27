@@ -61,6 +61,7 @@ import Colors from './constants/color';
 import VideoScreen from './screens/video/VideoScreen';
 import IsPlayer from './utils/perType/IsPlayer';
 import playerProfileIsComplete from './utils/perType/playerProfileIsComplete';
+import CoachHasCompletedStepFour from './utils/perType/CoachHasCompletedStepFour';
 
 let initialRouteName = null
 let Apps = null
