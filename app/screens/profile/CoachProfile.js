@@ -93,14 +93,6 @@ class MultiStep extends Component {
         this.focusListener?.remove();
     }
 
-    resolveDisabledElementsOnTopMenu = (item, index) => {
-        const profile = getGlobalState('profile')
-
-        if (this.state.selectedSegmentIndex == 0 && !this.stepOneIsComplete(profile)) return true
-        if (this.state.selectedSegmentIndex == 1 && !this.stepTwoIsComplete(profile)) return true
-        if (this.state.selectedSegmentIndex == 2 && !this.stepThreeIsComplete(profile)) return true
-    }
-
     resolveCurrentStep = () => {
         const profile = getGlobalState('profile')
 
@@ -120,7 +112,6 @@ class MultiStep extends Component {
         }
 
         if (this.stepFourIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 4 })
             if (hasFullProfile(profile)) {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
             }
@@ -131,22 +122,16 @@ class MultiStep extends Component {
         }
 
         if (this.stepThreeIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 3 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 3 })
             console.log('step three is completed, jumping to 4')
             return
         }
 
         if (this.stepTwoIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 2 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 2 })
             console.log('step two is completed, jumping to 3')
             return
         }
 
         if (this.stepOneIsComplete(profile)) {
-            this.setState({ selectedSegmentIndex: 1 })
-            this.containerScrollView && this.containerScrollView.scrollTo({ x: Dimensions.get('window').width * 1 })
             console.log('step one is completed, jumping to 2')
         }
 
@@ -251,7 +236,6 @@ class MultiStep extends Component {
     }
 
     handleContainerScroll = async (event) => {
-        if (this.resolveDisabledElementsOnTopMenu()) return
         let _index = event.nativeEvent.contentOffset.x / Dimensions.get('window').width
         if (_index == Math.round(_index)) {
             this.setState({
@@ -292,7 +276,6 @@ class MultiStep extends Component {
                     showsHorizontalScrollIndicator={false}
                     ref={(scrollView) => { this.containerScrollView = scrollView }}
                     onScroll={this.handleContainerScroll}
-                    scrollEnabled={!this.resolveDisabledElementsOnTopMenu()}
                     scrollEventThrottle={16}
                 >
                     <View style={{
@@ -337,7 +320,6 @@ class MultiStep extends Component {
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity
-                                disabled={this.resolveDisabledElementsOnTopMenu(item, index)}
                                 style={{
                                     justifyContent: 'center',
                                     width: Dimensions.get('window').width / 3,
@@ -351,7 +333,6 @@ class MultiStep extends Component {
                                 }} >
                                 <Text style={{
                                     color: this.state.selectedSegmentIndex == index ? Colors.s_blue : TEXT_COLOR,
-                                    opacity: this.resolveDisabledElementsOnTopMenu(item, index) ? 0.5 : 1,
                                     textAlign: 'center'
                                 }}>{item}</Text>
                                 {this.state.selectedSegmentIndex == index && <View style={{
