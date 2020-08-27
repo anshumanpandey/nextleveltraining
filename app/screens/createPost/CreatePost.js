@@ -114,6 +114,10 @@ const Profile = (props) => {
               }
             })
             .then(() => getUserData())
+            .then((r) => {
+              dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+              dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: null })
+            })
             .then(() => {
               props.navigation.navigate('Home')
               resetForm({ values: {file: null, bodyText: ''} })
