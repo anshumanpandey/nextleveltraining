@@ -5,7 +5,6 @@ import { Icon } from 'native-base'
 import Images from '../../constants/image.js'
 import styles from './styles'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState.js';
-import hasFullProfile from '../../utils/perType/profileResolver.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from '../../navigation/NavigationService.js';
 import Screens from '../../utils/screen.js';
