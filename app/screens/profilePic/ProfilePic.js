@@ -88,6 +88,7 @@ const ProfilePicScreen = (props) => {
                             .then((r) => {
                                 console.log(r.data)
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                                NavigationService.navigate("AboutMe")
                                 console.log("new profile")
                             })
                     })

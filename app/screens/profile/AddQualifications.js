@@ -5,14 +5,9 @@ import styles from './styles';
 import { CheckBox } from 'native-base';
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
 import NavigationService from '../../navigation/NavigationService';
-import Dimension from '../../constants/dimensions';
-import AsyncStorage from '@react-native-community/async-storage';
 import ErrorLabel from '../../components/ErrorLabel';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import moment from 'moment'
-import { Picker } from '@react-native-community/picker';
-import DocumentPicker from 'react-native-document-picker';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 
 const options = [
