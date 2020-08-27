@@ -4,7 +4,7 @@ import CoachHasCompletedStepFour from "./perType/CoachHasCompletedStepFour";
 import IsCoach from "./perType/IsCoach";
 
 const HasCompletedVerificationProcess = (profile) => {
-    return (IsPlayer(profile) && playerProfileIsComplete(profile)) || (IsCoach(profile) && profile.AboutUs)
+    return (IsPlayer(profile) && playerProfileIsComplete(profile)) || (IsCoach(profile) && profile.AboutUs != null)
 }
 
 export default HasCompletedVerificationProcess;
