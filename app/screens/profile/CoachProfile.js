@@ -1395,8 +1395,8 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>DBS Certificate</Text>
-                                {profile?.DBSCeritificate && profile?.DBSCeritificate.Verified == true && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
-                                {(!profile?.DBSCeritificate || profile?.DBSCeritificate.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { marginLeft: '5%', fontSize: 20, color: 'red' }]} />}
+                                {profile?.DBSCeritificate && profile?.DBSCeritificate.Verified == true && <Text style={{ marginLeft: '5%', fontSize: 20, color: 'green' }}>Verified</Text>}
+                                {(!profile?.DBSCeritificate || profile?.DBSCeritificate.Verified == false) && <Text style={{ marginLeft: '5%', fontSize: 20, color: 'red' }}>Not Verified</Text>}
                             </View>
                             <Icon
                                 type="EvilIcons"
@@ -1418,8 +1418,8 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>Valid ID</Text>
-                                {profile?.VerificationDocument?.Verified == true && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
-                                {(!profile?.VerificationDocument || profile?.VerificationDocument.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { marginLeft: '5%', fontSize: 20, color: 'red' }]} />}
+                                {profile?.VerificationDocument?.Verified == true && <Text style={{ marginLeft: '5%', fontSize: 20, color: 'green' }}>Verified</Text>}
+                                {(!profile?.VerificationDocument || profile?.VerificationDocument.Verified == false) && <Text style={{ marginLeft: '5%', fontSize: 20, color: 'red' }}>Not Verified</Text>}
                             </View>
                             <Icon
                                 type="EvilIcons"
