@@ -92,9 +92,9 @@ const AddTeam = (props) => {
                     </View>
                   );
                 })}
-                <TouchableOpacity style={{ marginBottom: '3%'}} onPress={() => setFieldValue("addOther", !values.addOther)}>
+                {/*<TouchableOpacity style={{ marginBottom: '3%'}} onPress={() => setFieldValue("addOther", !values.addOther)}>
                   <Text>Other</Text>
-                </TouchableOpacity>
+              </TouchableOpacity>*/}
 
                 {values.addOther && (
                   <View style={styles.signup_info_view}>
