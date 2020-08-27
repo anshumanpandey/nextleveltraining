@@ -68,7 +68,7 @@ const Information = (props) => {
         </View>
         <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2 }}></View>
         <View style={styles.infoContain}>
-          <Image source={{ uri: props.navigation.getParam("ProfileImage") }} style={styles.user_pic} />
+          <Image source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder} style={styles.user_pic} />
           <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', height: 60 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
