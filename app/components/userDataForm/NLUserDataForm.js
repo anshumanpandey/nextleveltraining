@@ -131,6 +131,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                         <NLGooglePlacesAutocomplete
                             hideMap={true}
+                            placeholder={"Home Address"}
                             style={{ backgroundColor: 'transparent' }}
                             defaultValue={values.address}
                             onPress={(data, details) => {
@@ -144,7 +145,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             <TextInput
                                 style={{ color: "black"}}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                placeholder="Post Code"
+                                placeholder="Home Postcode"
                                 onChangeText={handleChange('postCode')}
                                 onBlur={handleBlur('postCode')}
                                 value={values.postCode}

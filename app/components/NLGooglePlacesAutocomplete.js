@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { View } from 'native-base';
 import Colors from '../constants/color';
 
-const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = undefined, style = {} }) => {
+const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = undefined, style = {}, placeholder = null }) => {
     const inputRef = useRef()
     const [currentLocation, setCurrentLocation] = useState()
     const [inputValue, setInputValue] = useState(undefined)
@@ -19,7 +19,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = un
             <GooglePlacesAutocomplete
                 ref={(instance) => { inputRef.current = instance }}
                 style={{ zIndex: 10 }}
-                placeholder={'Search location address'}
+                placeholder={placeholder || 'Search location address'}
                 listViewDisplayed='true'
                 onChangeText={(txt) => setInputValue(txt)}
                 fetchDetails={true}

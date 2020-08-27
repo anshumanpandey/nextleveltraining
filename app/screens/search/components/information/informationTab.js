@@ -8,7 +8,7 @@ import DetailsCard from './DetailsCard';
 import ExperienceCard from './ExperienceCard';
 
 const InformationTab = (props) => {
-  console.log(props.DBSCeritificate)
+  console.log(props)
   return (
     <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
       <View style={styles.tab1Contain}>
@@ -17,15 +17,15 @@ const InformationTab = (props) => {
             <Text style={[styles.tab_text, { color: Colors.s_blue }]}>
               DBS Checked
             </Text>
-            {props.DBSCeritificate.Verified == true && <Icon type="MaterialIcons" name="check" style={styles.icons} />}
-            {props.DBSCeritificate.Verified == false && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
+            {props?.DBSCeritificate?.Verified == true && <Icon type="MaterialIcons" name="check" style={styles.icons} />}
+            {(!props?.DBSCeritificate || props?.DBSCeritificate.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
           </View>
           <View style={[styles.tabs1, { justifyContent: 'center' }]}>
             <Text style={[styles.tab_text, { color: Colors.s_blue }]}>
               Valid ID
             </Text>
-            {props.VerificationDocument.Verified == true && <Icon type="MaterialIcons" name="check" style={styles.icons} />}
-            {props.VerificationDocument.Verified == false && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
+            {props?.VerificationDocument?.Verified == true && <Icon type="MaterialIcons" name="check" style={styles.icons} />}
+            {(!props.VerificationDocument || props?.VerificationDocument?.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
           </View>
         </View>
       </View>
