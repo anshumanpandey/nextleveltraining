@@ -36,6 +36,8 @@ const AddTeam = (props) => {
       innerRef={(r) => formikRef.current = r}
       initialValues={{
         qualifications: props.navigation.getParam("Qualifications"),
+        addOther: props.navigation.getParam("Qualifications") ? props.navigation.getParam("Qualifications").find(q => options.find(o => o.Qualification != q.Qualification)) != null: false,
+        otherQualification: props.navigation.getParam("Qualifications") ? props.navigation.getParam("Qualifications").find(q => options.find(o => o.Qualification != q.Qualification)) : undefined
       }}
       validate={(values) => {
         const errors = {}
