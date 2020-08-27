@@ -38,9 +38,6 @@ const AddTeam = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
-  console.log(profile?.VerificationDocument)
-
-
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
       if (!profile?.VerificationDocument?.path) {

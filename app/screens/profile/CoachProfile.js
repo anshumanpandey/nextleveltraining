@@ -1391,7 +1391,6 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>Qualifications</Text>
-                                {profile?.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
                             </View>
                             <Icon
                                 type="EvilIcons"
@@ -1420,7 +1419,8 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>DBS Certificate</Text>
-                                {profile?.DBSCeritificate && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {profile?.DBSCeritificate && profile?.DBSCeritificate.Verified == true && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {(!profile?.DBSCeritificate || profile?.DBSCeritificate.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
                             </View>
                             <Icon
                                 type="EvilIcons"
@@ -1442,7 +1442,8 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                         <View style={styles.cardInner}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.textProfile}>Valid ID</Text>
-                                {profile?.VerificationDocument && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {profile?.VerificationDocument?.Verified == true && <Icon name='check' type='Feather' style={{ marginLeft: '5%', fontSize: 20, color: 'green' }} />}
+                                {(!profile?.VerificationDocument || profile?.VerificationDocument.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
                             </View>
                             <Icon
                                 type="EvilIcons"

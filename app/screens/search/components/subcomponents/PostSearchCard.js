@@ -126,12 +126,12 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '5%', marginTop: 10 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.ps_dbs_check}>Valid ID</Text>
-            {props?.VerificationDocument?.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
+            {props?.VerificationDocument?.Verified == true && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
             {!props?.VerificationDocument?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.ps_dbs_check}>DBS Checked</Text>
-            {props?.DBSCeritificate?.Verified && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
+            {props?.DBSCeritificate?.Verified == true && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
             {!props?.DBSCeritificate?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
           </View>
         </View>
