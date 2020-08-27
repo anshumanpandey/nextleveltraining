@@ -165,6 +165,7 @@ const PlayerInfoScreen = (props) => {
                     if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
                       j.fileType = "video"
                     }
+                    j.imageUri = p.MediaURL
                   }
                   return j
 
