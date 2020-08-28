@@ -11,11 +11,13 @@ import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
 import moment from 'moment'
 import { compose } from 'redux';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 
 const AddTeam = (props) => {
   const cb = props.navigation.state.params.cb;
+  const [profile] = useGlobalState('profile')
 
   const [postTeamReq, postTeam] = useAxios({
     url: '/Users/SaveExperience',
@@ -72,7 +74,13 @@ const AddTeam = (props) => {
         <>
           <View>
             <HeaderClosePlus
-              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
+              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => {
+                if (HasCompletedVerificationProcess(profile)) {
+                  NavigationService.navigate(props?.navigation?.getParam("goBackTo", undefined))
+                } else {
+                  NavigationService.goBack()
+                }
+              }: undefined}
               isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}

@@ -113,7 +113,13 @@ const AddTeam = (props) => {
           <>
             <View style={{ borderWidth: 0 }}>
               <HeaderClosePlus
-                onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
+                onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => {
+                  if (HasCompletedVerificationProcess(profile)) {
+                    NavigationService.navigate(props?.navigation?.getParam("goBackTo", undefined))
+                  } else {
+                    NavigationService.goBack()
+                  }
+                }: undefined}
                 isLoading={postTeamReq.loading || getUserReq.loading}
                 isSaveButton={true}
                 saveOnPress={handleSubmit}

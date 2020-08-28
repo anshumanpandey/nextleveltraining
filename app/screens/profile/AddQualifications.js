@@ -9,6 +9,7 @@ import ErrorLabel from '../../components/ErrorLabel';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const options = [
   { Qualification: "Level 1" },
@@ -20,6 +21,7 @@ const options = [
 
 
 const AddTeam = (props) => {
+  const [profile] = useGlobalState("profile")
   const formikRef = useRef()
 
   const [postTeamReq, postQulifications] = useAxios({
@@ -39,7 +41,7 @@ const AddTeam = (props) => {
       initialValues={{
         qualifications: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications")?.filter(q => options.map(e => e.Qualification).includes(q.Qualification) == true ) : [],
         addOther: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false) != null: false,
-        otherQualification: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false).Qualification : undefined
+        otherQualification: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false)?.Qualification : undefined
       }}
       validate={(values) => {
         const errors = {}
@@ -69,7 +71,13 @@ const AddTeam = (props) => {
         <>
           <View style={{ flex: 1 }}>
             <HeaderClosePlus
-              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")) : undefined}
+              onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => {
+                if (HasCompletedVerificationProcess(profile)) {
+                  NavigationService.navigate(props?.navigation?.getParam("goBackTo", undefined))
+                } else {
+                  NavigationService.goBack()
+                }
+              } : undefined}
               isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}

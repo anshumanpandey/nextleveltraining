@@ -7,6 +7,7 @@ import NavigationService from '../../navigation/NavigationService';
 import Dimension from '../../constants/dimensions';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import ErrorLabel from '../../components/ErrorLabel';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const URL_MAP = {
   "About Me": {
@@ -66,7 +67,13 @@ const EditInput = (props) => {
   return (
     <View>
       <HeaderClosePlus
-        onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")) : undefined}
+        onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => {
+          if (HasCompletedVerificationProcess(profile)) {
+            NavigationService.navigate(props?.navigation?.getParam("goBackTo", undefined))
+          } else {
+            NavigationService.goBack()
+          }
+        } : undefined}
         isLoading={updateDataReq.loading || getUserReq.loading}
         isSaveButton={true}
         saveOnPress={() => {
