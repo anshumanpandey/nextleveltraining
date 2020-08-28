@@ -91,7 +91,7 @@ const Menu = (props) => {
         },
         {
             id: 4,
-            title: profile.Role == "Player" ? 'Home Pitch Location':'Training Pitch Location',
+            title: profile?.Role == "Player" ? 'Home Pitch Location':'Training Pitch Location',
             icon: `${Images.HomeTrainingIcon}`,
             path: 'PaymentMethod',
             onPress: (props, profile) => {
