@@ -1,5 +1,5 @@
 import React, { Component, useRef, useEffect } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, Platform } from 'react-native'
 import NLGooglePlacesAutocomplete from '../NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { Formik } from 'formik';
@@ -92,6 +92,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                     delete values.password
                 }
                 values.deviceId = DeviceInfo.getUniqueId()
+                values.deviceType = Platform.OS
                 return register({ data: values })
                     .then((r) => {
                         if (action == 'register') {

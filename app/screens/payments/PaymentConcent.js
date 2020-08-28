@@ -15,6 +15,7 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import { NavigationActions, StackActions } from 'react-navigation';
 var qs = require('qs');
+var UrlParser = require('url-parse');
 
 const simpleAxiosHook = makeUseAxios()
 
@@ -133,7 +134,8 @@ const PaymentConcentScreen = (props) => {
               console.log('webview', url)
               if (!url) return;
 
-              //console.log(new URL(url))
+              const parsed = new UrlParser(url)
+              const urlParams = qs.parse(parsed.query.substring(1))
 
               if (url.includes('payment_success')) {
                 console.log('success')
@@ -147,7 +149,7 @@ const PaymentConcentScreen = (props) => {
                   "trainingLocationID": props.navigation.getParam('selectedLocation').id,
                   "amount": props.navigation.getParam('coach').Rate,
                   "paymentStatus": "Processed",
-                  "transactionID": qs.parse(url).PayerID,
+                  "transactionID": urlParams.paymentId,
                   "bookingStatus": "Done"
                 }
                 saveBooking({ data })

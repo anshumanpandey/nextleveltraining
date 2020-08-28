@@ -31,8 +31,8 @@ export const GET_PAYPAL_JSON = (coach, meta, extras) => {
         }],
         "note_to_payer": "Contact us for any questions on your order.",
         "redirect_urls": {
-            "return_url": "http://44.233.116.105/NextLevelTrainingApi/pages/payment_success.html",
-            "cancel_url": "http://44.233.116.105/NextLevelTrainingApi/pages/payment_failure.html",
+            "return_url": "https://mobileapi.nextlevelfootballtraining.co.uk/NextLevelTrainingApi/pages/payment_success.html",
+            "cancel_url": "https://mobileapi.nextlevelfootballtraining.co.uk/NextLevelTrainingApi/pages/payment_failure.html",
         }
     }
 };

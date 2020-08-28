@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native'
 import Images from '../../constants/image'
 import styles from './styles.js';
 import useAxios from 'axios-hooks'
@@ -95,7 +95,8 @@ const Signup = (props) => {
             "name": "",
             "email": appleAuthRequestResponse.email,
             "role": props.navigation.getParam('role'),
-            deviceID: DeviceInfo.getUniqueId()
+            deviceID: DeviceInfo.getUniqueId(),
+            deviceType: Platform.OS
           }
         })
           .then((r) => {
@@ -153,7 +154,7 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -188,6 +189,7 @@ const Signup = (props) => {
                       "role": props.navigation.getParam('role'),
                       "authenticationToken": userInfo.serverAuthCode,
                       deviceId: DeviceInfo.getUniqueId(),
+                      deviceType: Platform.OS,
                     }
                   })
                     .then((r) => {

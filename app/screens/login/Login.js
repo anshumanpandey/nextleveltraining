@@ -105,7 +105,8 @@ const Login = (props) => {
             "name": "",
             "email": appleAuthRequestResponse.email,
             "role": props.navigation.getParam('role'),
-            deviceID: DeviceInfo.getUniqueId()
+            deviceID: DeviceInfo.getUniqueId(),
+            deviceType: Platform.OS
           }
         })
           .then((r) => {
@@ -154,6 +155,7 @@ const Login = (props) => {
             return errors
           }}
           onSubmit={values => {
+            values.deviceType = Platform.OS
             login({ data: values })
               .then((r) => {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
@@ -239,7 +241,7 @@ const Login = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => FBlogin({ data: { deviceType: Platform.OS,deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -268,7 +270,8 @@ const Login = (props) => {
                       "picture": userInfo.user.photo,
                       "role": props.navigation.getParam('role'),
                       "authenticationToken": userInfo.serverAuthCode,
-                      deviceID: DeviceInfo.getUniqueId()
+                      deviceID: DeviceInfo.getUniqueId(),
+                      deviceType: Platform.OS
                     }
                   })
                     .then((r) => {

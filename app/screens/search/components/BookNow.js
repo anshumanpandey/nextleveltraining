@@ -91,6 +91,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }
 
   const filterLocationCoachCanTravel = (location) => {
+    if (!coach?.TravelMile?.TravelDistance) return true
     const startPoint = { latitude: coach.Lat, longitude: coach.Lng }
     const endPoint = { latitude: location.Lat, longitude: location.Lng }
     const milesAwayFromLocation = getDistance(startPoint, endPoint)

@@ -10,7 +10,7 @@ import moment from 'moment'
 import PostSearchCard from './components/subcomponents/PostSearchCard';
 import { FlatList } from 'react-native-gesture-handler';
 import NavigationService from '../../navigation/NavigationService';
-
+import getDistance from 'geolib/es/getDistance';
 
 const NoResultMessage = () => <Text style={{ textAlign: 'center', fontSize: 22, marginTop: '10%' }}>No results</Text>
 
@@ -111,13 +111,53 @@ const Search = (props) => {
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[0]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[0]]} renderItem={({ item }) => <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList
+              keyExtractor={(item) => item.Id}
+              data={searchCoachesReq.data[propsToIterate[0]]
+                .sort((a,b) => {
+                  if (propsToIterate[0] == "Player" || !a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
+
+                  const distanceToCoachA = getDistance(
+                    { latitude: profile?.Lat, longitude: profile?.Lng, },
+                    { latitude: a.Lat, longitude: a.Lng }
+                  )
+
+                  const distanceToCoachB = getDistance(
+                    { latitude: profile?.Lat, longitude: profile?.Lng, },
+                    { latitude: b.Lat, longitude: b.Lng }
+                  )
+
+                  console.log("distanceToCoachA",distanceToCoachA)
+                  console.log("distanceToCoachA",distanceToCoachA)
+            
+                  return distanceToCoachA - distanceToCoachB
+                })
+                } renderItem={({ item }) => <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
           </View>
         </Tab>
         <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[1]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length == 0 && <NoResultMessage />}
-            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList keyExtractor={(item) => item.Id} data={searchCoachesReq.data[propsToIterate[1]]} renderItem={({ item }) => <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[1], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
+            {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList
+              keyExtractor={(item) => item.Id}
+              data={searchCoachesReq
+                .data[propsToIterate[1]]
+                .sort((a,b) => {
+                  if (propsToIterate[1] == "Player" || !a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
+                  
+                  const distanceToCoachA = getDistance(
+                    { latitude: profile?.Lat, longitude: profile?.Lng, },
+                    { latitude: a.Lat, longitude: a.Lng }
+                  )
+
+                  const distanceToCoachB = getDistance(
+                    { latitude: profile?.Lat, longitude: profile?.Lng, },
+                    { latitude: b.Lat, longitude: b.Lng }
+                  )
+            
+                  return distanceToCoachA - distanceToCoachB
+                })
+              } renderItem={({ item }) => <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[1], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
           </View>
         </Tab>
 
