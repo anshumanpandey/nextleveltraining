@@ -172,14 +172,14 @@ const Profile = (props) => {
 
                 {values.file && !values.file.type.includes('video') && (
                   <View style={{ justifyContent: 'center' }}>
-                    <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }} />
+                    <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 35 }} />
                   </View>
                 )}
 
                 {values.file && values.file.type.includes('video') && (
                   <LoadableVideo
                     source={{ uri: values.file.uri, }}   // Can be a URL or a local file.
-                    style={{ flex: 2, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 50 }}
+                    style={{ flex: 2, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 35 }}
                   />
                 )}
 
