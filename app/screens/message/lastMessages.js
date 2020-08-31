@@ -15,6 +15,8 @@ const LastMessage = (props) => {
     const [profile] = useGlobalState('profile')
     const [profileId, setProfileId] = useState('')
 
+    console.log(getUserReq.data)
+
     function Item({ item, key, id }) {
        // alert(id)
         return (

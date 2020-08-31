@@ -166,11 +166,6 @@ const PlayerInfoScreen = (props) => {
                       j.fileType = "video"
                     }
                     j.imageUri = p.MediaURL
-                  } else if (fileString && JSON.parse(fileString).file) {
-                    console.log("no media url", fileString)
-                    const jsonFile = JSON.parse(fileString)
-                    j.imageUri = jsonFile.file.uri
-                    j.fileType = jsonFile.file.type
                   }
                   return j
 

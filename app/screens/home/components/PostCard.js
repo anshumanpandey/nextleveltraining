@@ -16,13 +16,15 @@ import Video from 'react-native-video';
 import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
 import ModalVideo from '../../../components/ModalVideo';
+import NavigationService from '../../../navigation/NavigationService';
 
-const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
+const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [profile] = useGlobalState('profile')
+  const [token] = useGlobalState('token')
 
   const [{ loading }, postLike] = useAxios({
     url: '/Users/SaveLikebyPost',
@@ -45,19 +47,34 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
     setTriggerChange(o => !o)
   }, [item.profileImage])
 
-
   return (
     <View style={styles.post_container}>
       <View style={styles.post_card_container}>
         <View style={{ flexDirection: 'row', paddingHorizontal: '5%' }}>
-          {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
-          {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+          <TouchableOpacity onPress={() => {
+            if (item.poster.Role == "Player") {
+              NavigationService.navigate("PlayerInfo", { player: item.poster })
+            } else {
+              NavigationService.navigate("Information", { ...item.poster })
+            }
+          }}>
+            {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+          </TouchableOpacity>
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <View style={styles.post_title}>
-                <Text style={styles.post_title_name}>{item.createdBy}</Text>
-                <Text style={styles.post_title_time}>{item.time}</Text>
-              </View>
+              <TouchableOpacity onPress={() => {
+                if (item.poster.Role == "Player") {
+                  NavigationService.navigate("PlayerInfo", { player: item.poster })
+                } else {
+                  NavigationService.navigate("Information", { ...item.poster })
+                }
+              }}>
+                <View style={styles.post_title}>
+                  <Text style={styles.post_title_name}>{item.createdBy}</Text>
+                  <Text style={styles.post_title_time}>{item.time}</Text>
+                </View>
+              </TouchableOpacity>
               <TouchableOpacity disabled={hidePostReq.loading} onPress={() => {
                 Alert.alert("", "Are you sure you want to hide this post?", [
                   {
@@ -86,11 +103,11 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
           parse={[
             {
               pattern: /@[A-Za-z0-9._-]*/,
-              style: { color: Colors.s_blue, fontWeight: 'bold'}
+              style: { color: Colors.s_blue, fontWeight: 'bold' }
             },
             {
               pattern: /#(\w+)/,
-              style: { color: Colors.s_blue, fontWeight: 'bold'}
+              style: { color: Colors.s_blue, fontWeight: 'bold' }
             }
           ]}
         >
@@ -140,7 +157,7 @@ const PostCard = ({ item, onClickItem, refreshCb,onPressOfComment }) => {
                 </>
               )}
               {videoError == true && (
-                <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 50, justifyContent: 'center'}}>
+                <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', height: 50, justifyContent: 'center' }}>
                   <Text style={{ textAlign: 'center', opacity: 0.8, color: 'white' }}>Error Loading Video :(</Text>
                 </View>
               )}

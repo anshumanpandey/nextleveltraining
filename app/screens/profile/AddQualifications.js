@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { Input as TextInput } from 'native-base';
+import { Input as TextInput, Icon } from 'native-base';
 import styles from './styles';
 import { CheckBox } from 'native-base';
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
 import NavigationService from '../../navigation/NavigationService';
 import ErrorLabel from '../../components/ErrorLabel';
-import { Formik } from 'formik';
+import { Formik, FieldArray } from 'formik';
 import useAxios from 'axios-hooks'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const options = [
   { Qualification: "Level 1" },
@@ -39,9 +40,10 @@ const AddTeam = (props) => {
     <Formik
       innerRef={(r) => formikRef.current = r}
       initialValues={{
-        qualifications: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications")?.filter(q => options.map(e => e.Qualification).includes(q.Qualification) == true ) : [],
-        addOther: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false) != null: false,
-        otherQualification: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false)?.Qualification : undefined
+        qualifications: props.navigation.getParam("Qualifications", []).length != 0 ? props.navigation.getParam("Qualifications")?.filter(q => options.map(e => e.Qualification).includes(q.Qualification) == true) : [],
+        addOther: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false) != null : false,
+        otherQualification: props.navigation.getParam("Qualifications", []).length ? props.navigation.getParam("Qualifications").find(q => options.map(e => e.Qualification).includes(q.Qualification) == false)?.Qualification : undefined,
+        extraQualifications: props.navigation.getParam("Qualifications", []).length != 0 ? props.navigation.getParam("Qualifications")?.filter(q => options.map(e => e.Qualification).includes(q.Qualification) == false) : [],
       }}
       validate={(values) => {
         const errors = {}
@@ -52,7 +54,7 @@ const AddTeam = (props) => {
       }}
       onSubmit={values => {
         const data = values.qualifications || []
-        if (values.otherQualification) data.push({Qualification: values.otherQualification})
+        data.push(...values.extraQualifications)
         console.log(data)
         postQulifications({ data })
           .then(() => getUserData())
@@ -69,7 +71,7 @@ const AddTeam = (props) => {
     >
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <>
-          <View style={{ flex: 1 }}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <HeaderClosePlus
               onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => {
                 if (HasCompletedVerificationProcess(profile)) {
@@ -109,27 +111,54 @@ const AddTeam = (props) => {
                     </View>
                   );
                 })}
-                <View style={{ height: '15%'}}>
-                  <TouchableOpacity style={{ marginBottom: '3%' }} onPress={() => setFieldValue("addOther", !values.addOther)}>
-                    <Text style={{ fontSize: 18}}>Add Other</Text>
-                  </TouchableOpacity>
-
-                  {values.addOther && (
-                    <TextInput
-                      style={{ color: "black" }}
-                      placeholderTextColor={'rgba(0,0,0,0.3)'}
-                      placeholder="Other Qualification"
-                      onChangeText={handleChange('otherQualification')}
-                      onBlur={handleBlur('otherQualification')}
-                      value={values.otherQualification}
-                    />
-                  )}
+                <View style={{ height: '15%' }}>
+                  <FieldArray
+                    name="extraQualifications"
+                    render={arrayHelpers => (
+                      <View>
+                        {values.extraQualifications && values.extraQualifications.length > 0 ? (
+                          values.extraQualifications.map((extraQualification, index) => (
+                            <View key={index} style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: '5%', marginBottom: '4%' }}>
+                              <View style={{ width: '85%', height: 35 }}>
+                                <TextInput
+                                  onChangeText={(txt) => arrayHelpers.replace(index, { Qualification: txt })}
+                                  value={extraQualification.Qualification}
+                                  placeholder="Search..."
+                                  style={{
+                                    width: '100%',
+                                    fontSize: 16,
+                                    height: 55,
+                                    color: 'black'
+                                  }}
+                                />
+                              </View>
+                              <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity
+                                  style={{ padding: '3%', marginRight: '5%'}}
+                                  type="button"
+                                  onPress={() => arrayHelpers.remove(index)}>
+                                  <Icon type="AntDesign" name="close" style={{ fontSize: 22 }} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ padding: '3%'}} onPress={() => arrayHelpers.insert(index, { Qualification: '' })}>
+                                  <Icon type="AntDesign" name="plus" style={{ fontSize: 22 }} />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ))
+                        ) : (
+                            <TouchableOpacity style={{ marginBottom: '3%' }} onPress={() => arrayHelpers.push({ Qualification: ''})}>
+                              <Text style={{ fontSize: 18 }}>Add Extra Qualification</Text>
+                            </TouchableOpacity>
+                          )}
+                      </View>
+                    )}
+                  />
                 </View>
               </View>
               {errors.qualifications && touched.qualifications && <ErrorLabel text={errors.qualifications} />}
 
             </View>
-          </View>
+          </ScrollView>
         </>
       )}
     </Formik>

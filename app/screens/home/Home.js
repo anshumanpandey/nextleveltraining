@@ -24,8 +24,11 @@ import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../..
 import screen from '../../utils/screen'
 import Video from 'react-native-video';
 import Colors from '../../constants/color';
-import SyncProfileAssets from '../../utils/SyncProfileAssets';
+import PushNotification from 'react-native-push-notification';
 
+PushNotification.popInitialNotification((notification) => {
+  console.log('Initial Notification', notification);
+});
 
 const Home = (props) => {
   const [visibleModal, setVisibleModal] = useState(false);
@@ -77,6 +80,7 @@ const Home = (props) => {
             profileImage: p.ProfileImage,
             comments: p.Comments || [],
             likes: p.Likes || [],
+            poster: p.Poster
           }
 
           if (p.MediaURL) {

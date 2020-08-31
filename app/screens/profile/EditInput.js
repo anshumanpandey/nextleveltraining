@@ -13,15 +13,6 @@ const URL_MAP = {
   "About Me": {
     url: "/Users/ChangeAboutUs",
     getParams: (values) => ({ aboutUs: values }),
-    validate: (values) => {
-      let str = values.aboutUs.replace(/(^\s*)|(\s*$)/gi, "");
-      str = str.replace(/[ ]{2,}/gi, " ");
-      str = str.replace(/\n /, "\n");
-      if (str.split(' ').length > 10) {
-        return "Can be max of 10 words"
-      }
-      return null
-    }
   },
   Achievements: {
     url: "/Users/ChangeAchievement",

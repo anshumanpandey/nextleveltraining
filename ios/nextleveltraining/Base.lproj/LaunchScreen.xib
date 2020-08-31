@@ -13,7 +13,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Skype_Picture_2020_07_20T18_38_54_467Z" translatesAutoresizingMaskIntoConstraints="NO" id="p06-hm-FYR">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sokash1" translatesAutoresizingMaskIntoConstraints="NO" id="p06-hm-FYR">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                 </imageView>
             </subviews>
@@ -30,6 +30,6 @@
         </view>
     </objects>
     <resources>
-        <image name="Skype_Picture_2020_07_20T18_38_54_467Z" width="1024" height="1024"/>
+        <image name="sokash1" width="542.5" height="926.5"/>
     </resources>
 </document>

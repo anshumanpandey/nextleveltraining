@@ -113,7 +113,7 @@ class MultiStep extends Component {
             return
         }
 
-        if (this.stepFourIsComplete(profile)) {
+        if (this.stepFourIsComplete(profile) && HasCompletedVerificationProcess(profile)) {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
             NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
@@ -260,7 +260,9 @@ class MultiStep extends Component {
 
     //tracking location
     trackingLocation() {
-        return (<TrainingLocationForm setSubmitFn={(fn) => this.setState({ traininLocationSubmitFn: fn })} />)
+        const profile = getGlobalState('profile')
+
+        return (<TrainingLocationForm {...profile.TrainingLocations[0]} setSubmitFn={(fn) => this.setState({ traininLocationSubmitFn: fn })} />)
     }
 
 
@@ -1059,7 +1061,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                     trainingLocationId: params.Id || undefined,
                     locationName: params.LocationName || "",
                     address: params.LocationAddress || "",
-                    file: null,
+                    file: params.ImageUrl || null,
                     lat: params.Lat || 0,
                     lng: params.Lng || 0
                 }}
