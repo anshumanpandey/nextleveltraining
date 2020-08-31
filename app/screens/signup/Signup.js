@@ -19,6 +19,7 @@ import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
 var jwtDecode = require('jwt-decode');
 import messaging from '@react-native-firebase/messaging';
+import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
@@ -91,7 +92,7 @@ const Signup = (props) => {
         } else if (await AsyncStorage.getItem("appleUserName")) {
           appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
         }
-        const deviceToken = await messaging().getToken()
+        const deviceToken = await messaging().getToken(FIREBASE_SENDER_ID)
 
         loginWithApple({
           data: {
@@ -159,7 +160,7 @@ const Signup = (props) => {
                   return AccessToken.getCurrentAccessToken()
                 })
                   .then(({ accessToken }) => {
-                    return messaging().getToken().then(deviceToken => ({ deviceToken, accessToken }))
+                    return messaging().getToken(FIREBASE_SENDER_ID).then(deviceToken => ({ deviceToken, accessToken }))
                   })
                   .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
@@ -185,7 +186,7 @@ const Signup = (props) => {
               onPress={async () => {
                 setSocialLogin(true)
                 try {
-                  const deviceToken = await messaging().getToken()
+                  const deviceToken = await messaging().getToken(FIREBASE_SENDER_ID)
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
                   console.log(userInfo)

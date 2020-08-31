@@ -1,6 +1,8 @@
 import firebase from '@react-native-firebase/app';
 import iid from '@react-native-firebase/iid';
 
+export const FIREBASE_SENDER_ID = "932426364308"
+
 // Your secondary Firebase project credentials...
 const credentials = {
   clientId: '932426364308-earsrl3rg5f21a6v2s9n8jfql7aet2ot.apps.googleusercontent.com',
