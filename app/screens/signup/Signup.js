@@ -18,6 +18,7 @@ import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
 var jwtDecode = require('jwt-decode');
+import messaging from '@react-native-firebase/messaging';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
@@ -90,13 +91,16 @@ const Signup = (props) => {
         } else if (await AsyncStorage.getItem("appleUserName")) {
           appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
         }
+        const deviceToken = await messaging().getToken()
+
         loginWithApple({
           data: {
             "name": "",
             "email": appleAuthRequestResponse.email,
             "role": props.navigation.getParam('role'),
             deviceID: DeviceInfo.getUniqueId(),
-            deviceType: Platform.OS
+            deviceType: Platform.OS,
+            deviceToken
           }
         })
           .then((r) => {
@@ -154,7 +158,10 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => FBlogin({ data: { deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), deviceId: DeviceInfo.getUniqueId(), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => {
+                    return messaging().getToken().then(deviceToken => ({ deviceToken, accessToken }))
+                  })
+                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -178,6 +185,7 @@ const Signup = (props) => {
               onPress={async () => {
                 setSocialLogin(true)
                 try {
+                  const deviceToken = await messaging().getToken()
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
                   console.log(userInfo)
@@ -190,6 +198,7 @@ const Signup = (props) => {
                       "authenticationToken": userInfo.serverAuthCode,
                       deviceId: DeviceInfo.getUniqueId(),
                       deviceType: Platform.OS,
+                      deviceToken
                     }
                   })
                     .then((r) => {

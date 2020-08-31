@@ -1,43 +1,35 @@
 {
   "project_info": {
-    "project_number": "932426364308",
-    "firebase_url": "https://nextleveltraining-cc7ce.firebaseio.com",
-    "project_id": "nextleveltraining-cc7ce",
-    "storage_bucket": "nextleveltraining-cc7ce.appspot.com"
+    "project_number": "981975510723",
+    "firebase_url": "https://nextlevel-b6900.firebaseio.com",
+    "project_id": "nextlevel-b6900",
+    "storage_bucket": "nextlevel-b6900.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:932426364308:android:8704130440b24fabb78b81",
+        "mobilesdk_app_id": "1:981975510723:android:306ce3793e2fa1f95c7c76",
         "android_client_info": {
           "package_name": "com.nextleveltraining"
         }
       },
       "oauth_client": [
         {
-          "client_id": "932426364308-earsrl3rg5f21a6v2s9n8jfql7aet2ot.apps.googleusercontent.com",
+          "client_id": "981975510723-068urnq98ab357j3nn3ul25537amvrgh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDrwsmUIARbeJOQtt6rHw4dkvjda6RRSAM"
+          "current_key": "AIzaSyBQWblbRiJlXmxMGqZQavNnaG0mpkd3qQk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "932426364308-earsrl3rg5f21a6v2s9n8jfql7aet2ot.apps.googleusercontent.com",
+              "client_id": "981975510723-068urnq98ab357j3nn3ul25537amvrgh.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "932426364308-blaq4fevoqltp0lr45l8eo6cn4vbr3rd.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.nextleveltraining",
-                "app_store_id": "1528078013"
-              }
             }
           ]
         }
