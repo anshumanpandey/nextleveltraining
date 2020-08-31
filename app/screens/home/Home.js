@@ -25,10 +25,7 @@ import screen from '../../utils/screen'
 import Video from 'react-native-video';
 import Colors from '../../constants/color';
 import PushNotification from 'react-native-push-notification';
-
-PushNotification.popInitialNotification((notification) => {
-  console.log('Initial Notification', notification);
-});
+import messaging from '@react-native-firebase/messaging';
 
 const Home = (props) => {
   const [visibleModal, setVisibleModal] = useState(false);
@@ -48,10 +45,15 @@ const Home = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
+  messaging().getToken().then(d => console.log("token",d))
+
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
       refetch();
       getNotifications();
+      PushNotification.popInitialNotification((notification) => {
+        console.log('Initial Notification', notification);
+      });
     });
     return () => focusListener?.remove();
   }, [])

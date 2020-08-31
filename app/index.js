@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './utils/PushNotifications';
+//import './utils/Firebase';
 import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
