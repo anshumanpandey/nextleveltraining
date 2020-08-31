@@ -6,6 +6,7 @@ import useAxios from 'axios-hooks'
 import placeholder from '../../assets/images/player-placeholder.jpeg'
 
 import { useGlobalState } from "../../state/GlobalState"
+import NavigationService from '../../navigation/NavigationService.js';
 
 const LastMessage = (props) => {
 
@@ -15,26 +16,32 @@ const LastMessage = (props) => {
     const [profile] = useGlobalState('profile')
     const [profileId, setProfileId] = useState('')
 
-    console.log(getUserReq.data)
-
     function Item({ item, key, id }) {
-       // alert(id)
+        // alert(id)
         return (
             <View style={styles.flatList} key={key}>
-                <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic || item.SenderID === profileId && item.ReceiverProfilePic===''  || item.RecieverId === profileId && item.SenderProfilePic==='' ?  placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
+                <TouchableOpacity onPress={() => {
+                    if (item.Sender.Role == "Player") {
+                        NavigationService.navigate("PlayerInfo", { player: item.Sender })
+                    } else {
+                        NavigationService.navigate("Information", { ...item.Sender })
+                    }
+                }} style={{ flexDirection: 'row' }}>
+                    <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic || item.SenderID === profileId && item.ReceiverProfilePic === '' || item.RecieverId === profileId && item.SenderProfilePic === '' ? placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
+                    <View style={styles.innerRow}>
+                        <Text style={styles.screenTitle}>
+                            {item.SenderID === profileId ? item.ReceiverName : item.SenderName}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.container_text} onPress={() => props.navigation.navigate('Chat', {
                     RecieverId: item.RecieverID === profileId ? item.SenderID : item.RecieverID,
                     SenderId: profileId,
                     friendName: item.SenderID === profileId ? item.ReceiverName : item.SenderName
                 })}>
-                    <View style={styles.innerRow}>
-                        <Text style={styles.screenTitle}>
-                            {item.SenderID === profileId ? item.ReceiverName : item.SenderName}
-                        </Text>
-                        <Text style={styles.description}>
-                            {new Date(item.SentDate).toLocaleDateString()}
-                        </Text>
-                    </View>
+                    <Text style={styles.description}>
+                        {new Date(item.SentDate).toLocaleDateString()}
+                    </Text>
                     <Text style={styles.description}>
                         {item.Message}
                     </Text>
@@ -58,7 +65,7 @@ const LastMessage = (props) => {
         });
 
         return () => focusListener.remove()
-       
+
         /*const intervalId = setInterval(() => {
         getUserData()
         setProfileId(profile.Id)

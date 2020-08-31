@@ -24,8 +24,7 @@ const styles =StyleSheet.create({
     container_text: {
         flex: 1,
         flexDirection: 'column',
-        marginLeft:12 ,
-        //justifyContent: 'center',
+        alignItems: 'flex-end'
     },
     innerRow:{
      flexDirection:"row",
@@ -57,6 +56,7 @@ const styles =StyleSheet.create({
         padding: 10,
         height: 90,
         flexDirection: 'row',
+        justifyContent: 'space-between',
         
     },
     flatListNotification:{
