@@ -20,6 +20,7 @@ var convert = require('convert-units')
 
 const Information = (props) => {
   const [profile] = useGlobalState('profile')
+  const [token] = useGlobalState('token')
   const [selectedTab, setSelectedTab] = useState(0);
   const [milesAway, setMilesAway] = useState();
   const activeColor = Colors.s_blue;
@@ -53,7 +54,7 @@ const Information = (props) => {
     return () => focusListener?.remove();
   }, [])
 
-  //console.log(JSON.stringify(props.navigation.state.params))
+  console.log(JSON.stringify(props.navigation.state.params.Posts))
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>

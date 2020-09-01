@@ -5,6 +5,7 @@ import Header from '../../components/header/Header'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { Spinner } from 'native-base'
 import { AvailabiltyForm } from '../profile/CoachProfile'
+import NavigationService from '../../navigation/NavigationService'
 
 const AvailavilityScreen = (props) => {
     const [submitFn, setSubmitFn] = useState();
@@ -27,7 +28,12 @@ const AvailavilityScreen = (props) => {
                                     if (submitFn) {
                                         submitFn()
                                             .then(() => setIsSaving(false))
-                                            .catch(() => setIsSaving(false))
+                                            .catch((err) => {
+                                                if (err == "NO_DATA") {
+                                                NavigationService.navigate("Home")
+                                                }
+                                                setIsSaving(false)
+                                            })
                                     }
                                 }}>
                                 <Text style={{ color: 'black', opacity: isSaving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>

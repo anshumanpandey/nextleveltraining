@@ -143,7 +143,8 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
                 currentPosition={1}
                 controls={true}
                 resizeMode="contain"
-                onError={() => {
+                onError={(err) => {
+                  console.log(err)
                   setVideoError(true)
                 }}               // Callback when video cannot be loaded
                 style={{

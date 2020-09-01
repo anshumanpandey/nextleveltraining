@@ -28,7 +28,7 @@ const MediaTab = ({ posts = [], selectedTab }) => {
 
           if (p.MediaURL) {
             j.fileType = "image"
-            if (p.MediaURL.includes('MOV')) {
+            if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
               j.fileType = "video"
             }
             j.imageUri = p.MediaURL

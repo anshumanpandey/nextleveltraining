@@ -63,9 +63,11 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
                 <View style={{ marginLeft: '4%' }}>
-                  <View style={{ backgroundColor: Colors.s_blue, position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: 'white', fontSize: 12 }}>{props.Bookings.length}</Text>
-                  </View>
+                  {props.Role == "Coach" && (
+                    <View style={{ backgroundColor: Colors.s_blue, position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
+                      <Text style={{ color: 'white', fontSize: 12 }}>{props?.Level}</Text>
+                    </View>
+                  )}
                 </View>
               </View>
               <View style={{ width: '80%' }}>

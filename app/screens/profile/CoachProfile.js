@@ -475,7 +475,7 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
 
     const availabiltySaveFunction = useCallback(() => {
         const formatDate = (d) => moment(d).utcOffset(0, true).format('hh:mm A')
-        if (Object.keys(errorsDic).length == 0) return Promise.reject()
+        if (Object.keys(errorsDic).length == 0) return Promise.reject("NO_DATA")
         if (Object.keys(errorsDic).some(k => errorsDic[k] != undefined)) return Promise.reject()
         setSaving(true)
         const data = []
