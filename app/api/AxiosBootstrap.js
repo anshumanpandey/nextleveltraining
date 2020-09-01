@@ -3,6 +3,7 @@ import Axios from 'axios'
 import { getGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../state/GlobalState';
 
 export const API_BASE_URL = "https://mobileapi.nextlevelfootballtraining.co.uk/api"
+//export const API_BASE_URL = "https://44.233.116.105/NextLevelTrainingApi/api"
 export const axiosInstance = Axios.create({
     baseURL: API_BASE_URL
 })
