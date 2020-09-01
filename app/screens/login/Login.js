@@ -159,8 +159,9 @@ const Login = (props) => {
 
             return errors
           }}
-          onSubmit={values => {
-            messaging().getToken(FIREBASE_SENDER_ID)
+          onSubmit={async values => {
+            messaging()
+            .getToken(FIREBASE_SENDER_ID)
             .then(deviceToken => {
               values.deviceType = Platform.OS
               values.deviceID = DeviceInfo.getUniqueId()

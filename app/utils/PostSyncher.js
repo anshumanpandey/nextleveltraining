@@ -1,5 +1,6 @@
 import Upload from 'react-native-background-upload'
 import { getGlobalState } from '../state/GlobalState'
+import { API_BASE_URL } from '../api/AxiosBootstrap'
 
 const fileUploaderMap = new Map()
 
@@ -9,7 +10,7 @@ const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
     const { uri } = fileObject
 
     const options = {
-        url: 'http://44.233.116.105/NextLevelTrainingApi/api/Users/UploadFile',
+        url: `${API_BASE_URL}/Users/UploadFile`,
         path: uri,
         method: 'POST',
         type: 'multipart',

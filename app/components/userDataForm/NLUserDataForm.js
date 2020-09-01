@@ -12,6 +12,8 @@ import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalSta
 import DeviceInfo from 'react-native-device-info';
 import Screens from '../../utils/screen';
 import InfoLabel from '../InfoLabel';
+import messaging from '@react-native-firebase/messaging';
+import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
 
 const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
     const formikRef = useRef()
@@ -86,13 +88,16 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                 return errors
             }}
-            onSubmit={values => {
+            onSubmit={async values => {
+                const deviceToken = await messaging().getToken(FIREBASE_SENDER_ID)
+
                 console.log('saving user data')
                 if (props.hidePasswordInput == true) {
                     delete values.password
                 }
                 values.deviceId = DeviceInfo.getUniqueId()
                 values.deviceType = Platform.OS
+                values.deviceToken = deviceToken
                 return register({ data: values })
                     .then((r) => {
                         if (action == 'register') {
