@@ -3,10 +3,10 @@ import { View, Text, Image, FlatList, TouchableHighlight, TouchableOpacity, Scro
 import styles from './styles.js';
 import Header from '../../components/header/Header'
 import useAxios from 'axios-hooks'
-import placeholder from '../../assets/images/player-placeholder.jpeg'
 
 import { useGlobalState } from "../../state/GlobalState"
 import NavigationService from '../../navigation/NavigationService.js';
+import Images from '../../constants/image.js';
 
 const LastMessage = (props) => {
 
@@ -27,7 +27,7 @@ const LastMessage = (props) => {
                         NavigationService.navigate("Information", { ...item.Sender })
                     }
                 }} style={{ flexDirection: 'row' }}>
-                    <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic || item.SenderID === profileId && item.ReceiverProfilePic === '' || item.RecieverId === profileId && item.SenderProfilePic === '' ? placeholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
+                    <Image source={!item.ReceiverProfilePic && !item.SenderProfilePic || item.SenderID === profileId && item.ReceiverProfilePic === '' || item.RecieverId === profileId && item.SenderProfilePic === '' ? Images.PlayerPlaceholder : { uri: item.SenderID === profileId ? item.ReceiverProfilePic : item.SenderProfilePic }} style={styles.userImage} />
                     <View style={styles.innerRow}>
                         <Text style={styles.screenTitle}>
                             {item.SenderID === profileId ? item.ReceiverName : item.SenderName}

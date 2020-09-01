@@ -60,11 +60,18 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
         <View style={{ marginLeft: 10, width: '85%' }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'column', width: '70%' }}>
-              <Text style={{ marginTop: 10, color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
+                <View style={{ marginLeft: '4%' }}>
+                  <View style={{ backgroundColor: Colors.s_blue, position: 'absolute', minHeight: 28, minWidth: 28, borderRadius: 28 / 2, alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: 'white', fontSize: 14 }}>{props.Bookings.length}</Text>
+                  </View>
+                </View>
+              </View>
               <View style={{ width: '80%' }}>
                 <Text>{props.AboutUs}</Text>
               </View>
-              {props.Role == "Player" && props.hideAddress != true &&(
+              {props.Role == "Player" && props.hideAddress != true && (
                 <View style={{ flexDirection: 'row', width: '80%' }}>
                   <Icon style={{ fontSize: 22 }} type="EvilIcons" name="location" />
                   <Text>{props.Address}</Text>
@@ -113,29 +120,29 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
 
         </View>
       </View>
-      <View style={{ flexDirection: 'row'}}>
-      {props.Role == "Coach" && (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
-          <View style={styles.ps_hourly_symbol}>
-            <Text style={styles.ps_pound_symbol}>{'\u00A3'}</Text>
-            <Text style={{ marginLeft: 5 }}>{props.Rate}/hr</Text>
+      <View style={{ flexDirection: 'row' }}>
+        {props.Role == "Coach" && (
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+            <View style={styles.ps_hourly_symbol}>
+              <Text style={styles.ps_pound_symbol}>{'\u00A3'}</Text>
+              <Text style={{ marginLeft: 5 }}>{props.Rate}/hr</Text>
+            </View>
           </View>
-        </View>
-      )}
-      {props.Role == "Coach" && (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '5%', marginTop: 10 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={styles.ps_dbs_check}>Valid ID</Text>
-            {props?.VerificationDocument?.Verified == true && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
-            {!props?.VerificationDocument?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
+        )}
+        {props.Role == "Coach" && (
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '5%', marginTop: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.ps_dbs_check}>Valid ID</Text>
+              {props?.VerificationDocument?.Verified == true && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
+              {!props?.VerificationDocument?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.ps_dbs_check}>DBS Checked</Text>
+              {props?.DBSCeritificate?.Verified == true && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
+              {!props?.DBSCeritificate?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
+            </View>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={styles.ps_dbs_check}>DBS Checked</Text>
-            {props?.DBSCeritificate?.Verified == true && (<Icon type="Feather" name="check" style={{ fontSize: 20, color: '#38A663' }} />)}
-            {!props?.DBSCeritificate?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
-          </View>
-        </View>
-      )}
+        )}
       </View>
       {props.Qualifications && props.Qualifications.length != 0 && (
         <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', width: '80%', marginTop: 10, justifyContent: 'space-between', marginBottom: 10 }}>
