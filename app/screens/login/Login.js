@@ -22,8 +22,7 @@ import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
 import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
-import messaging from '@react-native-firebase/messaging';
-import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
+import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 
 const Login = (props) => {
   const [role, setRole] = useState();
@@ -102,7 +101,7 @@ const Login = (props) => {
         } else if (await AsyncStorage.getItem("appleUserName")) {
           appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
         }
-        const deviceToken = await messaging().getToken(FIREBASE_SENDER_ID)
+        const deviceToken = await RequestDeviceToken()
 
         loginWithApple({
           data: {
@@ -160,8 +159,7 @@ const Login = (props) => {
             return errors
           }}
           onSubmit={async values => {
-            messaging()
-            .getToken(FIREBASE_SENDER_ID)
+            RequestDeviceToken()
             .then(deviceToken => {
               values.deviceType = Platform.OS
               values.deviceID = DeviceInfo.getUniqueId()
@@ -254,7 +252,7 @@ const Login = (props) => {
                   return AccessToken.getCurrentAccessToken()
                 })
                   .then(({ accessToken }) => {
-                    return messaging().getToken(FIREBASE_SENDER_ID).then(deviceToken => ({ deviceToken, accessToken}))
+                    return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken}))
                   })
                   .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken,deviceType: Platform.OS,deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
@@ -275,7 +273,7 @@ const Login = (props) => {
               disabled={isLoginDisabled()}
               onPress={async () => {
                 try {
-                  const deviceToken = await messaging().getToken(FIREBASE_SENDER_ID)
+                  const deviceToken = await RequestDeviceToken()
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
                   console.log(userInfo)

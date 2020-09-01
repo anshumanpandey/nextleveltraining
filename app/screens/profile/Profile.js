@@ -21,7 +21,7 @@ const PlayerProfile = (props) => {
   const [token] = useGlobalState('token')
   const { user, AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
-  useEffect(() => {
+  const resolveProfilePic = () => {
     if (profile?.ProfileImage) {
       setProfilePic({ uri: profile.ProfileImage })
     } else {
@@ -31,6 +31,10 @@ const PlayerProfile = (props) => {
           setProfilePic(JSON.parse(s))
         })
     }
+  }
+
+  useEffect(() => {
+    resolveProfilePic()
 
     if (profile.IsTempPassword) {
       props?.navigation?.replace("ForceChangePassword");
@@ -46,6 +50,7 @@ const PlayerProfile = (props) => {
   }, [])
 
   useEffect(() => {
+    resolveProfilePic()
     setTriggerChange(o => !o)
   }, [profile.ProfileImage])
 

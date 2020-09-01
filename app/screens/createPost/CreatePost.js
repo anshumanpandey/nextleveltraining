@@ -172,21 +172,21 @@ const Profile = (props) => {
 
                 {values.file && !values.file.type.includes('video') && (
                   <View style={{ justifyContent: 'center' }}>
-                    <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 35 }} />
+                    <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 30 }} />
                   </View>
                 )}
 
                 {values.file && values.file.type.includes('video') && (
                   <LoadableVideo
                     source={{ uri: values.file.uri, }}   // Can be a URL or a local file.
-                    style={{ flex: 2, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 35 }}
+                    style={{ flex: 1, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 30 }}
                   />
                 )}
 
               </View>
             </ScrollView>
             {errors.file && touched.file && <ErrorLabel style={{ textAlign: 'center' }} text={errors.file} />}
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 0.8 : 0.3 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 1 : 0.3, height: (Dimensions.get('screen').height / 100) * 10 }}>
 
               <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
                 ImageCropPicker.openCamera({ cropping: true })

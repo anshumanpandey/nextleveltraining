@@ -14,6 +14,7 @@ import Screens from '../../utils/screen';
 import InfoLabel from '../InfoLabel';
 import messaging from '@react-native-firebase/messaging';
 import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
+import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 
 const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
     const formikRef = useRef()
@@ -89,7 +90,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                 return errors
             }}
             onSubmit={async values => {
-                const deviceToken = await messaging().getToken(FIREBASE_SENDER_ID)
+                const deviceToken = await RequestDeviceToken()
 
                 console.log('saving user data')
                 if (props.hidePasswordInput == true) {
