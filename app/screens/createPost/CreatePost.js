@@ -90,10 +90,10 @@ const Profile = (props) => {
           if (!values.bodyText) errors.bodyText = "Required"
           if (!values.file) {
             errors.file = "Required"
-          } else if (values.file.height > 1080 ) {
-            errors.file = "Image resolution max of 1920*1080"
-          } else if (values.file.width > 1920 ) {
-            errors.file = "Image resolution max of 1920*1080"
+          } else if (values.file.height > 1350 ) {
+            errors.file = "Image resolution max of 1080*1350"
+          } else if (values.file.width > 1080 ) {
+            errors.file = "Image resolution max of 1080*1350"
           }
 
           return errors;
@@ -177,7 +177,7 @@ const Profile = (props) => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', height: (Dimensions.get('screen').height / 100) * 10 }}>
 
                   <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                    ImageCropPicker.openCamera({ cropping: true, width: 1920, height: 1080 })
+                    ImageCropPicker.openCamera({ cropping: true, width: 1350, height: 1350 })
                       .then(image => {
                         image.type = image.mime
                         image.uri = image.path
@@ -189,7 +189,7 @@ const Profile = (props) => {
 
                   <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
 
-                    ImageCropPicker.openPicker({ cropping: true, mediaType: "photo", width: 1920, height: 1080 })
+                    ImageCropPicker.openPicker({ cropping: true, mediaType: "photo", width: 1350, height: 1350 })
                       .then(image => {
                         console.log(image)
                         image.type = image.mime

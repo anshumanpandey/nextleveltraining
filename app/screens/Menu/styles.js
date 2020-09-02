@@ -17,10 +17,10 @@ const styles=StyleSheet.create({
        alignItems:  'center',
        width:Dimension.pro100,
        height:200,
-       backgroundColor:Colors.s_blue
+       backgroundColor: "white"
     },
     avatar_title:{
-        color:'white',
+        color:'black',
         fontSize:16,
         fontWeight:'500',
         marginTop:10
