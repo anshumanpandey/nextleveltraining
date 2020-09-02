@@ -189,8 +189,9 @@ const Profile = (props) => {
 
                   <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
 
-                    ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
+                    ImageCropPicker.openPicker({ cropping: true, mediaType: "photo", width: 1920, height: 1080 })
                       .then(image => {
+                        console.log(image)
                         image.type = image.mime
                         image.uri = image.path
                         setFieldValue('file', image)
