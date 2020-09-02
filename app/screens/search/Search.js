@@ -178,6 +178,8 @@ const Search = (props) => {
                     comments: p.Comments || [],
                     likes: p.Likes || [],
                     imageUri: p.MediaURL,
+                    width: p.Width,
+                    height: p.Height,
                   }
 
                   if (p.MediaURL) {

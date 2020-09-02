@@ -24,6 +24,8 @@ const MediaTab = ({ posts = [], selectedTab }) => {
             profileImage: p.ProfileImage,
             comments: p.Comments || [],
             likes: p.Likes || [],
+            width: p.Width,
+            height: p.Height,
           }
 
           if (p.MediaURL) {

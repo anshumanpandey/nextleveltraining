@@ -148,14 +148,10 @@ const Home = (props) => {
         maxToRenderPerBatch={4}
         initialNumToRender={4}
         horizontal={false}
-        style={{ width: '100%', height: '100%' }}
         data={dataToShow}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         removeClippedSubviews={true}
-        getItemLayout={(data, index) => {
-          return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
-        }}
       />
     );
   }

@@ -118,29 +118,16 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
 
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
-            <View style={{ alignItems: 'center' }}>
-              {imageLoaded == false && (
-                <Image
-                  resizeMode="contain"
-                  source={{ uri: item.imageUri }}
-                  style={{ width: item.width, height: item.height, maxHeight: maxHeight }}
-                  onLoadEnd={() => {
-                    console.log("Image loaded 1")
-                    setImageLoaded(true)
-                  }}
-                />
-              )}
-              {imageLoaded == true && (
-                <Image
-                  resizeMode="contain"
-                  source={{ uri: item.imageUri }}
-                  style={{ width: item.width, height: item.height, maxHeight: maxHeight }}
-                  onLoadEnd={() => {
-                    console.log("Image loaded 2")
-                    setImageLoaded(true)
-                  }}
-                />
-              )}
+            <View style={{ alignItems: 'center', maxHeight: maxHeight }}>
+              <Image
+                resizeMode="contain"
+                source={{ uri: item.imageUri }}
+                style={{ width: item.width, height: item.height, maxHeight: maxHeight }}
+                onLoadEnd={() => {
+                  console.log("Image loaded 1")
+                  setImageLoaded(true)
+                }}
+              />
             </View>
           )}
           {item.fileType && item.fileType.includes('video') && (
