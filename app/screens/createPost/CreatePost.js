@@ -121,7 +121,7 @@ const Profile = (props) => {
             })
             .then(() => {
               props.navigation.navigate('Home')
-              resetForm({ values: {file: null, bodyText: ''} })
+              resetForm({ values: { file: null, bodyText: '' } })
               inputEl?.current?.clearInput()
             })
 
@@ -130,7 +130,6 @@ const Profile = (props) => {
         {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
           <>
             <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollView}>
-              <View style={styles.post_view}>
                 <View style={{ padding: '5%' }}>
                   <MentionInput
                     inputField={styles.textArea}
@@ -158,7 +157,7 @@ const Profile = (props) => {
                       console.log(item)
                       return (
                         <View style={{ padding: '2%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)', flexDirection: 'row' }}>
-                          <Image style={{ width: 25, height: 25, borderRadius: 25/2, marginRight: '5%' }} source={{ uri: item.ProfileImage }} />
+                          <Image style={{ width: 25, height: 25, borderRadius: 25 / 2, marginRight: '5%' }} source={{ uri: item.ProfileImage }} />
                           <Text>{item.name}</Text>
                         </View>
                       )
@@ -166,67 +165,63 @@ const Profile = (props) => {
                     style={styles.inputField}
                   />
                   {errors.bodyText && touched.bodyText && <ErrorLabel text={errors.bodyText} />}
+                </View>
 
+                {errors.file && touched.file && <ErrorLabel style={{ textAlign: 'center' }} text={errors.file} />}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', height: (Dimensions.get('screen').height / 100) * 10 }}>
+
+                  <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
+                    ImageCropPicker.openCamera({ cropping: true })
+                      .then(image => {
+                        image.type = image.mime
+                        image.uri = image.path
+                        setFieldValue('file', image)
+                      });
+                  }}>
+                    <Icon type="FontAwesome" name="camera" style={{ fontSize: 28, color: Colors.s_blue }} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
+
+                    ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
+                      .then(image => {
+                        image.type = image.mime
+                        image.uri = image.path
+                        setFieldValue('file', image)
+                      });
+                  }}>
+                    <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: Colors.s_blue }} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
+                    ImageCropPicker.openPicker({
+                      mediaType: "video",
+                    })
+                      .then((file) => {
+                        file.type = file.mime
+                        file.uri = file.path
+                        file.type.includes('video')
+                        console.log(file)
+                        setFieldValue('file', file)
+                      })
+                  }}>
+                    <Icon type="Entypo" name="video" style={{ fontSize: 28, color: Colors.s_blue }} />
+                  </TouchableOpacity>
 
                 </View>
 
                 {values.file && !values.file.type.includes('video') && (
-                  <View style={{ justifyContent: 'center' }}>
-                    <Image resizeMode="stretch" source={{ uri: values.file.uri }} style={{ width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 30 }} />
-                  </View>
+                    <Image source={{ uri: values.file.uri,  }} style={{ flex: 1, width: null, height: null, resizeMode: 'contain' }} />
                 )}
 
                 {values.file && values.file.type.includes('video') && (
                   <LoadableVideo
                     source={{ uri: values.file.uri, }}   // Can be a URL or a local file.
-                    style={{ flex: 1, width: Dimensions.get('screen').width, height: (Dimensions.get('screen').height / 100) * 30 }}
+                    style={{ flex: 1, width: Dimensions.get('screen').width, height: '100%' }}
                   />
                 )}
 
-              </View>
             </ScrollView>
-            {errors.file && touched.file && <ErrorLabel style={{ textAlign: 'center' }} text={errors.file} />}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flex: values.file ? 1 : 0.3, height: (Dimensions.get('screen').height / 100) * 10 }}>
-
-              <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                ImageCropPicker.openCamera({ cropping: true })
-                  .then(image => {
-                    image.type = image.mime
-                    image.uri = image.path
-                    setFieldValue('file', image)
-                  });
-              }}>
-                <Icon type="FontAwesome" name="camera" style={{ fontSize: 28, color: Colors.s_blue }} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-
-                ImageCropPicker.openPicker({ cropping: true, mediaType: "photo" })
-                  .then(image => {
-                    image.type = image.mime
-                    image.uri = image.path
-                    setFieldValue('file', image)
-                  });
-              }}>
-                <Icon type="FontAwesome" name="photo" style={{ fontSize: 28, color: Colors.s_blue }} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                ImageCropPicker.openPicker({
-                  mediaType: "video",
-                })
-                  .then((file) => {
-                    file.type = file.mime
-                    file.uri = file.path
-                    file.type.includes('video')
-                    console.log(file)
-                    setFieldValue('file', file)
-                  })
-              }}>
-                <Icon type="Entypo" name="video" style={{ fontSize: 28, color: Colors.s_blue }} />
-              </TouchableOpacity>
-
-            </View>
           </>
         )}
       </Formik>

@@ -91,8 +91,10 @@ const Home = (props) => {
           } else if (fileString && JSON.parse(fileString).file) {
             console.log("no media url", fileString)
             const jsonFile = JSON.parse(fileString)
-            j.imageUri = jsonFile.file.uri
+            j.imageUri = jsonFile.file.path
             j.fileType = jsonFile.file.type
+            j.width = jsonFile.file.width
+            j.height = jsonFile.file.height
             SyncPosts(jsonFile.file, p.Id)
               .then(() => AsyncStorage.removeItem(`post-${p.Id}-file`))
               .then(() => getUserData())

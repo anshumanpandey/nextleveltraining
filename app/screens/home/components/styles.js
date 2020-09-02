@@ -1,10 +1,11 @@
 import Dimension from '../../../constants/dimensions.js';
 import Colors from '../../../constants/color.js';
-import {StyleSheet} from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   post_container: {
-    width: Dimension.pro100,
     backgroundColor: 'white',
     marginBottom: '1%',
     padding: '2%'
@@ -45,8 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   post_title: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     display: 'flex',
   },
   post_title_name: {
@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
     // width:'90%'
   },
   post_news_image: {
-    height: Dimension.px440,
-    width: Dimension.deviceWidth,
-    borderRadius: 0,
+    resizeMode: 'contain',
+        flex: 1,
+        aspectRatio: 1 // 
   },
   comment_news_image: {
     height: Dimension.px250,
