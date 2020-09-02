@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
 import Images from '../../../constants/image';
 import { Icon, Spinner } from 'native-base';
