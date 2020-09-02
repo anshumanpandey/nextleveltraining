@@ -45,8 +45,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   post_title: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     display: 'flex',
   },
   post_title_name: {

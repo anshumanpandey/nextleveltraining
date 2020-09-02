@@ -123,8 +123,8 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
             >
               <NLOriginalImage
                 source={{ uri: item.imageUri }}
-                style={styles.post_news_image}
-                resizeMode="cover"
+                width={item.width}
+                height={item.height}
               />
             </TouchableOpacity>
           )}
