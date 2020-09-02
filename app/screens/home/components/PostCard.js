@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
 import Images from '../../../constants/image';
 import { Icon, Spinner } from 'native-base';
@@ -117,13 +118,13 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
             <TouchableOpacity
+              style={{ flex: 1, width: null, height: null, resizeMode: 'contain' }}
               onPress={() => onClickingItem(item)}
             >
-              <Image
-                source={{ uri: item.imageUri }}
-                style={styles.post_news_image}
-                resizeMode="cover"
-              />
+                <Image
+                  source={{ uri: item.imageUri }}
+                  style={styles.post_news_image}
+                />
             </TouchableOpacity>
           )}
           {item.fileType && item.fileType.includes('video') && (
