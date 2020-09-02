@@ -18,6 +18,7 @@ import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
 import ModalVideo from '../../../components/ModalVideo';
 import NavigationService from '../../../navigation/NavigationService';
+import NLOriginalImage from '../../../components/NLOriginalImage';
 
 const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
@@ -118,13 +119,14 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
             <TouchableOpacity
-              style={{ flex: 1, width: null, height: null, resizeMode: 'contain' }}
+              style={{ alignItems: 'center'}}
               onPress={() => onClickingItem(item)}
             >
-                <Image
-                  source={{ uri: item.imageUri }}
-                  style={styles.post_news_image}
-                />
+              <NLOriginalImage
+                source={{ uri: item.imageUri }}
+                style={styles.post_news_image}
+                resizeMode="cover"
+              />
             </TouchableOpacity>
           )}
           {item.fileType && item.fileType.includes('video') && (
