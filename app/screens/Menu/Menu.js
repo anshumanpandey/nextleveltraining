@@ -65,7 +65,7 @@ const Menu = (props) => {
         {
             id: 44,
             title: 'Calendar',
-            icon: `${Images.MyBookingIcon}`,
+            icon: `${Images.CalendarIcon}`,
             path: 'Calendar',
             onPress: (props, profile) => {
                 NavigationService.navigate('Calendar')

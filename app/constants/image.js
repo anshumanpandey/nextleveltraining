@@ -17,6 +17,7 @@ const Images ={
     //Menu icon Images
     PersonalDetailIcon:require('../assets/images/personal-details-icon2x.png'),
     AboutMeIcon:require('../assets/images/about-me-icon2x.png'),
+    CalendarIcon:require('../assets/images/calendaricon.png'),
     MyBookingIcon:require('../assets/images/my-bookings-icon2x.png'),
     PaymentMethodIcon:require('../assets/images/payment-methods-icons2x.png'),
     PrivacyIcon:require('../assets/images/privacy-icon2x.png'),
