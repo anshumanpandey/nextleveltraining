@@ -161,6 +161,7 @@ const Login = (props) => {
           onSubmit={async values => {
             RequestDeviceToken()
             .then(deviceToken => {
+              console.log('token => ', deviceToken)
               values.deviceType = Platform.OS
               values.deviceID = DeviceInfo.getUniqueId()
               values.deviceToken = deviceToken
@@ -276,7 +277,7 @@ const Login = (props) => {
                   const deviceToken = await RequestDeviceToken()
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
-                  console.log(userInfo)
+                  console.log(userInfo, "token =>", deviceToken)
                   loginWithGoogle({
                     data: {
                       "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
