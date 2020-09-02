@@ -17,6 +17,7 @@ import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalSta
 import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
+import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
