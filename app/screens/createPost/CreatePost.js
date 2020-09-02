@@ -171,7 +171,7 @@ const Profile = (props) => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', height: (Dimensions.get('screen').height / 100) * 10 }}>
 
                   <TouchableOpacity style={{ flexDirection: 'row', borderWidth: 1, borderColor: Colors.s_blue, padding: '2%', borderRadius: 50 }} onPress={() => {
-                    ImageCropPicker.openCamera({ cropping: true })
+                    ImageCropPicker.openCamera({ cropping: true, width: 1920, height: 1080 })
                       .then(image => {
                         image.type = image.mime
                         image.uri = image.path

@@ -20,6 +20,8 @@ import ModalVideo from '../../../components/ModalVideo';
 import NavigationService from '../../../navigation/NavigationService';
 import NLOriginalImage from '../../../components/NLOriginalImage';
 
+const maxHeight = (Dimensions.get("screen").height / 100) * 45
+
 const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
@@ -118,16 +120,11 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
 
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
-            <TouchableOpacity
+            <View
               style={{ alignItems: 'center'}}
-              onPress={() => onClickingItem(item)}
             >
-              <NLOriginalImage
-                source={{ uri: item.imageUri }}
-                width={item.width}
-                height={item.height}
-              />
-            </TouchableOpacity>
+              <Image resizeMode="contain" source={{ uri: item.imageUri }} style={{ width: item.width, height: item.height, maxHeight: maxHeight }} />
+            </View>
           )}
           {item.fileType && item.fileType.includes('video') && (
             <TouchableOpacity

@@ -26,6 +26,9 @@ import Video from 'react-native-video';
 import Colors from '../../constants/color';
 import PushNotification from 'react-native-push-notification';
 
+const ITEM_HEIGHT = (Dimensions.get("screen").height / 100) * 10
+
+
 const Home = (props) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [dataToShow, setDataToShow] = useState([]);
@@ -79,7 +82,9 @@ const Home = (props) => {
             profileImage: p.ProfileImage,
             comments: p.Comments || [],
             likes: p.Likes || [],
-            poster: p.Poster
+            poster: p.Poster,
+            width: p.Width,
+            height: p.Height,
           }
 
           if (p.MediaURL) {
@@ -125,23 +130,32 @@ const Home = (props) => {
     );
   }
 
+  const renderItem = ({ item }) => {
+    return (
+      <PostCard
+        refreshCb={refetch}
+        onPressOfComment={() => props.navigation.navigate(screen.CreateComment, { post: item })}
+        item={item}
+        onClickItem={(item) => {
+          setVisibleModal(item)
+        }} />
+    );
+  }
+
   if (!loading && data && dataToShow.length != 0) {
     body = (
       <FlatList
+        maxToRenderPerBatch={4}
+        initialNumToRender={4}
         horizontal={false}
         style={{ width: '100%', height: '100%' }}
         data={dataToShow}
-        keyExtractor={item => item.Id}
-        renderItem={({ item }) => (
-          <PostCard
-            refreshCb={refetch}
-            onPressOfComment={() => props.navigation.navigate(screen.CreateComment, { post: item })}
-            item={item}
-            onClickItem={(item) => {
-              setVisibleModal(item)
-            }} />
-        )
-        }
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        removeClippedSubviews={true}
+        getItemLayout={(data, index) => {
+          return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
+        }}
       />
     );
   }
