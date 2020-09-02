@@ -16,9 +16,7 @@ import { useGlobalState } from '../../../state/GlobalState';
 import Video from 'react-native-video';
 import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
-import ModalVideo from '../../../components/ModalVideo';
 import NavigationService from '../../../navigation/NavigationService';
-import NLOriginalImage from '../../../components/NLOriginalImage';
 
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
@@ -27,8 +25,8 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [profile] = useGlobalState('profile')
-  const [token] = useGlobalState('token')
 
   const [{ loading }, postLike] = useAxios({
     url: '/Users/SaveLikebyPost',
@@ -120,10 +118,29 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
 
         <View style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
-            <View
-              style={{ alignItems: 'center'}}
-            >
-              <Image resizeMode="contain" source={{ uri: item.imageUri }} style={{ width: item.width, height: item.height, maxHeight: maxHeight }} />
+            <View style={{ alignItems: 'center' }}>
+              {imageLoaded == false && (
+                <Image
+                  resizeMode="contain"
+                  source={{ uri: item.imageUri }}
+                  style={{ width: item.width, height: item.height, maxHeight: maxHeight }}
+                  onLoadEnd={() => {
+                    console.log("Image loaded 1")
+                    setImageLoaded(true)
+                  }}
+                />
+              )}
+              {imageLoaded == true && (
+                <Image
+                  resizeMode="contain"
+                  source={{ uri: item.imageUri }}
+                  style={{ width: item.width, height: item.height, maxHeight: maxHeight }}
+                  onLoadEnd={() => {
+                    console.log("Image loaded 2")
+                    setImageLoaded(true)
+                  }}
+                />
+              )}
             </View>
           )}
           {item.fileType && item.fileType.includes('video') && (

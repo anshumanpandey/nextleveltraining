@@ -88,7 +88,13 @@ const Profile = (props) => {
           const errors = {}
 
           if (!values.bodyText) errors.bodyText = "Required"
-          if (!values.file) errors.file = "Required"
+          if (!values.file) {
+            errors.file = "Required"
+          } else if (values.file.height > 1080 ) {
+            errors.file = "Image resolution max of 1920*1080"
+          } else if (values.file.width > 1920 ) {
+            errors.file = "Image resolution max of 1920*1080"
+          }
 
           return errors;
         }}
