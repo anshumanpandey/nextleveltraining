@@ -87,7 +87,11 @@ const EditInput = (props) => {
             .then((r) => {
               console.log(r.data)
               dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-              dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: null })
+              if (HasCompletedVerificationProcess(profile)) {
+                NavigationService.navigate("AboutMe")
+              } else {
+                NavigationService.goBack()
+              }
             })
         }}
       />
