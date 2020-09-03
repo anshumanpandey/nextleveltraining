@@ -45,12 +45,12 @@ const Search = (props) => {
     }
   }, [])
 
-  let TabsName = ["Player", "Coach"]
+  let TabsName = ["Players", "Coaches"]
   let propsToIterate = ["Players", "Coaches"]
   let screensToNavigate = ["PlayerInfo", "Information"]
 
   if (profile?.Role == "Player") {
-    TabsName = ["Coach", "Player"]
+    TabsName = ["Coaches", "Players"]
     propsToIterate = ["Coaches", "Players"]
     screensToNavigate = ["Information", "PlayerInfo"]
   }
