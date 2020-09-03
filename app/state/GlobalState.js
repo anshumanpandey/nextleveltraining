@@ -47,6 +47,7 @@ const reducer = (state, action) => {
       }
       case GLOBAL_STATE_ACTIONS.PROFILE: {
         let toggle = state.toggle
+        let goto = undefined
         AsyncStorage.setItem('profile', JSON.stringify(action.state))
         console.log("1", toggle)
         if (state.profile == null && action?.state?.Id) {
@@ -59,6 +60,7 @@ const reducer = (state, action) => {
           if (action?.state?.AboutUs && action?.state?.AboutUs != state?.profile?.AboutUs) {
             console.log('no full profile, new aboutUs')
             toggle = !state.toggle
+            goto = "AboutMe"
           } else if (action?.state?.TravelMile && action?.state?.TravelMile?.TravelDistance != state?.profile?.TravelMile?.TravelDistance) {
             console.log('no full profile, Rate')
             toggle = !state.toggle
@@ -85,7 +87,7 @@ const reducer = (state, action) => {
         console.log("2", toggle)
         if (state.toggle !== toggle) {
           console.log("trugerring rerender of stack")
-          return { ...state, ...{profile: action.state}, toggle: toggle };
+          return { ...state, ...{profile: action.state}, toggle: toggle, goto };
         }
         return { ...state, ...{profile: action.state} };
       }
