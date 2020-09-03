@@ -1,5 +1,6 @@
 const HasCompletedVerificationProcess = (profile) => {
-    return (profile?.AboutUs != null)
+    return profile != null
+    //return (profile?.AboutUs != null)
 }
 
 export default HasCompletedVerificationProcess;

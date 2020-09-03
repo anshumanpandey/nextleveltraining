@@ -15,6 +15,7 @@ import InfoLabel from '../InfoLabel';
 import messaging from '@react-native-firebase/messaging';
 import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
     const formikRef = useRef()
@@ -115,7 +116,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                     })
                     .then((r) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        props.navigation.navigate(Screens.LandingPage)
+                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'AboutMe'})
                     })
                     .catch((r) => console.log(r))
             }}

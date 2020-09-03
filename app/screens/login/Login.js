@@ -107,7 +107,7 @@ const Login = (props) => {
           data: {
             "name": "",
             "email": appleAuthRequestResponse.email,
-            "role": props.navigation.getParam('role'),
+            "role": props.navigation.getParam('role', role),
             deviceID: DeviceInfo.getUniqueId(),
             deviceType: Platform.OS,
             deviceToken
@@ -255,7 +255,7 @@ const Login = (props) => {
                   .then(({ accessToken }) => {
                     return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken }))
                   })
-                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
+                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role', role), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -283,7 +283,7 @@ const Login = (props) => {
                       "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
                       "email": userInfo.user.email,
                       "picture": userInfo.user.photo,
-                      "role": props.navigation.getParam('role'),
+                      "role": props.navigation.getParam('role', role),
                       "authenticationToken": userInfo.serverAuthCode,
                       deviceID: DeviceInfo.getUniqueId(),
                       deviceType: Platform.OS,

@@ -256,6 +256,14 @@ const AppMain = () => {
         ),
       }),
     },
+    AboutMe: {
+      screen: AboutMeScreen,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
   }
 
   if (HasCompletedVerificationProcess(profile) == true && token) {
@@ -395,15 +403,6 @@ const AppMain = () => {
           ),
         }),
       }
-
-    tabs.AboutMe = {
-      screen: AboutMeScreen,
-      navigationOptions: () => ({
-        tabBarButtonComponent: ({ tintColor }) => (
-          <></>
-        ),
-      }),
-    }
     tabs.BankAccount = {
       screen: BankAccountScreen,
       navigationOptions: () => ({
