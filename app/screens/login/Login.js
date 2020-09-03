@@ -160,14 +160,14 @@ const Login = (props) => {
           }}
           onSubmit={async values => {
             RequestDeviceToken()
-            .then(deviceToken => {
-              console.log('token => ', deviceToken)
-              values.deviceType = Platform.OS
-              values.deviceID = DeviceInfo.getUniqueId()
-              values.deviceToken = deviceToken
-              console.log(values)
-              return login({ data: values })
-            })
+              .then(deviceToken => {
+                console.log('token => ', deviceToken)
+                values.deviceType = Platform.OS
+                values.deviceID = DeviceInfo.getUniqueId()
+                values.deviceToken = deviceToken
+                console.log(values)
+                return login({ data: values })
+              })
               .then((r) => {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                 return getUserData()
@@ -253,9 +253,9 @@ const Login = (props) => {
                   return AccessToken.getCurrentAccessToken()
                 })
                   .then(({ accessToken }) => {
-                    return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken}))
+                    return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken }))
                   })
-                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken,deviceType: Platform.OS,deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
+                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()

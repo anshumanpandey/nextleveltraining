@@ -4,7 +4,7 @@ import { Icon, Spinner } from 'native-base';
 import PostSearchCard from './subcomponents/PostSearchCard';
 import Images from '../../../constants/image';
 import NavigationService from '../../../navigation/NavigationService';
-import { useGlobalState } from '../../../state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import Header from '../../../components/header/Header';
 
@@ -19,6 +19,10 @@ const SearchComponent = (props) => {
     method: 'POST',
   }, { manual: true })
 
+  const [getconnectedUserReq, refetch] = useAxios({
+    url: '/Users/GetConnectedUsers',
+  }, { manual: true })
+
   const fnInit = () => {
     if (profile.Role == "Player") {
       searchCoaches({
@@ -27,9 +31,15 @@ const SearchComponent = (props) => {
           search: keyword
         }
       })
-      .then((r) => setCoaches([...r.data]))
+        .then((r) => setCoaches([...r.data]))
     }
   }
+
+  useEffect(() => {
+    if (getconnectedUserReq.loading == false) {
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: getconnectedUserReq.data })
+    }
+  }, [getconnectedUserReq.loading])
 
   useEffect(() => {
     fnInit()
@@ -113,7 +123,7 @@ const SearchComponent = (props) => {
       </View>
       <FlatList
         horizontal={false}
-        data={coaches.filter(c => c.Status != 'Saved').map(i => ({...i, Role: "Coach"}))}
+        data={coaches.filter(c => c.Status != 'Saved').map(i => ({ ...i, Role: "Coach" }))}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostSearchCard

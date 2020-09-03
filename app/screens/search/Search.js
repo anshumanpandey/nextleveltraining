@@ -4,7 +4,7 @@ import { Icon, Spinner, Tabs, Tab } from 'native-base';
 import Header from '../../components/header/Header';
 import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
-import { useGlobalState } from '../../state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import PostCard from '../home/components/PostCard';
 import moment from 'moment'
 import PostSearchCard from './components/subcomponents/PostSearchCard';
@@ -24,6 +24,16 @@ const Search = (props) => {
     method: 'POST',
     data: { playerId: profile?.Id, search: keyword }
   }, { manual: true })
+
+  const [getconnectedUserReq, refetch] = useAxios({
+    url: '/Users/GetConnectedUsers',
+  }, { manual: true })
+
+  useEffect(() => {
+    if (getconnectedUserReq.loading == false) {
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: getconnectedUserReq.data })
+    }
+  }, [getconnectedUserReq.loading])
 
   useEffect(() => {
     searchCoaches({ data: { playerId: profile?.Id, search: keyword } })

@@ -2,13 +2,17 @@ import React, { useEffect } from 'react'
 import { FlatList } from 'react-native'
 import PostSearchCard from './subcomponents/PostSearchCard'
 import useAxios from 'axios-hooks'
-import { useGlobalState } from '../../../state/GlobalState'
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../../state/GlobalState'
 import NavigationService from '../../../navigation/NavigationService';
 import { Spinner } from 'native-base'
 import Colors from '../../../constants/color'
 
 const SavedComponent = (props) => {
   const [profile] = useGlobalState('profile')
+
+  const [getconnectedUserReq, refetch] = useAxios({
+    url: '/Users/GetConnectedUsers',
+  }, { manual: true })
 
   const [searchCoachesReq, searchCoaches] = useAxios({
     url: `/Users/GetCoaches`,
@@ -18,6 +22,12 @@ const SavedComponent = (props) => {
       "search": ""
     }
   }, { manual: true })
+
+  useEffect(() => {
+    if (getconnectedUserReq.loading == false) {
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: getconnectedUserReq.data })
+    }
+  }, [getconnectedUserReq.loading])
 
   const initFn = () => {
     if (profile?.Role == "Player") {

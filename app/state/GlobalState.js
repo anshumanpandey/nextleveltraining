@@ -9,6 +9,7 @@ export const GLOBAL_STATE_ACTIONS = {
     TOKEN: 'TOKEN',
     PROFILE: 'PROFILE',
     LOGOUT: 'LOGOUT',
+    CONNECTED_USER: 'CONNECTED_USER',
     TOGGLE: 'TOGGLE',
     NOTIFICATIONS: 'NOTIFICATIONS',
     ADD_NOTIFICATION: 'ADD_NOTIFICATION',
@@ -24,11 +25,13 @@ const initialState = {
     toggle: false,
     goto: null,
     notifications: [],
+    connectedUsers: [],
     currentAchivemenSelected: null,
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
+      case GLOBAL_STATE_ACTIONS.CONNECTED_USER: return { ...state, connectedUsers: action.state || [] };
       case GLOBAL_STATE_ACTIONS.ACHIVEMEN_SELECTED: return { ...state, currentAchivemenSelected: action.state };
       case GLOBAL_STATE_ACTIONS.ERROR: return { ...state, ...{error: action.state} };
       case GLOBAL_STATE_ACTIONS.SUCCESS: return { ...state, ...{success: action.state} };
