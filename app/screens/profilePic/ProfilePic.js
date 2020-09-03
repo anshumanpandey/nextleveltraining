@@ -92,9 +92,9 @@ const ProfilePicScreen = (props) => {
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                                 if (HasCompletedVerificationProcess(profile)) {
                                     NavigationService.navigate("AboutMe")
-                                  } else {
+                                } else {
                                     NavigationService.goBack()
-                                  }
+                                }
                                 console.log("new profile")
                             })
                     })
