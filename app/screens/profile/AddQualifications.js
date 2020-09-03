@@ -123,7 +123,7 @@ const AddTeam = (props) => {
                                 <TextInput
                                   onChangeText={(txt) => arrayHelpers.replace(index, { Qualification: txt })}
                                   value={extraQualification.Qualification}
-                                  placeholder="Search..."
+                                  placeholder="Type Here..."
                                   style={{
                                     width: '100%',
                                     fontSize: 16,
@@ -147,7 +147,7 @@ const AddTeam = (props) => {
                           ))
                         ) : (
                             <TouchableOpacity style={{ marginBottom: '3%' }} onPress={() => arrayHelpers.push({ Qualification: ''})}>
-                              <Text style={{ fontSize: 18 }}>Add Extra Qualification</Text>
+                              <Text style={{ fontSize: 18 }}>Add Other Qualification</Text>
                             </TouchableOpacity>
                           )}
                       </View>
