@@ -13,6 +13,7 @@ import { pickImage } from '../../helpers/ImagePicker';
 import Images from '../../constants/image';
 import { axiosInstance, API_BASE_URL } from '../../api/AxiosBootstrap';
 import NLCropperImagePicker from '../../components/NLCropperImagePicker';
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
 const ProfilePicScreen = (props) => {
     const [profile] = useGlobalState('profile')
@@ -89,7 +90,11 @@ const ProfilePicScreen = (props) => {
                             .then((r) => {
                                 console.log(r.data)
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                                NavigationService.navigate("AboutMe")
+                                if (HasCompletedVerificationProcess(profile)) {
+                                    NavigationService.navigate("AboutMe")
+                                  } else {
+                                    NavigationService.goBack()
+                                  }
                                 console.log("new profile")
                             })
                     })
