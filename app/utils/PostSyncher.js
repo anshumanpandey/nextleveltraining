@@ -5,13 +5,14 @@ import { API_BASE_URL } from '../api/AxiosBootstrap'
 const fileUploaderMap = new Map()
 
 const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
-    const profile = getGlobalState('profile')
     const token = getGlobalState('token')
-    const { uri } = fileObject
+    const { uploadPath, uri } = fileObject
+
+    const getPath = () => uploadPath || uri
 
     const options = {
         url: `${API_BASE_URL}/Users/UploadFile`,
-        path: uri,
+        path: getPath(),
         method: 'POST',
         type: 'multipart',
         maxRetries: 2, // set retry count (Android only). Default 2
@@ -31,7 +32,7 @@ const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
         useUtf8Charset: true
     }
 
-    const fileKey = `${idToAttach}-${fileType}-${uri}`
+    const fileKey = `${idToAttach}-${fileType}-${getPath()}`
     if (!fileUploaderMap.has(fileKey)) {
         fileUploaderMap.set(fileKey)
     } else {
@@ -44,18 +45,18 @@ const FileSyncher = (fileObject, idToAttach, fileType = "Post") => {
             return new Promise((resolve, rejected) => {
                 console.log('Upload started')
                 Upload.addListener('progress', uploadId, (data) => {
-                    console.log(`[${uri}] Progress: ${data.progress}%`)
+                    console.log(`[${getPath()}] Progress: ${data.progress}%`)
                 })
                 Upload.addListener('error', uploadId, (data) => {
-                    console.log(`[${uri}] Error: ${JSON.stringify(data)}`)
+                    console.log(`[${getPath()}] Error: ${JSON.stringify(data)}`)
                     rejected()
                 })
                 Upload.addListener('cancelled', uploadId, (data) => {
-                    console.log(`[${uri}] Cancelled!`)
+                    console.log(`[${getPath()}] Cancelled!`)
                 })
                 Upload.addListener('completed', uploadId, (data) => {
                     // data includes responseCode: number and responseBody: Object
-                    console.log(`[${uri}] Completed!`)
+                    console.log(`[${getPath()}] Completed!`)
                     console.log(data)
                     resolve()
                 })

@@ -12,6 +12,7 @@ import Upload from 'react-native-background-upload'
 import { pickImage } from '../../helpers/ImagePicker';
 import Images from '../../constants/image';
 import { axiosInstance, API_BASE_URL } from '../../api/AxiosBootstrap';
+import NLCropperImagePicker from '../../components/NLCropperImagePicker';
 
 const ProfilePicScreen = (props) => {
     const [profile] = useGlobalState('profile')
@@ -38,7 +39,7 @@ const ProfilePicScreen = (props) => {
             }}
             onSubmit={values => {
                 const data = { "file": values.file || '' }
-                if (uploading) return true                
+                if (uploading) return true
 
                 console.log({
                     Type: "profile",
@@ -47,7 +48,7 @@ const ProfilePicScreen = (props) => {
 
                 const options = {
                     url: `${API_BASE_URL}/Users/UploadFile`,
-                    path: values.file.uri,
+                    path: values.file.uploadPath,
                     method: 'POST',
                     type: 'multipart',
                     maxRetries: 2, // set retry count (Android only). Default 2
@@ -100,28 +101,26 @@ const ProfilePicScreen = (props) => {
                     <View>
                         <View style={{ borderWidth: 0 }}>
                             <HeaderClosePlus
-                                onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")): undefined}
+                                onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")) : undefined}
                                 isLoading={uploading || getUserReq.loading}
                                 isSaveButton={true}
                                 saveOnPress={handleSubmit}
                             />
                             <View>
-    
-                                <TouchableOpacity disabled={uploading} onPress={async() => {
-                                    if (uploading) return true
-                                    const source = await pickImage();
-                                    setFieldValue('file', source)
-                                }}>
-                                    <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
-                                        {values.file?.uri && <Text numberOfLines={1} style={{ color: 'black', paddingVertical: '4%' }}>{values.file.uri}</Text>}
-                                        {values.file && !values.file?.uri && <Text numberOfLines={1} style={{ color: 'black', paddingVertical: '4%' }}>{values.file}</Text>}
-                                        {!values.file && <Text numberOfLines={1} style={{ color: 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>Upload profile pic</Text>}
-                                    </View>
-                                </TouchableOpacity>
+
+                                <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
+                                    {values.file?.uri && <Text numberOfLines={1} style={{ color: 'black', paddingVertical: '4%' }}>{values.file.uri}</Text>}
+                                    {values.file && !values.file?.uri && <Text numberOfLines={1} style={{ color: 'black', paddingVertical: '4%' }}>{values.file}</Text>}
+                                    {!values.file && <Text numberOfLines={1} style={{ color: 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>Upload profile pic</Text>}
+                                </View>
+                                <NLCropperImagePicker onFileSelected={(file) => {
+                                    console.log(file)
+                                    setFieldValue("file", file)
+                                }} />
                                 {values.file?.uri && <Image style={{ height: '80%', width: Dimensions.get("screen").width, resizeMode: 'contain' }} source={{ uri: values.file.uri }} />}
                                 {values.file && !values.file?.uri && <Image style={{ height: '80%', width: Dimensions.get("screen").width, resizeMode: 'contain' }} source={{ uri: values.file }} />}
                                 {errors.file && touched.file && <ErrorLabel text={errors.file} />}
-    
+
                             </View>
                         </View>
                     </View>

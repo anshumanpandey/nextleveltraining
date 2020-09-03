@@ -16,6 +16,7 @@ import ImagePicker from 'react-native-image-picker';
 import { syncDbs } from '../../utils/SyncProfileAssets';
 import LoaderImage from 'react-native-image-progress';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
+import NLCropperImagePicker from '../../components/NLCropperImagePicker';
 
 const options = [
   "Basic DBS Check",
@@ -76,10 +77,10 @@ const AddTeam = (props) => {
         }
         postDbsCertificate({ data })
           .then(r => {
-            
+
           })
           .then(r => {
-            if (values.file.fileSize) {
+            if (values.file.uploadPath) {
               delete values.file.data
               return AsyncStorage.setItem(`DbsCert-file-${profile.Id}`, JSON.stringify({ file: values.file, uploaded: false }))
             } else {
@@ -97,7 +98,7 @@ const AddTeam = (props) => {
             return AsyncStorage.getItem(`DbsCert-file-${profile.Id}`)
           })
           .then((fileString) => {
-            if (fileString && values.file.fileSize) {
+            if (fileString && values.file.uploadPath) {
               return syncDbs(values.file)
                 .then(() => {
                   console.log('deleting')
@@ -119,7 +120,7 @@ const AddTeam = (props) => {
                   } else {
                     NavigationService.goBack()
                   }
-                }: undefined}
+                } : undefined}
                 isLoading={postTeamReq.loading || getUserReq.loading}
                 isSaveButton={true}
                 saveOnPress={handleSubmit}
@@ -142,39 +143,17 @@ const AddTeam = (props) => {
                   })}
                 </Menu>
                 {errors.type && touched.type && <ErrorLabel text={errors.type} />}
-  
-                <TouchableOpacity onPress={() => {
-                  const options = {
-                    title: 'Select picture',
-                    chooseFromLibraryButtonTitle: '',
-                    storageOptions: {
-                      skipBackup: true,
-                      path: 'images',
-                    },
-                  };
-  
-                  ImagePicker.launchImageLibrary(options, (file) => {
-  
-                    if (file.didCancel) {
-                      console.log('User cancelled image picker');
-                    } else if (file.error) {
-                      console.log('ImagePicker Error: ', file.error);
-                    } else if (file.customButton) {
-                      console.log('User tapped custom button: ', file.customButton);
-                    } else {
-                      console.log(Object.keys(file))
-                      setFieldValue('file', file)
-                    }
-                  });
-  
-                }}>
-                  <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
-                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload DBS Certificate"}</Text>
-                  </View>
-                </TouchableOpacity>
-                {values.file && <LoaderImage indicator={<Spinner />}  style={{ height: '80%', width: Dimensions.get("screen").width, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
+
+                <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
+                  <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload DBS Certificate"}</Text>
+                </View>
+                <NLCropperImagePicker onFileSelected={(file) => {
+                  console.log(file)
+                  setFieldValue("file", file)
+                }} />
+                {values.file && <LoaderImage indicator={<Spinner />} style={{ height: '80%', width: Dimensions.get("screen").width, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
                 {errors.file && touched.file && <ErrorLabel text={errors.file} />}
-  
+
               </View>
             </View>
           </>

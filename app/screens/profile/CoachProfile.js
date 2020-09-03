@@ -24,6 +24,7 @@ import Menu, { MenuItem } from 'react-native-material-menu';
 import Upload from 'react-native-background-upload'
 import { StackActions, NavigationActions, withNavigation } from 'react-navigation';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
+import NLCropperImagePicker from '../../components/NLCropperImagePicker';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -1086,7 +1087,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
                     return doPost({ data })
                         .then((r) => {
-                            if (values?.file?.fileSize) {
+                            if (values?.file?.uploadPath) {
                                 syncTrainingLocationImage(values.file, r.data.Id)
                                 delete values.file.data
                                 return AsyncStorage.setItem(`Location-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
@@ -1145,33 +1146,13 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
                                 {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
-                                <TouchableOpacity onPress={() => {
-                                    const options = {
-                                        title: 'Select picture',
-                                        chooseFromLibraryButtonTitle: '',
-                                        storageOptions: {
-                                            skipBackup: true,
-                                            path: 'images',
-                                        },
-                                    };
-
-                                    ImagePicker.launchImageLibrary(options, (file) => {
-
-                                        if (file.didCancel) {
-                                            console.log('User cancelled image picker');
-                                        } else if (file.error) {
-                                            console.log('ImagePicker Error: ', file.error);
-                                        } else if (file.customButton) {
-                                            console.log('User tapped custom button: ', file.customButton);
-                                        } else {
-                                            setFieldValue('file', file)
-                                        }
-                                    });
-                                }}>
-                                    <View style={[styles.inputContainer, { marginTop: '2%' }]}>
-                                        <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
-                                    </View>
-                                </TouchableOpacity>
+                                <View style={[styles.inputContainer, { marginTop: '2%' }]}>
+                                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
+                                </View>
+                                <NLCropperImagePicker onFileSelected={(file) => {
+                                    console.log(file)
+                                    setFieldValue("file", file)
+                                }} />
                                 {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
                                 {errors.file && touched.file && <ErrorLabel text={errors.file} />}
 
@@ -1551,7 +1532,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                                 </View>
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
-                                        style={{ color: "black"}}
+                                        style={{ color: "black" }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Bank Name"}
                                         onChangeText={handleChange('bankName')}
@@ -1584,7 +1565,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
-                                        style={{ color: "black"}}
+                                        style={{ color: "black" }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account Holder Name"}
                                         onChangeText={handleChange('holderName')}
@@ -1596,7 +1577,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
-                                        style={{ color: "black"}}
+                                        style={{ color: "black" }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Sort code "}
                                         onChangeText={handleChange('sortCode')}
@@ -1608,7 +1589,7 @@ export const BankAccountForm = ({ setSubmitFn }) => {
 
                                 <View style={{ borderBottomWidth: 0.8, borderBottomColor: "lightgrey" }}>
                                     <TextInput
-                                        style={{ color: "black"}}
+                                        style={{ color: "black" }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Account number"}
                                         onChangeText={handleChange('accountNumber')}
