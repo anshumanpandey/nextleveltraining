@@ -168,7 +168,7 @@ const Information = (props) => {
       {selectedTab === 0 ? (
         <InformationTab selectedTab={selectedTab} {...props.navigation.state.params} />
       ) : selectedTab === 1 ? (
-        <MediaTab selectedTab={selectedTab} posts={props?.navigation?.getParam("Posts", []) || []} />
+        <MediaTab selectedTab={selectedTab} fetchPost={props?.navigation?.getParam("Id", undefined)} posts={props?.navigation?.getParam("Posts", []) || []} />
       ) : (
             <ReviewTab reviews={(props?.navigation?.getParam("Bookings", []) || []).reduce((arr, booking) => {
               arr.push(...booking.BookingReviews)
