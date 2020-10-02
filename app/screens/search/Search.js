@@ -45,6 +45,8 @@ const Search = (props) => {
     }
   }, [])
 
+  const tabStyle = { color: Colors.s_blue }
+  const activeTabStyle = { color: Colors.nl_yellow }
   let TabsName = ["Players", "Coaches"]
   let propsToIterate = ["Players", "Coaches"]
   let screensToNavigate = ["PlayerInfo", "Information"]
@@ -80,7 +82,7 @@ const Search = (props) => {
 
         <View
           style={{
-            backgroundColor: '#0F2F80',
+            backgroundColor: Colors.nl_yellow,
             width: 30,
             height: 40,
             padding: 17,
@@ -117,8 +119,8 @@ const Search = (props) => {
           )}
         </View>
       </View>
-      <Tabs tabBarUnderlineStyle={{ backgroundColor: Colors.s_blue }}>
-        <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[0]}>
+      <Tabs tabBarUnderlineStyle={{ backgroundColor: Colors.nl_yellow }}>
+        <Tab textStyle={tabStyle} activeTextStyle={activeTabStyle} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[0]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length == 0 && <NoResultMessage />}
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList
@@ -145,7 +147,7 @@ const Search = (props) => {
                 } renderItem={({ item }) => <PostSearchCard hideCoachLevel={true} hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
           </View>
         </Tab>
-        <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[1]}>
+        <Tab textStyle={tabStyle} activeTextStyle={activeTabStyle} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading={TabsName[1]}>
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length == 0 && <NoResultMessage />}
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList
@@ -171,7 +173,7 @@ const Search = (props) => {
           </View>
         </Tab>
 
-        <Tab textStyle={{ color: Colors.s_blue }} activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
+        <Tab textStyle={tabStyle} activeTextStyle={activeTabStyle} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
           {searchCoachesReq.data && searchCoachesReq.data.Posts.length == 0 && <NoResultMessage />}
           {searchCoachesReq.data && searchCoachesReq.data.Posts.length != 0 && (
             <FlatList

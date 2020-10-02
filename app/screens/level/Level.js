@@ -48,7 +48,7 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.level_btn_coach, { backgroundColor: Colors.g_text }]}
+          style={[styles.level_btn_coach, { backgroundColor: Colors.nl_yellow }]}
           onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Coach" })}
         >
           <View style={styles.level_btn_player_view}>

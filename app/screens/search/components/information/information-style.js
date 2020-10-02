@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
     padding: 8,
     alignItems: 'center',
     width: Dimension.pro31,
-    borderBottomColor: 'rgb(119,71,206)',
   },
   tabs1: {
     padding: 10,

@@ -23,7 +23,7 @@ const Information = (props) => {
   const [token] = useGlobalState('token')
   const [selectedTab, setSelectedTab] = useState(0);
   const [milesAway, setMilesAway] = useState();
-  const activeColor = Colors.s_blue;
+  const activeColor = Colors.nl_yellow;
   const inActiveColor = 'gray';
 
   const calculateMiles = useCallback(() => {

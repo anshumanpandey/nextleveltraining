@@ -1,10 +1,11 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import Colors from '../../../../constants/color';
 import styles from './information-style';
 
 const tabs = [
   {id: 1, title: 'INFORMATION'},
-  {id: 2, title: 'POSTS'},
+  {id: 2, title: 'MEDIA'},
   {id: 3, title: 'REVIEW'},
 ];
 const Tabs = ({
@@ -24,6 +25,7 @@ const Tabs = ({
             style={[
               styles.tabs,
               {borderBottomWidth: selectedTab === index ? 1.5 : 0},
+              {borderBottomColor: selectedTab === index ? Colors.nl_yellow : 0},
             ]}>
             <Text
               style={[

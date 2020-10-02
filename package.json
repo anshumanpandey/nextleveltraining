@@ -13,7 +13,8 @@
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "android-release": "cd android && gradlew assembleRelease",
     "android-debug": "npm run android-bundle && cd android && ./gradlew assembleDebug",
-    "build:debug": "react-native run-android --variant=release"
+    "build:debug": "react-native run-android --variant=release",
+    "android:log": "adb logcat com.nextleveltraining:D *:W"
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^1.1.2",

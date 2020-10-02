@@ -64,13 +64,13 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                 <Text style={{ color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
                 <View style={{ marginLeft: '4%' }}>
                   {props.Role == "Coach" && (
-                    <View style={{ backgroundColor: Colors.s_blue, position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ backgroundColor: "black", position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
                       <Text style={{ color: 'white', fontSize: 12 }}>{props?.Level}</Text>
                     </View>
                   )}
                 </View>
               </View>
-              <View style={{ width: '80%' }}>
+              <View style={{ width: '115%' }}>
                 <Text>{props.AboutUs}</Text>
               </View>
               {props.Role == "Player" && props.hideAddress != true && (
@@ -96,15 +96,6 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                   {!saveCoachReq.loading && props.Status == 'Saved' && <Icon type="Entypo" name="heart" style={{ fontSize: 19, color: "#0F2F80" }} />}
                 </View>
               </TouchableOpacity>}
-              <View style={{ marginRight: '8%' }}>
-                <ConnectedWidget userToConnectTo={props.Id} />
-              </View>
-              {milesAway != -1 && (
-                <View>
-                  <Text style={{ color: "#38A663", textAlign: 'right', marginRight: '15%' }}>{milesAway}</Text>
-                  <Text style={{ color: "#38A663", textAlign: 'right', marginRight: '15%' }}>Miles</Text>
-                </View>
-              )}
             </View>
           </View>
           {props.Teams && props.Teams.length != 0 && (
@@ -156,6 +147,13 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               </View>
             );
           })}
+        </View>
+      )}
+
+      {milesAway != -1 && (
+        <View style={{ flexDirection: 'row'}}>
+          <Icon style={{ fontSize: 20 }} type="Entypo" name="location-pin" />
+          <Text style={{ fontSize: 17 }}>{milesAway} Miles from you</Text>
         </View>
       )}
 
