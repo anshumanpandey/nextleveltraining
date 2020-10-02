@@ -32,7 +32,7 @@ const Images ={
     //other iamges
     KobePlayer:require('../assets/images/kobe.jpg'),
     MessiPlayer:require('../assets/images/football.jpg'),
-    UserPlus:require('../assets/images/user-plus.jpg'),
+    UserPlus:require('../assets/images/user-plus.png'),
 
 }
 export default Images;
