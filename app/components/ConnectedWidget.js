@@ -33,7 +33,7 @@ const ConnectedWidget = ({ userToConnectTo }) => {
                         .then(() => refetch())
                         .then(r => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: r.data }))
                 }}>
-                    <Image style={{ height: 40, width: 40, marginRight: '15%' }} source={Images.ConnectIcon} />
+                    <Image style={{ height: 40, width: 40, marginRight: '15%' }} source={Images.UserPlus} />
                     {isConnected() && <Text style={{ fontSize: 12 }}>Connected</Text>}
                     {!isConnected() && <Text style={{ fontSize: 12 }}>Connect</Text>}
                 </TouchableOpacity>
