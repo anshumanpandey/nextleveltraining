@@ -101,7 +101,7 @@ const Login = (props) => {
         } else if (await AsyncStorage.getItem("appleUserName")) {
           appleAuthRequestResponse.fullName = { givenName: await AsyncStorage.getItem("appleUserName") }
         }
-        const deviceToken = await DeviceInfo.getDeviceToken();
+        const deviceToken = await AsyncStorage.getItem('AppleDeviceToken');
 
         loginWithApple({
           data: {

@@ -62,6 +62,8 @@ import ForceChangePassword from './screens/forceChangePassword/ForceChangePasswo
 import Colors from './constants/color';
 import VideoScreen from './screens/video/VideoScreen';
 import HasCompletedVerificationProcess from './utils/HasCompletedVerificationProcess';
+import AsyncStorage from '@react-native-community/async-storage';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 let initialRouteName = null
 let Apps = null
@@ -87,6 +89,12 @@ const AppMain = () => {
 
   useEffect(() => {
     SplashScreen.hide();
+    PushNotificationIOS.addEventListener('register', (deviceToken) => {
+      AsyncStorage.setItem('AppleDeviceToken', deviceToken)
+    });
+    PushNotificationIOS.addEventListener('registrationError', (err) => {
+      Alert.alert("PushNotification registrationError", `${err.message}\n${err.details}`)
+    });
   }, [])
 
   useEffect(() => {
