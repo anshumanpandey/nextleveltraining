@@ -172,6 +172,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
         </View>
         <View style={[styles.post_news_comment, { justifyContent: 'center' }]}>
           <TouchableOpacity
+            style={styles.post_news_like}
             disabled={loading}
             onPress={() => {
               const data = {

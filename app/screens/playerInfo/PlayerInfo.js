@@ -83,7 +83,7 @@ const PlayerInfoScreen = (props) => {
 
               <UserCard
                 title={'About Me'}
-                disabledEdit={true}
+                disabledEdit={!(props.navigation.getParam("editable", false) === true)}
                 data={AboutUs}
                 onEditPress={() =>
                   NavigationService.navigate('EditInput', {
@@ -97,7 +97,7 @@ const PlayerInfoScreen = (props) => {
               <UserCard
                 title={'Achievements'}
                 data={Achievements}
-                disabledEdit={true}
+                disabledEdit={!(props.navigation.getParam("editable", false) === true)}
                 onEditPress={() =>
                   NavigationService.navigate('EditInput', {
                     title: 'Achievements',
@@ -110,7 +110,7 @@ const PlayerInfoScreen = (props) => {
               <TeamMatchCard
                 title={'Teams'}
                 data={Teams}
-                disableEdit={true}
+                disableEdit={!(props.navigation.getParam("editable", false) === true)}
                 onEditPress={(item) =>
                   NavigationService.navigate('AddTeam', {
                     title: 'Teams',
@@ -123,7 +123,7 @@ const PlayerInfoScreen = (props) => {
               <TeamUpComingCard
                 title={'Upcoming Matches'}
                 data={UpcomingMatches}
-                disableEdit={true}
+                disableEdit={!(props.navigation.getParam("editable", false) === true)}
                 onEditPress={(item) =>
                   NavigationService.navigate('UpComingMatch', {
                     title: 'Teams',
@@ -136,7 +136,7 @@ const PlayerInfoScreen = (props) => {
           </ScrollView>
 
         </Tab>
-        <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Posts">
+        <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Media">
           {getPostByUserReq.loading && <Spinner color={Colors.s_blue} />}
           {getPostByUserReq.error && <Text style={{ fontSize: 18, textAlign: 'center', marginTop: '15%' }}>No Posts Yet</Text>}
           {!getPostByUserReq.loading && getPostByUserReq.data && (

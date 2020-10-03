@@ -16,7 +16,6 @@ import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificatio
 
 
 const AddTeam = (props) => {
-  const cb = props.navigation.state.params.cb;
   const [profile] = useGlobalState('profile')
 
   const [postTeamReq, postTeam] = useAxios({
@@ -30,6 +29,7 @@ const AddTeam = (props) => {
 
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
         experienceId: props.navigation.state.params.Id || undefined,
         jobPosition: props.navigation.state.params.JobPosition || '',
@@ -67,7 +67,7 @@ const AddTeam = (props) => {
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
             if (HasCompletedVerificationProcess(profile)) {
-              NavigationService.navigate("AboutMe")
+              NavigationService.navigate(props?.navigation?.getParam("goBackTo", "AboutMe"))
             } else {
               NavigationService.goBack()
             }
@@ -80,7 +80,7 @@ const AddTeam = (props) => {
             <HeaderClosePlus
               onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => {
                 if (HasCompletedVerificationProcess(profile)) {
-                  NavigationService.navigate(props?.navigation?.getParam("goBackTo", undefined))
+                  NavigationService.navigate(props?.navigation?.getParam("goBackTo", "AboutMe"))
                 } else {
                   NavigationService.goBack()
                 }

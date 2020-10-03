@@ -62,7 +62,7 @@ const AddTeam = (props) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
             console.log(r.data)
             if (HasCompletedVerificationProcess(profile)) {
-              NavigationService.navigate("AboutMe")
+              NavigationService.navigate(props?.navigation?.getParam("goBackTo", "AboutMe"))
             } else {
               NavigationService.goBack()
             }

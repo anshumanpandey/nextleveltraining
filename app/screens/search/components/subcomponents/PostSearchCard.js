@@ -153,7 +153,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
       {milesAway != -1 && (
         <View style={{ flexDirection: 'row'}}>
           <Icon style={{ fontSize: 20 }} type="Entypo" name="location-pin" />
-          <Text style={{ fontSize: 17 }}>{milesAway} Miles from you</Text>
+          <Text style={{ fontSize: 17 }}>{parseInt(milesAway)} Miles from you</Text>
         </View>
       )}
 

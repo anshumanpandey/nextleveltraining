@@ -35,7 +35,7 @@ import Information from './screens/search/components/information/Information';
 import BookNow from './screens/search/components/BookNow';
 import Payments from './screens/payments';
 import JobDetails from './screens/bookingDetails';
-import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from './state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS, getGlobalState } from './state/GlobalState';
 import './api/AxiosBootstrap';
 import SplashScreen from 'react-native-splash-screen'
 import EditProfile from './screens/editProfile/EditProfile';
@@ -367,8 +367,8 @@ const AppMain = () => {
       }),
     }
     tabs.Profile = {
-      screen: profile.Role == "Player" ? PlayerInfoScreen : Information,
-      params: { player: profile, ...profile, hideConnect: true, hideCoachButtons: true },
+      getScreen: () => profile.Role == "Player" ? PlayerInfoScreen : Information,
+      params: { player: getGlobalState("profile"), ...getGlobalState("profile"), coach: getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true },
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>

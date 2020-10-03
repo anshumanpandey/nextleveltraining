@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   post_news_content: {
+    marginTop: 25,
     marginLeft: 0,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.3)',
@@ -105,6 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    alignItems: 'stretch'
   },
   like_reply: {
     width: Dimension.pro80,
@@ -113,12 +115,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   post_tumb_up: {
+    marginTop: 'auto',
+    marginBottom: 'auto',
     fontSize: 20,
     color: Colors.s_blue,
     marginRight: '7%'
   },
   post_like: {
     marginLeft: 10,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   post_like_reply: {
     marginLeft: 10,

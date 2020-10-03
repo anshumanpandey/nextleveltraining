@@ -5,7 +5,7 @@ import useAxios from 'axios-hooks'
 import HeaderClosePlus from '../../components/header/HeaderClosePlus';
 import NavigationService from '../../navigation/NavigationService';
 import Dimension from '../../constants/dimensions';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
+import { dispatchGlobalState, getGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import ErrorLabel from '../../components/ErrorLabel';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 
@@ -88,7 +88,9 @@ const EditInput = (props) => {
               console.log(r.data)
               dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
               if (HasCompletedVerificationProcess(profile)) {
-                NavigationService.navigate("AboutMe")
+                const goTo = props?.navigation?.getParam("goBackTo", "AboutMe")
+                const params = goTo != "Profile" ? undefined : { player: getGlobalState("profile"), ...getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true }
+                NavigationService.navigate(goTo, params)
               } else {
                 NavigationService.goBack()
               }

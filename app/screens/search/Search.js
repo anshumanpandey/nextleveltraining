@@ -140,7 +140,7 @@ const Search = (props) => {
                   )
 
                   console.log("distanceToCoachA",distanceToCoachA)
-                  console.log("distanceToCoachA",distanceToCoachA)
+                  console.log("distanceToCoachB",distanceToCoachB)
             
                   return distanceToCoachA - distanceToCoachB
                 })

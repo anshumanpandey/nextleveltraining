@@ -12,7 +12,7 @@ import useAxios from 'axios-hooks'
 import Tabs from './Tabs';
 import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
-import { useGlobalState } from '../../../../state/GlobalState';
+import { getGlobalState, useGlobalState } from '../../../../state/GlobalState';
 import dimensions from '../../../../constants/dimensions';
 import { StackActions, NavigationActions } from 'react-navigation';
 import ConnectedWidget from '../../../../components/ConnectedWidget';
@@ -29,7 +29,7 @@ const Information = (props) => {
   const calculateMiles = useCallback(() => {
     console.log(profile?.Lat)
     console.log(profile?.Lng)
-    console.log(props.navigation.getParam("Lat"))
+    console.log(props.navigation.getParam("Coach.Lat"))
     console.log(props.navigation.getParam("Lng"))
     console.log(props.navigation.getParam("hideConnect"))
 
@@ -69,7 +69,28 @@ const Information = (props) => {
         </View>
         <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2 }}></View>
         <View style={styles.infoContain}>
-          <Image source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder} style={styles.user_pic} />
+          <TouchableOpacity disabled={!(props.navigation.getParam("editable", false) == true)} onPress={() => props.navigation.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'Profile' } })}>
+            <Image source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder} style={styles.user_pic} />
+            <View style={{
+              display: props.navigation.getParam("editable", false) == true ? 'flex': 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+              width: Dimension.px30,
+              height: Dimension.px30,
+              backgroundColor: Colors.s_blue,
+              borderRadius: Dimension.px30 / 2,
+              right: 0,
+              top: 0,
+              marginTop: -Dimension.px50
+            }}>
+              <Icon
+                type="EvilIcons"
+                name="pencil"
+                style={{ color: 'white', fontSize: 25 }}
+              />
+            </View>
+          </TouchableOpacity>
           <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', height: 60 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.userName}>{props.navigation.getParam("FullName")}</Text>
@@ -166,7 +187,7 @@ const Information = (props) => {
       </View>
 
       {selectedTab === 0 ? (
-        <InformationTab selectedTab={selectedTab} {...props.navigation.state.params} />
+        <InformationTab editable={props.navigation.getParam("editable", false)} selectedTab={selectedTab} coach={props.navigation.getParam("coach", undefined) == undefined ? props.navigation.state.params: getGlobalState("profile")} />
       ) : selectedTab === 1 ? (
         <MediaTab selectedTab={selectedTab} fetchPost={props?.navigation?.getParam("Id", undefined)} posts={props?.navigation?.getParam("Posts", []) || []} />
       ) : (
