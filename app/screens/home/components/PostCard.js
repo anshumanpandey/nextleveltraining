@@ -21,6 +21,8 @@ import NavigationService from '../../../navigation/NavigationService';
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
 const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
+  const [currentMediaViewSize, setCurrentMediaViewSize] = useState({ width: null, height: null });
+  const [fullSize, setFullSize] = useState(false);
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
@@ -60,8 +62,8 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
               NavigationService.navigate("Information", { ...item.poster })
             }
           }}>
-            {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
-            {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == true && <Image resizeMode="contain" source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == false && <Image resizeMode="contain" source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
           </TouchableOpacity>
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -116,7 +118,12 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           {item.description}
         </ParsedText>
 
-        <View style={styles.post_news_content}>
+        <View
+          onLayout={(event) => {
+            var { width, height } = event.nativeEvent.layout;
+            setCurrentMediaViewSize({ width, height })
+          }}
+          style={[styles.post_news_content, { maxHeight: fullSize == true ? undefined: 100 }]}>
           {item.fileType && !item.fileType.includes('video') && (
             <View style={{ alignItems: 'center', maxHeight: maxHeight }}>
               <Image
@@ -170,6 +177,11 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           )}
 
         </View>
+        {fullSize == false && currentMediaViewSize.height > 98 && (
+          <TouchableOpacity onPress={() => setFullSize(true)} style={{ backgroundColor: 'white' }}>
+            <Text style={{ textAlign: 'center', fontSize: 18, color: Colors.nl_yellow }}>Show More</Text>
+          </TouchableOpacity>
+        )}
         <View style={[styles.post_news_comment, { justifyContent: 'center' }]}>
           <TouchableOpacity
             style={styles.post_news_like}

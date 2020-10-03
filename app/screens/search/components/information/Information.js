@@ -70,7 +70,13 @@ const Information = (props) => {
         <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2 }}></View>
         <View style={styles.infoContain}>
           <TouchableOpacity disabled={!(props.navigation.getParam("editable", false) == true)} onPress={() => props.navigation.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'Profile' } })}>
-            <Image source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder} style={styles.user_pic} />
+            <View>
+              <Image
+                resizeMode="contain"
+                style={styles.user_pic}
+                source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder}
+              />
+            </View>
             <View style={{
               display: props.navigation.getParam("editable", false) == true ? 'flex': 'none',
               alignItems: 'center',

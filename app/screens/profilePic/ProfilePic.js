@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ErrorLabel from '../../components/ErrorLabel';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
+import { dispatchGlobalState, getGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import Upload from 'react-native-background-upload'
 import { pickImage } from '../../helpers/ImagePicker';
 import Images from '../../constants/image';
@@ -24,6 +24,8 @@ const ProfilePicScreen = (props) => {
     const [getUserReq, getUserData] = useAxios({
         url: '/Users/GetUser',
     }, { manual: true })
+
+    console.log(props?.navigation?.state)
 
     return (
         <Formik
@@ -91,7 +93,10 @@ const ProfilePicScreen = (props) => {
                                 console.log(r.data)
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                                 if (HasCompletedVerificationProcess(profile)) {
-                                    NavigationService.navigate("AboutMe")
+                                    const goTo = props?.navigation?.getParam("goBackTo", "AboutMe")
+                                    const params = goTo != "Profile" ? undefined : { player: getGlobalState("profile"), ...getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true }
+                                    console.log("profilepic: back to", goTo)
+                                    NavigationService.navigate(goTo, params)
                                 } else {
                                     NavigationService.goBack()
                                 }
@@ -106,7 +111,12 @@ const ProfilePicScreen = (props) => {
                     <View>
                         <View style={{ borderWidth: 0 }}>
                             <HeaderClosePlus
-                                onGoBack={props?.navigation?.getParam("goBackTo", undefined) ? () => NavigationService.navigate(props?.navigation?.getParam("goBackTo")) : undefined}
+                                onGoBack={() => {
+                                    const goTo = props?.navigation?.getParam("goBackTo", "AboutMe")
+                                    const params = goTo != "Profile" ? undefined : { player: getGlobalState("profile"), ...getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true }
+                                    console.log("profilepic: back to", goTo)
+                                    NavigationService.navigate(goTo, params)
+                                }}
                                 isLoading={uploading || getUserReq.loading}
                                 isSaveButton={true}
                                 saveOnPress={handleSubmit}

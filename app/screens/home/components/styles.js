@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
   post_container: {
     backgroundColor: 'white',
     marginBottom: '1%',
-    padding: '2%'
   },
   post_card_container: {
     paddingTop: 10,
@@ -70,8 +69,6 @@ const styles = StyleSheet.create({
   post_news_content: {
     marginTop: 25,
     marginLeft: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.3)',
     marginBottom: '0.5%'
     // width:'90%'
   },
@@ -91,6 +88,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'space-between',
     marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.3)',
   },
   news_comment: {
     flexDirection: 'row',

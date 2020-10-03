@@ -38,6 +38,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
       <View style={{ flexDirection: 'row' }}>
         <View style={{ marginTop: 15 }}>
           <ImageProgress
+            resizeMode="contain"
             source={props.ProfileImage ? { uri: props.ProfileImage } : Images.PlayerPlaceholder}
             style={styles.ps_image}
             imageStyle={styles.ps_image}

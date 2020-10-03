@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     marginTop: -Dimension.px50,
     height: Dimension.px100,
     width: Dimension.px100,
-    borderRadius: Dimension.px50,
+    borderRadius: Dimension.px100 / 2,
   },
   userName: {
     marginTop: Dimension.pro5,

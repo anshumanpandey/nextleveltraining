@@ -375,7 +375,7 @@ const AppMain = () => {
       }),
     }
     tabs.Profile = {
-      getScreen: () => profile.Role == "Player" ? PlayerInfoScreen : Information,
+      screen: profile.Role == "Player" ? PlayerInfoScreen : Information,
       params: { player: getGlobalState("profile"), ...getGlobalState("profile"), coach: getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true },
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (

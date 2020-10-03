@@ -11,7 +11,7 @@ import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
 import moment from 'moment'
 import { compose } from 'redux';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, getGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 
 const AddTeam = (props) => {
@@ -65,7 +65,11 @@ const AddTeam = (props) => {
         })
         .then((r) => {
           dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
-          NavigationService.goBack()
+          if (props.navigation.getParam("goBackTo", false)) {
+            NavigationService.navigate(props.navigation.getParam("goBackTo"), { player: getGlobalState("profile") })
+          } else {
+            NavigationService.goBack()
+          }
         })
       }}
     >
@@ -73,6 +77,13 @@ const AddTeam = (props) => {
         <>
           <View>
             <HeaderClosePlus
+              onGoBack={() => {
+                if (props.navigation.getParam("goBackTo", false)) {
+                  NavigationService.navigate(props.navigation.getParam("goBackTo"), { player: getGlobalState("profile") })
+                } else {
+                  NavigationService.goBack()
+                }
+              }}
               isLoading={postTeamReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}

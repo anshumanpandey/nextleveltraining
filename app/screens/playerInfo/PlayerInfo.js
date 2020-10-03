@@ -16,6 +16,8 @@ import useAxios from 'axios-hooks'
 import { FlatList } from 'react-native-gesture-handler';
 import moment from "moment"
 import PostCard from '../home/components/PostCard';
+import dimensions from '../../constants/dimensions';
+import { NavigationActions } from 'react-navigation';
 
 const PlayerInfoScreen = (props) => {
   const [toggle, setToggle] = useState(false);
@@ -60,20 +62,47 @@ const PlayerInfoScreen = (props) => {
           <ScrollView>
             <View>
               <View style={[styles.userView, { flexDirection: 'row' }]}>
-                <View style={{ marginTop: 50 }}>
+                <TouchableOpacity
+                  disabled={!(props.navigation.getParam("editable", false) === true)}
+                  onPress={() => {
+                    const d = NavigationActions.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'Profile' } })
+                    props.navigation.dispatch(d)
+                  }}
+                  style={{ marginTop: 50 }}>
                   {toggle == true && (
                     <Image
+                      resizeMode="contain"
                       source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                       style={styles.userImg}
                     />
                   )}
                   {toggle == false && (
                     <Image
+                      resizeMode="contain"
                       source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                       style={styles.userImg}
                     />
                   )}
-                </View>
+                  {props.navigation.getParam("editable", false) == true && (
+                    <View style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      position: 'absolute',
+                      width: dimensions.px30,
+                      height: dimensions.px30,
+                      backgroundColor: Colors.s_blue,
+                      borderRadius: dimensions.px30 / 2,
+                      right: 0,
+                      top: 3,
+                    }}>
+                      <Icon
+                        type="EvilIcons"
+                        name="pencil"
+                        style={{ color: 'white', fontSize: 25 }}
+                      />
+                    </View>
+                  )}
+                </TouchableOpacity>
                 {props?.navigation?.getParam("hideConnect", false) == false && (
                   <View style={{ position: 'absolute', right: '5%', alignSelf: 'flex-end' }}>
                     <ConnectedWidget userToConnectTo={profile.Id} />
@@ -89,6 +118,7 @@ const PlayerInfoScreen = (props) => {
                   NavigationService.navigate('EditInput', {
                     title: 'About Me',
                     data: AboutUs,
+                    goBackTo: props.navigation.getParam("editable", false) == true ? "Profile" : "AboutMe",
                     cb: (aboutMe) => { },
                   })
                 }
@@ -102,6 +132,7 @@ const PlayerInfoScreen = (props) => {
                   NavigationService.navigate('EditInput', {
                     title: 'Achievements',
                     data: Achievements,
+                    goBackTo: props.navigation.getParam("editable", false) == true ? "Profile" : "AboutMe",
                     cb: (achievements) => { },
                   })
                 }
@@ -114,6 +145,7 @@ const PlayerInfoScreen = (props) => {
                 onEditPress={(item) =>
                   NavigationService.navigate('AddTeam', {
                     title: 'Teams',
+                    goBackTo: props.navigation.getParam("editable", false) == true ? "Profile" : "AboutMe",
                     cb: (team) => { },
                     ...item
                   })
@@ -127,6 +159,7 @@ const PlayerInfoScreen = (props) => {
                 onEditPress={(item) =>
                   NavigationService.navigate('UpComingMatch', {
                     title: 'Teams',
+                    goBackTo: props.navigation.getParam("editable", false) == true ? "Profile" : "AboutMe",
                     cb: (upComing) => { },
                     ...item
                   })

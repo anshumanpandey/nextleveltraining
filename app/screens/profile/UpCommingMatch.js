@@ -8,7 +8,7 @@ import Dimension from '../../constants/dimensions';
 import DatePicker from 'react-native-datepicker';
 import ErrorLabel from '../../components/ErrorLabel';
 import useAxios from 'axios-hooks'
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, getGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 
 const UpComingMatch = (props) => {
   const cb = props.navigation.state.params.cb;
@@ -44,7 +44,11 @@ const UpComingMatch = (props) => {
         .then(r => getUserData())
         .then((r) => {
           dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
-          NavigationService.goBack()
+          if (props.navigation.getParam("goBackTo", false)) {
+            NavigationService.navigate(props.navigation.getParam("goBackTo"), { player: getGlobalState("profile") })
+          } else {
+            NavigationService.goBack()
+          }
         })
       }}
     >
@@ -52,6 +56,13 @@ const UpComingMatch = (props) => {
         <>
           <View>
             <HeaderClosePlus
+              onGoBack={() => {
+                if (props.navigation.getParam("goBackTo", false)) {
+                  NavigationService.navigate(props.navigation.getParam("goBackTo"), { player: getGlobalState("profile") })
+                } else {
+                  NavigationService.goBack()
+                }
+              }}
               isLoading={postMatchReq.loading || getUserReq.loading}
               isSaveButton={true}
               saveOnPress={handleSubmit}

@@ -63,11 +63,12 @@ const PlayerProfile = (props) => {
             <View style={{ marginTop: 50 }}>
               <TouchableOpacity
                 onPress={async () => {
-                  NavigationService.navigate('ProfilePic')
+                  NavigationService.navigate('ProfilePic', { goBackTo: 'AboutMe' })
                 }}
                 style={{ position: 'relative' }}>
                 {triggerChange == true && (
                   <ImageProgress
+                    resizeMode="contain"
                     source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                     style={styles.userImg}
                     imageStyle={styles.userImg}
@@ -75,6 +76,7 @@ const PlayerProfile = (props) => {
                 )}
                 {triggerChange == false && (
                   <ImageProgress
+                    resizeMode="contain"
                     source={profilePic ? { uri: profilePic.uri } : Images.PlayerPlaceholder}
                     style={styles.userImg}
                     imageStyle={styles.userImg}

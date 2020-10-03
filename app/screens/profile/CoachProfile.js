@@ -1238,12 +1238,14 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
                     {triggerChange == true && (
                         <Image
+                            resizeMode="stretch"
                             source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
                             style={styles.profileImage}
                         />
                     )}
                     {triggerChange == false && (
                         <Image
+                            resizeMode="stretch"
                             source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
                             style={styles.profileImage}
                         />

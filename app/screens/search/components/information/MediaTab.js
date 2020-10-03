@@ -47,7 +47,7 @@ const MediaTab = ({ posts = [], selectedTab, fetchPost }) => {
 
   useEffect(() => {
     if (fetchPost) {
-      getPost({ url: `https://mobileapi.nextlevelfootballtraining.co.uk/api/Users/GetPostsByUser/5c50c4a0-e7f6-4dab-a76f-29679937c1b8` })
+      getPost({ url: `https://mobileapi.nextlevelfootballtraining.co.uk/api/Users/GetPostsByUser/${fetchPost}` })
         .then(r => {
           const p = r.data.map(ParsePost)
           Promise.all(p)
