@@ -21,7 +21,8 @@ import NavigationService from '../../../navigation/NavigationService';
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
 const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
-  const [currentMediaViewSize, setCurrentMediaViewSize] = useState({ width: null, height: null });
+  const [maxNumOfLines, setMaxNumOfLines] = useState(3);
+  const [numOfLines, setNumOfLines] = useState(0);
   const [fullSize, setFullSize] = useState(false);
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
@@ -62,8 +63,8 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
               NavigationService.navigate("Information", { ...item.poster })
             }
           }}>
-            {triggerChange == true && <Image resizeMode="contain" source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
-            {triggerChange == false && <Image resizeMode="contain" source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == true && <Image resizeMode={item.profileImage ? undefined:"contain"} source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == false && <Image resizeMode={item.profileImage ? undefined:"contain"} source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
           </TouchableOpacity>
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -103,6 +104,10 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           </View>
         </View>
         <ParsedText
+          numberOfLines={maxNumOfLines}
+          onTextLayout={(e) => {
+            setNumOfLines(e.nativeEvent.lines.length)
+          }}
           style={[styles.post_description, { paddingHorizontal: '5%' }]}
           parse={[
             {
@@ -117,13 +122,13 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
         >
           {item.description}
         </ParsedText>
-
+        {fullSize == false && numOfLines > maxNumOfLines && (
+          <TouchableOpacity onPress={() => setMaxNumOfLines(numOfLines)} style={{ backgroundColor: 'white' }}>
+            <Text style={{ textAlign: 'center', fontSize: 16, color: Colors.nl_yellow }}>Show More</Text>
+          </TouchableOpacity>
+        )}
         <View
-          onLayout={(event) => {
-            var { width, height } = event.nativeEvent.layout;
-            setCurrentMediaViewSize({ width, height })
-          }}
-          style={[styles.post_news_content, { maxHeight: fullSize == true ? undefined: 100 }]}>
+          style={[styles.post_news_content, { maxHeight: fullSize == true ? undefined : 100 }]}>
           {item.fileType && !item.fileType.includes('video') && (
             <View style={{ alignItems: 'center', maxHeight: maxHeight }}>
               <Image
@@ -145,7 +150,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
                 source={{ uri: item.imageUri }}
                 paused={true}
                 onLoadStart={(d) => {
-                  console.log('onLoadStart')
+                  //console.log('onLoadStart', item.imageUri)
                 }}
                 onLoad={(d) => {
                   console.log('onLoad')
@@ -177,11 +182,6 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           )}
 
         </View>
-        {fullSize == false && currentMediaViewSize.height > 98 && (
-          <TouchableOpacity onPress={() => setFullSize(true)} style={{ backgroundColor: 'white' }}>
-            <Text style={{ textAlign: 'center', fontSize: 18, color: Colors.nl_yellow }}>Show More</Text>
-          </TouchableOpacity>
-        )}
         <View style={[styles.post_news_comment, { justifyContent: 'center' }]}>
           <TouchableOpacity
             style={styles.post_news_like}
