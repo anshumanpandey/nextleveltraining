@@ -150,7 +150,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
                 source={{ uri: item.imageUri }}
                 paused={true}
                 onLoadStart={(d) => {
-                  //console.log('onLoadStart', item.imageUri)
+                  console.log('onLoadStart', item.imageUri)
                 }}
                 onLoad={(d) => {
                   console.log('onLoad')
