@@ -128,7 +128,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           </TouchableOpacity>
         )}
         <View
-          style={[styles.post_news_content, { maxHeight: fullSize == true ? undefined : 100 }]}>
+          style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
             <View style={{ alignItems: 'center', maxHeight: maxHeight }}>
               <Image
