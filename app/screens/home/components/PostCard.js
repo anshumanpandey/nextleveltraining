@@ -63,8 +63,8 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
               NavigationService.navigate("Information", { ...item.poster })
             }
           }}>
-            {triggerChange == true && <Image resizeMode={item.profileImage ? undefined:"contain"} source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
-            {triggerChange == false && <Image resizeMode={item.profileImage ? undefined:"contain"} source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == true && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
+            {triggerChange == false && <Image source={item.profileImage ? { uri: item.profileImage } : Images.PlayerPlaceholder} style={styles.post_image_size} />}
           </TouchableOpacity>
           <View style={styles.post_content_view}>
             <View style={{ width: Dimension.pro100, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

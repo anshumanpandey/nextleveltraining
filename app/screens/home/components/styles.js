@@ -52,9 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.s_blue,
   },
-  post_title_time: {
-    marginLeft: 'auto',
-  },
+  post_title_time: {},
   comment_title_time: {
     marginLeft: 10,
     fontSize: 12,
