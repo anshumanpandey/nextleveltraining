@@ -170,7 +170,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
                   setVideoError(true)
                 }}               // Callback when video cannot be loaded
                 style={{
-                  height: Dimension.px440,
+                  height: videoHeight,
                   display: videoIsReady && !videoError ? 'flex' : "none"
                 }} />
               {!videoIsReady && videoError == false && (
