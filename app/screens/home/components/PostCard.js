@@ -104,7 +104,6 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           </View>
         </View>
         <ParsedText
-          numberOfLines={numOfLines > maxNumOfLines ? maxNumOfLines : undefined}
           onTextLayout={(e) => {
             if (numOfLines == null) setNumOfLines(e.nativeEvent.lines.length)
             console.log("numOfLines", e.nativeEvent.lines.length)
@@ -118,16 +117,18 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
             {
               pattern: /#(\w+)/,
               style: { color: Colors.s_blue, fontWeight: 'bold' }
+            },
+            {
+              pattern: /(Show More)/,
+              style: { color: Colors.nl_yellow, fontWeight: 'bold' },
+              onPress: () => {
+                setMaxNumOfLines(numOfLines)
+              }
             }
           ]}
         >
-          {item.description}
+          {numOfLines > maxNumOfLines ? item.description.slice(0,100) + "... " + "Show More" : item.description }
         </ParsedText>
-        {fullSize == false && numOfLines > maxNumOfLines && (
-          <TouchableOpacity onPress={() => setMaxNumOfLines(numOfLines)} style={{ backgroundColor: 'white' }}>
-            <Text style={{ textAlign: 'center', fontSize: 16, color: Colors.nl_yellow }}>Show More</Text>
-          </TouchableOpacity>
-        )}
         <View
           style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (

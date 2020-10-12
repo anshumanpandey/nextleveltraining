@@ -141,7 +141,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               <View style={{ flex: 1,flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%'}}>
                 {isLoading() && <Spinner color="white" style={{ marginRight: '10%' }} />}
                 <Text style={{ color: 'white', fontSize: 18, opacity: (selectedLocation && time) || !isLoading() ? 1 : 0.5 }}>
-                  Save
+                  Book Now
               </Text>
               </View>
             </TouchableOpacity>

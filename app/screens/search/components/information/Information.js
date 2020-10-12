@@ -72,7 +72,6 @@ const Information = (props) => {
           <TouchableOpacity disabled={!(props.navigation.getParam("editable", false) == true)} onPress={() => props.navigation.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'Profile' } })}>
             <View>
               <Image
-                resizeMode="contain"
                 style={styles.user_pic}
                 source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder}
               />
