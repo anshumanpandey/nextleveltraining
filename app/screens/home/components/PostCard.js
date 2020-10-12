@@ -17,10 +17,12 @@ import Video from 'react-native-video';
 import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
 import NavigationService from '../../../navigation/NavigationService';
+import dimensions from '../../../constants/dimensions';
 
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
 const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
+  const [videoHeight, setVideoHeight] = useState(dimensions.px160);
   const [maxNumOfLines, setMaxNumOfLines] = useState(3);
   const [numOfLines, setNumOfLines] = useState(null);
   const [fullSize, setFullSize] = useState(false);
@@ -119,15 +121,16 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
               style: { color: Colors.s_blue, fontWeight: 'bold' }
             },
             {
-              pattern: /(Show More)/,
+              pattern: /(NL_SHOW_MORE)/,
               style: { color: Colors.nl_yellow, fontWeight: 'bold' },
+              renderText: () => "Show More",
               onPress: () => {
                 setMaxNumOfLines(numOfLines)
               }
             }
           ]}
         >
-          {numOfLines > maxNumOfLines ? item.description.slice(0,100) + "... " + "Show More" : item.description }
+          {numOfLines > maxNumOfLines ? item.description.slice(0,100) + "... " + "NL_SHOW_MORE" : item.description }
         </ParsedText>
         <View
           style={styles.post_news_content}>
@@ -157,6 +160,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
                 onLoad={(d) => {
                   console.log('onLoad')
                   setVideoIsReady(true)
+                  setVideoHeight(d.naturalSize.height)
                 }}
                 currentPosition={1}
                 controls={true}
