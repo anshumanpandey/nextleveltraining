@@ -22,7 +22,7 @@ const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
 const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
   const [maxNumOfLines, setMaxNumOfLines] = useState(3);
-  const [numOfLines, setNumOfLines] = useState(0);
+  const [numOfLines, setNumOfLines] = useState(null);
   const [fullSize, setFullSize] = useState(false);
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
@@ -104,9 +104,10 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
           </View>
         </View>
         <ParsedText
-          numberOfLines={maxNumOfLines}
+          numberOfLines={numOfLines > maxNumOfLines ? maxNumOfLines : undefined}
           onTextLayout={(e) => {
-            setNumOfLines(e.nativeEvent.lines.length)
+            if (numOfLines == null) setNumOfLines(e.nativeEvent.lines.length)
+            console.log("numOfLines", e.nativeEvent.lines.length)
           }}
           style={[styles.post_description, { paddingHorizontal: '5%' }]}
           parse={[

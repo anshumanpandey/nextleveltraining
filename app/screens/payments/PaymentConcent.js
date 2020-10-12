@@ -36,17 +36,17 @@ const PaymentConcentScreen = (props) => {
   }, { manual: true })
 
   const [{ data, loading, error }, getAccessToken] = simpleAxiosHook({
-    url: `https://api.paypal.com/v1/oauth2/token`,
+    url: `https://api.sandbox.paypal.com/v1/oauth2/token`,
     method: 'POST',
     params,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${base64.encode(`AWpaMztfwuCn_dP0IYhyvsnGRxgHtgP5GjDOfFi1U21ANbvyr7PRly1iwcplriBjtPuUGnZufVn894cE:EIzgb7EaeYuczf-7pe633I6nfDroJQ97bix7H56lsDhqGeDIBck7LD1546VuahVCEOosOOvMDC6-ZThb`)}`,
+      'Authorization': `Basic ${base64.encode(`ASzioBXLboxNr1ZU-Il-AYsuFYnElDWfuhBsMUDCpNb3iROIxhI4DEfef99nXwsP7f1dDkTiHwoZshr_:EBKq-fql7wyVuyfuILX--YiFIb0CziLcfU5UiTlC88eqABsKC5YQd47U8BL428Np4s4_zynBgCj0S1NH`)}`,
     },
   }, { manual: true })
 
   const [paymentReq, doPayment] = simpleAxiosHook({
-    url: 'https://api.paypal.com/v1/payments/payment',
+    url: 'https://api.sandbox.paypal.com/v1/payments/payment',
     method: 'POST'
   }, { manual: true })
 

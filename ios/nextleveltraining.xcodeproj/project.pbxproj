@@ -29,6 +29,7 @@
 		576EA907D98F4FF1A7B872BA /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9EB914D5AF6344C89C371070 /* MaterialIcons.ttf */; };
 		794C9BA63D2E4F29950826BF /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9028C956A72471D9A6490D5 /* Fontisto.ttf */; };
 		7BE9A66B343B4581AEE5B83D /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC765F2E5EDD47C58CC6510C /* EvilIcons.ttf */; };
+		841D3E8E2533EC320042893D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841D3E8D2533EC320042893D /* File.swift */; };
 		9BC7EF4AB88741ACBE1AA184 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9485721DCA49474DAE3038CA /* Entypo.ttf */; };
 		A6FD1351B17343E79CC0882D /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7ACFC3FE46CA411097CA71E0 /* FontAwesome5_Brands.ttf */; };
 		A836953D29C5417183C8CBD5 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA8952AC044D4CEE96CE5E99 /* Foundation.ttf */; };
@@ -98,6 +99,8 @@
 		748B9003338E339E0F8A13B8 /* libPods-nextleveltraining-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nextleveltraining-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78D9BB166072D73D2091E427 /* Pods-nextleveltraining.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nextleveltraining.release.xcconfig"; path = "Target Support Files/Pods-nextleveltraining/Pods-nextleveltraining.release.xcconfig"; sourceTree = "<group>"; };
 		7ACFC3FE46CA411097CA71E0 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		841D3E8D2533EC320042893D /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		8492AB072527B5BB0048D81B /* nextleveltraining-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nextleveltraining-Bridging-Header.h"; sourceTree = "<group>"; };
 		9485721DCA49474DAE3038CA /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		9759992D47A445A6843CCBFF /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		9EB914D5AF6344C89C371070 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -254,6 +257,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				841D3E8D2533EC320042893D /* File.swift */,
 				13B07FAE1A68108700A75B9A /* nextleveltraining */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* nextleveltrainingTests */,
@@ -261,6 +265,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				16C70C5F9279313BF40FE8FE /* Pods */,
 				055671DFF0C24F039A7AA8B4 /* Resources */,
+				8492AB072527B5BB0048D81B /* nextleveltraining-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -383,7 +388,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Y77A2C426U;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1220;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -711,6 +716,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				841D3E8E2533EC320042893D /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -764,6 +770,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 64A6A920B0D1718D4438946F /* Pods-nextleveltraining-nextleveltrainingTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -787,6 +794,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6285BCB8AA266FF850691DE5 /* Pods-nextleveltraining-nextleveltrainingTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = nextleveltrainingTests/Info.plist;
@@ -812,7 +820,7 @@
 				CODE_SIGN_ENTITLEMENTS = nextleveltraining/NextLevelTrainingDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = Y77A2C426U;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -821,7 +829,7 @@
 				);
 				INFOPLIST_FILE = nextleveltraining/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -830,6 +838,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.nextleveltraining;
 				PRODUCT_NAME = NextLevelTraining;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "nextleveltraining-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -845,11 +854,11 @@
 				CODE_SIGN_ENTITLEMENTS = nextleveltraining/NextLevelTrainingRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = Y77A2C426U;
 				INFOPLIST_FILE = nextleveltraining/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.11;
+				MARKETING_VERSION = 1.12;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -858,6 +867,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.nextleveltraining;
 				PRODUCT_NAME = NextLevelTraining;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "nextleveltraining-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
