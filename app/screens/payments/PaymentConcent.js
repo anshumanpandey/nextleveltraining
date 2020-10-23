@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
@@ -36,17 +36,17 @@ const PaymentConcentScreen = (props) => {
   }, { manual: true })
 
   const [{ data, loading, error }, getAccessToken] = simpleAxiosHook({
-    url: `https://api.sandbox.paypal.com/v1/oauth2/token`,
+    url: `https://api.paypal.com/v1/oauth2/token`,
     method: 'POST',
     params,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${base64.encode(`ASzioBXLboxNr1ZU-Il-AYsuFYnElDWfuhBsMUDCpNb3iROIxhI4DEfef99nXwsP7f1dDkTiHwoZshr_:EBKq-fql7wyVuyfuILX--YiFIb0CziLcfU5UiTlC88eqABsKC5YQd47U8BL428Np4s4_zynBgCj0S1NH`)}`,
+      'Authorization': `Basic ${base64.encode(`AWpaMztfwuCn_dP0IYhyvsnGRxgHtgP5GjDOfFi1U21ANbvyr7PRly1iwcplriBjtPuUGnZufVn894cE:EIzgb7EaeYuczf-7pe633I6nfDroJQ97bix7H56lsDhqGeDIBck7LD1546VuahVCEOosOOvMDC6-ZThb`)}`,
     },
   }, { manual: true })
 
   const [paymentReq, doPayment] = simpleAxiosHook({
-    url: 'https://api.sandbox.paypal.com/v1/payments/payment',
+    url: 'https://api.paypal.com/v1/payments/payment',
     method: 'POST'
   }, { manual: true })
 
@@ -162,7 +162,7 @@ const PaymentConcentScreen = (props) => {
                     const resetAction = StackActions.reset({
                       index: 0,
                       key: null,
-                      actions: [ NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Booking' }) }) ]
+                      actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Booking' }) })]
                     })
                     props.navigation.dispatch(resetAction);
                   })
