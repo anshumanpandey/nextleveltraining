@@ -10,6 +10,7 @@ import { Icon } from 'native-base';
 import { Calendar } from 'react-native-calendars';
 import { UseNLMarkedDates } from '../../utils/UseNLMarkedDates';
 import { parseISO } from 'date-fns';
+import CalendarRules from '../../components/CalendarRules';
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
@@ -90,6 +91,8 @@ const CalendarScreen = (props) => {
                     monthTextColor: 'white',
                 }}
             />
+            <CalendarRules />
+
 
             <FlatList
                 ListEmptyComponent={
