@@ -14,139 +14,9 @@ import { Calendar } from 'react-native-calendars';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import getDistance from 'geolib/es/getDistance';
-import { API_BASE_URL } from '../../../api/AxiosBootstrap';
+import { UseNLMarkedDates } from '../../../utils/UseNLMarkedDates';
 
-const _format = 'ddd, MMM DD, YYYY';
 const _today = new Date();
-let _menu = null;
-const showMenu = () => {
-  _menu.show();
-};
-const hideMenu = () => {
-  _menu.hide();
-};
-
-const getWeeksDay = (except) => {
-  const daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return daysInWeek.filter(d => !except.includes(d))
-}
-
-const UseMultipleAxioHook = (config) => {
-  const [token] = useGlobalState('token');
-  const [loading, setLoading] = useState();
-  const [error, setError] = useState();
-  const [data, setData] = useState();
-
-  const fetch = (con) => {
-    setLoading(true)
-    const finalConfig = (con || config).map(c => {
-      return {
-        ...c,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    })
-    return Promise.all(finalConfig.map(c => {
-      return Axios(c)
-    }))
-    .then((r) => {
-      setLoading(false)
-      setData(r.map(d => d.data))
-      return r
-    })
-    .catch(err => {
-      setLoading(false)
-      console.log(err)
-      setError(err)
-    })
-  }
-
-  return [{ loading, data, error }, fetch]
-}
-
-const UseMarkedDates = (props) => {
-  const [markedDays, setMarkedDay] = useState({})
-  const [nonAvailableDays, setNonAvailableDays] = useState({})
-  const [partialBookedDay, setPartialBookedDay] = useState({})
-
-  const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
-  const [availableTimePerCoach, getUserData] = UseMultipleAxioHook()
-
-  const isUpdating = () => singleUserReq.loading || availableTimePerCoach.loading
-
-  useEffect(() => {
-    getSingleUser({ url: `/Account/GetUserByEmail/${props.EmailID}` })
-      .then(({ data }) => {
-        getWeeksDay(data.Availabilities.map(i => i.Day)).forEach(d => {
-          markDayOfWeekNonAvailable(d)
-        })
-      })
-
-    const bookedDays = props.Bookings.reduce((newState, booking) => {
-      newState[booking.BookingDate.split('T')[0]] = {
-        selected: true,
-        selectedColor: 'orange',
-        total: props.Bookings.filter(el => el.Id == booking.Id).length,
-        booking
-      }
-      return newState
-    }, {})
-
-    const httpCalls = Object.keys(bookedDays).map(k => {
-      const data = {
-        "coachID": props.Id,
-        "date": bookedDays[k].booking.BookingDate
-      }
-      return { data, url: `${API_BASE_URL}/Users/GetAvailableTimeByCoachId`, method: 'post' }
-    })
-
-    getUserData(httpCalls).then(r => {
-      r.forEach((axiosRes) => {
-        const date = JSON.parse(axiosRes.config.data).date.split('T')[0]
-        const bookedDay = bookedDays[date]
-        if (bookedDay.total >= axiosRes.data.length) {
-          bookedDays[date] = { selected: true, selectedColor: 'red', disabled: true }
-        } else {
-          bookedDays[date] = { selected: true, selectedColor: 'orange' }
-        }
-      })
-
-      setPartialBookedDay(bookedDays)
-    })
-  }, [props.EmailID])
-
-  const markAvailableDay = (string) => {
-    setMarkedDay({ [string]: { selected: true, selectedColor: 'white' } })
-  }
-
-  const markDayOfWeekNonAvailable = (dayOfWeek) => {
-    var dayOfW = moment().startOf('month')
-    var month = dayOfW.month();
-
-    const dayArr = []
-    while (month === dayOfW.month()) {
-      if (dayOfW.format('dddd') == dayOfWeek) {
-        dayArr.push(dayOfW.format('YYYY-MM-DD'))
-      }
-      dayOfW = dayOfW.add(1, 'd');
-    }
-    const newDate = {}
-    dayArr.forEach(d => {
-      newDate[d] = { selected: true, selectedColor: 'red', disabled: true }
-    })
-
-    setNonAvailableDays((p) => ({ ...p, ...newDate }))
-  }
-
-  return {
-    isUpdating,
-    markedDays: { ...markedDays, ...nonAvailableDays, ...partialBookedDay },
-    markAvailableDay,
-    markDayOfWeekNonAvailable
-  }
-}
-
 
 const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingId, FromTime, ToTime, Location, SentDate, isEditing = false } } } }) => {
   const activeColor = Colors.s_blue;
@@ -159,7 +29,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const [time, setTime] = useState()
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
-  const { markedDays, markAvailableDay, isUpdating } = UseMarkedDates({ EmailID: coach.EmailID, Id: coach.Id,Bookings: coach.Bookings });
+  const { markedDays, markAvailableDay, isUpdating } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id,Bookings: coach.Bookings });
 
   const [availableTimePerCoach, getUserData] = useAxios({
     url: '/Users/GetAvailableTimeByCoachId',

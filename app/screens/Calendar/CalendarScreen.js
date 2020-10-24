@@ -7,14 +7,15 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import Colors from '../../constants/color';
 import { Icon } from 'native-base';
-import { format, addDays, parse } from 'date-fns'
+import { Calendar } from 'react-native-calendars';
+import { UseNLMarkedDates } from '../../utils/UseNLMarkedDates';
+import { parseISO } from 'date-fns';
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
-    const [showCalendar, setShowCalendar] = useState(false)
     const [agroupedData, setAgroupedData] = useState([])
-    const [startDate, setStartDate] = useState(new Date())
-    const [endDate, setEndDate] = useState(addDays(new Date(), 30))
+    
+    const { markedDays, startDate, endDate, selectRange } = UseNLMarkedDates({ EmailID: profile.EmailID })
 
     const [{ data, loading, error }, getBookings] = useAxios({
         url: '/Users/GetBookings',
@@ -39,7 +40,8 @@ const CalendarScreen = (props) => {
     }, [])
 
     useEffect(() => {
-        if (!data) return
+        console.log(data)
+        if (!data || data.length == 0) return
 
         const d = data
             .filter(booking => {
@@ -72,37 +74,20 @@ const CalendarScreen = (props) => {
                 toggleDrawer={props.navigation.toggleDrawer}
                 navigate={props.navigation.navigate}
             />
-            <DatePicker
-                style={{ height: 45 }}
-                customStyles={{
-                    placeholderText: { fontSize: 20 }, // placeHolder style
-                    headerStyle: { backgroundColor: Colors.s_blue },			// title container style
-                    headerMarkTitle: { color: 'white', opacity: 1 }, // title mark style 
-                    headerDateTitle: {}, // title Date style
-                    contentInput: {}, //content text container style
-                    contentText: {}, //after selected text Style
-                }} // optional 
-                centerAlign // optional text will align center or not
-                allowFontScaling={false} // optional
-                placeholder={`${format(startDate, 'LLL dd, yyyy')} → ${format(endDate, 'LLL dd, yyyy')}`}
-                mode={'range'}
-                markText="Select a Date Range"
-                ButtonText="Done"
-                onConfirm={({ endDate, startDate }) => {
-                    setStartDate(parse(startDate, "yyyy/MM/dd", new Date()))
-                    setEndDate(parse(endDate, "yyyy/MM/dd", new Date()))
+            <Calendar
+                onDayPress={(day) => {
+                    selectRange(parseISO(day.dateString))
                 }}
-                customButton={(onConfirm, onCancel) => {
-                    return (
-                        <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: '5%'}}>
-                            <TouchableOpacity onPress={onConfirm}>
-                                <Text style={{ fontSize: 18}}>Done</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={onCancel}>
-                                <Text style={{ fontSize: 18}}>Cancel</Text>
-                            </TouchableOpacity>
-                        </View>
-                    );
+                markedDates={markedDays}
+                disableAllTouchEventsForDisabledDays={true}
+                markingType={'period'}
+                theme={{
+                    calendarBackground: Colors.s_blue,
+                    dayTextColor: 'white',
+                    todayTextColor: 'white',
+                    selectedDayTextColor: Colors.s_blue,
+                    arrowColor: 'white',
+                    monthTextColor: 'white',
                 }}
             />
 
