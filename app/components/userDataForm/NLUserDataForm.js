@@ -16,8 +16,9 @@ import messaging from '@react-native-firebase/messaging';
 import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 import { NavigationActions, StackActions } from 'react-navigation';
+import NLAddressSuggestionInput from '../NLAddressSuggestionInput';
 
-const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...props}) => {
+const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...props }) => {
     const formikRef = useRef()
 
     const [{ data, loading, error }, register] = useAxios({
@@ -67,21 +68,21 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                 if (props.hidePasswordInput != true) {
                     if (!values.password) {
                         errors.password = 'Required'
-                      } else if (values.password.length < 8) {
+                    } else if (values.password.length < 8) {
                         errors.password = 'Must be at least 8 characters long'
-                      } else if (/\d/.test(values.password) == false) {
+                    } else if (/\d/.test(values.password) == false) {
                         errors.password = 'Must include one number'
-                      } else if (/[A-Z]/.test(values.password) == false) {
+                    } else if (/[A-Z]/.test(values.password) == false) {
                         errors.password = 'Must include one uppercase character'
-                      } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?\.!]/g.test(values.password) == false) {
+                    } else if (/[~`!#$%@\^&*+=\-\[\]\\';,/{}|\\":<>\?\.!]/g.test(values.password) == false) {
                         errors.password = 'Must include one special character'
-                      }
+                    }
                 }
 
                 if (showsConfirmPassword) {
                     if (!values.confirmPassword) {
                         errors.confirmPassword = 'Required'
-                    } else if(props.hidePasswordInput != true && values.password) {
+                    } else if (props.hidePasswordInput != true && values.password) {
                         if (values.password != values.confirmPassword) {
                             errors.confirmPassword = 'Password and Confirm Password does not match'
                         }
@@ -116,7 +117,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                     })
                     .then((r) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'AboutMe'})
+                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'AboutMe' })
                     })
                     .catch((r) => console.log(r))
             }}
@@ -126,7 +127,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                     <View style={styles.signup_info_input_view}>
                         <View style={styles.signup_info_view}>
                             <TextInput
-                                style={{ color: "black"}}
+                                style={{ color: "black" }}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Full Name"
                                 keyboardType="default"
@@ -137,21 +138,21 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                         </View>
                         {errors.fullName && touched.fullName && <ErrorLabel text={errors.fullName} />}
 
-                        <NLGooglePlacesAutocomplete
-                            hideMap={true}
+                        <NLAddressSuggestionInput
+                            style={{ width: '85%'}}
                             placeholder={"Home Address"}
-                            style={{ backgroundColor: 'transparent' }}
                             defaultValue={values.address}
-                            onPress={(data, details) => {
-                                setFieldValue("address", data.description)
-                                setFieldValue("lat", details.geometry.location.lat)
-                                setFieldValue("lng", details.geometry.location.lng)
-                            }} />
+                            onLocationSelected={(loc) => {
+                                setFieldValue("address", getFullSuggestionAddress(loc))
+                                setFieldValue("lat", loc.latitude)
+                                setFieldValue("lng", loc.longitude)
+                            }}
+                        />
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
                         <View style={styles.signup_info_view}>
                             <TextInput
-                                style={{ color: "black"}}
+                                style={{ color: "black" }}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Home Postcode"
                                 onChangeText={handleChange('postCode')}
@@ -163,7 +164,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                         <View style={styles.signup_info_view}>
                             <TextInput
-                                style={{ color: "black"}}
+                                style={{ color: "black" }}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 editable={!props.navigation.getParam('emailIDIsDisabled', false)}
                                 placeholder="Email ID"
@@ -177,7 +178,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
 
                         <View style={styles.signup_info_view}>
                             <TextInput
-                                style={{ color: "black"}}
+                                style={{ color: "black" }}
                                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                                 placeholder="Mobile Number"
                                 keyboardType='numeric'
@@ -192,7 +193,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             <>
                                 <View style={styles.signup_info_view}>
                                     <TextInput
-                                        style={{ color: "black"}}
+                                        style={{ color: "black" }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder="Password"
                                         secureTextEntry={true}
@@ -208,7 +209,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false,...p
                             <>
                                 <View style={styles.signup_info_view}>
                                     <TextInput
-                                        style={{ color: "black"}}
+                                        style={{ color: "black" }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder="Confirm Password"
                                         secureTextEntry={true}

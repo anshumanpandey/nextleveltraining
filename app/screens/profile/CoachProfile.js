@@ -25,6 +25,7 @@ import Upload from 'react-native-background-upload'
 import { StackActions, NavigationActions, withNavigation } from 'react-navigation';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 import NLCropperImagePicker from '../../components/NLCropperImagePicker';
+import NLAddressSuggestionInput, { getFullSuggestionAddress } from '../../components/NLAddressSuggestionInput';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
@@ -1136,13 +1137,13 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                 </View>
                                 {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
-                                <NLGooglePlacesAutocomplete
-                                    defaultValue={values.address}
-                                    onPress={(data, details = null) => {
-                                        setFieldValue("address", data.description)
-                                        setFieldValue("lat", details.geometry.location.lat)
-                                        setFieldValue("lng", details.geometry.location.lng)
-                                    }} />
+                                <NLAddressSuggestionInput
+                                    onLocationSelected={(loc) => {
+                                        setFieldValue("address", getFullSuggestionAddress(loc))
+                                        setFieldValue("lat", loc.latitude)
+                                        setFieldValue("lng", loc.longitude)
+                                    }}
+                                />
 
                                 {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
