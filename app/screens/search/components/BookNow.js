@@ -5,7 +5,7 @@ import styles from './information/information-style';
 import { Icon, Spinner } from 'native-base';
 import NavigationService from '../../../navigation/NavigationService';
 import Dimension from '../../../constants/dimensions';
-import Menu from 'react-native-material-menu';
+import Axios from 'axios'
 import TeachingCard from '../components/subcomponents/TeachingCard';
 import Colors from '../../../constants/color';
 import moment from 'moment';
@@ -14,6 +14,7 @@ import { Calendar } from 'react-native-calendars';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import getDistance from 'geolib/es/getDistance';
+import { API_BASE_URL } from '../../../api/AxiosBootstrap';
 
 const _format = 'ddd, MMM DD, YYYY';
 const _today = new Date();
@@ -30,14 +31,49 @@ const getWeeksDay = (except) => {
   return daysInWeek.filter(d => !except.includes(d))
 }
 
+const UseMultipleAxioHook = (config) => {
+  const [token] = useGlobalState('token');
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState();
+  const [data, setData] = useState();
+
+  const fetch = (con) => {
+    setLoading(true)
+    const finalConfig = (con || config).map(c => {
+      return {
+        ...c,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    })
+    return Promise.all(finalConfig.map(c => {
+      return Axios(c)
+    }))
+    .then((r) => {
+      setLoading(false)
+      setData(r.map(d => d.data))
+      return r
+    })
+    .catch(err => {
+      setLoading(false)
+      console.log(err)
+      setError(err)
+    })
+  }
+
+  return [{ loading, data, error }, fetch]
+}
+
 const UseMarkedDates = (props) => {
   const [markedDays, setMarkedDay] = useState({})
   const [nonAvailableDays, setNonAvailableDays] = useState({})
   const [partialBookedDay, setPartialBookedDay] = useState({})
 
   const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
+  const [availableTimePerCoach, getUserData] = UseMultipleAxioHook()
 
-  const isUpdating = () => singleUserReq.loading
+  const isUpdating = () => singleUserReq.loading || availableTimePerCoach.loading
 
   useEffect(() => {
     getSingleUser({ url: `/Account/GetUserByEmail/${props.EmailID}` })
@@ -48,10 +84,34 @@ const UseMarkedDates = (props) => {
       })
 
     const bookedDays = props.Bookings.reduce((newState, booking) => {
-      newState[booking.BookingDate.split('T')[0]] = { selected: true, selectedColor: 'orange' }
+      newState[booking.BookingDate.split('T')[0]] = {
+        selected: true,
+        selectedColor: 'orange',
+        total: props.Bookings.filter(el => el.Id == booking.Id).length,
+        booking
+      }
       return newState
     }, {})
-    setPartialBookedDay(bookedDays)
+
+    const httpCalls = Object.keys(bookedDays).map(k => {
+      const data = {
+        "coachID": props.Id,
+        "date": bookedDays[k].booking.BookingDate
+      }
+      return { data, url: `${API_BASE_URL}/Users/GetAvailableTimeByCoachId`, method: 'post' }
+    })
+
+    getUserData(httpCalls).then(r => {
+      r.forEach((axiosRes) => {
+        const date = JSON.parse(axiosRes.config.data).date.split('T')[0]
+        const bookedDay = bookedDays[date]
+        if (bookedDay.total >= axiosRes.data.length) {
+          bookedDays[date] = { selected: true, selectedColor: 'red', disabled: true }
+        }
+      })
+
+      setPartialBookedDay(bookedDays)
+    })
   }, [props.EmailID])
 
   const markAvailableDay = (string) => {
@@ -97,7 +157,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const [time, setTime] = useState()
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
-  const { markedDays, markAvailableDay, isUpdating } = UseMarkedDates({ EmailID: coach.EmailID, Bookings: coach.Bookings });
+  const { markedDays, markAvailableDay, isUpdating } = UseMarkedDates({ EmailID: coach.EmailID, Id: coach.Id,Bookings: coach.Bookings });
 
   const [availableTimePerCoach, getUserData] = useAxios({
     url: '/Users/GetAvailableTimeByCoachId',
@@ -214,32 +274,39 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             </Text>
           </View>
         </View>
-        <Calendar
-          onDayPress={(day) => {
-            setDate(moment(day.dateString, 'YYYY-MM-DD'))
-            markAvailableDay(day.dateString)
-          }}
-          markedDates={markedDays}
-          disableAllTouchEventsForDisabledDays={true}
-          theme={{
-            calendarBackground: Colors.s_blue,
-            dayTextColor: 'white',
-            todayTextColor: 'white',
-            selectedDayTextColor: Colors.s_blue,
-            arrowColor: 'white',
-            monthTextColor: 'white',
-          }}
-        />
+        <View>
+          <Calendar
+            onDayPress={(day) => {
+              setDate(moment(day.dateString, 'YYYY-MM-DD'))
+              markAvailableDay(day.dateString)
+            }}
+            markedDates={markedDays}
+            disableAllTouchEventsForDisabledDays={true}
+            theme={{
+              calendarBackground: Colors.s_blue,
+              dayTextColor: 'white',
+              todayTextColor: 'white',
+              selectedDayTextColor: Colors.s_blue,
+              arrowColor: 'white',
+              monthTextColor: 'white',
+            }}
+          />
+          {isUpdating() == true && (
+            <View style={{ backgroundColor: '#ffffff60', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+              <Spinner size={150} color={Colors.nl_yellow} style={{ height: '100%' }} />
+            </View>
+          )}
+        </View>
 
         <View style={[styles.whenView, { marginTop: "5%" }]}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
           {availableTimePerCoach.loading && <Spinner color={Colors.s_blue} />}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
             {!availableTimePerCoach.loading && availableTimePerCoach.data && availableTimePerCoach.data.map(t => {
               const isSelected = time == t
 
-              return <TouchableOpacity onPress={() => setTime(t)} style={{ width: '30%', padding: '1%', marginBottom: '1%',backgroundColor: isSelected ? `${Colors.nl_yellow}30`:'#00000005' }}>
-                <Text style={{ padding: '1%',textAlign: 'center' }}>{t}</Text>
+              return <TouchableOpacity onPress={() => setTime(t)} style={{ width: '30%', padding: '1%', marginBottom: '1%', backgroundColor: isSelected ? `${Colors.nl_yellow}30` : '#00000005' }}>
+                <Text style={{ padding: '1%', textAlign: 'center' }}>{t}</Text>
               </TouchableOpacity>
             })}
           </View>
