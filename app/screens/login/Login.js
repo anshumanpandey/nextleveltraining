@@ -110,7 +110,8 @@ const Login = (props) => {
             "role": props.navigation.getParam('role', role),
             deviceID: DeviceInfo.getUniqueId(),
             deviceType: Platform.OS,
-            deviceToken
+            deviceToken,
+            featured: props.navigation.getParam('isFeatured')
           }
         })
           .then((r) => {
@@ -165,6 +166,7 @@ const Login = (props) => {
                 values.deviceType = Platform.OS
                 values.deviceID = DeviceInfo.getUniqueId()
                 values.deviceToken = deviceToken
+                values.featured = props.navigation.getParam('isFeatured')
                 console.log(values)
                 return login({ data: values })
               })
@@ -255,7 +257,7 @@ const Login = (props) => {
                   .then(({ accessToken }) => {
                     return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken }))
                   })
-                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role', role), authenticationToken: accessToken } }))
+                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { featured: props.navigation.getParam('isFeatured'), deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role', role), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -287,7 +289,8 @@ const Login = (props) => {
                       "authenticationToken": userInfo.serverAuthCode,
                       deviceID: DeviceInfo.getUniqueId(),
                       deviceType: Platform.OS,
-                      deviceToken
+                      deviceToken,
+                      featured: props.navigation.getParam('isFeatured')
                     }
                   })
                     .then((r) => {

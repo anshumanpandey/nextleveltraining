@@ -64,11 +64,10 @@ const Information = (props) => {
             onPress={() => NavigationService.goBack()}
             name="close"
             type="MaterialIcons"
-            style={{ fontSize: 25, color: 'white', padding: 10 }}
+            style={{ fontSize: 25, color: Colors.s_blue, padding: 10 }}
           />
         </View>
-        <View style={{ backgroundColor: Colors.s_blue, height: '50%', position: 'absolute', width: '100%', zIndex: -2 }}></View>
-        <View style={styles.infoContain}>
+        <View style={[styles.infoContain, { marginTop: '5%'}]}>
           <TouchableOpacity disabled={!(props.navigation.getParam("editable", false) == true)} onPress={() => props.navigation.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'Profile' } })}>
             <View>
               <Image

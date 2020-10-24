@@ -64,6 +64,7 @@ import VideoScreen from './screens/video/VideoScreen';
 import HasCompletedVerificationProcess from './utils/HasCompletedVerificationProcess';
 import AsyncStorage from '@react-native-community/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import AskFeatured from './screens/askFeatured/AskFeatured';
 
 let initialRouteName = null
 let Apps = null
@@ -589,6 +590,7 @@ const AppMain = () => {
     screens.MainStack = RootStack
   } else {
     screens.Level = { screen: Level }
+    screens.AskFeatured = { screen: AskFeatured }
     screens.Login = { screen: Login }
     screens.ForgotPassword = { screen: ForgotPassword }
     screens.SignUp = { screen: SignUp }

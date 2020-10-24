@@ -107,6 +107,8 @@ const UseMarkedDates = (props) => {
         const bookedDay = bookedDays[date]
         if (bookedDay.total >= axiosRes.data.length) {
           bookedDays[date] = { selected: true, selectedColor: 'red', disabled: true }
+        } else {
+          bookedDays[date] = { selected: true, selectedColor: 'orange' }
         }
       })
 
@@ -296,6 +298,20 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               <Spinner size={150} color={Colors.nl_yellow} style={{ height: '100%' }} />
             </View>
           )}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', backgroundColor: Colors.s_blue, paddingBottom: '3%'}}>
+            <View style={{ alignItems: 'center'}}>
+              <Text style={{ color: 'white',textAlign: 'center' }}>No available</Text>
+              <View style={{ backgroundColor: 'red', height: 40, width: 40 }}></View>
+            </View>
+            <View style={{ alignItems: 'center'}}>
+              <Text style={{ color: 'white',textAlign: 'center' }}>Partial Booked</Text>
+              <View style={{ backgroundColor: 'orange', height: 40, width: 40 }}></View>
+            </View>
+            <View style={{ alignItems: 'center'}}>
+              <Text style={{ color: 'white',textAlign: 'center' }}>Partial Booked</Text>
+              <View style={{ backgroundColor: 'white', height: 40, width: 40 }}></View>
+            </View>
+          </View>
         </View>
 
         <View style={[styles.whenView, { marginTop: "5%" }]}>

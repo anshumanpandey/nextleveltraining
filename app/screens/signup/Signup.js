@@ -99,7 +99,8 @@ const Signup = (props) => {
             "role": props.navigation.getParam('role'),
             deviceID: DeviceInfo.getUniqueId(),
             deviceType: Platform.OS,
-            deviceToken
+            deviceToken,
+            featured: props.navigation.getParam('isFeatured'),
           }
         })
           .then((r) => {
@@ -136,7 +137,7 @@ const Signup = (props) => {
           <Image source={Images.Mlogo} />
         </View>
         <NLUserDataForm {...props} showsConfirmPassword={true} />
-        <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player") })}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player"), isFeatured: props.navigation.getParam('isFeatured') })}>
           <View style={[styles.signup_other_view, { color: 'black', paddingTop: '5%', paddingBottom: '5%' }]}>
             <Text style={styles.signup_continue}>Go to Login</Text>
           </View>
@@ -160,7 +161,7 @@ const Signup = (props) => {
                   .then(({ accessToken }) => {
                     return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken }))
                   })
-                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
+                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { featured: props.navigation.getParam('isFeatured'),deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -197,7 +198,8 @@ const Signup = (props) => {
                       "authenticationToken": userInfo.serverAuthCode,
                       deviceId: DeviceInfo.getUniqueId(),
                       deviceType: Platform.OS,
-                      deviceToken
+                      deviceToken,
+                      featured: props.navigation.getParam('isFeatured'),
                     }
                   })
                     .then((r) => {
