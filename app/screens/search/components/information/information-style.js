@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   topContain: {
-    //flex: 1,
+    flexGrow: 1,
   },
   infoContain: {
     backgroundColor: 'white',

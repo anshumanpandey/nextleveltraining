@@ -52,7 +52,7 @@
     "react-native": "0.62.2",
     "react-native-background-upload": "^5.7.0",
     "react-native-base64": "^0.1.0",
-    "react-native-calendars": "^1.300.0",
+    "react-native-calendars": "^1.403.0",
     "react-native-dash": "^0.0.11",
     "react-native-date-ranges": "git+https://github.com/TheLox95/react-native-date-ranges.git",
     "react-native-datepicker": "^1.7.2",

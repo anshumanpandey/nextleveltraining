@@ -10,7 +10,7 @@ import TeachingCard from '../components/subcomponents/TeachingCard';
 import Colors from '../../../constants/color';
 import moment from 'moment';
 import Tabs from './information/Tabs';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Calendar } from 'react-native-calendars';
 import { useGlobalState } from '../../../state/GlobalState';
 import useAxios from 'axios-hooks'
 import getDistance from 'geolib/es/getDistance';
@@ -25,6 +25,66 @@ const hideMenu = () => {
   _menu.hide();
 };
 
+const getWeeksDay = (except) => {
+  const daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return daysInWeek.filter(d => !except.includes(d))
+}
+
+const UseMarkedDates = (props) => {
+  const [markedDays, setMarkedDay] = useState({})
+  const [nonAvailableDays, setNonAvailableDays] = useState({})
+  const [partialBookedDay, setPartialBookedDay] = useState({})
+
+  const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
+
+  const isUpdating = () => singleUserReq.loading
+
+  useEffect(() => {
+    getSingleUser({ url: `/Account/GetUserByEmail/${props.EmailID}` })
+      .then(({ data }) => {
+        getWeeksDay(data.Availabilities.map(i => i.Day)).forEach(d => {
+          markDayOfWeekNonAvailable(d)
+        })
+      })
+
+    const bookedDays = props.Bookings.reduce((newState, booking) => {
+      newState[booking.BookingDate.split('T')[0]] = { selected: true, selectedColor: 'orange' }
+      return newState
+    }, {})
+    setPartialBookedDay(bookedDays)
+  }, [props.EmailID])
+
+  const markAvailableDay = (string) => {
+    setMarkedDay({ [string]: { selected: true, selectedColor: 'white' } })
+  }
+
+  const markDayOfWeekNonAvailable = (dayOfWeek) => {
+    var dayOfW = moment().startOf('month')
+    var month = dayOfW.month();
+
+    const dayArr = []
+    while (month === dayOfW.month()) {
+      if (dayOfW.format('dddd') == dayOfWeek) {
+        dayArr.push(dayOfW.format('YYYY-MM-DD'))
+      }
+      dayOfW = dayOfW.add(1, 'd');
+    }
+    const newDate = {}
+    dayArr.forEach(d => {
+      newDate[d] = { selected: true, selectedColor: 'red', disabled: true }
+    })
+
+    setNonAvailableDays((p) => ({ ...p, ...newDate }))
+  }
+
+  return {
+    isUpdating,
+    markedDays: { ...markedDays, ...nonAvailableDays, ...partialBookedDay },
+    markAvailableDay,
+    markDayOfWeekNonAvailable
+  }
+}
+
 
 const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingId, FromTime, ToTime, Location, SentDate, isEditing = false } } } }) => {
   const activeColor = Colors.s_blue;
@@ -34,10 +94,10 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
 
   const [dropdownOptions, setDropdownOptions] = useState([])
   const [date, setDate] = useState(_today)
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState()
   const [time, setTime] = useState()
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
+  const { markedDays, markAvailableDay, isUpdating } = UseMarkedDates({ EmailID: coach.EmailID, Bookings: coach.Bookings });
 
   const [availableTimePerCoach, getUserData] = useAxios({
     url: '/Users/GetAvailableTimeByCoachId',
@@ -65,6 +125,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }
 
   useEffect(() => {
+    markAvailableDay(moment(_today).format('YYYY-MM-DD'))
     initFn()
     const focusListener = addListener('didFocus', () => {
       initFn()
@@ -101,7 +162,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
-        <View style={[styles.orgView, { height: '36%'} ]}>
+        <View style={[styles.orgView]}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Icon
@@ -111,7 +172,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               style={{ fontSize: 25, color: 'white', padding: 10 }}
             />
             <TouchableOpacity
-              style={{ width: '40%'}}
+              style={{ width: '40%' }}
               disabled={selectedLocation == undefined || time == undefined || rescheduleBookingReq.loading}
               onPress={() => {
                 if (isEditing == true) {
@@ -138,7 +199,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
                   NavigationService.navigate('PaymentConcent', { coach, selectedLocation, selectedTime: time, selectedDate: date })
                 }
               }}>
-              <View style={{ flex: 1,flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%'}}>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%' }}>
                 {isLoading() && <Spinner color="white" style={{ marginRight: '10%' }} />}
                 <Text style={{ color: 'white', fontSize: 18, opacity: (selectedLocation && time) || !isLoading() ? 1 : 0.5 }}>
                   Book Now
@@ -152,91 +213,36 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               {coach.FullName}
             </Text>
           </View>
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            date={date}
-            mode="date"
-            onConfirm={(d) => {
-              setIsDatePickerVisible(false)
-              const userTimezoneOffset = d.getTimezoneOffset() * 60000;
-              setDate(new Date(d.getTime() - userTimezoneOffset))
-            }}
-            onCancel={() => setIsDatePickerVisible(false)}
-          />
-          <TouchableOpacity
-            onPress={() => setIsDatePickerVisible(true)}
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <Text style={{ color: 'white', fontSize: 18 }}>{moment(date).format(_format)}</Text>
-            <Icon
-              name="keyboard-arrow-right"
-              type="MaterialIcons"
-              style={{ fontSize: 30, color: 'white' }}
-            />
-          </TouchableOpacity>
         </View>
+        <Calendar
+          onDayPress={(day) => {
+            setDate(moment(day.dateString, 'YYYY-MM-DD'))
+            markAvailableDay(day.dateString)
+          }}
+          markedDates={markedDays}
+          disableAllTouchEventsForDisabledDays={true}
+          theme={{
+            calendarBackground: Colors.s_blue,
+            dayTextColor: 'white',
+            todayTextColor: 'white',
+            selectedDayTextColor: Colors.s_blue,
+            arrowColor: 'white',
+            monthTextColor: 'white',
+          }}
+        />
 
         <View style={[styles.whenView, { marginTop: "5%" }]}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
-          {availableTimePerCoach.loading && <Spinner color={'white'} />}
-          {!availableTimePerCoach.loading && (
-            <Menu
-              ref={(ref) => (_menu = ref)}
-              style={{ maxHeight: 225, marginRight: 'auto', marginLeftL:'auto' }}
-              button={
-                <TouchableOpacity
-                  style={styles.menuContainer}
-                  disabled={dropdownOptions.length == 0}
-                  onPress={() => {
-                    showMenu();
-                  }}>
-                  <Text style={{ fontSize: 15, color: !time && dropdownOptions.length == 0 && 'No available hours' ? 'gray' : 'black' }}>
-                    {time && time}
-                    {!time && dropdownOptions.length != 0 && 'Select Time'}
-                    {!time && dropdownOptions.length == 0 && 'No available hours'}
-                  </Text>
-                  <Icon
-                    name="arrow-drop-down"
-                    type="MaterialIcons"
-                    style={{ fontSize: 30, color: 'lightgray' }}
-                  />
-                </TouchableOpacity>
-              }>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                {!availableTimePerCoach.loading && dropdownOptions.length != 0 && dropdownOptions.map((objs, index) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        setTime(objs)
-                        hideMenu();
-                      }}
-                      style={{
-                        width: Dimension.deviceWidth - 75,
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingHorizontal: 10,
-                        borderBottomWidth: 0.5,
-                        borderColor: 'lightgray',
-                        height: 45,
-                      }}>
-                      <Text
-                        style={{
-                          marginLeft: 8,
-                          fontWeight: objs === time ? '600' : '400',
-                        }}>
-                        {objs}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            </Menu>
+          {availableTimePerCoach.loading && <Spinner color={Colors.s_blue} />}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+            {!availableTimePerCoach.loading && availableTimePerCoach.data && availableTimePerCoach.data.map(t => {
+              const isSelected = time == t
 
-          )}
+              return <TouchableOpacity onPress={() => setTime(t)} style={{ width: '30%', padding: '1%', marginBottom: '1%',backgroundColor: isSelected ? `${Colors.nl_yellow}30`:'#00000005' }}>
+                <Text style={{ padding: '1%',textAlign: 'center' }}>{t}</Text>
+              </TouchableOpacity>
+            })}
+          </View>
         </View>
         <View style={styles.whenView}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>Where?</Text>
