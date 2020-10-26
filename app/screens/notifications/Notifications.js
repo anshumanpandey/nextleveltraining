@@ -7,7 +7,7 @@ import styles from '../message/styles';
 import { Icon } from 'native-base';
 import Colors from '../../constants/color';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import { parseISO } from 'date-fns';
+import { parseISO, formatDistanceToNow } from 'date-fns';
 
 const Notifications = (props) => {
 
@@ -25,12 +25,12 @@ const Notifications = (props) => {
         return (
             <View style={styles.flatListNotification} key={key}>
                 <TouchableOpacity disable={readNotificationReq.loading} style={[styles.container_text, { opacity: readNotificationReq.loading ? 0.5 : 1 }]} onPress={() => readMessage(item.Id)}>
-                    <View style={styles.innerRow}>
+                    <View style={[styles.innerRow, { width: '100%'}]}>
                         <Text style={styles.description}>
                             {item.Text}
                         </Text>
                         <Text style={styles.description2}>
-                            {new Date(item.CreatedDate).toLocaleDateString()}
+                            {formatDistanceToNow(new Date(item.CreatedDate))} ago
                         </Text>
                     </View>
                 </TouchableOpacity>
