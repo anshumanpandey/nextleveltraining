@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>981975510723-d8vfa6cohoha4pt32n7oclgvbgrst7ov.apps.googleusercontent.com</string>
+	<string>669575831507-r84633mtfqc26al0917hep98i2mse110.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.981975510723-d8vfa6cohoha4pt32n7oclgvbgrst7ov</string>
+	<string>com.googleusercontent.apps.669575831507-r84633mtfqc26al0917hep98i2mse110</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>669575831507-1t77dvfe17sir5usss2ejc7ju5dhmako.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA8PCRz32kMMJm386IXS5LDo20rOq9rn6E</string>
+	<string>AIzaSyC-1rsWmHpYqoa6EGKwbgDh119TzrIEadY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>981975510723</string>
+	<string>669575831507</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.NextLevelTraining</string>
+	<string>com.nextleveltraining</string>
 	<key>PROJECT_ID</key>
-	<string>nextlevel-b6900</string>
+	<string>next-level-training-3ab08</string>
 	<key>STORAGE_BUCKET</key>
-	<string>nextlevel-b6900.appspot.com</string>
+	<string>next-level-training-3ab08.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:981975510723:ios:6f14280e0b01c0555c7c76</string>
+	<string>1:669575831507:ios:dc13f72d4f018c00e01926</string>
 	<key>DATABASE_URL</key>
-	<string>https://nextlevel-b6900.firebaseio.com</string>
+	<string>https://next-level-training-3ab08.firebaseio.com</string>
 </dict>
 </plist>
