@@ -1,5 +1,5 @@
-import React, { Component, useRef, useEffect } from 'react'
-import { Text, TouchableOpacity, Platform } from 'react-native'
+import React, { useState, useRef, useEffect } from 'react'
+import { Text, TouchableOpacity, Platform, Dimensions } from 'react-native'
 import NLGooglePlacesAutocomplete from '../NLGooglePlacesAutocomplete';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { Formik } from 'formik';
@@ -16,10 +16,12 @@ import messaging from '@react-native-firebase/messaging';
 import { FIREBASE_SENDER_ID } from '../../utils/Firebase';
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 import { NavigationActions, StackActions } from 'react-navigation';
-import NLAddressSuggestionInput from '../NLAddressSuggestionInput';
+import NLAddressSuggestionInput, { getFullSuggestionAddress } from '../NLAddressSuggestionInput';
+import NLDropdownMenu from '../NLDropdownMenu';
 
 const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...props }) => {
     const formikRef = useRef()
+    const [addresses, setAddresses] = useState([])
 
     const [{ data, loading, error }, register] = useAxios({
         url: action == 'update' ? '/Users/UpdateProfile' : '/Account/Register',
@@ -140,26 +142,30 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...
 
                         <NLAddressSuggestionInput
                             style={{ width: '85%'}}
-                            placeholder={"Home Address"}
-                            defaultValue={values.address}
-                            onLocationSelected={(loc) => {
-                                setFieldValue("address", getFullSuggestionAddress(loc))
-                                setFieldValue("lat", loc.latitude)
-                                setFieldValue("lng", loc.longitude)
+                            placeholder={"Home Postcode"}
+                            defaultValue={values.postCode}
+                            noList={true}
+                            onSuggestionsUpdated={(suggetions) => {
+                                setAddresses(suggetions)
                             }}
                         />
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
-                        <View style={styles.signup_info_view}>
-                            <TextInput
-                                style={{ color: "black" }}
-                                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                placeholder="Home Postcode"
-                                onChangeText={handleChange('postCode')}
-                                onBlur={handleBlur('postCode')}
-                                value={values.postCode}
-                            />
-                        </View>
+                        <NLDropdownMenu
+                            placeholder={addresses.length == 0 ? 'No options': "Select an address"}
+                            theme={{ 
+                                menu: { width: '80%' },
+                                textButton: {fontSize: 18, color: 'rgba(0,0,0,0.3)', paddingLeft: 0},
+                                button: { ...styles.signup_info_view, width: Dimensions.get('screen').width * 0.83 }
+                            }}
+                            onSelect={(selected) => {
+                                setFieldValue("address", getFullSuggestionAddress(selected))
+                                setFieldValue("lat", selected.latitude)
+                                setFieldValue("lng", selected.longitude)
+                                setFieldValue("postCode", selected.postcode)
+                            }}
+                            options={addresses.map(a => ({ label: getFullSuggestionAddress(a), value: a}))}
+                        />
                         {errors.postCode && touched.postCode && <ErrorLabel text={errors.postCode} />}
 
                         <View style={styles.signup_info_view}>

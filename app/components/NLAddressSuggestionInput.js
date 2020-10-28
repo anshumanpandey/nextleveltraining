@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Alert, FlatList } from 'react-native'
 import { Input } from 'native-base';
-import { makeUseAxios } from 'axios-hooks'
+import Toast from 'react-native-simple-toast';
 import Axios from 'axios'
 import { Client } from "@ideal-postcodes/core-axios"
 import { useThrottle } from '@react-hook/throttle'
+import NLButton from './NLButton';
+import Colors from '../constants/color';
 
-const client = new Client({ api_key: "ak_kgnzbul8qoXgcpM4PtnMaMwlFVk1x" });
-
-const singleUseAxios = makeUseAxios({ axios: Axios.create() })
+const client = new Client({ api_key: "ak_kgpgg5sceGe2S9cpVSSeU9UJo8YrI" });
 
 const getSuggesitonId = (suggestion) => {
     return suggestion.northings + suggestion.udprn
@@ -76,14 +76,16 @@ const RenderItem = ({ onLocationSelected, value }) => {
 /**
  * @param {Object} params
  * @param {onLocationSelected} params.onLocationSelected - On suggestion selected callback
+ * @param {Function} params.onSuggestionsUpdated - When suggestions list is updated
  * @param {String} [params.defaultValue]
  * @param {String} [params.placeholder]
  */
-const NLAddressSuggestionInput = ({ onLocationSelected, defaultValue, placeholder = '', style = {} }) => {
+const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, noList = false,defaultValue, placeholder = '', style = {} }) => {
     const [inputLayout, setInputLayout] = useState()
     const [currentValue, setCurrentValue] = useThrottle(undefined, 3)
     const [currentDisaplyValue, setCurrentDisaplyValue] = useState()
     const [suggestions, setSuggestions] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const suggestionSelected = (s) => {
         setSuggestions([])
@@ -95,31 +97,33 @@ const NLAddressSuggestionInput = ({ onLocationSelected, defaultValue, placeholde
         if (defaultValue) setCurrentDisaplyValue(defaultValue)
     }, [defaultValue])
 
-    useEffect(() => {
-        if (currentValue) {
-            Promise.all([
-                client.lookupPostcode({ postcode: currentValue }),
-                client.lookupAddress({ query: currentValue })
-            ])
-                .then(([byPostCode, byAddress]) => {
-                    const merged = byPostCode.concat(byAddress)
-                    console.log(merged.length)
-                    const suggestions = merged.reduce((map, suggestion) => {
-                        map.set(getSuggesitonId(suggestion), suggestion)
-                        return map
-                    }, new Map())
+    const doLookup = () => {
+        setLoading(true)
+        Promise.all([
+            client.lookupPostcode({ postcode: currentValue }),
+            client.lookupAddress({ query: currentValue })
+        ])
+            .then(([byPostCode, byAddress]) => {
+                setLoading(false)
+                const merged = byPostCode.concat(byAddress)
 
-                    console.log(suggestions.size)
+                if (merged.length == 0) Toast.show('No suggestion found');
+                
+                const suggestions = merged.reduce((map, suggestion) => {
+                    map.set(getSuggesitonId(suggestion), suggestion)
+                    return map
+                }, new Map())
 
-
-                    setSuggestions(Array.from(suggestions.values()))
-                })
-                .catch(err => {
-                    console.log(err)
-                    Alert.alert("Error", 'We could not get the suggestions')
-                })
-        }
-    }, [currentValue])
+                const suggestionsResult = Array.from(suggestions.values())
+                setSuggestions(suggestionsResult)
+                onSuggestionsUpdated(suggestionsResult)
+            })
+            .catch(err => {
+                setLoading(false)
+                console.log(err)
+                Alert.alert("Error", 'We could not get the suggestions')
+            })
+    }
 
     return (
         <>
@@ -134,8 +138,9 @@ const NLAddressSuggestionInput = ({ onLocationSelected, defaultValue, placeholde
                         setCurrentDisaplyValue(t)
                     }}
                 />
+                <NLButton disabled={loading} color={Colors.s_blue} style={{ width: '25%' }} value="Lookup" onPress={() => doLookup()} />
             </View>
-            {suggestions.length != 0 && (
+            {noList == false && suggestions.length != 0 && (
                 <View style={[styles.input_wrapper, { backgroundColor: 'white', height: 200,position: 'absolute', zIndex: 20, marginTop: inputLayout ? inputLayout.height * 2 : undefined }]}>
                     <FlatList
                         keyboardShouldPersistTaps={'always'}
@@ -157,6 +162,7 @@ const styles = StyleSheet.create({
         borderBottomColor: "lightgrey",
         marginTop: Dimension.px1,
         width: '100%',
+        flexDirection: 'row'
     },
 })
 
