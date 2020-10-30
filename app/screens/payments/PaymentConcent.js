@@ -14,6 +14,7 @@ import moment from 'moment'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import { NavigationActions, StackActions } from 'react-navigation';
+import GlobalContants from '../../constants/GlobalContants';
 var qs = require('qs');
 var UrlParser = require('url-parse');
 
@@ -36,16 +37,16 @@ const PaymentConcentScreen = (props) => {
   }, { manual: true })
 
   const [{ data, loading, error }, getAccessToken] = simpleAxiosHook({
-    url: `https://api.sandbox.paypal.com/v1/oauth2/token`,
+    url: GlobalContants.PAYPAL_TOKEN_URL,
     method: 'POST',
     params,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${base64.encode(`ASzioBXLboxNr1ZU-Il-AYsuFYnElDWfuhBsMUDCpNb3iROIxhI4DEfef99nXwsP7f1dDkTiHwoZshr_:EBKq-fql7wyVuyfuILX--YiFIb0CziLcfU5UiTlC88eqABsKC5YQd47U8BL428Np4s4_zynBgCj0S1NH`)}`,    },
+      'Authorization': `Basic ${base64.encode(`${GlobalContants.PAYPAL_CLIENT_ID}:${GlobalContants.PAYPAL_CLIENT_SECRET}`)}`,    },
   }, { manual: true })
 
   const [paymentReq, doPayment] = simpleAxiosHook({
-    url: 'https://api.sandbox.paypal.com/v1/payments/payment',
+    url: GlobalContants.PAYPAL_PAYMENT_URL,
     method: 'POST'
   }, { manual: true })
 
