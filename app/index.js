@@ -100,6 +100,7 @@ const AppMain = () => {
   }
 
   useEffect(() => {
+    listenTokens();
     SplashScreen.hide();
     PushNotificationIOS.addEventListener('register', (deviceToken) => {
       AsyncStorage.setItem('AppleDeviceToken', deviceToken)
@@ -231,7 +232,7 @@ const AppMain = () => {
     Profile: {
       screen: ProfileStack,
       navigationOptions: () => ({
-        tabBarVisible: HasCompletedVerificationProcess(profile),
+        tabBarVisible: HasCompletedVerificationProcess(profile) && profile.ProfileImage,
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
             <Icon
@@ -250,7 +251,7 @@ const AppMain = () => {
     ProfileStack: {
       screen: ConfirmedProfileStack,
       navigationOptions: () => ({
-        tabBarVisible: HasCompletedVerificationProcess(profile),
+        tabBarVisible: HasCompletedVerificationProcess(profile) && profile.ProfileImage,
         tabBarIcon: ({ tintColor }) => (
           <View style={styles.tabContain}>
             <Icon

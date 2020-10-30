@@ -55,7 +55,7 @@ const PlayerProfile = (props) => {
   }, [profile.ProfileImage])
 
   return (
-    <View style={{ flex: 1 }}>
+    <>
       {props.navigation && <Header hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />}
       <ScrollView>
         <View>
@@ -63,7 +63,7 @@ const PlayerProfile = (props) => {
             <View style={{ marginTop: 50 }}>
               <TouchableOpacity
                 onPress={async () => {
-                  NavigationService.navigate('ProfilePic', { goBackTo: 'AboutMe' })
+                  NavigationService.navigate('ProfilePic', { goBackTo: props.goBackTo || "AboutMe" })
                 }}
                 style={{ position: 'relative' }}>
                 {triggerChange == true && (
@@ -142,7 +142,7 @@ const PlayerProfile = (props) => {
           />
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 }
 

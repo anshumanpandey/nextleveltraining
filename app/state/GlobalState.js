@@ -82,6 +82,9 @@ const reducer = (state, action) => {
           } else if (!HasCompletedVerificationProcess(state?.profile) && action?.state?.TrainingLocations && action?.state?.TrainingLocations.length != state?.profile?.TrainingLocations.length) {
             console.log('no full profile, TrainingLocations')
             toggle = !state.toggle
+          } else if (action?.state?.ProfileImage && action?.state?.ProfileImage != state?.profile?.ProfileImage) {
+            console.log('no ProfileImage')
+            toggle = !state.toggle
           }
         }
         console.log("2", toggle)

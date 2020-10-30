@@ -196,45 +196,9 @@ class MultiStep extends Component {
                 <Header
                     toggleDrawer={this.props.navigation.toggleDrawer}
                     hideCreatePost={true}
-                    customButton={this.state.selectedSegmentIndex != 0 ? () => {
-                        return (
-                            <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
-                                {this.state.saving && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
-                                <TouchableOpacity
-                                    disabled={this.state.saving == true}
-                                    onPress={() => {
-
-                                        if (this.state.selectedSegmentIndex == 1) {
-                                            this.setState({ saving: true })
-                                            this.state.bankSubmitFn()
-                                        }
-                                        if (this.state.selectedSegmentIndex == 2) {
-                                            this.setState({ saving: true })
-                                            this.state.availabilitySubmitFn()
-                                                .then((r) => {
-                                                    console.log(r)
-                                                    this.setState({ saving: false })
-                                                })
-                                                .catch(() => this.setState({ saving: false }))
-                                        }
-                                        if (this.state.selectedSegmentIndex == 3) {
-                                            this.setState({ saving: true })
-                                            this.state.traininLocationSubmitFn()
-                                                .then((r) => {
-                                                    console.log(r)
-                                                    this.setState({ saving: false })
-                                                })
-                                                .catch(() => this.setState({ saving: false }))
-                                        }
-
-                                    }}>
-                                    <Text style={{ color: 'black', opacity: this.state.saving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
-                                </TouchableOpacity>
-                            </View>
-                        );
-                    } : undefined}
+                    title={"Save Profile"}
                 />
-                {this.containerView()}
+                {this.about()}
             </View>
 
         )
@@ -256,7 +220,7 @@ class MultiStep extends Component {
 
 
     about() {
-        return <AboutMeCoachForm navigation={this.props.navigation} />
+        return <AboutMeCoachForm goBackTo={"Profile"} navigation={this.props.navigation} />
     }
 
 
@@ -1234,7 +1198,7 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
             <View style={styles.containerAbout}>
                 <TouchableOpacity
                     onPress={async () => {
-                        const d = NavigationActions.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'AboutMe' } })
+                        const d = NavigationActions.navigate({ routeName: 'ProfilePic', params: { goBackTo: props.goBackTo ? props.goBackTo: 'AboutMe' } })
                         props.navigation.dispatch(d)
                     }}
                     style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -1271,7 +1235,7 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "About Me", data: profile?.AboutUs, goBackTo: 'AboutMe' })}>
+                <TouchableOpacity onPress={() => handleOnCardPress({ title: "About Me", data: profile?.AboutUs, goBackTo: props.goBackTo ? props.goBackTo: 'AboutMe' })}>
                     <View style={styles.cardContainer}>
                         <View style={styles.cardInner}>
                             <Text style={styles.textProfile}>About me</Text>

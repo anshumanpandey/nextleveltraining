@@ -24,12 +24,9 @@ const TeamMatchCard = ({ title, data, disableEdit = false, onEditPress }) => {
         </View>
       </TouchableOpacity>
       <View style={{ marginTop: data && data.length <= 0 ? 20 : 10, marginRight: 15 }}>
-        <FlatList
-          horizontal={false}
-          data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity disabled={disableEdit} onPress={() => onEditPress(item)}>
+        {data && data.map(item => {
+          return (
+            <TouchableOpacity key={item.Id} disabled={disableEdit} onPress={() => onEditPress(item)}>
               <View style={styles.cardContain}>
                 <View>
                   <Text style={styles.arrdataText}>{item.title}</Text>
@@ -49,8 +46,8 @@ const TeamMatchCard = ({ title, data, disableEdit = false, onEditPress }) => {
                 )}
               </View>
             </TouchableOpacity>
-          )}
-        />
+          );
+        })}
       </View>
     </View>
   );

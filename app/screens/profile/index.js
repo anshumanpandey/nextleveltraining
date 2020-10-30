@@ -11,6 +11,13 @@ import { StackActions, NavigationActions } from 'react-navigation';
 const ProfileFactory = (props) => {
   const [profile] = useGlobalState('profile')
 
+  if (profile && profile.Role == "Player") {
+    return <PlayerProfile {...props} goBackTo={"Profile"} />
+  }
+  if (profile && profile.Role == "Coach") {
+    return <CoachProfile {...props} goBackTo={"Profile"} />
+  }
+
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
       <Spinner size={140} color={Colors.s_blue} />
