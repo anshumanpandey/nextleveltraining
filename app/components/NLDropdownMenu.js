@@ -4,7 +4,7 @@ import Menu, { MenuItem } from 'react-native-material-menu';
 
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
-const NLDropdownMenu = ({ options, onSelect, placeholder = "Select",theme = { button: {}, textButton: {},menu: {}} }) => {
+const NLDropdownMenu = ({ options, onSelect, disabled = false, placeholder = "Select",theme = { button: {}, textButton: {},menu: {}} }) => {
     const menuRef = useRef()
     const [ selectedValue, setselectedValue ] = useState();
 
@@ -14,7 +14,7 @@ const NLDropdownMenu = ({ options, onSelect, placeholder = "Select",theme = { bu
                 ref={(r) => menuRef.current = r}
                 style={{ width: '85%', position: 'absolute', maxHeight: 300, ...theme.menu }}
                 button={
-                    <TouchableOpacity onPress={() => menuRef.current?.show()} style={[{ width: '100%',height: 50, justifyContent: 'center', ...theme.button }]}>
+                    <TouchableOpacity disabled={disabled} onPress={() => menuRef.current?.show()} style={[{ width: '100%',height: 50, justifyContent: 'center', ...theme.button }]}>
                         <Text numberOfLines={1} style={{ paddingLeft: 30, ...theme.textButton, color: selectedValue ? "black" : theme.textButton.color || 'gray', }}>
                             {selectedValue ? selectedValue : placeholder}
                         </Text>

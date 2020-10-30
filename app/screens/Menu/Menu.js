@@ -113,6 +113,17 @@ const Menu = (props) => {
                 })
             }
         },
+        {
+            id: 7,
+            title: 'Be Featured',
+            icon: `${Images.MyBookingIcon}`,
+            path: '',
+            onPress: (props, profile) => {
+                NavigationService.navigate("PayFeatured", {
+                    navigation: props.navigation,
+                })
+            }
+        },
     ]
 
     const [profilePic, setProfilePic] = useState();

@@ -1,9 +1,6 @@
-export const getTotalBookingPrice = (coach,sessions) => {
-    return sessions.reduce((total) => {
-        return total = total + coach.Rate + 2
-    }, 0).toString()
-}
-export const GET_PAYPAL_JSON = (coach, sessions) => {
+import GlobalContants from "../../constants/GlobalContants";
+
+export const GET_PAYPAL_JSON = () => {
     return {
         "intent": "sale",
         "payer": {
@@ -11,7 +8,7 @@ export const GET_PAYPAL_JSON = (coach, sessions) => {
         },
         "transactions": [{
             "amount": {
-                "total": getTotalBookingPrice(coach, sessions),
+                "total": GlobalContants.FEATURED_PRICE.toString(),
                 "currency": "GBP",
             },
             "description": "This is the payment transaction description.",
@@ -23,24 +20,11 @@ export const GET_PAYPAL_JSON = (coach, sessions) => {
             "soft_descriptor": "ECHI5786786",
             "item_list": {
                 "items": [
-                    ...sessions.map(session => {
-                        return {
-                            "name": `Coaching from ${coach.FullName}`,
-                            "description": `Training seesion from ${coach.FullName} starting from ${session.FromTime} to ${session.ToTime}`,
-                            "quantity": "1",
-                            "price": coach.Rate,
-                            "tax": "0",
-                            "sku": "1",
-                            "currency": "GBP"
-                        }
-                    }),
                     {
-                        "name": `Next Level Comission`,
-                        "description": `Next Level Comission of 2£ per session`,
+                        "name": `Next Level Featured`,
+                        "description": `Be featured on our app`,
                         "quantity": "1",
-                        "price": sessions.reduce((total) => {
-                            return total = total + 2
-                        }, 0),
+                        "price": GlobalContants.FEATURED_PRICE.toString(),
                         "tax": "0",
                         "sku": "1",
                         "currency": "GBP"

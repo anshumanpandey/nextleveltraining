@@ -16,7 +16,7 @@ const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
     const [agroupedData, setAgroupedData] = useState([])
     
-    const { markedDays, startDate, endDate, selectRange } = UseNLMarkedDates({ EmailID: profile.EmailID })
+    const { markedDays, startDate, endDate, selectRange } = UseNLMarkedDates({ EmailID: profile?.EmailID })
 
     const [{ data, loading, error }, getBookings] = useAxios({
         url: '/Users/GetBookings',
@@ -83,12 +83,10 @@ const CalendarScreen = (props) => {
                 disableAllTouchEventsForDisabledDays={true}
                 markingType={'period'}
                 theme={{
-                    calendarBackground: Colors.s_blue,
-                    dayTextColor: 'white',
-                    todayTextColor: 'white',
-                    selectedDayTextColor: Colors.s_blue,
-                    arrowColor: 'white',
-                    monthTextColor: 'white',
+                    dayTextColor: Colors.s_blue,
+                    todayTextColor: Colors.nl_yellow,
+                    arrowColor: Colors.nl_yellow,
+                    monthTextColor: Colors.nl_yellow,
                 }}
             />
             <CalendarRules />

@@ -54,7 +54,7 @@ const Information = (props) => {
     return () => focusListener?.remove();
   }, [])
 
-  console.log(JSON.stringify(props.navigation.state.params.Posts))
+  console.log(props.navigation.getParam("editable", false))
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
@@ -67,7 +67,7 @@ const Information = (props) => {
             style={{ fontSize: 25, color: Colors.s_blue, padding: 10 }}
           />
         </View>
-        <View style={[styles.infoContain, { marginTop: '5%'}]}>
+        <View style={[styles.infoContain, { marginTop: '5%' }]}>
           <TouchableOpacity disabled={!(props.navigation.getParam("editable", false) == true)} onPress={() => props.navigation.navigate({ routeName: 'ProfilePic', params: { goBackTo: 'Profile' } })}>
             <View>
               <Image
@@ -75,25 +75,27 @@ const Information = (props) => {
                 source={props.navigation.getParam("ProfileImage") ? { uri: props.navigation.getParam("ProfileImage") } : Images.PlayerPlaceholder}
               />
             </View>
-            <View style={{
-              display: props.navigation.getParam("editable", false) == true ? 'flex': 'none',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'absolute',
-              width: Dimension.px30,
-              height: Dimension.px30,
-              backgroundColor: Colors.s_blue,
-              borderRadius: Dimension.px30 / 2,
-              right: 0,
-              top: 0,
-              marginTop: -Dimension.px50
-            }}>
-              <Icon
-                type="EvilIcons"
-                name="pencil"
-                style={{ color: 'white', fontSize: 25 }}
-              />
-            </View>
+            {props.navigation.getParam("editable", false) == true && (
+              <View style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'absolute',
+                width: Dimension.px30,
+                height: Dimension.px30,
+                backgroundColor: Colors.s_blue,
+                borderRadius: Dimension.px30 / 2,
+                right: 0,
+                top: 0,
+                marginTop: -Dimension.px50
+              }}>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{ color: 'white', fontSize: 25 }}
+                />
+              </View>
+            )}
           </TouchableOpacity>
           <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'center', height: 60 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -191,7 +193,7 @@ const Information = (props) => {
       </View>
 
       {selectedTab === 0 ? (
-        <InformationTab editable={props.navigation.getParam("editable", false)} selectedTab={selectedTab} coach={props.navigation.getParam("coach", undefined) == undefined ? props.navigation.state.params: getGlobalState("profile")} />
+        <InformationTab editable={props.navigation.getParam("editable", false)} selectedTab={selectedTab} coach={props.navigation.getParam("coach", undefined) == undefined ? props.navigation.state.params : getGlobalState("profile")} />
       ) : selectedTab === 1 ? (
         <MediaTab selectedTab={selectedTab} fetchPost={props?.navigation?.getParam("Id", undefined)} posts={props?.navigation?.getParam("Posts", []) || []} />
       ) : (

@@ -38,7 +38,7 @@ const reducer = (state, action) => {
       case GLOBAL_STATE_ACTIONS.NOTIFICATIONS: return { ...state, notifications: action.state };
       case GLOBAL_STATE_ACTIONS.ADD_NOTIFICATION: {
         state.notifications.push(action.state)
-        return { ...state, notifications: state.notifications }
+        return { ...state, notifications: [ ...state.notifications ] }
       };
       case GLOBAL_STATE_ACTIONS.GOTO: return { ...state, goto: action.state };
       case GLOBAL_STATE_ACTIONS.TOKEN: {

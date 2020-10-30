@@ -27,7 +27,8 @@ const TeachingCard = ({ data, onPress, selectedItem }) => {
             }}>
               <View style={[styles.expView, currentStyles]}>
                 <LoaderImage
-                  source={{ uri: obj.ImageUrl }}
+                /* TODO: show empty image */
+                  source={obj.ImageUrl ? { uri: obj.ImageUrl }: undefined}
                   style={styles.expImg}
                   imageStyle={styles.expImg}
                 />

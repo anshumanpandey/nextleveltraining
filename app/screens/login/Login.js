@@ -23,6 +23,7 @@ import Colors from '../../constants/color';
 import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 const Login = (props) => {
   const [role, setRole] = useState();
@@ -77,6 +78,11 @@ const Login = (props) => {
     return () => focusListener.remove()
   }, [])
 
+  const redirectAferLogin = () => {
+    const resetAction = StackActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Search' }) })
+    props.navigation.dispatch(resetAction);
+  }
+
   const handleResponse = async () => {
     try {
       // performs login request
@@ -120,7 +126,7 @@ const Login = (props) => {
           })
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-            props.navigation.navigate(Screen.LandingPage)
+            redirectAferLogin()
           })
           .catch(err => console.log(err))
       }
@@ -176,7 +182,7 @@ const Login = (props) => {
               })
               .then((r) => {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                props.navigation.navigate(Screen.LandingPage)
+                redirectAferLogin()
               })
               .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, }))
               .catch((r) => console.log(r))
@@ -264,7 +270,7 @@ const Login = (props) => {
                   })
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                    props.navigation.navigate(Screen.LandingPage)
+                    redirectAferLogin()
                   })
                   .catch(err => console.log(err))
               }}
@@ -299,7 +305,7 @@ const Login = (props) => {
                     })
                     .then((r) => {
                       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                      props.navigation.navigate(Screen.LandingPage)
+                      redirectAferLogin()
                     })
                     .catch(err => console.log(err))
                 } catch (e) {

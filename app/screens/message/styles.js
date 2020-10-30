@@ -27,13 +27,12 @@ const styles =StyleSheet.create({
         alignItems: 'flex-end'
     },
     innerRow:{
-     flexDirection:"row",
      justifyContent:"space-between"
     },
     description: {
-        fontSize: 11,
+        fontSize: 16,
         fontStyle: 'italic',
-        color:"#a9a9a9",
+        color:"#00000090",
     },
     description2: {
         fontSize: 11,

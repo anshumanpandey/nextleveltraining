@@ -337,36 +337,12 @@ const Search = (props) => {
         </Tab>
 
         <Tab textStyle={tabStyle} activeTextStyle={activeTabStyle} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
-          {searchCoachesReq.data && searchCoachesReq.data.Posts.length == 0 && <NoResultMessage />}
-          {searchCoachesReq.data && searchCoachesReq.data.Posts.length != 0 && (
+          {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length == 0 && <NoResultMessage />}
+          {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length != 0 && (
             <FlatList
               keyExtractor={(item) => item.Id}
-              data={searchCoachesReq.data.Posts
-                .map(p => {
-                  const j = {
-                    id: p.Id,
-                    name: p.Header,
-                    time: moment(p.CreatedDate).format('DD MMM HH:mm'),
-                    description: p.Body,
-                    createdBy: p.CreatedBy,
-                    profileImage: p.ProfileImage,
-                    comments: p.Comments || [],
-                    likes: p.Likes || [],
-                    imageUri: p.MediaURL,
-                    width: p.Width,
-                    height: p.Height,
-                  }
-
-                  if (p.MediaURL) {
-                    j.fileType = "image"
-                    if (p.MediaURL.includes('MOV') || p.MediaURL.includes('mp4')) {
-                      j.fileType = "video"
-                    }
-                  }
-                  return j
-
-                })}
-              renderItem={({ item }) => <PostCard item={item} />} />
+              data={searchCoachesReq?.data?.Featured}
+              renderItem={({ item }) => <PostSearchCard item={item} />} />
           )}
 
 

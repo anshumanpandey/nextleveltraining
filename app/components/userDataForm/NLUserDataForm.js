@@ -119,7 +119,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...
                     })
                     .then((r) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'AboutMe' })
+                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: action == 'register' ? "PayFeatured":'AboutMe' })
                     })
                     .catch((r) => console.log(r))
             }}
@@ -152,6 +152,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...
                         {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
                         <NLDropdownMenu
+                            disabled={addresses.length == 0}
                             placeholder={addresses.length == 0 ? 'No options': "Select an address"}
                             theme={{ 
                                 menu: { width: '80%' },

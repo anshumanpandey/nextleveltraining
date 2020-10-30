@@ -65,6 +65,9 @@ import HasCompletedVerificationProcess from './utils/HasCompletedVerificationPro
 import AsyncStorage from '@react-native-community/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import AskFeatured from './screens/askFeatured/AskFeatured';
+import PayFeatured from './screens/payFeaturedScreen/PayFeatured';
+import messaging from '@react-native-firebase/messaging';
+import { axiosInstance } from './api/AxiosBootstrap';
 
 let initialRouteName = null
 let Apps = null
@@ -87,6 +90,13 @@ const AppMain = () => {
   const [notifications] = useGlobalState('notifications')
   const [goto] = useGlobalState('goto')
   const [currentNotifications, setCurrentNotifications] = useState([]);
+
+  const listenTokens = () => {
+    messaging().onTokenRefresh(fcmToken => {
+      // Process your token as required
+      axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: fcmToken } })
+    });
+  }
 
   useEffect(() => {
     SplashScreen.hide();
@@ -474,6 +484,15 @@ const AppMain = () => {
       }),
     }
 
+    tabs.PayFeatured = {
+      screen: PayFeatured,
+      navigationOptions: () => ({
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
     tabs.CoachSummary = {
       screen: CoachsummaryScreen,
       navigationOptions: () => ({
@@ -535,7 +554,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "PayFeatured","ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

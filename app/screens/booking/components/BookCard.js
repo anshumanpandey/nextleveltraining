@@ -19,7 +19,7 @@ const BookCard = (item) => {
           </Text>
           <Text style={{ fontWeight: '500', marginTop: 5 }}>{item.FullName}</Text>
           <View style={{ marginTop: 5 }}>
-            <Text>{item.Location.LocationAddress}</Text>
+            <Text>{item?.Location?.LocationAddress}</Text>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
               <Text style={{ marginLeft: 5 }}>

@@ -1,13 +1,13 @@
 import React, { Component, useRef, useEffect } from 'react'
 import Header from '../../components/header/Header';
-import { StyleSheet, ScrollView, Text, FlatList, TouchableOpacity } from 'react-native'
+import { Image, ScrollView, Text, FlatList, TouchableOpacity } from 'react-native'
 import { View } from 'native-base';
 import useAxios from 'axios-hooks'
 import styles from '../message/styles';
 import { Icon } from 'native-base';
-import Colors from '../../constants/color';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import { parseISO, formatDistanceToNow } from 'date-fns';
+import Images from "../../constants/image"
 
 const Notifications = (props) => {
 
@@ -19,19 +19,22 @@ const Notifications = (props) => {
     }, { manual: true })
     const readMessage = (id) => {
         readNotification({ url: `/Users/ReadNotification/${id}` })
-        .then(() => getUserData())
+            .then(() => getUserData())
     }
     function Item({ item, key }) {
         return (
             <View style={styles.flatListNotification} key={key}>
                 <TouchableOpacity disable={readNotificationReq.loading} style={[styles.container_text, { opacity: readNotificationReq.loading ? 0.5 : 1 }]} onPress={() => readMessage(item.Id)}>
-                    <View style={[styles.innerRow, { width: '100%'}]}>
-                        <Text style={styles.description}>
-                            {item.Text}
+                    <View style={[styles.innerRow, { width: '100%', flexDirection: 'row' }]}>
+                        <Image style={{ height: 45, width: 45, borderRadius: 45/2  }} source={item.Image ? item.Image : Images.PlayerPlaceholder } />
+                        <View style={{ width: '80%'}}>
+                            <Text style={styles.description}>
+                                {item.Text}
+                            </Text>
+                            <Text style={styles.description2}>
+                                {formatDistanceToNow(new Date(item.CreatedDate))} ago
                         </Text>
-                        <Text style={styles.description2}>
-                            {formatDistanceToNow(new Date(item.CreatedDate))} ago
-                        </Text>
+                        </View>
                     </View>
                 </TouchableOpacity>
                 {!item.IsRead ?
@@ -66,22 +69,22 @@ const Notifications = (props) => {
         }
     }, [getUserReq.loading]);
     return (
-        <ScrollView contentContainerStyle={{flexGrow: 1 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
             <Header title={"Notifications"} hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
             <View style={[styles.signup_container]}>
-                <View style={[styles.fullFlatListContainer ]}>
+                <View style={[styles.fullFlatListContainer]}>
                     {!getUserReq.loading && getUserReq?.data && getUserReq?.data.Notifications.length > 0 &&
-                    <>
-                        <FlatList
-                            contentContainerStyle={{ flexGrow: 1 }}
-                            ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: '10%'}}>No notifications</Text>}
-                            data={getUserReq.data?.Notifications.sort((a,b) => parseISO(b.CreatedDate) - parseISO(a.CreatedDate)) || []}
-                            renderItem={({ item, key }) => <Item item={item} key={key} />}
-                            temSeparatorComponent={() => <ItemSeparator />}
-                            keyExtractor={item => item.id}
-                        />
-                    </>
+                        <>
+                            <FlatList
+                                contentContainerStyle={{ flexGrow: 1 }}
+                                ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: '10%' }}>No notifications</Text>}
+                                data={getUserReq.data?.Notifications.sort((a, b) => parseISO(b.CreatedDate) - parseISO(a.CreatedDate)) || []}
+                                renderItem={({ item, key }) => <Item item={item} key={key} />}
+                                temSeparatorComponent={() => <ItemSeparator />}
+                                keyExtractor={item => item.id}
+                            />
+                        </>
                     }
                 </View>
                 {!getUserReq.loading && getUserReq?.data?.Notifications && getUserReq?.data?.Notifications.length === 0 && <Text style={styles.notFoundText}>No Notifications</Text>}

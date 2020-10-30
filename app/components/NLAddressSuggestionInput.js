@@ -80,7 +80,7 @@ const RenderItem = ({ onLocationSelected, value }) => {
  * @param {String} [params.defaultValue]
  * @param {String} [params.placeholder]
  */
-const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, noList = false,defaultValue, placeholder = '', style = {} }) => {
+const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, noLookupButton = false,noList = false,defaultValue, placeholder = '', style = {} }) => {
     const [inputLayout, setInputLayout] = useState()
     const [currentValue, setCurrentValue] = useThrottle(undefined, 3)
     const [currentDisaplyValue, setCurrentDisaplyValue] = useState()
@@ -138,7 +138,7 @@ const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, no
                         setCurrentDisaplyValue(t)
                     }}
                 />
-                <NLButton disabled={loading} color={Colors.s_blue} style={{ width: '25%' }} value="Lookup" onPress={() => doLookup()} />
+                {noLookupButton == false && <NLButton disabled={loading} color={Colors.s_blue} style={{ width: '25%' }} value="Lookup" onPress={() => doLookup()} />}
             </View>
             {noList == false && suggestions.length != 0 && (
                 <View style={[styles.input_wrapper, { backgroundColor: 'white', height: 200,position: 'absolute', zIndex: 20, marginTop: inputLayout ? inputLayout.height * 2 : undefined }]}>

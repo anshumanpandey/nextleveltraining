@@ -1,8 +1,9 @@
 import useAxios from "axios-hooks";
+import Axios from "axios";
 import { useEffect, useState } from "react"
 import { useGlobalState } from "../state/GlobalState";
 import { API_BASE_URL } from '../api/AxiosBootstrap';
-import { lightFormat, isAfter } from 'date-fns';
+import { lightFormat, isAfter, endOfMonth, setMonth } from 'date-fns';
 import moment from 'moment'
 import color from 'color'
 import Colors from "../constants/color";
@@ -12,7 +13,7 @@ const getWeeksDay = (except) => {
     return daysInWeek.filter(d => !except.includes(d))
 }
 
-var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(new Date(d));}return a;};
+var getDaysArray = function (s, e) { for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) { a.push(new Date(d)); } return a; };
 
 const UseMultipleAxioHook = (config) => {
     const [token] = useGlobalState('token');
@@ -49,16 +50,24 @@ const UseMultipleAxioHook = (config) => {
 }
 
 
-export const UseNLMarkedDates = ({ Bookings = [],...props}) => {
+export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     const [markedDays, setMarkedDay] = useState({})
     const [nonAvailableDays, setNonAvailableDays] = useState({})
     const [partialBookedDay, setPartialBookedDay] = useState({})
 
     const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
+    const [availablesDatesReq, getAvailablesDates] = useAxios({}, { manual: true })
     const [availableTimePerCoach, getUserData] = UseMultipleAxioHook()
 
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
+
+    const getTimespansPerDate = (date, timespans) => {
+        return timespans.filter(timespan => {
+            const formattedDate = timespan.BookingDate.split("T")[0]
+            return formattedDate == date
+        })
+    }
 
     const selectRange = (date) => {
         if (!startDate && !endDate) {
@@ -101,44 +110,64 @@ export const UseNLMarkedDates = ({ Bookings = [],...props}) => {
                 })
             })
 
-        const bookedDays = Bookings.reduce((newState, booking) => {
-            newState[booking.BookingDate.split('T')[0]] = {
-                selected: true,
-                selectedColor: 'orange',
-                total: Bookings.filter(el => el.Id == booking.Id).length,
-                booking
-            }
+        const bookedDays = Bookings.reduce((newState, book) => {
+            book.Sessions.forEach(d => {
+                newState[d.BookingDate?.split('T')[0]] = {
+                    selected: true,
+                    selectedColor: 'orange',
+                    total: Bookings.filter(el => el.Id == book.Id).length,
+                    booking: book,
+                    bookingDate: d.BookingDate,
+                }
+            })
+
             return newState
         }, {})
 
-        const httpCalls = Object.keys(bookedDays).map(k => {
+        if (Bookings.length != 0) {
+            const bookedDates = Object.keys(bookedDays)
             const data = {
                 "coachID": props.Id,
-                "date": bookedDays[k].booking.BookingDate
+                "date": moment(bookedDates[0]).startOf("month").toISOString(),
+                "endDate": moment(bookedDates.pop()).endOf("month").subtract(1, "day").toDate().toISOString(),
             }
-            return { data, url: `${API_BASE_URL}/Users/GetAvailableTimeByCoachId`, method: 'post' }
-        })
 
-        if (httpCalls.length != 0) {
-            getUserData(httpCalls).then(r => {
-                r.forEach((axiosRes) => {
-                    const date = JSON.parse(axiosRes.config.data).date.split('T')[0]
-                    const bookedDay = bookedDays[date]
-                    if (bookedDay.total >= axiosRes.data.length) {
-                        bookedDays[date] = { selected: true, selectedColor: 'red', disabled: true }
-                    } else {
-                        bookedDays[date] = { selected: true, selectedColor: 'orange' }
-                    }
+            const axiosReq = { data, url: `${API_BASE_URL}/Users/GetAvailableTimeByCoachId`, method: 'post' }
+            getAvailablesDates(axiosReq)
+                .then(r => {
+                    console.log(r.data)
+                    const datesToCheck = r.data.map(timeSpan => {
+                        return timeSpan.BookingDate.split("T")[0]
+                    })
+                    .reduce((newArray, next) => {
+                        const temp = new Set(newArray)
+                        temp.add(next)
+                        return Array.from(temp.values())
+                    }, [])
+
+                    datesToCheck.forEach(d => {
+                        const bookedDay = bookedDays[d]
+
+                        if (bookedDay) {
+                            //console.log("bookedDay", bookedDay)
+                            //console.log("getTimespansPerDate", getTimespansPerDate(d, r.data).length)
+                            
+                            if (bookedDay.total >= getTimespansPerDate(d, r.data).length) {
+                                bookedDays[d] = { selected: true, color: 'red', disabled: true }
+                            } else {
+                                bookedDays[d] = { selected: true, color: Colors.s_blue }
+                            }
+                        }
+                    })
+
+                    setPartialBookedDay(bookedDays)
                 })
-    
-                setPartialBookedDay(bookedDays)
-            })
         }
-        
+
     }, [props.EmailID])
 
     const markAvailableDay = (string) => {
-        setMarkedDay({ [string]: { selected: true, selectedColor: 'white' } })
+        setMarkedDay({ [string]: { selected: true } })
     }
 
     const markDayOfWeekNonAvailable = (dayOfWeek) => {
@@ -154,7 +183,7 @@ export const UseNLMarkedDates = ({ Bookings = [],...props}) => {
         }
         const newDate = {}
         dayArr.forEach(d => {
-            newDate[d] = { selected: true, selectedColor: 'red', disabled: true }
+            newDate[d] = { selected: true, color: 'red', disabled: true }
         })
 
         setNonAvailableDays((p) => ({ ...p, ...newDate }))

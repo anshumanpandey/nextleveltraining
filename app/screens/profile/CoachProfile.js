@@ -1138,6 +1138,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                 {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
 
                                 <NLAddressSuggestionInput
+                                    noLookupButton={true}
                                     onLocationSelected={(loc) => {
                                         setFieldValue("address", getFullSuggestionAddress(loc))
                                         setFieldValue("lat", loc.latitude)

@@ -16,6 +16,7 @@ import useAxios from 'axios-hooks'
 import getDistance from 'geolib/es/getDistance';
 import { UseNLMarkedDates } from '../../../utils/UseNLMarkedDates';
 import CalendarRules from '../../../components/CalendarRules';
+import { isAfter } from 'date-fns';
 
 const _today = new Date();
 
@@ -26,11 +27,43 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const [profile] = useGlobalState('profile')
 
   const [dropdownOptions, setDropdownOptions] = useState([])
-  const [date, setDate] = useState(_today)
-  const [time, setTime] = useState()
+  const [searchStartDate, setSearchStartDate] = useState(_today)
+  const [searchEndDate, setSearchEndDate] = useState(_today)
+  const [sessions, setSessions] = useState([])
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
-  const { markedDays, markAvailableDay, isUpdating } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id,Bookings: coach.Bookings });
+  const { markedDays, markAvailableDay, selectRange, isUpdating } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id, Bookings: coach.Bookings });
+
+  const addSession = (session) => {
+    const uniqueSessions = new Set(sessions)
+    if (uniqueSessions.has(session)){
+      uniqueSessions.delete(session)
+    } else {
+      uniqueSessions.add(session)
+    }
+    
+    setSessions(Array.from(uniqueSessions.values()))
+  }
+
+  const isSessionSelected = (session) => {
+    return sessions.find(s => s.TimeTag == session.TimeTag) != null
+  }
+
+  const selectSearchRange = (date) => {
+    if (!searchStartDate && !searchEndDate) {
+      setSearchStartDate(date)
+    } else if (searchStartDate && !searchEndDate) {
+      if (isAfter(searchStartDate, date)) {
+        setSearchStartDate(date)
+        setSearchEndDate(searchStartDate)
+      } else {
+        setSearchEndDate(date)
+      }
+    } else {
+      setSearchStartDate(date)
+      setSearchEndDate(null)
+    }
+  }
 
   const [availableTimePerCoach, getUserData] = useAxios({
     url: '/Users/GetAvailableTimeByCoachId',
@@ -49,7 +82,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
 
   const initFn = () => {
     SentDate && setDate(moment(SentDate).toDate())
-    FromTime && ToTime && setTime(`${FromTime}-${ToTime}`)
+    FromTime && ToTime && addSession(`${FromTime}-${ToTime}`)
     Location && setSelectedLocation({
       id: Location.Id,
       title: Location.LocationName,
@@ -67,18 +100,21 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }, [])
 
   useEffect(() => {
+    if (!searchStartDate || !searchEndDate) return
+
     const data = {
       "coachID": coach.Id,
-      "date": date.toISOString()
+      "date": searchStartDate.toISOString(),
+      "endDate": searchEndDate.toISOString(),
     }
     getUserData({ data })
       .then((r) => {
         setDropdownOptions(r.data)
         if (r.data.length == 0) {
-          setTime(undefined)
+          setSessions([])
         }
       })
-  }, [date])
+  }, [searchStartDate, searchEndDate])
 
   const isLoading = () => {
     return loading || rescheduleBookingReq.loading
@@ -102,11 +138,11 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               onPress={() => NavigationService.goBack()}
               name="close"
               type="MaterialIcons"
-              style={{ fontSize: 25, color: 'white', padding: 10 }}
+              style={{ fontSize: 25, color: Colors.s_blue, padding: 10 }}
             />
             <TouchableOpacity
               style={{ width: '40%' }}
-              disabled={selectedLocation == undefined || time == undefined || rescheduleBookingReq.loading}
+              disabled={selectedLocation == undefined || rescheduleBookingReq.loading}
               onPress={() => {
                 if (isEditing == true) {
                   const [startDate, endDate] = time.split('-')
@@ -129,12 +165,12 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
                       NavigationService.navigate("JobDetails", data.find(i => i.Id == BookingId))
                     })
                 } else {
-                  NavigationService.navigate('PaymentConcent', { coach, selectedLocation, selectedTime: time, selectedDate: date })
+                  NavigationService.navigate('PaymentConcent', { coach, selectedLocation, sessions })
                 }
               }}>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%' }}>
                 {isLoading() && <Spinner color="white" style={{ marginRight: '10%' }} />}
-                <Text style={{ color: 'white', fontSize: 18, opacity: (selectedLocation && time) || !isLoading() ? 1 : 0.5 }}>
+                <Text style={{ color: Colors.s_blue, fontSize: 18, opacity: (selectedLocation) || !isLoading() ? 1 : 0.5 }}>
                   Book Now
               </Text>
               </View>
@@ -142,7 +178,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
           </View>
           <View style={styles.userView}>
             <Image source={coach.ProfileImage ? { uri: coach.ProfileImage } : Images.PlayerPlaceholder} style={styles.userImg} />
-            <Text style={{ color: 'white', fontSize: 18, marginLeft: 15 }}>
+            <Text style={{ color: Colors.s_blue, fontSize: 18, marginLeft: 15 }}>
               {coach.FullName}
             </Text>
           </View>
@@ -150,22 +186,22 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
         <View>
           <Calendar
             onDayPress={(day) => {
-              setDate(moment(day.dateString, 'YYYY-MM-DD'))
+              selectRange(moment(day.dateString, 'YYYY-MM-DD').toDate())
+              selectSearchRange(moment(day.dateString, 'YYYY-MM-DD').toDate())
               markAvailableDay(day.dateString)
             }}
+            markingType={'period'}
             markedDates={markedDays}
             disableAllTouchEventsForDisabledDays={true}
             theme={{
-              calendarBackground: Colors.s_blue,
-              dayTextColor: 'white',
-              todayTextColor: 'white',
-              selectedDayTextColor: Colors.s_blue,
-              arrowColor: 'white',
-              monthTextColor: 'white',
+              dayTextColor: Colors.s_blue,
+              todayTextColor: Colors.nl_yellow,
+              arrowColor: Colors.nl_yellow,
+              monthTextColor: Colors.nl_yellow,
             }}
           />
           {isUpdating() == true && (
-            <View style={{ backgroundColor: '#ffffff60', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+            <View style={{ backgroundColor: `${Colors.nl_yellow}60`, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
               <Spinner size={150} color={Colors.nl_yellow} style={{ height: '100%' }} />
             </View>
           )}
@@ -176,11 +212,13 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
           {availableTimePerCoach.loading && <Spinner color={Colors.s_blue} />}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-            {!availableTimePerCoach.loading && availableTimePerCoach.data && availableTimePerCoach.data.map(t => {
-              const isSelected = time == t
+            {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text> }
 
-              return <TouchableOpacity onPress={() => setTime(t)} style={{ width: '30%', padding: '1%', marginBottom: '1%', backgroundColor: isSelected ? `${Colors.nl_yellow}30` : '#00000005' }}>
-                <Text style={{ padding: '1%', textAlign: 'center' }}>{t}</Text>
+            {!availableTimePerCoach.loading && availableTimePerCoach.data && availableTimePerCoach.data.map(t => {
+              const isSelected = isSessionSelected(t)
+
+              return <TouchableOpacity onPress={() => addSession(t)} style={{ width: '45%', padding: '1%', marginBottom: '1%', backgroundColor: isSelected ? `${Colors.nl_yellow}30` : '#00000005' }}>
+                <Text style={{ padding: '1%', textAlign: 'center' }}>{t.TimeTag}</Text>
               </TouchableOpacity>
             })}
           </View>

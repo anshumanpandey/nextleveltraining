@@ -6,7 +6,7 @@ import { Text, View, CheckBox, Spinner } from 'native-base';
 import Header from '../../components/header/Header';
 import Images from '../../constants/image';
 import Colors from '../../constants/color';
-import { GET_PAYPAL_JSON, getTotalBookingPrice } from "./PaypalUtils"
+import { GET_PAYPAL_JSON } from "./PaypalUtils"
 import base64 from 'react-native-base64'
 import { makeUseAxios } from 'axios-hooks'
 import { WebView } from 'react-native-webview';
@@ -14,6 +14,7 @@ import moment from 'moment'
 import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import { NavigationActions, StackActions } from 'react-navigation';
+import GlobalContants from '../../constants/GlobalContants';
 var qs = require('qs');
 var UrlParser = require('url-parse');
 
@@ -30,8 +31,8 @@ const PaymentConcentScreen = (props) => {
   const [checked, setChecked] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
-  const [saveBookingReq, saveBooking] = useAxios({
-    url: '/Users/SaveBooking',
+  const [savePaymenReq, savePayment] = useAxios({
+    url: '/Users/UpdatePaymentDetails',
     method: 'POST'
   }, { manual: true })
 
@@ -51,21 +52,19 @@ const PaymentConcentScreen = (props) => {
 
   const isLoading = () => loading || paymentReq.loading
 
-  console.log(props.navigation.getParam('sessions'))
-
   return (
     <ScrollView hide style={{ flex: 1, backgroundColor: 'white' }}>
       <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} hideCreatePost={true} />
       <View style={{ backgroundColor: '#f0f2f3', marginTop: '10%' }}>
         <View style={{ paddingHorizontal: '5%', justifyContent: 'space-between', flexDirection: 'row' }}>
-          <Text style={{ fontSize: 30 }}>£ {getTotalBookingPrice(props.navigation.getParam('coach'), props.navigation.getParam('sessions'))}</Text>
+          <Text style={{ fontSize: 30 }}>£ {GlobalContants.FEATURED_PRICE}</Text>
           <Text style={{ fontSize: 30 }}>Pay now</Text>
         </View>
       </View>
       <View style={{ paddingHorizontal: '5%', alignItems: "center", marginTop: '5%' }}>
         <Image source={Images.PaypalLogo} />
         <Text style={{ fontSize: 20, textAlign: 'center' }}>
-          You will be redirected to PayPal's website to acess your account and submit your payment.\nThen you will be return to Next Level App to obtain your booking confirmation
+          You will be redirected to PayPal's website to acess your account and submit your payment. Then you will be return to Next Level App
         </Text>
         <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', marginTop: '5%' }}>
           <CheckBox color={Colors.g_text} checked={checked} onPress={() => setChecked(p => !p)} />
@@ -101,7 +100,7 @@ const PaymentConcentScreen = (props) => {
                   headers: {
                     'Authorization': `Bearer ${res.data.access_token}`
                   },
-                  data: GET_PAYPAL_JSON(props.navigation.getParam('coach'), props.navigation.getParam('sessions'))
+                  data: GET_PAYPAL_JSON()
                 })
               })
               .then((res) => {
@@ -137,20 +136,12 @@ const PaymentConcentScreen = (props) => {
 
               if (url.includes('payment_success')) {
                 console.log('success')
-                if (apiCalled == true || saveBookingReq.loading == true) return
+                if (apiCalled == true || savePaymenReq.loading == true) return
                 const data = {
-                  "playerID": profile.Id,
-                  "coachID": props.navigation.getParam('coach').Id,
-                  "sessions": props.navigation.getParam('sessions'),
-                  "bookingDate": props.navigation.getParam('selectedDate'),
-                  "trainingLocationID": props.navigation.getParam('selectedLocation').id,
-                  "amount": props.navigation.getParam('coach').Rate,
-                  "paymentStatus": "Processed",
-                  "transactionID": urlParams.paymentId,
-                  "bookingStatus": "Done"
+                  "paypalPaymentId": urlParams.paymentId,
                 }
                 console.log(data)
-                saveBooking({ data })
+                savePayment({ data })
                   .then(r => {
                     setApiCalled(true)
                     console.log(r.data)
@@ -160,7 +151,7 @@ const PaymentConcentScreen = (props) => {
                     const resetAction = StackActions.reset({
                       index: 0,
                       key: null,
-                      actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Booking' }) })]
+                      actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'AboutMe' }) })]
                     })
                     props.navigation.dispatch(resetAction);
                   })
