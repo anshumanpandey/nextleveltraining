@@ -80,7 +80,7 @@ const RenderItem = ({ onLocationSelected, value }) => {
  * @param {String} [params.defaultValue]
  * @param {String} [params.placeholder]
  */
-const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, noLookupButton = false,showList = false,defaultValue, placeholder = '', style = {} }) => {
+const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, noLookupButton = false,showList = false,defaultValue = null, placeholder = '', style = {} }) => {
     const [inputLayout, setInputLayout] = useState()
     const [currentValue, setCurrentValue] = useThrottle(undefined, 3)
     const [currentDisaplyValue, setCurrentDisaplyValue] = useState()
@@ -94,7 +94,7 @@ const NLAddressSuggestionInput = ({ onLocationSelected, onSuggestionsUpdated, no
     }
 
     useEffect(() => {
-        if (defaultValue) setCurrentDisaplyValue(defaultValue)
+        if (defaultValue != null) setCurrentDisaplyValue(defaultValue)
     }, [defaultValue])
 
     const doLookup = () => {

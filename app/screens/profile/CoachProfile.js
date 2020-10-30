@@ -1103,6 +1103,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
                                 <NLAddressSuggestionInput
                                     showList={true}
+                                    defaultValue={values.address}
                                     onLocationSelected={(loc) => {
                                         setFieldValue("address", getFullSuggestionAddress(loc))
                                     }}
