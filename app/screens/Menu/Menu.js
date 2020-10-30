@@ -114,7 +114,18 @@ const Menu = (props) => {
             }
         },
         {
-            id: 7,
+            id: 8,
+            title: 'Contact Us',
+            icon: `${Images.HelpIcon}`,
+            path: '',
+            onPress: (props, profile) => {
+                NavigationService.navigate("ContactUs", {
+                    navigation: props.navigation,
+                })
+            }
+        },
+        {
+            id: 9,
             title: 'Be Featured',
             icon: `${Images.MyBookingIcon}`,
             path: '',
