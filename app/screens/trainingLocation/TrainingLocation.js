@@ -42,7 +42,7 @@ const TrainingLocationScreen = (props) => {
                                         source={t.ImageUrl ? {uri: t.ImageUrl}: Images.PlayerPlaceholder}
                                     />
                                 </View>
-                                <View>
+                                <View style={{ width: '80%', marginLeft: 'auto'}}>
                                     <Text style={{ fontWeight: 'bold', fontSize: 12 }}>{t.LocationName}</Text>
                                     <Text style={{ fontSize: 12 }}>{t.LocationAddress}</Text>
                                 </View>

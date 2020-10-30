@@ -6,7 +6,7 @@ const CalendarRules = ({ text, style }) => {
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', backgroundColor: "white", paddingBottom: '3%' }}>
             <View style={{ alignItems: 'center' }}>
-                <Text style={{ color: Colors.s_blue, textAlign: 'center' }}>No available</Text>
+                <Text style={{ color: Colors.s_blue, textAlign: 'center' }}>Not available</Text>
                 <View style={{ backgroundColor: 'red', height: 40, width: 40 }}></View>
             </View>
             <View style={{ alignItems: 'center' }}>

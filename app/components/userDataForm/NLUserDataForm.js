@@ -144,7 +144,6 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, isF
                             style={{ width: '85%'}}
                             placeholder={"Home Postcode"}
                             defaultValue={values.postCode}
-                            noList={true}
                             onSuggestionsUpdated={(suggetions) => {
                                 setAddresses(suggetions)
                             }}
