@@ -19,7 +19,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import NLAddressSuggestionInput, { getFullSuggestionAddress } from '../NLAddressSuggestionInput';
 import NLDropdownMenu from '../NLDropdownMenu';
 
-const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...props }) => {
+const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, isFeatured = false, ...props }) => {
     const formikRef = useRef()
     const [addresses, setAddresses] = useState([])
 
@@ -119,7 +119,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, ...
                     })
                     .then((r) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: action == 'register' ? "PayFeatured":'AboutMe' })
+                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: action == 'register' && isFeatured ? "PayFeatured":'AboutMe' })
                     })
                     .catch((r) => console.log(r))
             }}

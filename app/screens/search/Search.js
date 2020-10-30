@@ -341,7 +341,17 @@ const Search = (props) => {
           {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length != 0 && (
             <FlatList
               keyExtractor={(item) => item.Id}
-              data={searchCoachesReq?.data?.Featured}
+              data={searchCoachesReq?.data
+                ?.Featured
+                .sort((a, b) => {
+                  if (!a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
+
+                  if (orderingType.orderBy) {
+                    return distanceFilter(a, b, orderingType.orderBy)
+                  }
+                  return 0
+                })
+              }
               renderItem={({ item }) => <PostSearchCard item={item} />} />
           )}
 
