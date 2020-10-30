@@ -336,7 +336,7 @@ const Search = (props) => {
           </View>
         </Tab>
 
-        <Tab textStyle={tabStyle} activeTextStyle={activeTabStyle} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Hashtags">
+        <Tab textStyle={tabStyle} activeTextStyle={activeTabStyle} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Featured">
           {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length == 0 && <NoResultMessage />}
           {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length != 0 && (
             <FlatList
@@ -352,7 +352,9 @@ const Search = (props) => {
                   return 0
                 })
               }
-              renderItem={({ item }) => <PostSearchCard item={item} />} />
+              renderItem={({ item }) => {
+                return <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[1], { player: item, ...item })} {...item} hideHeartIcon={true} />
+              }} />
           )}
 
 

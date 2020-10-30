@@ -4,7 +4,17 @@ import {StyleSheet} from 'react-native'
 
 
 const styles =StyleSheet.create({
-
+    login_forgot_title:{
+        color:Colors.g_text,
+        fontSize: 20
+    },
+    login_forgot_view:{
+        width:Dimension.pro100,
+        justifyContent:'center',
+        alignItems:'center',
+        flexDirection:'row',
+        marginTop:Dimension.px30
+    },
     level_container:{
         backgroundColor:'white',
         height:Dimension.pro100,

@@ -79,8 +79,9 @@ const Login = (props) => {
   }, [])
 
   const redirectAferLogin = () => {
-    const resetAction = StackActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Search' }) })
+    const resetAction = StackActions.navigate({ routeName: 'MainStack' })
     props.navigation.dispatch(resetAction);
+    dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'Search' })
   }
 
   const handleResponse = async () => {

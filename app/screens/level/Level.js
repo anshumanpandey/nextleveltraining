@@ -56,6 +56,12 @@ const Level = (props) => {
             <Text style={styles.level_player_text}>{SignupCoach}</Text>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: 'Player' } )} style={styles.login_forgot_view}>
+                <Text style={styles.login_forgot_title}>Login as Player</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: 'Coach' })} style={styles.login_forgot_view}>
+                <Text style={styles.login_forgot_title}>Login as Coach</Text>
+              </TouchableOpacity>
       </View>
     </View>
   )
