@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
         borderRadius:25
     },
     level_btn_player_view:{
+        alignItems: 'center',
         display:'flex',
         flexDirection:'row',
         justifyContent:'center',
