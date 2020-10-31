@@ -48,6 +48,7 @@ const Home = (props) => {
   }, { manual: true })
 
   useEffect(() => {
+    refetch();
     const focusListener = props.navigation.addListener('didFocus', () => {
       refetch();
       getNotifications();

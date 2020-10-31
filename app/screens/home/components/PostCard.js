@@ -18,6 +18,7 @@ import Colors from '../../../constants/color';
 import ParsedText from 'react-native-parsed-text';
 import NavigationService from '../../../navigation/NavigationService';
 import dimensions from '../../../constants/dimensions';
+import NLFormatedShowMore from '../../../components/NLFormatedShowMore';
 
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
@@ -25,7 +26,6 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
   const [videoHeight, setVideoHeight] = useState(dimensions.px160);
   const [maxNumOfLines, setMaxNumOfLines] = useState(3);
   const [numOfLines, setNumOfLines] = useState(null);
-  const [fullSize, setFullSize] = useState(false);
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
@@ -105,33 +105,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
             </View>
           </View>
         </View>
-        <ParsedText
-          onTextLayout={(e) => {
-            if (numOfLines == null) setNumOfLines(e.nativeEvent.lines.length)
-            console.log("numOfLines", e.nativeEvent.lines.length)
-          }}
-          style={[styles.post_description, { paddingHorizontal: '5%' }]}
-          parse={[
-            {
-              pattern: /@[A-Za-z0-9._-]*/,
-              style: { color: Colors.s_blue, fontWeight: 'bold' }
-            },
-            {
-              pattern: /#(\w+)/,
-              style: { color: Colors.s_blue, fontWeight: 'bold' }
-            },
-            {
-              pattern: /(NL_SHOW_MORE)/,
-              style: { color: Colors.nl_yellow, fontWeight: 'bold' },
-              renderText: () => "Show More",
-              onPress: () => {
-                setMaxNumOfLines(numOfLines)
-              }
-            }
-          ]}
-        >
-          {numOfLines > maxNumOfLines ? item.description.slice(0,100) + "... " + "NL_SHOW_MORE" : item.description }
-        </ParsedText>
+        <NLFormatedShowMore text={item.description} />
         <View
           style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
