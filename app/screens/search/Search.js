@@ -372,7 +372,7 @@ const Search = (props) => {
 
           <View
             style={{
-              backgroundColor: Colors.nl_yellow,
+              backgroundColor: Colors.s_blue,
               width: 30,
               height: 40,
               padding: 17,

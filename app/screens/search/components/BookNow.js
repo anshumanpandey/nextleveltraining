@@ -20,6 +20,26 @@ import { isAfter } from 'date-fns';
 
 const _today = new Date();
 
+const agroupSessionPerDay = (sessions) => {
+  const newArr = sessions.reduce((map, next) => {
+    const id = next.BookingDate.split('T')[0]
+    if (map.has(id)) {
+      const currentArr = map.get(id)
+      currentArr.push(next)
+      map.set(id, currentArr)
+    } else {
+      map.set(id, [next])
+    }
+    return map
+  }, new Map)
+
+  return Array.from(newArr.entries())
+}
+
+const getSessionId = (s) => {
+  return `${s.BookingDate}-${s.TimeTag}`
+}
+
 const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingId, FromTime, ToTime, Location, SentDate, isEditing = false } } } }) => {
   const activeColor = Colors.s_blue;
   const inActiveColor = 'gray';
@@ -32,21 +52,21 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const [sessions, setSessions] = useState([])
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
-  const { markedDays, markAvailableDay, selectRange, isUpdating } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id, Bookings: coach.Bookings });
+  const { markedDays, multipleDates, markAvailableDay, selectRange, isUpdating, toggleDate } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id, Bookings: coach.Bookings });
 
   const addSession = (session) => {
-    const uniqueSessions = new Set(sessions)
-    if (uniqueSessions.has(session)){
+    const uniqueSessions = new Map(sessions.map(s => ([ getSessionId(s), s])))
+    if (uniqueSessions.has(session)) {
       uniqueSessions.delete(session)
     } else {
-      uniqueSessions.add(session)
+      uniqueSessions.set(getSessionId(session), session)
     }
-    
+
     setSessions(Array.from(uniqueSessions.values()))
   }
 
   const isSessionSelected = (session) => {
-    return sessions.find(s => s.TimeTag == session.TimeTag) != null
+    return sessions.find(s => getSessionId(s) == getSessionId(session)) != null
   }
 
   const selectSearchRange = (date) => {
@@ -100,21 +120,22 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }, [])
 
   useEffect(() => {
-    if (!searchStartDate || !searchEndDate) return
+    const dateToSearch = Object.keys(multipleDates).map(k => moment(k, 'YYYY-MM-DD').toDate().toISOString())
+    if (dateToSearch.length == 0) return
 
     const data = {
       "coachID": coach.Id,
-      "date": searchStartDate.toISOString(),
-      "endDate": searchEndDate.toISOString(),
+      "requestedDates": dateToSearch,
     }
     getUserData({ data })
       .then((r) => {
+        console.log(r.data)
         setDropdownOptions(r.data)
         if (r.data.length == 0) {
           setSessions([])
         }
       })
-  }, [searchStartDate, searchEndDate])
+  }, [multipleDates])
 
   const isLoading = () => {
     return loading || rescheduleBookingReq.loading
@@ -165,7 +186,8 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
                       NavigationService.navigate("JobDetails", data.find(i => i.Id == BookingId))
                     })
                 } else {
-                  NavigationService.navigate('PaymentConcent', { coach, selectedLocation, sessions })
+                  NavigationService.navigate('BookingCheckout', { coach, selectedLocation, sessions })
+                  setSessions([])
                 }
               }}>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%' }}>
@@ -186,9 +208,10 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
         <View>
           <Calendar
             onDayPress={(day) => {
-              selectRange(moment(day.dateString, 'YYYY-MM-DD').toDate())
-              selectSearchRange(moment(day.dateString, 'YYYY-MM-DD').toDate())
-              markAvailableDay(day.dateString)
+              //selectRange(moment(day.dateString, 'YYYY-MM-DD').toDate())
+              //selectSearchRange(moment(day.dateString, 'YYYY-MM-DD').toDate())
+              //markAvailableDay(day.dateString)
+              toggleDate(day.dateString)
             }}
             markingType={'period'}
             markedDates={markedDays}
@@ -211,16 +234,26 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
         <View style={[styles.whenView, { marginTop: "5%" }]}>
           <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
           {availableTimePerCoach.loading && <Spinner color={Colors.s_blue} />}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-            {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text> }
+          <View style={{ justifyContent: 'space-between' }}>
+            {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text>}
 
-            {!availableTimePerCoach.loading && availableTimePerCoach.data && availableTimePerCoach.data.map(t => {
-              const isSelected = isSessionSelected(t)
+            {!availableTimePerCoach.loading && availableTimePerCoach.data && agroupSessionPerDay(availableTimePerCoach.data)
+              .map(t => {
 
-              return <TouchableOpacity onPress={() => addSession(t)} style={{ width: '45%', padding: '1%', marginBottom: '1%', backgroundColor: isSelected ? `${Colors.nl_yellow}30` : '#00000005' }}>
-                <Text style={{ padding: '1%', textAlign: 'center' }}>{t.TimeTag}</Text>
-              </TouchableOpacity>
-            })}
+                return (
+                  <>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{t[0]}</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      {t[1].map(s => {
+                        const isSelected = isSessionSelected(s)
+                        return (<TouchableOpacity onPress={() => addSession(s)} style={{ width: '45%', padding: '1%', marginBottom: '1%', backgroundColor: isSelected ? `${Colors.nl_yellow}30` : '#00000005' }}>
+                          <Text style={{ padding: '1%', textAlign: 'center' }}>{s.TimeTag}</Text>
+                        </TouchableOpacity>);
+                      })}
+                    </View>
+                  </>
+                )
+              })}
           </View>
         </View>
         <View style={styles.whenView}>

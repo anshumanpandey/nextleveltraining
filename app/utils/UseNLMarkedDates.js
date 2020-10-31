@@ -54,6 +54,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     const [markedDays, setMarkedDay] = useState({})
     const [nonAvailableDays, setNonAvailableDays] = useState({})
     const [partialBookedDay, setPartialBookedDay] = useState({})
+    const [multipleDates, setMultipleDates] = useState({})
 
     const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
     const [availablesDatesReq, getAvailablesDates] = useAxios({}, { manual: true })
@@ -101,6 +102,19 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     }
 
     const isUpdating = () => singleUserReq.loading || availableTimePerCoach.loading
+
+    const toggleDate = (date) => {
+        let newState = { ...multipleDates }
+
+        if (multipleDates[date]) {
+            const { [date]: toIgnore , ...rest} = newState
+            newState = { ...rest }
+        } else {
+            newState[date] = { startingDay: true, color: Colors.nl_yellow, textColor: 'white' }
+        }
+        setMultipleDates(newState)
+    }
+
 
     useEffect(() => {
         getSingleUser({ url: `/Account/GetUserByEmail/${props.EmailID}` })
@@ -191,10 +205,12 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
 
     return {
         isUpdating,
-        markedDays: { ...markedDays, ...nonAvailableDays, ...partialBookedDay, ...markedDates },
+        markedDays: { ...markedDays, ...nonAvailableDays, ...partialBookedDay, ...markedDates, ...multipleDates },
         markAvailableDay,
         markDayOfWeekNonAvailable,
         selectRange,
+        toggleDate,
+        multipleDates,
         startDate,
         endDate
     }

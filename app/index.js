@@ -23,6 +23,7 @@ import Profile from './screens/profile/index';
 import EditInput from './screens/profile/EditInput';
 import CreatePostScreen from './screens/createPost/CreatePost';
 import CommentsScreen from './screens/home/Comments';
+import BookingCheckout from './screens/bookingCheckout/BookingCheckout';
 import AddTeam from './screens/profile/AddTeam';
 import AddExperience from './screens/profile/AddExperience';
 import AddDbsCertificate from './screens/profile/AddDbsCertificate';
@@ -161,6 +162,7 @@ const AppMain = () => {
       Search: { screen: Search },
       Information: { screen: Information },
       BookNow: { screen: BookNow },
+      BookingCheckout: { screen: BookingCheckout },
       Payments: { screen: Payments },
       PaymentConcent: { screen: PaymentConcentScreen },
       JobDetails: { screen: JobDetails },

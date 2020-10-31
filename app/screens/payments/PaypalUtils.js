@@ -1,6 +1,8 @@
+import GlobalContants from "../../constants/GlobalContants";
+
 export const getTotalBookingPrice = (coach,sessions) => {
     return sessions.reduce((total) => {
-        return total = total + coach.Rate + 2
+        return total = total + coach.Rate + GlobalContants.BOOKING_COMISSION
     }, 0).toString()
 }
 export const GET_PAYPAL_JSON = (coach, sessions) => {
@@ -39,7 +41,7 @@ export const GET_PAYPAL_JSON = (coach, sessions) => {
                         "description": `Next Level Comission of 2£ per session`,
                         "quantity": "1",
                         "price": sessions.reduce((total) => {
-                            return total = total + 2
+                            return total = total + GlobalContants.BOOKING_COMISSION
                         }, 0),
                         "tax": "0",
                         "sku": "1",
