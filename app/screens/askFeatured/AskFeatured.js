@@ -13,7 +13,7 @@ const AskFeatured = (props) => {
     <View style={styles.level_container}>
       <View style={styles.level_logo_view}>
         <Image source={Images.Logo} style={{ width: 150, height: 150 }} />
-        <Text style={styles.level_logo_text}>Would you like to be featured on our app?</Text>
+        <Text style={styles.level_logo_text}>1 week on feature tab. Expose your profile to the wider audience which includes post on social media.</Text>
       </View>
       <View style={styles.level_btn_view}>
         <TouchableOpacity
