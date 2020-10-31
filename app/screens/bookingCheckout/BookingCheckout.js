@@ -1,19 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Image, Dimensions, Platform, Alert } from 'react-native'
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { parseISO, format } from 'date-fns'
 import Header from '../../components/header/Header'
-import { Textarea, Icon, Input, Spinner } from 'native-base'
-import DocumentPicker from 'react-native-document-picker';
-import { Formik } from 'formik';
-import AsyncStorage from '@react-native-community/async-storage';
-import useAxios from 'axios-hooks'
-import ErrorLabel from '../../components/ErrorLabel'
-import Video from 'react-native-video';
 import Colors from '../../constants/color'
-import ImageCropPicker from 'react-native-image-crop-picker';
-import MentionInput from 'react-native-mention';
-import LoadableVideo from '../../components/LoadableVideo';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import { lightFormat } from 'date-fns';
 import NLButton from '../../components/NLButton';
 import { getTotalBookingPrice } from '../payments/PaypalUtils';
 import GlobalContants from '../../constants/GlobalContants';
@@ -51,7 +40,7 @@ const BookingCheckout = (props) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ paddingLeft: '5%', width: '50%' }}>
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Training session with</Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{coach.FullName}</Text>
+            <Text style={{ fontSize: 18 }}>{coach.FullName}</Text>
           </View>
 
           <View style={{ paddingRight: '5%', width: '50%' }}>
@@ -65,7 +54,7 @@ const BookingCheckout = (props) => {
             return (
               <View style={{ paddingHorizontal: '8%', paddingVertical: '3%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ffffff' }}>
                 <View>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Day: {session.BookingDate.split('T')[0]}</Text>
+                  <Text style={{ fontSize: 16 }}>Day: {format(parseISO(session.BookingDate), "EEEE, dd-MM-yyyy")}</Text>
                   <Text style={{ fontSize: 15 }}>Starting at {session.FromTime} to {session.ToTime}</Text>
                   <Text style={{ fontSize: 15 }}>Price of £{coach.Rate}</Text>
                   <Text style={{ fontSize: 12 }}>Next Level comission of £{GlobalContants.BOOKING_COMISSION}</Text>
@@ -80,11 +69,12 @@ const BookingCheckout = (props) => {
           })}
         </View>
 
-        <View style={{ marginTop: 'auto', backgroundColor: '#00000010' }}>
+        <View style={{ marginTop: 'auto', backgroundColor: '#00000010', marginTop: '5%', marginBottom: '5%' }}>
           <Text style={{ fontSize: 22, textAlign: 'center' }}>Total of £{getTotalBookingPrice(coach, currentSessions)}</Text>
         </View>
 
         <NLButton
+          color={Colors.s_blue}
           onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation, sessions: currentSessions })}
           value={`Pay`}
           style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: '10%' }}
