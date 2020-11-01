@@ -62,7 +62,7 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      <Textarea rowSpan={5} value={codes}/ >
+      <Textarea rowSpan={5} value={codes} />
     </View>
   )
 }
