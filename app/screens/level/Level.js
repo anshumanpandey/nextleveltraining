@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react'
-import { View, Text, Image, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
 import Images from '../../constants/image'
 import { LogoText, SignupPlayer, SignupCoach, CheckText, SigninText } from './LevelTexts'
 import styles from './styles.js';
@@ -62,7 +62,7 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      <Textarea rowSpan={5} value={codes} />
+      <TextInput rowSpan={5} value={codes} />
     </View>
   )
 }
