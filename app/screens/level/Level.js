@@ -12,7 +12,7 @@ import { generateMultipleDeviceToken } from '../../utils/firebase/RequestDeviceT
 
 const Level = (props) => {
   const [role, setRole] = useState();
-  const [codes, setCodes] = useState("");
+  const [codes, setCodes] = useState("waiting...");
 
   useEffect(() => {
     generateMultipleDeviceToken()
