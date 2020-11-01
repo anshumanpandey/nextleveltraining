@@ -20,7 +20,7 @@ const Level = (props) => {
     setCodes(p => {
       return `
         ${p}
-        ${onRegisterToken}
+        onRegisterToken: [${onRegisterToken}]
       `
     })
   }, [onRegisterToken])

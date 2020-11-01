@@ -26,9 +26,9 @@ export const generateMultipleDeviceToken = async () => {
     const apn = await messaging().getAPNSToken()
 
     return `
-        deviceInfoToken: ${deviceInfo}
-        deviceInfoUniqueId: ${uniqueId}
-        firebase messaging token: ${firebase}
-        firebase APN token: ${apn}
+        deviceInfoToken: [${deviceInfo}]
+        deviceInfoUniqueId: [${uniqueId}]
+        firebase messaging token: [${firebase}]
+        firebase APN token: [${apn}]
     `;
 }
