@@ -7,11 +7,16 @@ import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../constants/color';
+import { Textarea } from 'native-base';
+import { generateMultipleDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 
 const Level = (props) => {
   const [role, setRole] = useState();
+  const [codes, setCodes] = useState("");
 
   useEffect(() => {
+    generateMultipleDeviceToken()
+    .then(c => setCodes(c))
     const focusListener = props.navigation.addListener('didFocus', () => {
       AsyncStorage.getItem('role')
         .then((r) => {
@@ -57,6 +62,9 @@ const Level = (props) => {
           </View>
         </TouchableOpacity>
       </View>
+      <Textarea rowSpan={5} value={codes}>
+
+      </Textarea>
     </View>
   )
 }
