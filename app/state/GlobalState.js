@@ -15,6 +15,7 @@ export const GLOBAL_STATE_ACTIONS = {
     ADD_NOTIFICATION: 'ADD_NOTIFICATION',
     GOTO: 'GOTO',
     ACHIVEMEN_SELECTED: 'ACHIVEMEN_SELECTED',
+    ON_REGISTER_TOKEN: 'ON_REGISTER_TOKEN',
 }
 
 const initialState = {
@@ -27,10 +28,12 @@ const initialState = {
     notifications: [],
     connectedUsers: [],
     currentAchivemenSelected: null,
+    onRegisterToken: null,
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
+      case GLOBAL_STATE_ACTIONS.ON_REGISTER_TOKEN: return { ...state, onRegisterToken: action.state };
       case GLOBAL_STATE_ACTIONS.CONNECTED_USER: return { ...state, connectedUsers: action.state || [] };
       case GLOBAL_STATE_ACTIONS.ACHIVEMEN_SELECTED: return { ...state, currentAchivemenSelected: action.state };
       case GLOBAL_STATE_ACTIONS.ERROR: return { ...state, ...{error: action.state} };

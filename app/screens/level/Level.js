@@ -9,10 +9,22 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../constants/color';
 import { Textarea } from 'native-base';
 import { generateMultipleDeviceToken } from '../../utils/firebase/RequestDeviceToken';
+import { useGlobalState } from '../../state/GlobalState';
 
 const Level = (props) => {
+  const [onRegisterToken] = useGlobalState("onRegisterToken")
   const [role, setRole] = useState();
   const [codes, setCodes] = useState("waiting...");
+
+  useEffect(() => {
+    setCodes(p => {
+      return `
+        ${p}
+        ${onRegisterToken}
+      `
+    })
+  }, [onRegisterToken])
+
 
   useEffect(() => {
     generateMultipleDeviceToken()

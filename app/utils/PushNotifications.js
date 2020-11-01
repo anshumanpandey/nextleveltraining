@@ -10,6 +10,10 @@ if(isEmulator && Platform.OS == "ios") {
 } else {
   // Must be outside of any component LifeCycle (such as `componentDidMount`).
   PushNotification.configure({
+    onRegister: function (token) {
+      console.log("TOKEN:", token);
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.ON_REGISTER_TOKEN, state: token });
+    },  
 
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
