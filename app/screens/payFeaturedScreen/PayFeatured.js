@@ -67,7 +67,7 @@ const PaymentConcentScreen = (props) => {
           1 week on feature tab. Expose your profile to the wider audience which includes post on social media.
         </Text>
         <Text style={{ fontSize: 20, textAlign: 'center' }}>
-          You will be redirected to PayPal's website to acess your account and submit your payment. Then you will be return to Next Level App
+          You will be redirected to PayPal's website to acess your account and submit your payment. Then you will return to Next Level App
         </Text>
         <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', marginTop: '5%' }}>
           <CheckBox color={Colors.g_text} checked={checked} onPress={() => setChecked(p => !p)} />
