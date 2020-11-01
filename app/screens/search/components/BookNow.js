@@ -47,8 +47,6 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const [profile] = useGlobalState('profile')
 
   const [dropdownOptions, setDropdownOptions] = useState([])
-  const [searchStartDate, setSearchStartDate] = useState(_today)
-  const [searchEndDate, setSearchEndDate] = useState(_today)
   const [sessions, setSessions] = useState([])
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
@@ -67,22 +65,6 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
 
   const isSessionSelected = (session) => {
     return sessions.find(s => getSessionId(s) == getSessionId(session)) != null
-  }
-
-  const selectSearchRange = (date) => {
-    if (!searchStartDate && !searchEndDate) {
-      setSearchStartDate(date)
-    } else if (searchStartDate && !searchEndDate) {
-      if (isAfter(searchStartDate, date)) {
-        setSearchStartDate(date)
-        setSearchEndDate(searchStartDate)
-      } else {
-        setSearchEndDate(date)
-      }
-    } else {
-      setSearchStartDate(date)
-      setSearchEndDate(null)
-    }
   }
 
   const [availableTimePerCoach, getUserData] = useAxios({
@@ -149,6 +131,10 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
     return milesAwayFromLocation <= coach.TravelMile.TravelDistance
   }
 
+  const bookNowIsDisabled = () => {
+    return selectedLocation == undefined || rescheduleBookingReq.loading || sessions.length == 0
+  }
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
@@ -163,7 +149,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             />
             <TouchableOpacity
               style={{ width: '40%' }}
-              disabled={selectedLocation == undefined || rescheduleBookingReq.loading}
+              disabled={bookNowIsDisabled()}
               onPress={() => {
                 if (isEditing == true) {
                   const [startDate, endDate] = time.split('-')
@@ -192,7 +178,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               }}>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%' }}>
                 {isLoading() && <Spinner color="white" style={{ marginRight: '10%' }} />}
-                <Text style={{ color: Colors.s_blue, fontSize: 18, opacity: (selectedLocation) || !isLoading() ? 1 : 0.5 }}>
+                <Text style={{ color: bookNowIsDisabled() || isLoading() ? 'gray':Colors.s_blue, fontSize: 18, opacity: bookNowIsDisabled() || isLoading() ? 0.5 : 1 }}>
                   Book Now
               </Text>
               </View>
@@ -232,7 +218,6 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
         </View>
 
         <View style={[styles.whenView, { marginTop: "5%" }]}>
-          <Text style={{ color: Colors.s_blue, fontSize: 14 }}>When?</Text>
           {availableTimePerCoach.loading && <Spinner color={Colors.s_blue} />}
           <View style={{ justifyContent: 'space-between' }}>
             {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text>}
@@ -255,9 +240,6 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
                 )
               })}
           </View>
-        </View>
-        <View style={styles.whenView}>
-          <Text style={{ color: Colors.s_blue, fontSize: 14 }}>Where?</Text>
         </View>
 
         <View style={styles.tabContain}>

@@ -95,8 +95,8 @@ const FilterModal = ({ isModalVisible, onClose }) => {
           <View>
             <Text style={{ fontSize: 20, marginBottom: '3%' }}>Distance</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', 'asc')} selected={filterValues.orderBy == 'asc'} text={"Nearest ones"} />
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', 'desc')} selected={filterValues.orderBy == 'desc'} text={"Farest ones"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', 'asc')} selected={filterValues.orderBy == 'asc'} text={"Nearest"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', 'desc')} selected={filterValues.orderBy == 'desc'} text={"Farest"} />
             </View>
           </View>
 

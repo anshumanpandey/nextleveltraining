@@ -573,7 +573,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: HasCompletedVerificationProcess(profile) == true && token ? ['Search', 'Home', "Video",'Booking', "ContactUs","PayFeatured","ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "ContactUs","PayFeatured","ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {

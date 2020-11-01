@@ -167,7 +167,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
                             //console.log("getTimespansPerDate", getTimespansPerDate(d, r.data).length)
                             
                             if (bookedDay.total >= getTimespansPerDate(d, r.data).length) {
-                                bookedDays[d] = { selected: true, color: 'red', disabled: true }
+                                bookedDays[d] = { selected: true, color: 'gray', disabled: true }
                             } else {
                                 bookedDays[d] = { selected: true, color: Colors.s_blue }
                             }
@@ -197,7 +197,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         }
         const newDate = {}
         dayArr.forEach(d => {
-            newDate[d] = { selected: true, color: 'red', disabled: true }
+            newDate[d] = { selected: true, color: 'gray', disabled: true }
         })
 
         setNonAvailableDays((p) => ({ ...p, ...newDate }))
