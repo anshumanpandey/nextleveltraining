@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './utils/PushNotifications';
 //import './utils/Firebase';
-import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback, Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -70,6 +70,7 @@ import PayFeatured from './screens/payFeaturedScreen/PayFeatured';
 import ContactUsScreen from './screens/contactUs/ContactUsScreen';
 import messaging from '@react-native-firebase/messaging';
 import { axiosInstance } from './api/AxiosBootstrap';
+import { getDeviceToken } from 'react-native-device-info';
 
 let initialRouteName = null
 let Apps = null
@@ -95,8 +96,13 @@ const AppMain = () => {
 
   const listenTokens = () => {
     messaging().onTokenRefresh(fcmToken => {
-      // Process your token as required
-      axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: fcmToken } })
+      if (Platform.OS == "ios") {
+        getDeviceToken()
+        .then(token => axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: token } }))
+      } else {
+        // Process your token as required
+        axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: fcmToken } })
+      }
     });
   }
 
