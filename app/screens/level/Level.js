@@ -61,8 +61,8 @@ const Level = (props) => {
             <Text style={styles.level_player_text}>{SignupCoach}</Text>
           </View>
         </TouchableOpacity>
+        <TextInput rowSpan={5} value={codes} />
       </View>
-      <TextInput rowSpan={5} value={codes} />
     </View>
   )
 }
