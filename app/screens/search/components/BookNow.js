@@ -93,7 +93,6 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }
 
   useEffect(() => {
-    markAvailableDay(moment(_today).format('YYYY-MM-DD'))
     initFn()
     const focusListener = addListener('didFocus', () => {
       initFn()
@@ -199,14 +198,15 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               //markAvailableDay(day.dateString)
               toggleDate(day.dateString)
             }}
-            markingType={'period'}
+            markingType={"custom"}
             markedDates={markedDays}
             disableAllTouchEventsForDisabledDays={true}
             theme={{
+              todayBackgroundColor: 'white',
               dayTextColor: Colors.s_blue,
-              todayTextColor: Colors.nl_yellow,
-              arrowColor: Colors.nl_yellow,
-              monthTextColor: Colors.nl_yellow,
+              todayTextColor: Colors.s_blue,
+              arrowColor: Colors.s_blue,
+              monthTextColor: Colors.s_blue,
             }}
           />
           {isUpdating() == true && (

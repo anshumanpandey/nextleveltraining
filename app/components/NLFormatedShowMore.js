@@ -11,7 +11,6 @@ const NLFormatedShowMore = ({ text = "", style }) => {
         <ParsedText
             onTextLayout={(e) => {
                 if (numOfLines == null) setNumOfLines(e.nativeEvent.lines.length)
-                console.log("numOfLines", e.nativeEvent.lines.length)
             }}
             style={[{ marginTop: 10,paddingHorizontal: '5%' }]}
             parse={[

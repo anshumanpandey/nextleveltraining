@@ -63,14 +63,21 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
             <View style={{ flexDirection: 'column', width: '70%' }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
-                <View style={{ marginLeft: '4%' }}>
+                <View style={{ marginLeft: '2%', justifyContent: 'center' }}>
                   {props.Role == "Coach" && (
-                    <View style={{ backgroundColor: "black", position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ backgroundColor: Colors.s_blue, position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
                       <Text style={{ color: 'white', fontSize: 12 }}>{props?.Level}</Text>
                     </View>
                   )}
                 </View>
               </View>
+              {milesAway != -1 && (
+                <View style={{ flexDirection: 'row'}}>
+                  <Icon style={{ fontSize: 16 }} type="Entypo" name="location-pin" />
+                  <Text style={{ fontSize: 12 }}>{parseInt(milesAway)} Miles from you</Text>
+                </View>
+              )}
+
               <View style={{ width: '115%' }}>
                 <NLFormatedShowMore text={props.AboutUs} />
               </View>
@@ -148,13 +155,6 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               </View>
             );
           })}
-        </View>
-      )}
-
-      {milesAway != -1 && (
-        <View style={{ flexDirection: 'row'}}>
-          <Icon style={{ fontSize: 20 }} type="Entypo" name="location-pin" />
-          <Text style={{ fontSize: 17 }}>{parseInt(milesAway)} Miles from you</Text>
         </View>
       )}
 

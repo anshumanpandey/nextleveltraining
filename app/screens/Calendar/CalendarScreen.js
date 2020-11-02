@@ -83,10 +83,11 @@ const CalendarScreen = (props) => {
                 disableAllTouchEventsForDisabledDays={true}
                 markingType={'period'}
                 theme={{
+                    todayBackgroundColor: 'white',
                     dayTextColor: Colors.s_blue,
-                    todayTextColor: Colors.nl_yellow,
-                    arrowColor: Colors.nl_yellow,
-                    monthTextColor: Colors.nl_yellow,
+                    todayTextColor: Colors.s_blue,
+                    arrowColor: Colors.s_blue,
+                    monthTextColor: Colors.s_blue,
                 }}
             />
             <CalendarRules />

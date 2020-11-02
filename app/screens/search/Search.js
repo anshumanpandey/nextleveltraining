@@ -76,8 +76,14 @@ const UseFilters = () => {
     setFilterValues(prev => ({ ...prev, [category]: prev[category] == val ? initialsValues[category] : val }))
   }
 
+  const reset = () => {
+    setFilterValues({ ...initialsValues, orderBy: 'asc' });
+    return { ...initialsValues, orderBy: 'asc' }
+  }
+
   return {
     filterValues,
+    reset,
     setFilterValueFor,
     addValueFor,
     toggleValueFor
@@ -85,7 +91,7 @@ const UseFilters = () => {
 }
 
 const FilterModal = ({ isModalVisible, onClose }) => {
-  const { filterValues, setFilterValueFor, addValueFor, toggleValueFor } = UseFilters()
+  const { filterValues, setFilterValueFor, reset,addValueFor, toggleValueFor } = UseFilters()
   return (
     <Modal style={{ alignItems: 'center' }} isVisible={isModalVisible} onBackdropPress={() => onClose()}>
       <View style={{ padding: '3%', flexGrow: 0.6, backgroundColor: 'white', minHeight: '85%', width: '80%' }}>
@@ -232,8 +238,15 @@ const FilterModal = ({ isModalVisible, onClose }) => {
           }
           onClose(res)
         }}
-        style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center' }]}>
+        style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center', marginBottom: '5%', marginTop: '2%' }]}>
         <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Filter</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          onClose(reset())
+        }}
+        style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center' }]}>
+        <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Reset</Text>
       </TouchableOpacity>
 
       </View>
@@ -263,6 +276,10 @@ const Search = (props) => {
       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: getconnectedUserReq.data })
     }
   }, [getconnectedUserReq.loading])
+
+  useEffect(() => {
+    searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
+  }, [orderingType])
 
   useEffect(() => {
     searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
@@ -429,6 +446,7 @@ const Search = (props) => {
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && parseResults(searchCoachesReq.data[propsToIterate[0]]).length == 0 && <NoResultMessage />}
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[0]].length != 0 && <FlatList
+              contentContainerStyle={{ backgroundColor: '#00000020' }}
               keyExtractor={(item) => item.Id}
               data={parseResults(searchCoachesReq.data[propsToIterate[0]])} renderItem={({ item }) => <PostSearchCard hideCoachLevel={true} hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[0], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
           </View>
@@ -437,6 +455,7 @@ const Search = (props) => {
           <View style={{ padding: '2%' }}>
             {searchCoachesReq.data && parseResults(searchCoachesReq.data[propsToIterate[1]]).length == 0 && <NoResultMessage />}
             {searchCoachesReq.data && searchCoachesReq.data[propsToIterate[1]].length != 0 && <FlatList
+              contentContainerStyle={{ backgroundColor: '#00000020' }}
               keyExtractor={(item) => item.Id}
               data={parseResults(searchCoachesReq.data[propsToIterate[1]])} renderItem={({ item }) => <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[1], { player: item, ...item })} {...item} hideHeartIcon={true} />} />}
           </View>
@@ -446,6 +465,7 @@ const Search = (props) => {
           {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length == 0 && <NoResultMessage />}
           {searchCoachesReq.data && searchCoachesReq.data?.Featured?.length != 0 && (
             <FlatList
+              contentContainerStyle={{ backgroundColor: '#00000020' }}
               keyExtractor={(item) => item.Id}
               data={searchCoachesReq?.data
                 ?.Featured
