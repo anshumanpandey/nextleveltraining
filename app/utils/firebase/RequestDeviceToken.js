@@ -26,7 +26,7 @@ export const sendAndroidToken = (token) => {
 }
 
 export const sendIosToken = (token) => {
-    if (Platform.OS == "android") {
+    if (Platform.OS == "ios") {
         axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: token } })
     }
 }
