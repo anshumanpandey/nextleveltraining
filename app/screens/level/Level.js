@@ -14,21 +14,8 @@ import { useGlobalState } from '../../state/GlobalState';
 const Level = (props) => {
   const [onRegisterToken] = useGlobalState("onRegisterToken")
   const [role, setRole] = useState();
-  const [codes, setCodes] = useState("waiting...");
 
   useEffect(() => {
-    setCodes(p => {
-      return `
-        ${p}
-        onRegisterToken: [${onRegisterToken}]
-      `
-    })
-  }, [onRegisterToken])
-
-
-  useEffect(() => {
-    generateMultipleDeviceToken()
-    .then(c => setCodes(c))
     const focusListener = props.navigation.addListener('didFocus', () => {
       AsyncStorage.getItem('role')
         .then((r) => {
@@ -73,7 +60,6 @@ const Level = (props) => {
             <Text style={styles.level_player_text}>{SignupCoach}</Text>
           </View>
         </TouchableOpacity>
-        <Textarea rowSpan={5} rowSpan={5} value={codes} />
       </View>
     </View>
   )

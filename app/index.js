@@ -71,6 +71,7 @@ import ContactUsScreen from './screens/contactUs/ContactUsScreen';
 import messaging from '@react-native-firebase/messaging';
 import { axiosInstance } from './api/AxiosBootstrap';
 import { getDeviceToken } from 'react-native-device-info';
+import { sendAndroidToken } from './utils/firebase/RequestDeviceToken';
 
 let initialRouteName = null
 let Apps = null
@@ -96,13 +97,7 @@ const AppMain = () => {
 
   const listenTokens = () => {
     messaging().onTokenRefresh(fcmToken => {
-      if (Platform.OS == "ios") {
-        getDeviceToken()
-        .then(token => axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: token } }))
-      } else {
-        // Process your token as required
-        axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: fcmToken } })
-      }
+      sendAndroidToken(fcmToken)
     });
   }
 
