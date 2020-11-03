@@ -110,7 +110,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
             const { [date]: toIgnore , ...rest} = newState
             newState = { ...rest }
         } else {
-            newState[date] = { startingDay: true, color: Colors.nl_yellow, textColor: 'white' }
+            newState[date] = { startingDay: true, customStyles: { container: { backgroundColor: Colors.nl_yellow } }}
         }
         setMultipleDates(newState)
     }

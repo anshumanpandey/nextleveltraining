@@ -11,6 +11,7 @@ import PostSearchCard from './components/subcomponents/PostSearchCard';
 import Modal from 'react-native-modal';
 import NavigationService from '../../navigation/NavigationService';
 import getDistance from 'geolib/es/getDistance';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const NoResultMessage = () => <Text style={{ textAlign: 'center', fontSize: 22, marginTop: '10%' }}>No results</Text>
 
@@ -47,9 +48,15 @@ const StartOptionItem = ({ onPress, selected, value }) => {
 }
 
 const initialsValues = { orderBy: null, rate: null, dayOfWeek: [], level: null }
+const SORTING_KEYS = {
+  DISTANCE_ASC: "DISTANCE_ASC",
+  DISTANCE_DESC: "DISTANCE_DESC",
+  PRICE_ASC: "PRICE_ASC",
+  PRICE_DESC: "PRICE_DESC",
+}
 
 const UseFilters = () => {
-  const [filterValues, setFilterValues] = useState({ ...initialsValues, orderBy: 'asc' })
+  const [filterValues, setFilterValues] = useState({ ...initialsValues, orderBy: SORTING_KEYS.DISTANCE_ASC })
 
   const setFilterValueFor = (category, val) => {
     setFilterValues(prev => {
@@ -77,8 +84,8 @@ const UseFilters = () => {
   }
 
   const reset = () => {
-    setFilterValues({ ...initialsValues, orderBy: 'asc' });
-    return { ...initialsValues, orderBy: 'asc' }
+    setFilterValues({ ...initialsValues, orderBy: SORTING_KEYS.DISTANCE_ASC });
+    return { ...initialsValues, orderBy: SORTING_KEYS.DISTANCE_ASC }
   }
 
   return {
@@ -94,15 +101,23 @@ const FilterModal = ({ isModalVisible, onClose }) => {
   const { filterValues, setFilterValueFor, reset,addValueFor, toggleValueFor } = UseFilters()
   return (
     <Modal style={{ alignItems: 'center' }} isVisible={isModalVisible} onBackdropPress={() => onClose()}>
-      <View style={{ padding: '3%', flexGrow: 0.6, backgroundColor: 'white', minHeight: '85%', width: '80%' }}>
+      <ScrollView contentContainerStyle={{ padding: '3%', flexGrow: 0.6, backgroundColor: 'white', minHeight: '85%', width: '80%' }}>
         <Text style={{ fontSize: 24 }}>Filter by</Text>
 
         <View style={{ justifyContent: 'space-around', flex: 1, marginTop: '5%', backgroundColor: '#00000001' }}>
           <View>
             <Text style={{ fontSize: 20, marginBottom: '3%' }}>Distance</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', 'asc')} selected={filterValues.orderBy == 'asc'} text={"Nearest"} />
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', 'desc')} selected={filterValues.orderBy == 'desc'} text={"Farest"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.DISTANCE_ASC)} selected={filterValues.orderBy == SORTING_KEYS.DISTANCE_ASC} text={"Nearest"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.DISTANCE_DESC)} selected={filterValues.orderBy == SORTING_KEYS.DISTANCE_DESC} text={"Farest"} />
+            </View>
+          </View>
+
+          <View>
+            <Text style={{ fontSize: 20, marginBottom: '3%' }}>Price</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.PRICE_ASC)} selected={filterValues.orderBy == SORTING_KEYS.PRICE_ASC} text={"Most Expensive"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.PRICE_DESC)} selected={filterValues.orderBy == SORTING_KEYS.PRICE_DESC} text={"Least Expensive"} />
             </View>
           </View>
 
@@ -249,7 +264,7 @@ const FilterModal = ({ isModalVisible, onClose }) => {
         <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Reset</Text>
       </TouchableOpacity>
 
-      </View>
+      </ScrollView>
     </Modal >
   );
 }
@@ -257,7 +272,7 @@ const FilterModal = ({ isModalVisible, onClose }) => {
 const Search = (props) => {
   const [keyword, setKeyword] = useState('')
   const [isModalVisible, setModalVisible] = useState(false);
-  const [orderingType, setOrderingType] = useState({ orderBy: 'asc' });
+  const [orderingType, setOrderingType] = useState({ orderBy: SORTING_KEYS.DISTANCE_ASC });
   const [profile] = useGlobalState('profile')
 
   //TODO: add missing data for post for each coach
@@ -313,7 +328,7 @@ const Search = (props) => {
     return coach.Rate == val
   }
 
-  const distanceFilter = (a, b, order = 'asc') => {
+  const distanceFilter = (a, b) => {
     const distanceToCoachA = getDistance(
       { latitude: profile?.Lat, longitude: profile?.Lng, },
       { latitude: a.Lat, longitude: a.Lng }
@@ -324,21 +339,27 @@ const Search = (props) => {
       { latitude: b.Lat, longitude: b.Lng }
     )
 
-    if (order == 'asc') return distanceToCoachA - distanceToCoachB
-    if (order == 'desc') return distanceToCoachB - distanceToCoachA
+    return distanceToCoachA - distanceToCoachB
   }
 
   const parseResults = (users) => {
     return users
-    .sort((a, b) => {
+    ?.sort((a, b) => {
       if (!a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
 
-      if (orderingType.orderBy) {
-        return distanceFilter(a, b, orderingType.orderBy)
+      if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
+        return distanceFilter(a, b)
+      } else if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
+        return distanceFilter(b, a)
+      } else if (orderingType.orderBy == SORTING_KEYS.PRICE_ASC) {
+        return b.Rate - a.Rate
+      } else if (orderingType.orderBy == SORTING_KEYS.PRICE_DESC) {
+        return a.Rate - b.Rate
+      } else {
+        return 0
       }
-      return 0
     })
-    .filter(coach => {
+    ?.filter(coach => {
       if (coach.Role == "Player") return true
       if (orderingType.rate) {
         return rateFilter(coach, orderingType.rate)
@@ -346,7 +367,7 @@ const Search = (props) => {
 
       return true
     })
-    .filter(coach => {
+    ?.filter(coach => {
       if (coach.Role == "Player") return true
       if (!orderingType.dayOfWeek || orderingType.dayOfWeek.length == 0) return true
       if (coach.Availabilities.length == 0) return false
@@ -354,7 +375,7 @@ const Search = (props) => {
       return coach.Availabilities.some(a => orderingType.dayOfWeek.find(dow => a.Day == dow) != null)
 
     })
-    .filter(coach => {
+    ?.filter(coach => {
       if (coach.Role == "Player") return true
       if (!orderingType.level) return true
 

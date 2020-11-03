@@ -8,6 +8,18 @@ const styles =StyleSheet.create({
         color:Colors.g_text,
         fontSize: 20
     },
+    signup_other_view:{
+        width:Dimension.pro100,
+        marginTop:Dimension.px25,
+        justifyContent:'center',
+        alignItems:'center',
+        display:'flex',
+    },
+    signup_continue: {
+        backgroundColor:'white',
+        color:Colors.g_text,
+        fontSize:16
+    },
     login_forgot_view:{
         width:Dimension.pro100,
         justifyContent:'center',

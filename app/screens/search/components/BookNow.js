@@ -223,11 +223,12 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text>}
 
             {!availableTimePerCoach.loading && availableTimePerCoach.data && agroupSessionPerDay(availableTimePerCoach.data)
+              .sort((a,b) => moment.parseZone(`${a[0]}T00:00:00.00Z`) - moment.parseZone(`${b[0]}T00:00:00.00Z`))
               .map(t => {
 
                 return (
                   <>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{t[0]}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{moment.parseZone(`${t[0]}T00:00:00.00Z`).format("dddd, Do MMMM YYYY")}</Text>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                       {t[1].map(s => {
                         const isSelected = isSessionSelected(s)

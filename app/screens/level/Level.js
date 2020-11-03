@@ -60,6 +60,11 @@ const Level = (props) => {
             <Text style={styles.level_player_text}>{SignupCoach}</Text>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player"), isFeatured: props.navigation.getParam('isFeatured') })}>
+          <View style={[styles.signup_other_view, { color: 'black', paddingTop: '5%', paddingBottom: '5%' }]}>
+            <Text style={styles.signup_continue}>Already have an account? Sign In</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   )
