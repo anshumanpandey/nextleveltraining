@@ -60,7 +60,6 @@ const styles =StyleSheet.create({
     },
     flatListNotification:{
         padding: 10,
-        height: 65,
         flexDirection: 'row',
         borderBottomWidth: 0.5, 
         borderColor: 'gray'
