@@ -1,10 +1,10 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, FlatList, TouchableOpacity, Platform } from 'react-native';
 import { Icon, Spinner, Tabs, Tab, Button } from 'native-base';
 import Header from '../../components/header/Header';
 import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
-import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS, getStoreIosDeviceToken } from '../../state/GlobalState';
 import PostCard from '../home/components/PostCard';
 import moment from 'moment'
 import PostSearchCard from './components/subcomponents/PostSearchCard';
@@ -13,6 +13,7 @@ import NavigationService from '../../navigation/NavigationService';
 import getDistance from 'geolib/es/getDistance';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import { RequestAndroidDeviceToken, sendAndroidToken, sendIosToken } from '../../utils/firebase/RequestDeviceToken';
 
 const NoResultMessage = () => <Text style={{ textAlign: 'center', fontSize: 22, marginTop: '10%' }}>No results</Text>
 
@@ -298,6 +299,17 @@ const Search = (props) => {
   }, [orderingType])
 
   useEffect(() => {
+    if (Platform.OS == 'ios') {
+      getStoreIosDeviceToken()
+      .then(token => {
+        sendIosToken(token)
+      })
+    } else if (Platform.OS == 'android') {
+      RequestAndroidDeviceToken()
+      .then(token => {
+        sendAndroidToken(token)
+      })
+    }
     AsyncStorage.getItem("wantToBeFeatured")
       .then((item) => {
         if (item == "yes") {

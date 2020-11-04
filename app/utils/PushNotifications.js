@@ -1,9 +1,8 @@
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../state/GlobalState'
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, storeIosDeviceToken } from '../state/GlobalState'
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 var PushNotification = require("react-native-push-notification");
 import DeviceInfo from "react-native-device-info"
 import { Platform } from 'react-native';
-import { sendIosToken } from './firebase/RequestDeviceToken';
 
 const isEmulator = DeviceInfo.isEmulatorSync()
 if(isEmulator && Platform.OS == "ios") {
@@ -25,7 +24,7 @@ if(isEmulator && Platform.OS == "ios") {
     onRegister: function (tokenData) {
       const { token } = tokenData;
       console.log("TOKEN:", token);
-      sendIosToken(token)
+      storeIosDeviceToken(token)
     },  
 
     // (required) Called when a remote is received or opened, or local notification is opened

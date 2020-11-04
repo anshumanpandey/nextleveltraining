@@ -120,3 +120,11 @@ AsyncStorage.getItem('profile')
 .then(profile => {
   if (profile) dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: JSON.parse(profile) })
 })
+
+export const storeIosDeviceToken = (token) => {
+  return AsyncStorage.setItem("IOSDeviceToken", token)
+}
+
+export const getStoreIosDeviceToken = () => {
+  return AsyncStorage.getItem("IOSDeviceToken")
+}
