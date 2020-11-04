@@ -102,7 +102,14 @@ const AppMain = () => {
     });
   }
 
+  const listenForNotificationOpening = () => {
+    messaging().onNotificationOpenedApp(e => {
+      NavigationService.navigate("Notifications")
+    })
+  }
+
   useEffect(() => {
+    listenForNotificationOpening()
     listenTokens();
     SplashScreen.hide();
     PushNotificationIOS.addEventListener('register', (deviceToken) => {
