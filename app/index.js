@@ -51,6 +51,7 @@ import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen';
 import LogoutScreen from './screens/logoutScreen/LogoutScreen';
 import PaymentConcentScreen from './screens/payments/PaymentConcent';
 import HelpScreen from './screens/help/HelpScreen';
+import SuccessPayFeatured from './screens/successPayFeatured/SuccessPayFeatured';
 import ProfilePicScreen from './screens/profilePic/ProfilePic';
 import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
 import CalendarScreen from './screens/Calendar/CalendarScreen';
@@ -113,7 +114,7 @@ const AppMain = () => {
   }, [])
 
   useEffect(() => {
-    console.log('notifications.length',notifications.length)
+    console.log('notifications.length', notifications.length)
     console.log('readednotifications', notifications.filter(i => i.IsRead == false).length)
     console.log('currentNotifications', currentNotifications.filter(i => i.IsRead == false).length)
     setCurrentNotifications([...notifications])
@@ -287,6 +288,15 @@ const AppMain = () => {
           <></>
         ),
       }),
+    },
+    succesPayFeatured: {
+      screen: SuccessPayFeatured,
+      navigationOptions: () => ({
+        tabBarVisible: false,
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
     }
   }
 
@@ -302,6 +312,15 @@ const AppMain = () => {
               style={[styles.icons, { color: tintColor }]}
             />
           </View>
+        ),
+      }),
+    },
+    tabs.succesPayFeatured = {
+      screen: SuccessPayFeatured,
+      navigationOptions: () => ({
+        tabBarVisible: false,
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
         ),
       }),
     }
@@ -505,7 +524,7 @@ const AppMain = () => {
           <></>
         ),
       }),
-    }    
+    }
 
     tabs.CoachSummary = {
       screen: CoachsummaryScreen,
@@ -568,7 +587,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', 'Search', "Video",'Booking', "ContactUs","PayFeatured","ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack",'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile'],
+      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', "succesPayFeatured", 'Search', "Video", 'Booking', "ContactUs", "PayFeatured", "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack", 'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile', 'succesPayFeatured'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
@@ -645,7 +664,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  }, [token, profile?.Id, profile?.IsTempPassword, notifications.filter(i => i.IsRead == false).length,profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
+  }, [token, profile?.Id, profile?.IsTempPassword, notifications.filter(i => i.IsRead == false).length, profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

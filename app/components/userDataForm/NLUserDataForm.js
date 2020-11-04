@@ -119,7 +119,6 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, isF
                     })
                     .then((r) => {
                         dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: action == 'register' && isFeatured ? "PayFeatured":'AboutMe' })
                     })
                     .catch((r) => console.log(r))
             }}
@@ -141,7 +140,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, isF
                         {errors.fullName && touched.fullName && <ErrorLabel text={errors.fullName} />}
 
                         <NLAddressSuggestionInput
-                            style={{ width: '85%'}}
+                            style={{ width: '85%' }}
                             placeholder={"Home Postcode"}
                             defaultValue={values.postCode}
                             onSuggestionsUpdated={(suggetions) => {
@@ -152,10 +151,10 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, isF
 
                         <NLDropdownMenu
                             disabled={addresses.length == 0}
-                            placeholder={addresses.length == 0 ? 'No options': "Select an address"}
-                            theme={{ 
+                            placeholder={addresses.length == 0 ? 'No options' : "Select an address"}
+                            theme={{
                                 menu: { width: '80%' },
-                                textButton: {fontSize: 18, color: 'rgba(0,0,0,0.3)', paddingLeft: 0},
+                                textButton: { fontSize: 18, color: 'rgba(0,0,0,0.3)', paddingLeft: 0 },
                                 button: { ...styles.signup_info_view, width: Dimensions.get('screen').width * 0.83 }
                             }}
                             onSelect={(selected) => {
@@ -164,7 +163,7 @@ const NLUserDataForm = ({ action = "register", showsConfirmPassword = false, isF
                                 setFieldValue("lng", selected.longitude)
                                 setFieldValue("postCode", selected.postcode)
                             }}
-                            options={addresses.map(a => ({ label: getFullSuggestionAddress(a), value: a}))}
+                            options={addresses.map(a => ({ label: getFullSuggestionAddress(a), value: a }))}
                         />
                         {errors.postCode && touched.postCode && <ErrorLabel text={errors.postCode} />}
 

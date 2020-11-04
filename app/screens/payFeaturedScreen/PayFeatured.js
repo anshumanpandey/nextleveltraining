@@ -15,6 +15,7 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import { NavigationActions, StackActions } from 'react-navigation';
 import GlobalContants from '../../constants/GlobalContants';
+import AsyncStorage from '@react-native-community/async-storage';
 var qs = require('qs');
 var UrlParser = require('url-parse');
 
@@ -51,6 +52,10 @@ const PaymentConcentScreen = (props) => {
   }, { manual: true })
 
   const isLoading = () => loading || paymentReq.loading
+
+  useEffect(() => {
+    AsyncStorage.removeItem("wantToBeFeatured")
+  },[])
 
   return (
     <ScrollView hide style={{ flex: 1, backgroundColor: 'white' }}>
@@ -154,7 +159,7 @@ const PaymentConcentScreen = (props) => {
                     const resetAction = StackActions.reset({
                       index: 0,
                       key: null,
-                      actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'AboutMe' }) })]
+                      actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'succesPayFeatured' }) })]
                     })
                     props.navigation.dispatch(resetAction);
                   })

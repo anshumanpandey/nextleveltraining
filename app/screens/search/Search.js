@@ -12,6 +12,7 @@ import Modal from 'react-native-modal';
 import NavigationService from '../../navigation/NavigationService';
 import getDistance from 'geolib/es/getDistance';
 import { ScrollView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const NoResultMessage = () => <Text style={{ textAlign: 'center', fontSize: 22, marginTop: '10%' }}>No results</Text>
 
@@ -98,7 +99,7 @@ const UseFilters = () => {
 }
 
 const FilterModal = ({ isModalVisible, onClose }) => {
-  const { filterValues, setFilterValueFor, reset,addValueFor, toggleValueFor } = UseFilters()
+  const { filterValues, setFilterValueFor, reset, addValueFor, toggleValueFor } = UseFilters()
   return (
     <Modal style={{ alignItems: 'center' }} isVisible={isModalVisible} onBackdropPress={() => onClose()}>
       <ScrollView contentContainerStyle={{ padding: '3%', flexGrow: 0.6, backgroundColor: 'white', minHeight: '85%', width: '80%' }}>
@@ -202,67 +203,67 @@ const FilterModal = ({ isModalVisible, onClose }) => {
                 text={"Level 5"}
               />
 
+            </View>
+          </View>
+
+          <View>
+            <Text style={{ fontSize: 20, marginBottom: '3%' }}>Rate</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+              <StartOptionItem
+                onPress={() => setFilterValueFor('rate', 1)}
+                selected={filterValues.rate == 1}
+                value={1}
+              />
+
+              <StartOptionItem
+                onPress={() => setFilterValueFor('rate', 2)}
+                selected={filterValues.rate == 2}
+                value={2}
+              />
+
+              <StartOptionItem
+                onPress={() => setFilterValueFor('rate', 3)}
+                selected={filterValues.rate == 3}
+                value={3}
+              />
+
+              <StartOptionItem
+                onPress={() => setFilterValueFor('rate', 4)}
+                selected={filterValues.rate == 4}
+                value={4}
+              />
+
+              <StartOptionItem
+                onPress={() => setFilterValueFor('rate', 5)}
+                selected={filterValues.rate == 5}
+                value={5}
+              />
+            </View>
+
           </View>
         </View>
 
-        <View>
-          <Text style={{ fontSize: 20, marginBottom: '3%' }}>Rate</Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-            <StartOptionItem
-              onPress={() => setFilterValueFor('rate', 1)}
-              selected={filterValues.rate == 1}
-              value={1}
-            />
-
-            <StartOptionItem
-              onPress={() => setFilterValueFor('rate', 2)}
-              selected={filterValues.rate == 2}
-              value={2}
-            />
-
-            <StartOptionItem
-              onPress={() => setFilterValueFor('rate', 3)}
-              selected={filterValues.rate == 3}
-              value={3}
-            />
-
-            <StartOptionItem
-              onPress={() => setFilterValueFor('rate', 4)}
-              selected={filterValues.rate == 4}
-              value={4}
-            />
-
-            <StartOptionItem
-              onPress={() => setFilterValueFor('rate', 5)}
-              selected={filterValues.rate == 5}
-              value={5}
-            />
-          </View>
-
-        </View>
-      </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          const res = { dayOfWeek: filterValues.dayOfWeek, level: filterValues.level }
-          if (filterValues.orderBy) {
-            res.orderBy = filterValues.orderBy
-          }
-          if (filterValues.rate) {
-            res.rate = filterValues.rate
-          }
-          onClose(res)
-        }}
-        style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center', marginBottom: '5%', marginTop: '2%' }]}>
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Filter</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          onClose(reset())
-        }}
-        style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center' }]}>
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Reset</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const res = { dayOfWeek: filterValues.dayOfWeek, level: filterValues.level }
+            if (filterValues.orderBy) {
+              res.orderBy = filterValues.orderBy
+            }
+            if (filterValues.rate) {
+              res.rate = filterValues.rate
+            }
+            onClose(res)
+          }}
+          style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center', marginBottom: '5%', marginTop: '2%' }]}>
+          <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Filter</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            onClose(reset())
+          }}
+          style={[{ height: 40, backgroundColor: Colors.s_blue, justifyContent: 'center' }]}>
+          <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Reset</Text>
+        </TouchableOpacity>
 
       </ScrollView>
     </Modal >
@@ -279,7 +280,7 @@ const Search = (props) => {
   const [searchCoachesReq, searchCoaches] = useAxios({
     url: `/Users/SearchPost`,
     method: 'POST',
-    data: { playerId: profile?.Id, search: keyword }
+    data: { search: keyword }
   }, { manual: true })
 
   const [getconnectedUserReq, refetch] = useAxios({
@@ -293,13 +294,20 @@ const Search = (props) => {
   }, [getconnectedUserReq.loading])
 
   useEffect(() => {
-    searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
+    searchCoaches({ data: { search: keyword } })
   }, [orderingType])
 
   useEffect(() => {
-    searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
+    AsyncStorage.getItem("wantToBeFeatured")
+      .then((item) => {
+        if (item == "yes") {
+          props.navigation.navigate("PayFeatured")
+        } else {
+          searchCoaches({ data: { search: keyword } })
+        }
+      })
     const focusListener = props.navigation.addListener('didFocus', () => {
-      searchCoaches({ data: { playerId: profile?.Id, search: keyword } })
+      searchCoaches({ data: { search: keyword } })
     });
     return () => {
       focusListener?.remove();
@@ -318,7 +326,14 @@ const Search = (props) => {
     screensToNavigate = ["Information", "PlayerInfo"]
   }
 
-  const [currentTab, setCurrentTab] = useState({ i: TabsName[0] == "Coaches" ? 0 : 1 })
+  const resolveTabIdx = () => {
+    if (props.navigation.getParam("defaultTabIdx", false) != false) {
+      return props.navigation.getParam("defaultTabIdx")
+    }
+    return TabsName[0] == "Coaches" ? 0 : 1
+  }
+
+  const [currentTab, setCurrentTab] = useState({ i: resolveTabIdx() })
 
   const displayFilter = () => {
     return (currentTab.i == 0 && TabsName[0] == "Coaches") || (currentTab.i == 1 && TabsName[1] == "Coaches")
@@ -344,43 +359,43 @@ const Search = (props) => {
 
   const parseResults = (users) => {
     return users
-    ?.sort((a, b) => {
-      if (!a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
+      ?.sort((a, b) => {
+        if (!a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
 
-      if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
-        return distanceFilter(a, b)
-      } else if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
-        return distanceFilter(b, a)
-      } else if (orderingType.orderBy == SORTING_KEYS.PRICE_ASC) {
-        return b.Rate - a.Rate
-      } else if (orderingType.orderBy == SORTING_KEYS.PRICE_DESC) {
-        return a.Rate - b.Rate
-      } else {
-        return 0
-      }
-    })
-    ?.filter(coach => {
-      if (coach.Role == "Player") return true
-      if (orderingType.rate) {
-        return rateFilter(coach, orderingType.rate)
-      }
+        if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
+          return distanceFilter(a, b)
+        } else if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
+          return distanceFilter(b, a)
+        } else if (orderingType.orderBy == SORTING_KEYS.PRICE_ASC) {
+          return b.Rate - a.Rate
+        } else if (orderingType.orderBy == SORTING_KEYS.PRICE_DESC) {
+          return a.Rate - b.Rate
+        } else {
+          return 0
+        }
+      })
+      ?.filter(coach => {
+        if (coach.Role == "Player") return true
+        if (orderingType.rate) {
+          return rateFilter(coach, orderingType.rate)
+        }
 
-      return true
-    })
-    ?.filter(coach => {
-      if (coach.Role == "Player") return true
-      if (!orderingType.dayOfWeek || orderingType.dayOfWeek.length == 0) return true
-      if (coach.Availabilities.length == 0) return false
+        return true
+      })
+      ?.filter(coach => {
+        if (coach.Role == "Player") return true
+        if (!orderingType.dayOfWeek || orderingType.dayOfWeek.length == 0) return true
+        if (coach.Availabilities.length == 0) return false
 
-      return coach.Availabilities.some(a => orderingType.dayOfWeek.find(dow => a.Day == dow) != null)
+        return coach.Availabilities.some(a => orderingType.dayOfWeek.find(dow => a.Day == dow) != null)
 
-    })
-    ?.filter(coach => {
-      if (coach.Role == "Player") return true
-      if (!orderingType.level) return true
+      })
+      ?.filter(coach => {
+        if (coach.Role == "Player") return true
+        if (!orderingType.level) return true
 
-      return coach.Level == orderingType.level
-    })
+        return coach.Level == orderingType.level
+      })
 
   }
 
@@ -499,7 +514,9 @@ const Search = (props) => {
                   return 0
                 })
               }
-              renderItem={({ item }) => {
+              renderItem={({ item, index }) => {
+                console.log(`${item.Id} - ${item.FullName} - ${item.EmailID} - ${index}`)
+
                 return <PostSearchCard hideAddress={true} onPress={() => NavigationService.navigate(screensToNavigate[1], { player: item, ...item })} {...item} hideHeartIcon={true} />
               }} />
           )}

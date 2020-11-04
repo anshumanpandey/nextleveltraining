@@ -6,6 +6,7 @@ import styles from './styles.js';
 import Colors from '../../constants/color';
 import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const AskFeatured = (props) => {
 
@@ -18,7 +19,12 @@ const AskFeatured = (props) => {
       <View style={styles.level_btn_view}>
         <TouchableOpacity
           style={styles.level_btn_player}
-          onPress={() => NavigationService.navigate(Screens.SignUp, { isFeatured: true,role: props.navigation.getParam("role", "Player") })}
+          onPress={() => {
+            AsyncStorage.setItem("wantToBeFeatured", "yes")
+            .then(() => {
+              NavigationService.navigate(Screens.SignUp, { isFeatured: true,role: props.navigation.getParam("role", "Player") })
+            })
+          }}
         >
           <View style={styles.level_btn_player_view}>
             <Text style={styles.level_player_text}>Go Featured</Text>
