@@ -50,7 +50,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const [sessions, setSessions] = useState([])
   const [selectedTab, setSelectedTab] = useState(0)
   const [selectedLocation, setSelectedLocation] = useState()
-  const { markedDays, multipleDates, markAvailableDay, selectRange, isUpdating, toggleDate } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id, Bookings: coach.Bookings });
+  const { markedDays, multipleDates, pastDates, selectRange, isUpdating, toggleDate } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id, Bookings: coach.Bookings });
 
   const addSession = (session) => {
     const uniqueSessions = new Map(sessions.map(s => ([ getSessionId(s), s])))
@@ -199,7 +199,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               toggleDate(day.dateString)
             }}
             markingType={"custom"}
-            markedDates={markedDays}
+            markedDates={{ ...markedDays, ...pastDates}}
             disableAllTouchEventsForDisabledDays={true}
             theme={{
               todayBackgroundColor: 'white',

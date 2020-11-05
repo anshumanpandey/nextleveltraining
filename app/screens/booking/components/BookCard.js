@@ -21,13 +21,6 @@ const BookCard = (item) => {
           <View style={{ marginTop: 5 }}>
             <Text>{item?.Location?.LocationAddress}</Text>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Season for:</Text>
-              <Text style={{ marginLeft: 5 }}>
-                {item.BookingDate.split('T')[0]}{' '}
-                {item.FromTime.split('T')[1].replace(":00Z", "")} - {item.ToTime.split('T')[1].replace(":00Z", "")}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={{ fontWeight: '500', color: "#0F2F80" }}>Job fees:</Text>
               <View style={{ flexDirection: 'row', marginLeft: 5 }}>
                 <Text>{'\u00A3'}</Text>

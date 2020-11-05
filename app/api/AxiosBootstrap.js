@@ -12,9 +12,6 @@ axiosInstance.interceptors.request.use(
     config => {
         const token = getGlobalState('token')
 
-        console.log(token)
-
-
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -44,6 +41,8 @@ axiosInstance.interceptors.response.use(
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT });
             }
             console.log('error.response');
+            console.log(error.request._method);
+            console.log(error.request.responseURL);
             console.log(error.response.headers);
             console.log(error.response.data);
         } else if (error.request) {

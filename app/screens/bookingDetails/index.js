@@ -122,10 +122,6 @@ const JobDetails = (props) => {
 
           <View style={[styles.orderView, { flexDirection: 'row' }]}>
             <View>
-              <Text style={styles.headText}>Session Date/Time</Text>
-              <Text style={styles.headText1}>{props.navigation.getParam("BookingDate").split('T')[0]} {props.navigation.getParam("FromTime").split('T')[1].replace(":00Z","")} - {props.navigation.getParam("ToTime").split('T')[1].replace(":00Z","")}</Text>
-            </View>
-            <View>
               <Text style={styles.headText}>Cost</Text>
               <Text style={styles.headText1}>£ {props.navigation.getParam("CoachRate")}</Text>
             </View>

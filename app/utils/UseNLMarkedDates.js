@@ -55,6 +55,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     const [nonAvailableDays, setNonAvailableDays] = useState({})
     const [partialBookedDay, setPartialBookedDay] = useState({})
     const [multipleDates, setMultipleDates] = useState({})
+    const [pastDates, setPastDates] = useState({})
 
     const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
     const [availablesDatesReq, getAvailablesDates] = useAxios({}, { manual: true })
@@ -62,6 +63,16 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
 
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
+
+    useEffect(() => {
+        const newState = {}
+        const firstOfMonth = moment().startOf("month").startOf("day")
+        while (firstOfMonth.isBefore(moment(), "day")) {
+            newState[firstOfMonth.toDate().toISOString().split('T')[0]] = { customStyles: { container: { backgroundColor: 'gray'} }, disabled: true }
+            firstOfMonth.add(1, "day")
+        }
+        setPastDates(newState)
+    }, [])
 
     const getTimespansPerDate = (date, timespans) => {
         return timespans.filter(timespan => {
@@ -205,6 +216,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     return {
         isUpdating,
         markedDays: { ...markedDays, ...nonAvailableDays, ...partialBookedDay, ...markedDates, ...multipleDates },
+        pastDates,
         markAvailableDay,
         markDayOfWeekNonAvailable,
         selectRange,

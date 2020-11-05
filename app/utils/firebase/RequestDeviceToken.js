@@ -24,12 +24,12 @@ export const RequestAndroidDeviceToken = () => {
 
 export const sendAndroidToken = (token) => {
     if (Platform.OS == "android") {
-        axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: token } })
+        axiosInstance({ method: "post",url: "/Users/UpdateDeviceToken", data: { deviceToken: token } })
     }
 }
 
 export const sendIosToken = (token) => {
     if (Platform.OS == "ios") {
-        axiosInstance({ url: "/Users/UpdateDeviceToken", body: { deviceToken: token } })
+        axiosInstance({ method: "post",url: "/Users/UpdateDeviceToken", data: { deviceToken: token } })
     }
 }
