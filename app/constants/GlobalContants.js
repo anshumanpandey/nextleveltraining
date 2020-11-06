@@ -1,10 +1,11 @@
 /*const GlobalContants = {
+    ENV: 'LIVE',
     FEATURED_PRICE: '20',
     BOOKING_COMISSION: 2,
     PAYPAL_CLIENT_ID: 'AWpaMztfwuCn_dP0IYhyvsnGRxgHtgP5GjDOfFi1U21ANbvyr7PRly1iwcplriBjtPuUGnZufVn894cE',
     PAYPAL_CLIENT_SECRET: 'EIzgb7EaeYuczf-7pe633I6nfDroJQ97bix7H56lsDhqGeDIBck7LD1546VuahVCEOosOOvMDC6-ZThb',
-    PAYPAL_TOKEN_URL: 'https://api.paypal.com/v1/oauth2/token',
-    PAYPAL_PAYMENT_URL: 'https://api.paypal.com/v1/payments/payment',
+    PAYPAL_TOKEN_URL: 'https://api-m.paypal.com/v1/oauth2/token',
+    PAYPAL_PAYMENT_URL: 'https://api-m.paypal.com/v2/checkout/orders',
     GOOGLE_SIGNIN_DATA: {
         scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
         webClientId: '669575831507-c3nqa7p8camij0pbo1q5i1m2tp2m5kt0.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -19,13 +20,15 @@
 
 
 //TEST CREDENTIALS
-const GlobalContants ={
+const GlobalContants = {
+    ENV: 'TEST',
     FEATURED_PRICE:'20',
     BOOKING_COMISSION: 2,
     PAYPAL_CLIENT_ID:'ASzioBXLboxNr1ZU-Il-AYsuFYnElDWfuhBsMUDCpNb3iROIxhI4DEfef99nXwsP7f1dDkTiHwoZshr_',
     PAYPAL_CLIENT_SECRET:'EBKq-fql7wyVuyfuILX--YiFIb0CziLcfU5UiTlC88eqABsKC5YQd47U8BL428Np4s4_zynBgCj0S1NH',
-    PAYPAL_TOKEN_URL: 'https://api.sandbox.paypal.com/v1/oauth2/token',
-    PAYPAL_PAYMENT_URL:'https://api.sandbox.paypal.com/v1/payments/payment',
+    PAYPAL_TOKEN_URL: 'https://api-m.sandbox.paypal.com/v1/oauth2/token',
+    PAYPAL_PAYMENT_URL:'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+    PAYPAL_CAPTURE_URL: 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
     GOOGLE_SIGNIN_DATA: {
         scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
         webClientId: '669575831507-c3nqa7p8camij0pbo1q5i1m2tp2m5kt0.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)

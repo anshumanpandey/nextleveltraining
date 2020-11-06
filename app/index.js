@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import 'react-native-get-random-values'
 import './utils/PushNotifications';
 //import './utils/Firebase';
 import { Text, View, SafeAreaView, Alert, TouchableWithoutFeedback, Platform } from 'react-native';

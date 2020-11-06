@@ -15,6 +15,7 @@ import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
 import { NavigationActions, StackActions } from 'react-navigation';
 import GlobalContants from '../../constants/GlobalContants';
+import { UsePaypalHook } from '../../utils/UsePaypalHook';
 var qs = require('qs');
 var UrlParser = require('url-parse');
 
@@ -31,6 +32,8 @@ const PaymentConcentScreen = (props) => {
   const [checked, setChecked] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
+  const { generatePaymentOrderFor, capturePaymentForToken } = UsePaypalHook()
+
   const [saveBookingReq, saveBooking] = useAxios({
     url: '/Users/SaveBooking',
     method: 'POST'
@@ -42,7 +45,8 @@ const PaymentConcentScreen = (props) => {
     params,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${base64.encode(`${GlobalContants.PAYPAL_CLIENT_ID}:${GlobalContants.PAYPAL_CLIENT_SECRET}`)}`,    },
+      'Authorization': `Basic ${base64.encode(`${GlobalContants.PAYPAL_CLIENT_ID}:${GlobalContants.PAYPAL_CLIENT_SECRET}`)}`,
+    },
   }, { manual: true })
 
   const [paymentReq, doPayment] = simpleAxiosHook({
@@ -95,18 +99,9 @@ const PaymentConcentScreen = (props) => {
           disabled={!checked}
           style={[styles.buttonSave, { width: 200, opacity: checked ? 1 : 0.5 }]}
           onPress={() => {
-            getAccessToken()
+            generatePaymentOrderFor(GET_PAYPAL_JSON(props.navigation.getParam('coach'), props.navigation.getParam('sessions')))
               .then((res) => {
-                console.log(res.data)
-                return doPayment({
-                  headers: {
-                    'Authorization': `Bearer ${res.data.access_token}`
-                  },
-                  data: GET_PAYPAL_JSON(props.navigation.getParam('coach'), props.navigation.getParam('sessions'))
-                })
-              })
-              .then((res) => {
-                setOpenModal(res.data.links.find(i => i.method == 'REDIRECT').href)
+                setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
               })
               .catch(err => {
                 console.log(err);
@@ -136,34 +131,37 @@ const PaymentConcentScreen = (props) => {
               const parsed = new UrlParser(url)
               const urlParams = qs.parse(parsed.query.substring(1))
 
-              if (url.includes('payment_success')) {
+              if (url.includes('PayerID')) {
                 console.log('success')
                 if (apiCalled == true || saveBookingReq.loading == true) return
-                const data = {
-                  "playerID": profile.Id,
-                  "coachID": props.navigation.getParam('coach').Id,
-                  "sessions": props.navigation.getParam('sessions'),
-                  "bookingDate": props.navigation.getParam('selectedDate'),
-                  "trainingLocationID": props.navigation.getParam('selectedLocation').id,
-                  "amount": props.navigation.getParam('coach').Rate,
-                  "paymentStatus": "Processed",
-                  "transactionID": urlParams.paymentId,
-                  "bookingStatus": "Done"
-                }
-                console.log(data)
-                saveBooking({ data })
-                  .then(r => {
-                    setApiCalled(true)
-                    console.log(r.data)
-                  })
-                  .finally(() => {
-                    setOpenModal(false)
-                    const resetAction = StackActions.reset({
-                      index: 0,
-                      key: null,
-                      actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Booking' }) })]
-                    })
-                    props.navigation.dispatch(resetAction);
+                capturePaymentForToken(urlParams.token, GET_PAYPAL_JSON(props.navigation.getParam('coach'), props.navigation.getParam('sessions')))
+                  .then((captureRes) => {
+                    const data = {
+                      "playerID": profile.Id,
+                      "coachID": props.navigation.getParam('coach').Id,
+                      "sessions": props.navigation.getParam('sessions'),
+                      "bookingDate": props.navigation.getParam('selectedDate'),
+                      "trainingLocationID": props.navigation.getParam('selectedLocation').id,
+                      "amount": props.navigation.getParam('coach').Rate,
+                      "paymentStatus": "Processed",
+                      "transactionID": captureRes.data.id,
+                      "bookingStatus": "Done"
+                    }
+                    console.log(data)
+                    saveBooking({ data })
+                      .then(r => {
+                        setApiCalled(true)
+                        console.log(r.data)
+                      })
+                      .finally(() => {
+                        setOpenModal(false)
+                        const resetAction = StackActions.reset({
+                          index: 0,
+                          key: null,
+                          actions: [NavigationActions.navigate({ routeName: 'MainStack', action: NavigationActions.navigate({ routeName: 'Booking' }) })]
+                        })
+                        props.navigation.dispatch(resetAction);
+                      })
                   })
               }
               if (url.includes('payment_failure')) {
