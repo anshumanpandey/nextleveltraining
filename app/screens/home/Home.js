@@ -39,10 +39,6 @@ const Home = (props) => {
     url: '/Users/GetAllPosts',
   }, { manual: true })
 
-  const [notificationsReq, getNotifications] = useAxios({
-    url: '/Users/GetNotifications',
-  }, { manual: true })
-
   const [getUserReq, getUserData] = useAxios({
     url: '/Users/GetUser',
   }, { manual: true })
@@ -51,20 +47,12 @@ const Home = (props) => {
     refetch();
     const focusListener = props.navigation.addListener('didFocus', () => {
       refetch();
-      getNotifications();
       PushNotification.popInitialNotification((notification) => {
         console.log('Initial Notification', notification);
       });
     });
     return () => focusListener?.remove();
   }, [])
-
-  useEffect(() => {
-    if (notificationsReq.data) {
-      console.log('dispaching notigfication from home', notificationsReq.data.Notifications.length)
-      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: [...notificationsReq.data.Notifications] })
-    }
-  }, [notificationsReq.data?.Notifications?.length]);
 
   useEffect(() => {
     if (!data) return

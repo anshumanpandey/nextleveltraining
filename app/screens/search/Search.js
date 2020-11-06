@@ -298,7 +298,13 @@ const Search = (props) => {
     searchCoaches({ data: { search: keyword } })
   }, [orderingType])
 
+  const [notificationsReq, getNotifications] = useAxios({
+    url: '/Users/GetNotifications',
+  }, { manual: true })
+
   useEffect(() => {
+    getNotifications();
+
     if (Platform.OS == 'ios') {
       getStoreIosDeviceToken()
       .then(token => {
@@ -334,6 +340,13 @@ const Search = (props) => {
       focusListener?.remove();
     }
   }, [])
+
+  useEffect(() => {
+    if (notificationsReq.data) {
+      console.log('dispaching notigfication from home', notificationsReq.data.Notifications.length)
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: [...notificationsReq.data.Notifications] })
+    }
+  }, [notificationsReq.data?.Notifications?.length]);
 
   const tabStyle = { color: Colors.s_blue }
   const activeTabStyle = { color: Colors.nl_yellow }

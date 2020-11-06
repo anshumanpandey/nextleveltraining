@@ -36,7 +36,15 @@ const AskFeatured = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.level_btn_coach, { backgroundColor: Colors.nl_yellow }]}
-          onPress={() => NavigationService.navigate(Screens.SignUp, { isFeatured: false,role: props.navigation.getParam("role", "Coach") })}
+          onPress={() => {
+            if (props.navigation.getParam("redirect", false)) {
+              props.navigation.navigate("Search")
+            } else {
+              NavigationService.navigate(Screens.SignUp, { isFeatured: false,role: props.navigation.getParam("role", "Coach") })
+            }
+            AsyncStorage.removeItem("wantToBeFeatured")
+            AsyncStorage.removeItem("askToBeFeatured")
+          }}
         >
           <View style={styles.level_btn_player_view}>
             <Text style={styles.level_player_text}>Not Now</Text>
