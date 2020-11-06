@@ -2,7 +2,7 @@ import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, storeIosDeviceToken } from '
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 var PushNotification = require("react-native-push-notification");
 import DeviceInfo from "react-native-device-info"
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 
 const isEmulator = DeviceInfo.isEmulatorSync()
 if(isEmulator && Platform.OS == "ios") {
@@ -30,6 +30,8 @@ if(isEmulator && Platform.OS == "ios") {
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
       console.log("FIREBASE NOTIFICATION", notification)
+      Alert.alert("", JSON.stringify(notification))
+      return
       const NLnotification = JSON.parse(notification.data.notification)
 
       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.ADD_NOTIFICATION, state: NLnotification })
