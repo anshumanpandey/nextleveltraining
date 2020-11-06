@@ -1,9 +1,13 @@
 import { Platform } from "react-native"
-import { getDeviceToken, getUniqueId } from "react-native-device-info"
+import { getDeviceToken, isEmulator } from "react-native-device-info"
 import messaging from '@react-native-firebase/messaging';
 import { axiosInstance } from "../../api/AxiosBootstrap";
 
-export const RequestDeviceToken = () => {
+export const RequestDeviceToken = async () => {
+    const emulator = await isEmulator()
+    if (emulator && Platform.OS == "ios") {
+        return Promise.resolve()
+    }
     if (Platform.OS == "ios") {
         return getDeviceToken()
     }
