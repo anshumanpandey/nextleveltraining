@@ -15,7 +15,7 @@ import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
 import ErrorLabel from '../../components/ErrorLabel';
 import GlobalStyles from '../../constants/GlobalStyles';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { askToBefeatured, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Spinner, Input as TextInput } from 'native-base';
@@ -119,6 +119,7 @@ const Login = (props) => {
           })
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+            askToBefeatured(r.data)
             redirectAferLogin()
           })
           .catch(err => console.log(err))
@@ -175,6 +176,7 @@ const Login = (props) => {
               })
               .then((r) => {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                askToBefeatured(r.data)
                 redirectAferLogin()
               })
               .then((r) => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, }))
@@ -263,6 +265,7 @@ const Login = (props) => {
                   })
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                    askToBefeatured(r.data)
                     redirectAferLogin()
                   })
                   .catch(err => console.log(err))
@@ -298,6 +301,7 @@ const Login = (props) => {
                     })
                     .then((r) => {
                       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                      askToBefeatured(r.data)
                       redirectAferLogin()
                     })
                     .catch(err => console.log(err))

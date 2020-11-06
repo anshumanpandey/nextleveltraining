@@ -13,7 +13,7 @@ import appleAuth, {
   AppleAuthRequestScope,
   AppleAuthError
 } from '@invertase/react-native-apple-authentication';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { askToBefeatured, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
@@ -159,6 +159,7 @@ const Signup = (props) => {
                     return getUserData()
                   })
                   .then((r) => {
+                    askToBefeatured(r.data)
                     AsyncStorage.setItem('role', props.navigation.getParam('role'))
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                     setSocialLogin(false)
@@ -199,6 +200,7 @@ const Signup = (props) => {
                       return getUserData()
                     })
                     .then((r) => {
+                      askToBefeatured(r.data)
                       AsyncStorage.setItem('role', props.navigation.getParam('role'))
                       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                       setSocialLogin(false)

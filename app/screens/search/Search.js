@@ -4,7 +4,7 @@ import { Icon, Spinner, Tabs, Tab, Button } from 'native-base';
 import Header from '../../components/header/Header';
 import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
-import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS, getStoreIosDeviceToken } from '../../state/GlobalState';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS, getStoreIosDeviceToken, userAskedToBeFeatured, needsToAskFeaturedAfterLogin } from '../../state/GlobalState';
 import PostCard from '../home/components/PostCard';
 import moment from 'moment'
 import PostSearchCard from './components/subcomponents/PostSearchCard';
@@ -310,14 +310,23 @@ const Search = (props) => {
         sendAndroidToken(token)
       })
     }
-    AsyncStorage.getItem("wantToBeFeatured")
-      .then((item) => {
-        if (item == "yes") {
-          props.navigation.navigate("PayFeatured")
-        } else {
-          searchCoaches({ data: { search: keyword } })
-        }
-      })
+    userAskedToBeFeatured()
+    .then(asked => {
+      if (asked) {
+        props.navigation.navigate("PayFeatured")
+        return Promise.resolve('no')
+      } else {
+        return needsToAskFeaturedAfterLogin()
+      }
+    })
+    .then((needToAsk) => {
+      if (needToAsk) {
+        props.navigation.navigate("PayFeatured")
+      } else {
+        searchCoaches({ data: { search: keyword } })
+      }
+    })
+
     const focusListener = props.navigation.addListener('didFocus', () => {
       searchCoaches({ data: { search: keyword } })
     });

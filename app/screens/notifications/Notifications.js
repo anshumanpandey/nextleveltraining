@@ -5,11 +5,13 @@ import { View } from 'native-base';
 import useAxios from 'axios-hooks'
 import styles from '../message/styles';
 import { Icon } from 'native-base';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
 import { parseISO, formatDistanceToNow } from 'date-fns';
 import Images from "../../constants/image"
 
 const Notifications = (props) => {
+
+    const [notifications] = useGlobalState('notifications')
 
     const [getUserReq, getUserData] = useAxios({
         url: '/Users/GetNotifications',
@@ -52,14 +54,14 @@ const Notifications = (props) => {
             />
         );
     }
-    useEffect(() => {
+    /*useEffect(() => {
         getUserData()
         const focusListener = props.navigation.addListener('didFocus', () => {
             getUserData()
         });
 
         return () => focusListener.remove()
-    }, []);
+    }, []);*/
 
     useEffect(() => {
         if (getUserReq.data) {
@@ -74,12 +76,12 @@ const Notifications = (props) => {
             <Header title={"Notifications"} hideCreatePost={true} toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} />
             <View style={[styles.signup_container]}>
                 <View style={[styles.fullFlatListContainer]}>
-                    {!getUserReq.loading && getUserReq?.data && getUserReq?.data.Notifications.length > 0 &&
+                    {notifications.length > 0 &&
                         <>
                             <FlatList
                                 contentContainerStyle={{ flexGrow: 1 }}
                                 ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: '10%' }}>No notifications</Text>}
-                                data={getUserReq.data?.Notifications.sort((a, b) => parseISO(b.CreatedDate) - parseISO(a.CreatedDate)) || []}
+                                data={notifications.sort((a, b) => parseISO(b.CreatedDate) - parseISO(a.CreatedDate)) || []}
                                 renderItem={({ item, key }) => <Item item={item} key={key} />}
                                 temSeparatorComponent={() => <ItemSeparator />}
                                 keyExtractor={item => item.id}
@@ -87,7 +89,7 @@ const Notifications = (props) => {
                         </>
                     }
                 </View>
-                {!getUserReq.loading && getUserReq?.data?.Notifications && getUserReq?.data?.Notifications.length === 0 && <Text style={styles.notFoundText}>No Notifications</Text>}
+                {notifications.length === 0 && <Text style={styles.notFoundText}>No Notifications</Text>}
                 {getUserReq.loading && <Text style={styles.notFoundText}>Loading...</Text>}
             </View>
         </ScrollView>

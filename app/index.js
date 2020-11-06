@@ -86,6 +86,27 @@ const NotificationCountComponent = ({ currentNotifications }) => {
   </Text>
 }
 
+const BadgeNotification = ({ tintColor }) => {
+  const [notifications] = useGlobalState('notifications')
+
+  return (
+    <View style={styles.tabContain}>
+      <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
+        <View>
+          <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '50%', height: 18, width: 18, borderRadius: 18 / 2, alignItems: 'center', justifyContent: 'center' }}>
+            <NotificationCountComponent key={notifications.filter(n => n.IsRead).length} currentNotifications={notifications} />
+          </View>
+          <Icon
+            type="Feather"
+            name="bell"
+            style={[styles.icons, { color: tintColor }]}
+          />
+        </View>
+      </View>
+    </View>
+  );
+}
+
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 
@@ -324,15 +345,15 @@ const AppMain = () => {
         ),
       }),
     },
-    tabs.succesPayFeatured = {
-      screen: SuccessPayFeatured,
-      navigationOptions: () => ({
-        tabBarVisible: false,
-        tabBarButtonComponent: ({ tintColor }) => (
-          <></>
-        ),
-      }),
-    }
+      tabs.succesPayFeatured = {
+        screen: SuccessPayFeatured,
+        navigationOptions: () => ({
+          tabBarVisible: false,
+          tabBarButtonComponent: ({ tintColor }) => (
+            <></>
+          ),
+        }),
+      }
     tabs.CreatePost = {
       screen: CreatePostScreen,
       navigationOptions: () => ({
@@ -401,20 +422,7 @@ const AppMain = () => {
       screen: Notifications,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
-          <View style={styles.tabContain}>
-            <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
-              <View>
-                <View style={{ backgroundColor: Colors.s_blue, zIndex: 2, position: 'absolute', top: '-50%', left: '50%', height: 18, width: 18, borderRadius: 18 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                  <NotificationCountComponent key={notifications.filter(n => n.IsRead).length} currentNotifications={notifications} />
-                </View>
-                <Icon
-                  type="Feather"
-                  name="bell"
-                  style={[styles.icons, { color: tintColor }]}
-                />
-              </View>
-            </View>
-          </View>
+          <BadgeNotification tintColor={tintColor} />
         ),
       }),
     }
@@ -673,7 +681,7 @@ const AppMain = () => {
   useEffect(() => {
     console.log("generationg", screens)
     Apps = createAppContainer(AuthStack);
-  }, [token, profile?.Id, profile?.IsTempPassword, notifications.filter(i => i.IsRead == false).length, profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
+  }, [token, profile?.Id, profile?.IsTempPassword, profile?.AboutUs, profile?.Achievements, profile?.Accomplishment, profile?.Rate, profile?.TravelMile?.TravelDistance, profile?.Teams?.length, profile?.UpcomingMatches?.length, profile?.Availabilities?.length, profile?.BankAccount?.AccountName, toggle])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

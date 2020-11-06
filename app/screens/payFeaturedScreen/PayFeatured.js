@@ -37,6 +37,7 @@ const PaymentConcentScreen = (props) => {
 
   useEffect(() => {
     AsyncStorage.removeItem("wantToBeFeatured")
+    AsyncStorage.removeItem("askToBeFeatured")
   },[])
 
   return (
