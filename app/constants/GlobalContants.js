@@ -1,4 +1,4 @@
-/*const GlobalContants = {
+const GlobalContants = {
     ENV: 'LIVE',
     FEATURED_PRICE: '20',
     BOOKING_COMISSION: 2,
@@ -16,11 +16,11 @@
         accountName: '', // [Android] specifies an account name on the device that should be used
         iosClientId: '669575831507-r84633mtfqc26al0917hep98i2mse110.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     }
-}*/
+}
 
 
 //TEST CREDENTIALS
-const GlobalContants = {
+/*const GlobalContants = {
     ENV: 'TEST',
     FEATURED_PRICE:'20',
     BOOKING_COMISSION: 2,
@@ -39,7 +39,7 @@ const GlobalContants = {
         accountName: '', // [Android] specifies an account name on the device that should be used
         iosClientId: '669575831507-r84633mtfqc26al0917hep98i2mse110.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     }
-}
+}*/
 
 
 export default GlobalContants;
