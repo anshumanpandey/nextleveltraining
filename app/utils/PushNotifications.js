@@ -30,8 +30,6 @@ if(isEmulator && Platform.OS == "ios") {
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
       console.log("FIREBASE NOTIFICATION", notification)
-      Alert.alert("", JSON.stringify(notification))
-      return
       const NLnotification = JSON.parse(notification.data.notification)
 
       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.ADD_NOTIFICATION, state: NLnotification })

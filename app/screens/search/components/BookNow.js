@@ -17,6 +17,7 @@ import getDistance from 'geolib/es/getDistance';
 import { UseNLMarkedDates } from '../../../utils/UseNLMarkedDates';
 import CalendarRules from '../../../components/CalendarRules';
 import { isAfter } from 'date-fns';
+import NLButton from '../../../components/NLButton';
 
 const _today = new Date();
 
@@ -53,7 +54,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   const { markedDays, multipleDates, pastDates, selectRange, isUpdating, toggleDate } = UseNLMarkedDates({ EmailID: coach.EmailID, Id: coach.Id, Bookings: coach.Bookings });
 
   const addSession = (session) => {
-    const uniqueSessions = new Map(sessions.map(s => ([ getSessionId(s), s])))
+    const uniqueSessions = new Map(sessions.map(s => ([getSessionId(s), s])))
     if (uniqueSessions.has(session)) {
       uniqueSessions.delete(session)
     } else {
@@ -134,6 +135,33 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
     return selectedLocation == undefined || rescheduleBookingReq.loading || sessions.length == 0
   }
 
+  const onBookNowPress = () => {
+    if (isEditing == true) {
+      const [startDate, endDate] = time.split('-')
+      doRescheduleBooking({
+        data: {
+          "bookingId": BookingId,
+          "fromTime": startDate,
+          "toTime": endDate
+        }
+      })
+        .then(r => {
+          return getBookings({
+            data: {
+              "userID": profile.Id,
+              "role": profile.Role
+            }
+          })
+        })
+        .then(({ data }) => {
+          NavigationService.navigate("JobDetails", data.find(i => i.Id == BookingId))
+        })
+    } else {
+      NavigationService.navigate('BookingCheckout', { coach, selectedLocation, sessions })
+      setSessions([])
+    }
+  }
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
@@ -149,35 +177,10 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             <TouchableOpacity
               style={{ width: '40%' }}
               disabled={bookNowIsDisabled()}
-              onPress={() => {
-                if (isEditing == true) {
-                  const [startDate, endDate] = time.split('-')
-                  doRescheduleBooking({
-                    data: {
-                      "bookingId": BookingId,
-                      "fromTime": startDate,
-                      "toTime": endDate
-                    }
-                  })
-                    .then(r => {
-                      return getBookings({
-                        data: {
-                          "userID": profile.Id,
-                          "role": profile.Role
-                        }
-                      })
-                    })
-                    .then(({ data }) => {
-                      NavigationService.navigate("JobDetails", data.find(i => i.Id == BookingId))
-                    })
-                } else {
-                  NavigationService.navigate('BookingCheckout', { coach, selectedLocation, sessions })
-                  setSessions([])
-                }
-              }}>
+              onPress={() => {onBookNowPress()}}>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '5%' }}>
                 {isLoading() && <Spinner color="white" style={{ marginRight: '10%' }} />}
-                <Text style={{ color: bookNowIsDisabled() || isLoading() ? 'gray':Colors.s_blue, fontSize: 18, opacity: bookNowIsDisabled() || isLoading() ? 0.5 : 1 }}>
+                <Text style={{ color: bookNowIsDisabled() || isLoading() ? 'gray' : Colors.s_blue, fontSize: 18, opacity: bookNowIsDisabled() || isLoading() ? 0.5 : 1 }}>
                   Book Now
               </Text>
               </View>
@@ -199,7 +202,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               toggleDate(day.dateString)
             }}
             markingType={"custom"}
-            markedDates={{ ...markedDays, ...pastDates}}
+            markedDates={{ ...markedDays, ...pastDates }}
             disableAllTouchEventsForDisabledDays={true}
             theme={{
               todayBackgroundColor: 'white',
@@ -223,7 +226,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text>}
 
             {!availableTimePerCoach.loading && availableTimePerCoach.data && agroupSessionPerDay(availableTimePerCoach.data)
-              .sort((a,b) => moment.parseZone(`${a[0]}T00:00:00.00Z`) - moment.parseZone(`${b[0]}T00:00:00.00Z`))
+              .sort((a, b) => moment.parseZone(`${a[0]}T00:00:00.00Z`) - moment.parseZone(`${b[0]}T00:00:00.00Z`))
               .map(t => {
 
                 return (
@@ -288,6 +291,15 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
             {profile.TrainingLocations.filter(filterLocationCoachCanTravel).length == 0 && <Text style={{ padding: '5%', textAlign: 'center', fontSize: 14 }}>No Training Locations</Text>}
           </>
         )}
+        <View style={{ padding: '3%' }}>
+          <NLButton
+            onPress={onBookNowPress}
+            style={{ width: '70%', marginLeft: 'auto', marginRight: 'auto' }}
+            color={Colors.s_blue}
+            value={"Book Now"}
+            disabled={bookNowIsDisabled()}
+          />
+        </View>
       </View>
     </ScrollView>
   );

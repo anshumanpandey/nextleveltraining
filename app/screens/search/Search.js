@@ -313,7 +313,7 @@ const Search = (props) => {
     userAskedToBeFeatured()
     .then(asked => {
       if (asked) {
-        props.navigation.navigate("PayFeatured")
+        props.navigation.navigate("AskFeatured")
         return Promise.resolve('no')
       } else {
         return needsToAskFeaturedAfterLogin()
@@ -321,7 +321,7 @@ const Search = (props) => {
     })
     .then((needToAsk) => {
       if (needToAsk) {
-        props.navigation.navigate("PayFeatured")
+        props.navigation.navigate("AskFeatured")
       } else {
         searchCoaches({ data: { search: keyword } })
       }

@@ -20,10 +20,14 @@ const AskFeatured = (props) => {
         <TouchableOpacity
           style={styles.level_btn_player}
           onPress={() => {
-            AsyncStorage.setItem("wantToBeFeatured", "yes")
-            .then(() => {
-              NavigationService.navigate(Screens.SignUp, { isFeatured: true,role: props.navigation.getParam("role", "Player") })
-            })
+            if (props.navigation.getParam("redirect", false)) {
+              props.navigation.navigate("PayFeatured")
+            } else {
+              AsyncStorage.setItem("wantToBeFeatured", "yes")
+              .then(() => {
+                NavigationService.navigate(Screens.SignUp, { isFeatured: true,role: props.navigation.getParam("role", "Player") })
+              })
+            }
           }}
         >
           <View style={styles.level_btn_player_view}>

@@ -426,6 +426,18 @@ const AppMain = () => {
         ),
       }),
     }
+
+    tabs.AskFeatured = {
+      screen: AskFeatured,
+      params: { redirect: true },
+      navigationOptions: () => ({
+        tabBarVisible: false,
+        tabBarButtonComponent: ({ tintColor }) => (
+          <></>
+        ),
+      }),
+    }
+
     tabs.Profile = {
       screen: profile.Role == "Player" ? PlayerInfoScreen : Information,
       params: { player: getGlobalState("profile"), ...getGlobalState("profile"), coach: getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true },
@@ -604,7 +616,7 @@ const AppMain = () => {
   const TabNavigator = createBottomTabNavigator(tabs,
     {
       initialRouteName,
-      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', "succesPayFeatured", 'Search', "Video", 'Booking', "ContactUs", "PayFeatured", "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack", 'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile', 'succesPayFeatured'],
+      order: HasCompletedVerificationProcess(profile) == true && token ? ['Home', "succesPayFeatured", "AskFeatured",'Search', "Video", 'Booking', "ContactUs", "PayFeatured", "ReviewScreen", "Calendar", "Notifications", "CoachSummary", 'AddCoaches', "ProfileStack", 'Message', "Chat", 'Profile', 'CreatePost', 'EditProfile', 'AboutMe', 'BankAccount', 'TrainingLocation', 'Travel', 'Availavility', 'TrainingLocationEdit', "CreateComment", "Terms", "PrivacyPolicy", "Logout", "Help", "PlayerInfo"] : ['Profile', 'succesPayFeatured'],
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (navigation.state.routeName === 'homeTab') {
