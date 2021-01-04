@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>669575831507-r84633mtfqc26al0917hep98i2mse110.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.669575831507-r84633mtfqc26al0917hep98i2mse110</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>669575831507-1t77dvfe17sir5usss2ejc7ju5dhmako.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC-1rsWmHpYqoa6EGKwbgDh119TzrIEadY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>669575831507</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.nextleveltraining</string>
+	<key>PROJECT_ID</key>
+	<string>next-level-training-3ab08</string>
+	<key>STORAGE_BUCKET</key>
+	<string>next-level-training-3ab08.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:669575831507:ios:dc13f72d4f018c00e01926</string>
+	<key>DATABASE_URL</key>
+	<string>https://next-level-training-3ab08.firebaseio.com</string>
+</dict>
+</plist>
