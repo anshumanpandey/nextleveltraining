@@ -34,7 +34,7 @@ const Cart = ({navigation}) => {
         )}
         ListHeaderComponent={() => (
           <LogoContainer>
-            <Logo source={Images.LogoOnly} />
+            <Logo source={Images.Mlogo} />
           </LogoContainer>
         )}
       />
@@ -47,10 +47,14 @@ const CardItem = ({navigation, item}) => {
     <Card>
       <CardTitle>Buy Credits</CardTitle>
       <Text style={{fontWeight: '500'}}>About {item.credits} responses</Text>
-      <Text style={{fontWeight: '500'}}>{item.credits} credits</Text>
+      {item.credits === 1 ? (
+        <Text style={{fontWeight: '500'}}>{item.credits} credit</Text>
+      ) : (
+        <Text style={{fontWeight: '500'}}>{item.credits} credits</Text>
+      )}
 
       <Row>
-        <Text style={{fontWeight: '700'}}>£ {item.price.toFixed(2)}</Text>
+        <Text style={{fontWeight: '700'}}>£ {item.price}</Text>
         <Text style={{fontWeight: '500'}}> + VAT</Text>
       </Row>
 

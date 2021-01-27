@@ -69,13 +69,42 @@ const Profile = (props) => {
       <Header
         customButton={() => {
           return (
-            <View style={{ justifyContent: 'flex-end', flexDirection: 'row', flexGrow: 1, opacity: postReq.loading ? 0.5 : 1 }}>
-              {postReq.loading && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
-              <TouchableOpacity disabled={postReq.loading} onPress={formikRef?.current?.handleSubmit}>
-                <Text style={{ fontSize: 18 }}>Post</Text>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                flexGrow: 1,
+                opacity: postReq.loading ? 0.5 : 1,
+              }}>
+              {postReq.loading && (
+                <Spinner
+                  size={28}
+                  color="black"
+                  style={{
+                    right: 20,
+                    position: 'absolute',
+                    marginRight: '10%',
+                    height: '10%',
+                  }}
+                />
+              )}
+              <Icon
+                onPress={() => props.navigation.goBack()}
+                type="Feather"
+                name="arrow-left"
+                style={{
+                  left: 15,
+                  fontSize: 22,
+                  color: '#2D7AF0',
+                }}
+              />
+              <TouchableOpacity
+                disabled={postReq.loading}
+                onPress={formikRef?.current?.handleSubmit}>
+                <Text style={{fontSize: 18}}>Post</Text>
               </TouchableOpacity>
             </View>
-          );
+          )
         }}
         hideCreatePost={true}
         toggleDrawer={props.navigation.toggleDrawer}
@@ -90,11 +119,7 @@ const Profile = (props) => {
           if (!values.bodyText) errors.bodyText = "Required"
           if (!values.file) {
             errors.file = "Required"
-          } else if (values.file.height > 1350 ) {
-            errors.file = "Image resolution max of 1080*1350"
-          } else if (values.file.width > 1080 ) {
-            errors.file = "Image resolution max of 1080*1350"
-          }
+          } 
 
           return errors;
         }}

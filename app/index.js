@@ -269,6 +269,8 @@ const AppMain = () => {
       Help: {screen: HelpScreen},
       ContactUs: {screen: ContactUsScreen},
       Logout: {screen: LogoutScreen},
+      Information: {screen: Information},
+      PlayerInfo: {screen: PlayerInfoScreen},
     },
     {
       defaultNavigationOptions: ({navigation}) => {

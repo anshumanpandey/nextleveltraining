@@ -22,7 +22,14 @@ import { NavigationActions } from 'react-navigation';
 const PlayerInfoScreen = (props) => {
   const [toggle, setToggle] = useState(false);
   const [profilePic, setProfilePic] = useState();
-  const profile = props.navigation.getParam("player")
+  let profile = props.navigation.getParam("player")
+
+  if (!profile) {
+    profile = useGlobalState('profile')
+  }
+
+  console.log(profile)
+
   const { AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
   const [getPostByUserReq, getPostByUser] = useAxios({

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, ScrollView, Text} from 'react-native';
+import {View, TouchableOpacity, ScrollView, Text, Linking} from 'react-native';
 import Header from '../../components/header/Header';
 import {Icon} from 'native-base';
 
@@ -162,39 +162,6 @@ const ResponseDetails = (props) => {
             </Text>
           </View>
 
-          <View style={{width: '100%', marginTop: 10, flexDirection: 'row'}}>
-            <Icon
-              onPress={() => {}}
-              type="FontAwesome5"
-              name="tag"
-              style={{
-                color: '#9FA2B7',
-                fontSize: 18,
-                paddingLeft: 15,
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 18,
-                paddingLeft: 15,
-                color: '#9FA2B7',
-              }}>
-              Your estimate:
-            </Text>
-            <TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 18,
-                  paddingLeft: 5,
-                  textDecorationLine: 'underline',
-                  textDecorationStyle: 'solid',
-                  color: '#2D7AF0',
-                }}>
-                Send an estimate
-              </Text>
-            </TouchableOpacity>
-          </View>
-
           <View
             style={{
               width: '95%',
@@ -204,6 +171,9 @@ const ResponseDetails = (props) => {
               alignSelf: 'center',
             }}>
             <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`mailto:ashley.hecker@hotmail.com`)
+              }}
               style={{
                 backgroundColor: '#2D7AF0',
                 alignItems: 'center',
@@ -231,6 +201,9 @@ const ResponseDetails = (props) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`tel:077271837833`)
+              }}
               style={{
                 backgroundColor: '#2D7AF0',
                 alignItems: 'center',
@@ -258,6 +231,9 @@ const ResponseDetails = (props) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`sms:077271837833`)
+              }}
               style={{
                 backgroundColor: '#2D7AF0',
                 alignItems: 'center',
@@ -527,7 +503,7 @@ const ResponseDetails = (props) => {
         </View>
       </ScrollView>
     </View>
-  );
+  )
 };
 
 export default ResponseDetails;

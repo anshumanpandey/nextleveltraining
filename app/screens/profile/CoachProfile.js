@@ -192,15 +192,28 @@ class MultiStep extends Component {
 
     render() {
         return (
-            <View keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
-                <Header
-                    toggleDrawer={this.props.navigation.toggleDrawer}
-                    hideCreatePost={true}
-                    title={"Save Profile"}
+          <View keyboardShouldPersistTaps="handled" style={{flex: 1}}>
+            <Header
+              toggleDrawer={this.props.navigation.toggleDrawer}
+              hideCreatePost={true}
+              customButton={() => (
+                <Icon
+                  onPress={() => props.navigation.goBack()}
+                  type="Feather"
+                  name="arrow-left"
+                  style={{
+                    position: 'absolute',
+                    left: 15,
+                    fontSize: 22,
+                    zIndex: 1,
+                    color: '#2D7AF0',
+                  }}
                 />
-                {this.about()}
-            </View>
-
+              )}
+              title="Save Profile"
+            />
+            {this.about()}
+          </View>
         )
     }
 

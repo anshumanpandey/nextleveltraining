@@ -2,6 +2,7 @@ const Images = {
   Logo: require('../assets/images/logo3x.png'),
   Mlogo: require('../assets/images/logo2x.png'),
   Slogo: require('../assets/images/logo1x.png'),
+  grey_logo: require('../assets/images/grey_next_logo.jpeg'),
   LogoOnly: require('../assets/images/logo-icon-only.png'),
   PlayerIcon: require('../assets/images/player-sign-up-icon.png'),
   CoachIcon: require('../assets/images/coach-sign-up-icon.png'),

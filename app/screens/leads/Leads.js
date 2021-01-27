@@ -82,7 +82,7 @@ const Leads = props => {
   )
 }
 
-const LeadItem = ({item, navigation}) => {
+const LeadItem = ({ item, navigation }) => {
   return (
     <TouchableOpacity
       style={styles.leadItem}

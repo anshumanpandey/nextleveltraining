@@ -1531,29 +1531,31 @@ const PlayerProfile = (props) => {
             height: '100%',
             justifyContent: 'center',
           }}>
-          <Text
-            style={{
-              color: 'white',
-              width: '100%',
-              marginBottom: 20,
-              textAlign: 'center',
-              fontSize: 25,
-              fontWeight: '500',
-            }}>
-            Enter Player Details
-          </Text>
-          {experienceFlag && <ExperienceComponent />}
-          {ageFlag && <AgeComponent />}
-          {coachingFlag && <CoachingTypeComponent />}
-          {daysFlag && <DaysComponent />}
-          {timingFlag && <TimingComponent />}
-          {weeksFlag && <TrainTimeComponent />}
-          {nameFlag && <NameComponent />}
-          {emailFlag && <EmailComponent />}
-          {phoneFlag && <PhoneComponent />}
+          <ScrollView contentContainerStyle={{flexGrow: 1, alignItems:'center', justifyContent:'center'}}>
+            <Text
+              style={{
+                color: 'white',
+                width: '100%',
+                marginBottom: 20,
+                textAlign: 'center',
+                fontSize: 25,
+                fontWeight: '500',
+              }}>
+              Enter Player Details
+            </Text>
+            {experienceFlag && <ExperienceComponent />}
+            {ageFlag && <AgeComponent />}
+            {coachingFlag && <CoachingTypeComponent />}
+            {daysFlag && <DaysComponent />}
+            {timingFlag && <TimingComponent />}
+            {weeksFlag && <TrainTimeComponent />}
+            {nameFlag && <NameComponent />}
+            {emailFlag && <EmailComponent />}
+            {phoneFlag && <PhoneComponent />}
+          </ScrollView>
         </SafeAreaView>
       </>
-    );
+    )
   };
 
   return (

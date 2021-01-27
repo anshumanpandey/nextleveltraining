@@ -1,6 +1,6 @@
 const GlobalContants = {
     ENV: 'LIVE',
-    FEATURED_PRICE: '20',
+    FEATURED_PRICE: '15',
     BOOKING_COMISSION: 2,
     PAYPAL_CLIENT_ID: 'AWpaMztfwuCn_dP0IYhyvsnGRxgHtgP5GjDOfFi1U21ANbvyr7PRly1iwcplriBjtPuUGnZufVn894cE',
     PAYPAL_CLIENT_SECRET: 'EIzgb7EaeYuczf-7pe633I6nfDroJQ97bix7H56lsDhqGeDIBck7LD1546VuahVCEOosOOvMDC6-ZThb',

@@ -13,39 +13,45 @@ const AskFeatured = (props) => {
   return (
     <View style={styles.level_container}>
       <View style={styles.level_logo_view}>
-        <Image source={Images.Logo} style={{ width: 150, height: 150 }} />
-        <Text style={styles.level_logo_text}>1 week on feature tab. Expose your profile to the wider audience which includes post on social media.</Text>
+        <Image source={Images.Logo} style={{width: 150, height: 150}} />
+        <Text style={styles.level_logo_text}>
+          Find out more about how to boost your likes , comments and bookings on
+          Next Level by becoming “Featured.“
+        </Text>
       </View>
       <View style={styles.level_btn_view}>
         <TouchableOpacity
           style={styles.level_btn_player}
           onPress={() => {
-            if (props.navigation.getParam("redirect", false)) {
-              props.navigation.navigate("PayFeatured")
+            if (props.navigation.getParam('redirect', false)) {
+              props.navigation.navigate('PayFeatured')
             } else {
-              AsyncStorage.setItem("wantToBeFeatured", "yes")
-              .then(() => {
-                NavigationService.navigate(Screens.SignUp, { isFeatured: true,role: props.navigation.getParam("role", "Player") })
+              AsyncStorage.setItem('wantToBeFeatured', 'yes').then(() => {
+                NavigationService.navigate(Screens.SignUp, {
+                  isFeatured: true,
+                  role: props.navigation.getParam('role', 'Player'),
+                })
               })
             }
-          }}
-        >
+          }}>
           <View style={styles.level_btn_player_view}>
             <Text style={styles.level_player_text}>Go Featured</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.level_btn_coach, { backgroundColor: Colors.nl_yellow }]}
+          style={[styles.level_btn_coach, {backgroundColor: Colors.nl_yellow}]}
           onPress={() => {
-            if (props.navigation.getParam("redirect", false)) {
-              props.navigation.navigate("Search")
+            if (props.navigation.getParam('redirect', false)) {
+              props.navigation.navigate('Search')
             } else {
-              NavigationService.navigate(Screens.SignUp, { isFeatured: false,role: props.navigation.getParam("role", "Coach") })
+              NavigationService.navigate(Screens.SignUp, {
+                isFeatured: false,
+                role: props.navigation.getParam('role', 'Coach'),
+              })
             }
-            AsyncStorage.removeItem("wantToBeFeatured")
-            AsyncStorage.removeItem("askToBeFeatured")
-          }}
-        >
+            AsyncStorage.removeItem('wantToBeFeatured')
+            AsyncStorage.removeItem('askToBeFeatured')
+          }}>
           <View style={styles.level_btn_player_view}>
             <Text style={styles.level_player_text}>Not Now</Text>
           </View>

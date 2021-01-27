@@ -489,31 +489,31 @@ const Search = (props) => {
       <Header
         hideCreatePost={true}
         navigate={props.navigation.navigate}
-        customButton={() => {
-          return (
-            <>
-              <View style={{width: '70%'}} />
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('Notification');
-                }}
-                style={{marginHorizontal: 10}}>
-                <BadgeNotification />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('LastMessage');
-                }}
-                style={{marginHorizontal: 10}}>
-                <Icon
-                  type="Feather"
-                  name="message-square"
-                  style={{color: 'black', fontSize: 25}}
-                />
-              </TouchableOpacity>
-            </>
-          );
-        }}
+        // customButton={() => {
+        //   return (
+        //     <>
+        //       <View style={{width: '70%'}} />
+        //       <TouchableOpacity
+        //         onPress={() => {
+        //           props.navigation.navigate('Notification');
+        //         }}
+        //         style={{marginHorizontal: 10}}>
+        //         <BadgeNotification />
+        //       </TouchableOpacity>
+        //       <TouchableOpacity
+        //         onPress={() => {
+        //           props.navigation.navigate('LastMessage');
+        //         }}
+        //         style={{marginHorizontal: 10}}>
+        //         <Icon
+        //           type="Feather"
+        //           name="message-square"
+        //           style={{color: 'black', fontSize: 25}}
+        //         />
+        //       </TouchableOpacity>
+        //     </>
+        //   );
+        // }}
       />
       <View style={{flexDirection: 'row'}}>
         <View

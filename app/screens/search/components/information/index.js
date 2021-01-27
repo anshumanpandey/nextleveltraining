@@ -9,7 +9,7 @@ import Colors from '../../../../constants/color';
 import InfoTabs from './Information';
 
 const Information = (props) => {
-  console.log(props)
+  // console.log(props)
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.topContain}>

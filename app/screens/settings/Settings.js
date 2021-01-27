@@ -1,9 +1,11 @@
-import React from 'react';
-import {View, TouchableOpacity, Text, Image, ScrollView} from 'react-native';
-import Header from '../../components/header/Header';
-import Images from '../../constants/image';
+import React from 'react'
+import {View, TouchableOpacity, Text, Image, ScrollView} from 'react-native'
+import Header from '../../components/header/Header'
+import Images from '../../constants/image'
+import {useGlobalState} from '../../state/GlobalState'
 
-const Settings = (props) => {
+const Settings = props => {
+  const [profile] = useGlobalState('profile')
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header title="Settings" hideCreatePost={true} />
@@ -30,6 +32,13 @@ const Settings = (props) => {
           height={120}
           title="My Profile"
           subTitle="Your profile is key to attracing customers. Update your profile to stand out"
+          dividerFlag={true}
+          onPress={() => props.navigation.navigate('PlayerInfo')}
+        />
+        <Button
+          height={120}
+          title="Profile Summary"
+          subTitle="Your profile summary"
           dividerFlag={true}
           onPress={() => props.navigation.navigate('CoachSummary')}
         />
@@ -100,7 +109,7 @@ const Settings = (props) => {
         <Button
           height={120}
           title="Be Featured"
-          subTitle="Find out more about how to boost your business on Next Level by becoming Featured"
+          subTitle="Find out more about how to boost your likes , comments and bookings on Next Level by becoming “Featured“."
           dividerFlag={false}
           onPress={() => props.navigation.navigate('PayFeatured')}
         />
@@ -184,7 +193,7 @@ const Settings = (props) => {
           dividerFlag={false}
         /> */}
 
-        <Text
+        {/* <Text
           style={{
             fontSize: 20,
             color: '#9FA2B7',
@@ -200,7 +209,7 @@ const Settings = (props) => {
           title="Notifications"
           subTitle="Decide how you want to communicate across Bark and how you want us to contact you"
           dividerFlag={false}
-        />
+        /> */}
 
         <Text
           style={{
@@ -267,8 +276,8 @@ const Settings = (props) => {
         <View style={{height: 30}} />
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
 const Button = ({title, subTitle, dividerFlag, height, onPress}) => {
   return (
@@ -309,7 +318,7 @@ const Button = ({title, subTitle, dividerFlag, height, onPress}) => {
         />
       )}
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings
