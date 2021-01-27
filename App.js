@@ -1,5 +1,5 @@
 import React from 'react'
-import AppMain from './app'
+import AppMain from './app/index.js'
 
 const App = () => <AppMain />
 

@@ -1,4 +1,5 @@
 import styled, {css} from 'styled-components/native'
+import Images from '../constants/image'
 
 export const Screen = styled.View`
   flex: 1;
