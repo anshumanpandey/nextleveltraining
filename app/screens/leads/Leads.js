@@ -1,285 +1,164 @@
-import React from 'react';
-import {View, TouchableOpacity, ScrollView, Text} from 'react-native';
-import Header from '../../components/header/Header';
-import {Icon} from 'native-base'
+import React, {useMemo} from 'react'
+import {View, TouchableOpacity, Text, FlatList} from 'react-native'
+import {Icon, Spinner} from 'native-base'
+import useAxios from 'axios-hooks'
+import {getDistance} from 'geolib'
 
-const Leads = (props) => {
+import Header from '../../components/header/Header'
+import styles from './styles'
+import {useGlobalState} from '../../state/GlobalState'
+import {Row, Screen, CreditIcon} from '../../components/styled'
+
+const Leads = props => {
+  const [profile] = useGlobalState('profile')
+  const [preferences] = useGlobalState('preferences')
+
+  const [searchCoachesReq, searchCoaches] = useAxios(
+    {
+      url: `/Users/SearchPost`,
+      method: 'POST',
+      data: {search: ''},
+    },
+    {manual: true},
+  )
+
+  React.useEffect(() => {
+    searchCoaches({data: {search: ''}})
+  }, [])
+
+  const players = searchCoachesReq?.data?.Players || []
+
+  const distanceToLead = lead => {
+    return getDistance(
+      {
+        latitude: preferences?.lat || profile?.Lat,
+        longitude: preferences?.lng || profile?.Lng,
+      },
+      {latitude: lead.Lat, longitude: lead.Lng},
+    )
+  }
+
+  const distanceFilter = (a, b) => {
+    return a.Distance - b.Distance
+  }
+
+  const nearest = useMemo(
+    () =>
+      players
+        .filter(a => a.Lat && a.Lng)
+        .map(l => ({...l, Distance: distanceToLead(l)}))
+        .sort(distanceFilter)
+        .filter(l => l.Distance < Number(preferences?.range || 50) * 1000),
+    [players.length, preferences?.range, preferences?.lat, preferences?.lng],
+  )
+
   return (
-    <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
+    <Screen>
       <Header
         title="Leads"
-        hideCreatePost={true}
-        customButton={() => (
-          <View
-            style={{
-              width: '100%',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-            }}>
-            <Icon
-              onPress={() => {}}
-              type="AntDesign"
-              name="filter"
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                color: 'black',
-              }}
-            />
-          </View>
-        )}
+        hideCreatePost
+        customButton={() => <FilterButton navigation={props.navigation} />}
       />
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            height: 50,
-            alignItems: 'center',
-            paddingLeft: 15,
-            backgroundColor: 'white',
-            // justifyContent: 'center',
-          }}>
-          <Text style={{color: '#9FA2B7', fontSize: 18, fontWeight: '500'}}>
-            41 leads matching your{' '}
-          </Text>
-          <TouchableOpacity>
-            <Text
-              style={{
-                textDecorationLine: 'underline',
-                textDecorationStyle: 'solid',
-                fontSize: 18,
-              }}>
-              Lead preferences
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <View
-          style={{
-            width: '100%',
-            height: 80,
-            alignItems: 'flex-start',
-            backgroundColor: 'white',
-          }}>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-              paddingTop: 15,
-            }}>
-            Showing all 41 leads
-          </Text>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-              paddingTop: 5,
-            }}>
-            Updated just now
-          </Text>
-        </View>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <View style={{backgroundColor: '#F4F4F7', height: 20}} />
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('LeadDetails');
-          }}
-          style={{
-            height: 200,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={{fontSize: 20, color: '#327DED', paddingLeft: 5}}>
-              •
-            </Text>
-            <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 5}}>
-              Liam
-            </Text>
-          </View>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 20}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 20}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
+      {searchCoachesReq.loading ? (
+        <Spinner size={30} color="#80849D" />
+      ) : (
+        <FlatList
+          data={nearest}
+          keyExtractor={item => item.Id}
+          renderItem={({item}) => (
+            <LeadItem item={item} navigation={props.navigation} />
+          )}
+          ListHeaderComponent={() => (
+            <ListHeader
+              navigation={props.navigation}
+              numLeads={nearest.length}
             />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Newscastle Upon Tyne, NE16
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 17,
-              fontWeight: '500',
-              paddingLeft: 20,
-            }}>
-            2 credits
-          </Text>
-          <View
-            style={{
-              backgroundColor: '#ECF7F5',
-              height: 40,
-              width: '80%',
-              borderRadius: 5,
-              alignSelf: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{color: '#3ABA96'}}>
-              This customer has a requested quote
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('LeadDetails');
-          }}
-          style={{
-            height: 150,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 17,
-              fontWeight: '500',
-              paddingLeft: 15,
-            }}>
-            1 credit
-          </Text>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('LeadDetails');
-          }}
-          style={{
-            height: 150,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Adam
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Glasgow, Glasgow City
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 17,
-              fontWeight: '500',
-              paddingLeft: 15,
-            }}>
-            1 credit
-          </Text>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('LeadDetails');
-          }}
-          style={{
-            height: 150,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Dave
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Blackburn, Blackburn with Darwen
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 17,
-              fontWeight: '500',
-              paddingLeft: 15,
-            }}>
-            4 credits
-          </Text>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-      </ScrollView>
-    </View>
-  );
-};
+          )}
+          ListHeaderComponentStyle={{marginBottom: 15}}
+          ItemSeparatorComponent={Seperator}
+        />
+      )}
+    </Screen>
+  )
+}
 
-export default Leads;
+const LeadItem = ({item, navigation}) => {
+  return (
+    <TouchableOpacity
+      style={styles.leadItem}
+      onPress={() => navigation.navigate('LeadDetails', {player: item})}>
+      {item.QuoteRequested && <Text style={styles.leadIndicator}>•</Text>}
+
+      <Text style={styles.leadName}>{item.FullName}</Text>
+      <Text style={styles.leadDetail}>Football Coaching</Text>
+
+      {!!item.Address && (
+        <Row mb={4} style={{alignItems: 'flex-start'}}>
+          <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
+          <Text style={styles.locationText}>{item.Address}</Text>
+        </Row>
+      )}
+
+      <Row>
+        <CreditIcon />
+        <Text style={styles.creditText}>1 Credit</Text>
+      </Row>
+      {item.QuoteRequested && (
+        <View style={styles.quoteTag}>
+          <Text style={{color: '#3ABA96'}}>
+            This customer has a requested quote
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  )
+}
+
+const ListHeader = ({numLeads, navigation}) => {
+  return (
+    <>
+      <Seperator opacity={0.2} />
+      <View style={styles.listHeaderPref}>
+        <Text style={styles.prefText}>{numLeads} leads matching your </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('LeadPreferences')}>
+          <Text style={styles.prefLink}>Lead preferences</Text>
+        </TouchableOpacity>
+      </View>
+      <Seperator opacity={0.2} />
+      <View style={styles.listHeaderStatus}>
+        <Text style={styles.totalShowing}>Showing all {numLeads} leads</Text>
+        <Text style={styles.lastUpdated}>Updated just now</Text>
+      </View>
+      <Seperator opacity={0.2} />
+    </>
+  )
+}
+
+const FilterButton = ({navigation}) => {
+  return (
+    <TouchableOpacity
+      style={{
+        width: '100%',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+      }}>
+      <Icon
+        onPress={() => navigation.navigate('LeadPreferences')}
+        type="AntDesign"
+        name="filter"
+        style={{
+          position: 'absolute',
+          zIndex: 1,
+          color: 'black',
+        }}
+      />
+    </TouchableOpacity>
+  )
+}
+
+const Seperator = ({opacity = 0.3}) => (
+  <View style={{height: 1, backgroundColor: '#C7C9D6', opacity}} />
+)
+
+export default Leads

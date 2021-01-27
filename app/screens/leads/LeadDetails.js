@@ -5,6 +5,8 @@ import {Icon} from 'native-base';
 import MapView, {Marker} from 'react-native-maps';
 
 const LeadDetails = (props) => {
+  const player = props.navigation.getParam('player');
+
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header
@@ -12,15 +14,15 @@ const LeadDetails = (props) => {
         hideCreatePost={true}
         customButton={() => (
           <Icon
-            onPress={() => {
-              props.navigation.goBack();
-            }}
+            onPress={() => props.navigation.goBack()}
             type="Feather"
             name="arrow-left"
             style={{
               position: 'absolute',
+              left: 15,
+              fontSize: 22,
               zIndex: 1,
-              color: 'black',
+              color: '#2D7AF0',
             }}
           />
         )}
@@ -44,11 +46,11 @@ const LeadDetails = (props) => {
               fontSize: 18,
               fontWeight: '500',
               paddingLeft: 15,
-              lineHeight: 30,
+              lineHeight: 28,
             }}>
             What is the student's current level of experience?
           </Text>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>Biginner</Text>
+          <Text style={{fontSize: 18, paddingLeft: 15}}>Beginner</Text>
         </View>
         <View
           style={{
@@ -85,7 +87,7 @@ const LeadDetails = (props) => {
               fontSize: 18,
               fontWeight: '500',
               paddingLeft: 15,
-              lineHeight: 30,
+              lineHeight: 28,
             }}>
             Which kind of coaching would you consider?
           </Text>
@@ -106,7 +108,7 @@ const LeadDetails = (props) => {
               fontSize: 18,
               fontWeight: '500',
               paddingLeft: 15,
-              lineHeight: 30,
+              lineHeight: 28,
             }}>
             Which day(s) would you consider for coaching?
           </Text>
@@ -127,7 +129,7 @@ const LeadDetails = (props) => {
               fontSize: 18,
               fontWeight: '500',
               paddingLeft: 15,
-              lineHeight: 30,
+              lineHeight: 28,
             }}>
             Which time(s) of day would you consider for coaching?
           </Text>
@@ -146,13 +148,12 @@ const LeadDetails = (props) => {
             style={{
               fontSize: 18,
               paddingHorizontal: 15,
+              paddingRight: 30,
               color: '#5E6488',
               textAlign: 'left',
             }}>
-            I am looking for a one to one coach for my 7 year old son. He
-            currently plays for a team bug struggles to understand what is being
-            asked of him so I think he would get benefit from one to one
-            coaching.
+            {player.AboutUs ||
+              'I am looking for a one to one coach for my 7 year old son. He currently plays for a team bug struggles to understand what is being asked of him so I think he would get benefit from one to one coaching.'}
           </Text>
         </View>
 
@@ -180,6 +181,7 @@ const LeadDetails = (props) => {
           </MapView> */}
         </View>
         <TouchableOpacity
+          onPress={() => props.navigation.navigate('Cart')}
           style={{
             width: '90%',
             height: 50,

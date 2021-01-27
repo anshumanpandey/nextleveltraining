@@ -8,6 +8,7 @@ export const GLOBAL_STATE_ACTIONS = {
   SUCCESS: 'success',
   TOKEN: 'TOKEN',
   PROFILE: 'PROFILE',
+  PREFERENCES: 'PREFERENCES',
   LOGOUT: 'LOGOUT',
   CONNECTED_USER: 'CONNECTED_USER',
   TOGGLE: 'TOGGLE',
@@ -23,6 +24,7 @@ const initialState = {
   success: null,
   token: null,
   profile: null,
+  preferences: null,
   toggle: false,
   goto: null,
   notifications: [],
@@ -104,6 +106,9 @@ const reducer = (state, action) => {
     }
     case GLOBAL_STATE_ACTIONS.TOGGLE: {
       return { ...state, toggle: !state.toggle };
+    }
+    case GLOBAL_STATE_ACTIONS.PREFERENCES: {
+      return { ...state, preferences: action.state }
     }
     default: return state;
   }

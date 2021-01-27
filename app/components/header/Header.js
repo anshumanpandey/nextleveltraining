@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity, Text } from 'react-native';
-import {Icon} from 'native-base';
-import styles from './styles';
+import React from 'react'
+import {View, TouchableOpacity, Text} from 'react-native'
+import {Icon} from 'native-base'
+
+import styles from './styles'
 import screen from '../../utils/screen'
-import { useGlobalState } from '../../state/GlobalState';
-import Colors from '../../constants/color';
-import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
+import {useGlobalState} from '../../state/GlobalState'
+import Colors from '../../constants/color'
+import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess'
 
 const Header = (props) => {
   const [profile] = useGlobalState('profile')
@@ -13,7 +14,7 @@ const Header = (props) => {
   return (
     <View style={styles.header_layout}>
       <View style={styles.header_item_container}>
-        {props.menu && (
+        {props.menu ? (
           <TouchableOpacity
             style={{marginLeft: '3%'}}
             onPress={() => props.toggleDrawer()}>
@@ -26,6 +27,8 @@ const Header = (props) => {
               />
             ) : undefined}
           </TouchableOpacity>
+        ) : (
+          <View style={{marginLeft: '10.5%'}} />
         )}
         {props.title && (
           <Text
@@ -68,7 +71,7 @@ const Header = (props) => {
         {props.customButton && props.customButton()}
       </View>
     </View>
-  );
+  )
 }
 
-export default Header;
+export default Header

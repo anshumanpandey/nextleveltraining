@@ -1,6 +1,6 @@
-import Dimension from '../../constants/dimensions.js';
-import Colors from '../../constants/color.js';
-import {StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native'
+import Dimension from '../../constants/dimensions.js'
+import Colors from '../../constants/color.js'
 
 const styles = StyleSheet.create({
   header_layout: {
@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-});
-export default styles;
+})
+
+export default styles

@@ -1,7 +1,7 @@
-import firebase from '@react-native-firebase/app';
-import iid from '@react-native-firebase/iid';
+import firebase from '@react-native-firebase/app'
+import iid from '@react-native-firebase/iid'
 
-export const FIREBASE_SENDER_ID = "669575831507"
+export const FIREBASE_SENDER_ID = '669575831507'
 
 // Your secondary Firebase project credentials...
 const credentials = {
@@ -12,18 +12,18 @@ const credentials = {
   storageBucket: 'next-level-training-3ab08.appspot.com',
   messagingSenderId: FIREBASE_SENDER_ID,
   projectId: 'next-level-training-3ab08',
-};
+}
 
 const config = {
   name: iid.name,
-};
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(credentials, config);
 }
 
-const apps = firebase.apps;
+if (!firebase.apps.length) {
+  firebase.initializeApp(credentials, config)
+}
 
-apps.forEach(app => {
-  console.log('App name: ', app.name);
-});
+const apps = firebase.apps
+
+apps.forEach((app) => {
+  console.log('App name: ', app.name)
+})

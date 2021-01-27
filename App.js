@@ -1,13 +1,6 @@
+import React from 'react'
+import AppMain from './app'
 
-import React, {Component } from 'react';
-import AppMain from './app/index.js'
-class App extends Component {
+const App = () => <AppMain />
 
-  render() { 
-    return ( 
-        <AppMain/>
-      );
-  }
-}
- 
-export default App;
+export default App

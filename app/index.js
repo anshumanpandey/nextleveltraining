@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import 'react-native-get-random-values';
-import './utils/PushNotifications';
-import './utils/GlobalErrorHandler';
+import React, {useEffect, useState} from 'react'
+import 'react-native-get-random-values'
+import './utils/PushNotifications'
+import './utils/GlobalErrorHandler'
 //import './utils/Firebase';
 import {
   Text,
@@ -10,93 +10,96 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Platform,
-} from 'react-native';
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
-import {createDrawerNavigator} from 'react-navigation-drawer';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {NavigationActions, StackActions} from 'react-navigation';
-import {NavigationContainer} from '@react-navigation/native';
-import Dimensions from './constants/dimensions';
-import Menu from './screens/Menu/Menu.js';
-import NavigationService from './navigation/NavigationService.js';
-import Login from './screens/login/Login.js';
-import SignUp from './screens/signup/Signup.js';
-import Level from './screens/level/Level.js';
-import Home from './screens/home/Home';
-import Search from './screens/search/Search';
-import Booking from './screens/booking/Booking';
-import Message from './screens/message/Message';
-import LastMessage from './screens/message/lastMessages';
-import Profile from './screens/profile/index';
-import EditInput from './screens/profile/EditInput';
-import CreatePostScreen from './screens/createPost/CreatePost';
-import CommentsScreen from './screens/home/Comments';
-import BookingCheckout from './screens/bookingCheckout/BookingCheckout';
-import AddTeam from './screens/profile/AddTeam';
-import AddExperience from './screens/profile/AddExperience';
-import AddDbsCertificate from './screens/profile/AddDbsCertificate';
-import AddQualifications from './screens/profile/AddQualifications';
-import VerificationId from './screens/profile/VerificationId';
-import UpComingMatch from './screens/profile/UpCommingMatch';
-import {Icon} from 'native-base';
-import Comment from './screens/home/Comments';
-import Information from './screens/search/components/information/Information';
-import BookNow from './screens/search/components/BookNow';
-import Payments from './screens/payments';
-import JobDetails from './screens/bookingDetails';
+} from 'react-native'
+import {createAppContainer} from 'react-navigation'
+import {createStackNavigator} from 'react-navigation-stack'
+import {createDrawerNavigator} from 'react-navigation-drawer'
+import {createBottomTabNavigator} from 'react-navigation-tabs'
+import {NavigationActions, StackActions} from 'react-navigation'
+import {NavigationContainer} from '@react-navigation/native'
+import Dimensions from './constants/dimensions'
+import Menu from './screens/Menu/Menu.js'
+import NavigationService from './navigation/NavigationService.js'
+import Login from './screens/login/Login.js'
+import SignUp from './screens/signup/Signup.js'
+import Level from './screens/level/Level.js'
+import Home from './screens/home/Home'
+import Search from './screens/search/Search'
+import Booking from './screens/booking/Booking'
+import Message from './screens/message/Message'
+import LastMessage from './screens/message/lastMessages'
+import Profile from './screens/profile/index'
+import EditInput from './screens/profile/EditInput'
+import CreatePostScreen from './screens/createPost/CreatePost'
+import CommentsScreen from './screens/home/Comments'
+import BookingCheckout from './screens/bookingCheckout/BookingCheckout'
+import AddTeam from './screens/profile/AddTeam'
+import AddExperience from './screens/profile/AddExperience'
+import AddDbsCertificate from './screens/profile/AddDbsCertificate'
+import AddQualifications from './screens/profile/AddQualifications'
+import VerificationId from './screens/profile/VerificationId'
+import UpComingMatch from './screens/profile/UpCommingMatch'
+import {Icon} from 'native-base'
+import Comment from './screens/home/Comments'
+import Information from './screens/search/components/information/Information'
+import BookNow from './screens/search/components/BookNow'
+import Payments from './screens/payments'
+import JobDetails from './screens/bookingDetails'
 import {
   useGlobalState,
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
   getGlobalState,
-} from './state/GlobalState';
-import './api/AxiosBootstrap';
-import SplashScreen from 'react-native-splash-screen';
-import EditProfile from './screens/editProfile/EditProfile';
-import AboutMeScreen from './screens/aboutMe/AboutMe';
-import BankAccountScreen from './screens/bankAccount/BankAccount';
-import TrainingLocationScreen from './screens/trainingLocation/TrainingLocation';
-import TravelScreen from './screens/travel/Travel';
-import TrainingLocationEdit from './screens/trainingLocation/TrainingLocationEdit';
-import AvailavilityScreen from './screens/availavility/Availavility';
-import TermsScreen from './screens/terms/TermsScreen';
-import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen';
-import LogoutScreen from './screens/logoutScreen/LogoutScreen';
-import PaymentConcentScreen from './screens/payments/PaymentConcent';
-import HelpScreen from './screens/help/HelpScreen';
-import SuccessPayFeatured from './screens/successPayFeatured/SuccessPayFeatured';
-import ProfilePicScreen from './screens/profilePic/ProfilePic';
-import PlayerInfoScreen from './screens/playerInfo/PlayerInfo';
-import CalendarScreen from './screens/Calendar/CalendarScreen';
-import ParentComponent from './screens/search/components/ParentComponent';
-import CoachsummaryScreen from './screens/coachSummary/CoachsummaryScreen';
-import Notifications from './screens/notifications/Notifications';
-import ReviewScreen from './screens/review/ReviewScreen';
-import ForgotPassword from './screens/forgotPassword/ForgotPassword';
-import ForceChangePassword from './screens/forceChangePassword/ForceChangePassword';
-import Colors from './constants/color';
-import VideoScreen from './screens/video/VideoScreen';
-import HasCompletedVerificationProcess from './utils/HasCompletedVerificationProcess';
-import AsyncStorage from '@react-native-community/async-storage';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import AskFeatured from './screens/askFeatured/AskFeatured';
-import PayFeatured from './screens/payFeaturedScreen/PayFeatured';
-import ContactUsScreen from './screens/contactUs/ContactUsScreen';
-import messaging from '@react-native-firebase/messaging';
-import {axiosInstance} from './api/AxiosBootstrap';
-import {getDeviceToken} from 'react-native-device-info';
-import {sendAndroidToken} from './utils/firebase/RequestDeviceToken';
-import NavigatorService from './navigation/NavigationService';
-import Settings from './screens/settings/Settings';
-import Cart from './screens/cart/Cart';
-import Responses from './screens/responses/Responses';
-import ResponseDetails from './screens/responses/ResponseDetails';
-import Leads from './screens/leads/Leads';
+} from './state/GlobalState'
+import './api/AxiosBootstrap'
+import SplashScreen from 'react-native-splash-screen'
+import EditProfile from './screens/editProfile/EditProfile'
+import AboutMeScreen from './screens/aboutMe/AboutMe'
+import BankAccountScreen from './screens/bankAccount/BankAccount'
+import TrainingLocationScreen from './screens/trainingLocation/TrainingLocation'
+import TravelScreen from './screens/travel/Travel'
+import TrainingLocationEdit from './screens/trainingLocation/TrainingLocationEdit'
+import AvailavilityScreen from './screens/availavility/Availavility'
+import TermsScreen from './screens/terms/TermsScreen'
+import PrivacyPolicyScreen from './screens/privacyPolicy/PrivacyPolicyScreen'
+import LogoutScreen from './screens/logoutScreen/LogoutScreen'
+import PaymentConcentScreen from './screens/payments/PaymentConcent'
+import HelpScreen from './screens/help/HelpScreen'
+import SuccessPayFeatured from './screens/successPayFeatured/SuccessPayFeatured'
+import ProfilePicScreen from './screens/profilePic/ProfilePic'
+import PlayerInfoScreen from './screens/playerInfo/PlayerInfo'
+import CalendarScreen from './screens/Calendar/CalendarScreen'
+import ParentComponent from './screens/search/components/ParentComponent'
+import CoachsummaryScreen from './screens/coachSummary/CoachsummaryScreen'
+import Notifications from './screens/notifications/Notifications'
+import ReviewScreen from './screens/review/ReviewScreen'
+import ForgotPassword from './screens/forgotPassword/ForgotPassword'
+import ForceChangePassword from './screens/forceChangePassword/ForceChangePassword'
+import Colors from './constants/color'
+import VideoScreen from './screens/video/VideoScreen'
+import HasCompletedVerificationProcess from './utils/HasCompletedVerificationProcess'
+import AsyncStorage from '@react-native-community/async-storage'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
+import AskFeatured from './screens/askFeatured/AskFeatured'
+import PayFeatured from './screens/payFeaturedScreen/PayFeatured'
+import ContactUsScreen from './screens/contactUs/ContactUsScreen'
+import messaging from '@react-native-firebase/messaging'
+import {axiosInstance} from './api/AxiosBootstrap'
+import {getDeviceToken} from 'react-native-device-info'
+import {sendAndroidToken} from './utils/firebase/RequestDeviceToken'
+import NavigatorService from './navigation/NavigationService'
+import Settings from './screens/settings/Settings'
+import Cart from './screens/cart/Cart'
+import Responses from './screens/responses/Responses'
+import ResponseDetails from './screens/responses/ResponseDetails'
+import Leads from './screens/leads/Leads'
 import LeadDetails from './screens/leads/LeadDetails'
+import PayCredits from './screens/payCredits/PayCredits'
+import LeadPreferences from './screens/leadPreferences/LeadPreferences'
+import Wallet from './screens/wallet/Wallet'
 
-let initialRouteName = null;
-let Apps = null;
+let initialRouteName = null
+let Apps = null
 
 // const NotificationCountComponent = ({ currentNotifications }) => {
 //   console.log(currentNotifications.length)
@@ -129,79 +132,79 @@ let Apps = null;
 const AppMain = () => {
   //   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 
-  const [error] = useGlobalState('error');
-  const [success] = useGlobalState('success');
-  const [token] = useGlobalState('token');
-  const [profile] = useGlobalState('profile');
-  const [toggle] = useGlobalState('toggle');
-  const [notifications] = useGlobalState('notifications');
-  const [goto] = useGlobalState('goto');
-  const [currentNotifications, setCurrentNotifications] = useState([]);
+  const [error] = useGlobalState('error')
+  const [success] = useGlobalState('success')
+  const [token] = useGlobalState('token')
+  const [profile] = useGlobalState('profile')
+  const [toggle] = useGlobalState('toggle')
+  const [notifications] = useGlobalState('notifications')
+  const [goto] = useGlobalState('goto')
+  const [currentNotifications, setCurrentNotifications] = useState([])
 
   const listenTokens = () => {
     messaging().onTokenRefresh((fcmToken) => {
-      sendAndroidToken(fcmToken);
-    });
-  };
+      sendAndroidToken(fcmToken)
+    })
+  }
 
   const listenForNotificationOpening = () => {
     messaging().onNotificationOpenedApp((e) => {
-      NavigationService.navigate('Notifications');
-    });
-  };
+      NavigationService.navigate('Notifications')
+    })
+  }
 
   useEffect(() => {
-    listenForNotificationOpening();
-    listenTokens();
-    SplashScreen.hide();
+    listenForNotificationOpening()
+    listenTokens()
+    SplashScreen.hide()
     PushNotificationIOS.addEventListener('register', (deviceToken) => {
-      AsyncStorage.setItem('AppleDeviceToken', deviceToken);
-    });
+      AsyncStorage.setItem('AppleDeviceToken', deviceToken)
+    })
     PushNotificationIOS.addEventListener('registrationError', (err) => {
       Alert.alert(
         'PushNotification registrationError',
         `${err.message}\n${err.details}`,
-      );
-    });
-  }, []);
+      )
+    })
+  }, [])
 
   useEffect(() => {
-    console.log('notifications.length', notifications.length);
+    console.log('notifications.length', notifications.length)
     console.log(
       'readednotifications',
       notifications.filter((i) => i.IsRead == false).length,
-    );
+    )
     console.log(
       'currentNotifications',
       currentNotifications.filter((i) => i.IsRead == false).length,
-    );
-    setCurrentNotifications([...notifications]);
-  }, [...notifications, toggle]);
+    )
+    setCurrentNotifications([...notifications])
+  }, [...notifications, toggle])
 
   useEffect(() => {
     setTimeout(() => {
       if (goto) {
-        NavigationService.navigate(goto);
-        dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.GOTO, state: null});
+        NavigationService.navigate(goto)
+        dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.GOTO, state: null})
       }
-    }, 100);
-  }, [goto]);
+    }, 100)
+  }, [goto])
 
   useEffect(() => {
-    console.log('error', error);
+    console.log('error', error)
     if (error) {
-      Alert.alert('Error', error.toString());
-      dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.ERROR, state: null});
+      Alert.alert('Error', error.toString())
+      dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.ERROR, state: null})
     }
-  }, [error]);
+  }, [error])
 
   useEffect(() => {
-    console.log('success', error);
+    console.log('success', error)
     if (success) {
-      Toast.show(success, Toast.LONG);
-      dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.SUCCESS, state: null});
+      Toast.show(success, Toast.LONG)
+      dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.SUCCESS, state: null})
     }
-  }, [success]);
+  }, [success])
 
   const HomeStack = createStackNavigator(
     {
@@ -215,24 +218,27 @@ const AppMain = () => {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
 
   const LeadStack = createStackNavigator(
     {
       Leads: {screen: Leads},
       LeadDetails: {screen: LeadDetails},
+      Cart: {screen: Cart},
+      PayCredits: {screen: PayCredits},
+      LeadPreferences: {screen: LeadPreferences},
     },
     {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
 
   const ResponseStack = createStackNavigator(
     {
@@ -243,15 +249,41 @@ const AppMain = () => {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
+
+  const SettingsStack = createStackNavigator(
+    {
+      Settings: {screen: Settings},
+      CoachSummary: {screen: CoachsummaryScreen},
+      Wallet: {screen: Wallet},
+      EditProfile: {screen: EditProfile},
+      AboutMe: {screen: AboutMeScreen},
+      Availability: {screen: AvailavilityScreen},
+      TrainingLocation: {screen: TrainingLocationScreen},
+      Calendar: {screen: CalendarScreen},
+      Terms: {screen: TermsScreen},
+      Privacy: {screen: PrivacyPolicyScreen},
+      Help: {screen: HelpScreen},
+      ContactUs: {screen: ContactUsScreen},
+      Logout: {screen: LogoutScreen},
+    },
+    {
+      defaultNavigationOptions: ({navigation}) => {
+        return {
+          header: null,
+        }
+      },
+    },
+  )
 
   const SearchStack = createStackNavigator(
     {
       Search: {screen: Search},
       Information: {screen: Information},
+      PlayerInfo: {screen: PlayerInfoScreen},
       BookNow: {screen: BookNow},
       BookingCheckout: {screen: BookingCheckout},
       Payments: {screen: Payments},
@@ -265,10 +297,10 @@ const AppMain = () => {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
 
   const BookingStack = createStackNavigator(
     {
@@ -282,10 +314,10 @@ const AppMain = () => {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
 
   const ProfileStack = createStackNavigator(
     {
@@ -307,10 +339,10 @@ const AppMain = () => {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
   const ConfirmedProfileStack = createStackNavigator(
     {
       ProfilePic: {screen: ProfilePicScreen},
@@ -326,10 +358,10 @@ const AppMain = () => {
       defaultNavigationOptions: ({navigation}) => {
         return {
           header: null,
-        };
+        }
       },
     },
-  );
+  )
   const tabs = {
     Profile: {
       screen: ProfileStack,
@@ -388,10 +420,10 @@ const AppMain = () => {
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
     },
-  };
+  }
 
   if (HasCompletedVerificationProcess(profile) == true && token) {
-    (tabs.Home = {
+    ;(tabs.Home = {
       screen: HomeStack,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
@@ -411,33 +443,33 @@ const AppMain = () => {
           tabBarVisible: false,
           tabBarButtonComponent: ({tintColor}) => <></>,
         }),
-      });
+      })
     tabs.CreatePost = {
       screen: CreatePostScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.EditProfile = {
       screen: EditProfile,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
     tabs.Help = {
       screen: HelpScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.CreateComment = {
       screen: CommentsScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
     const searchMenuItem = {
       tabBarIcon: ({tintColor}) => (
         <View style={styles.tabContain}>
@@ -448,12 +480,12 @@ const AppMain = () => {
           />
         </View>
       ),
-    };
+    }
 
     tabs.Search = {
       screen: SearchStack,
       navigationOptions: () => searchMenuItem,
-    };
+    }
 
     if (profile && profile.Role == 'Player') {
       tabs.Cart = {
@@ -469,7 +501,7 @@ const AppMain = () => {
             </View>
           ),
         }),
-      };
+      }
     } else {
       tabs.Leads = {
         screen: LeadStack,
@@ -484,7 +516,7 @@ const AppMain = () => {
             </View>
           ),
         }),
-      };
+      }
     }
 
     if (profile && profile.Role == 'Player') {
@@ -501,7 +533,7 @@ const AppMain = () => {
             </View>
           ),
         }),
-      };
+      }
     } else {
       tabs.Responses = {
         screen: ResponseStack,
@@ -516,7 +548,7 @@ const AppMain = () => {
             </View>
           ),
         }),
-      };
+      }
     }
 
     // tabs.Notifications = {
@@ -535,11 +567,11 @@ const AppMain = () => {
         tabBarVisible: false,
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.Profile = {
       // screen: profile.Role == "Player" ? PlayerInfoScreen : Information,
-      screen: Settings,
+      screen: SettingsStack,
       // params: { player: getGlobalState("profile"), ...getGlobalState("profile"), coach: getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true },
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
@@ -552,7 +584,7 @@ const AppMain = () => {
           </View>
         ),
       }),
-    };
+    }
     // tabs.Message = {
     //   screen: LastMessage,
     //   navigationOptions: () => ({
@@ -580,83 +612,83 @@ const AppMain = () => {
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.TrainingLocation = {
       screen: TrainingLocationScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
     tabs.AddCoaches = {
       screen: ParentComponent,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.TrainingLocationEdit = {
       screen: TrainingLocationEdit,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.Availavility = {
       screen: AvailavilityScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.Travel = {
       screen: TravelScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.Terms = {
       screen: TermsScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.PayFeatured = {
       screen: PayFeatured,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.ContactUs = {
       screen: ContactUsScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.CoachSummary = {
       screen: CoachsummaryScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.PrivacyPolicy = {
       screen: PrivacyPolicyScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.PlayerInfo = {
       screen: PlayerInfoScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.Video = {
       screen: VideoScreen,
@@ -664,29 +696,29 @@ const AppMain = () => {
         tabBarVisible: false,
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.ReviewScreen = {
       screen: ReviewScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
 
     tabs.Calendar = {
       screen: CalendarScreen,
       navigationOptions: () => ({
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
-    };
+    }
   }
 
   initialRouteName =
     HasCompletedVerificationProcess(profile) == true && token
       ? 'Search'
-      : 'Profile';
+      : 'Profile'
 
-  let TabNavigator = null;
+  let TabNavigator = null
   if (profile && profile.Role == 'Player') {
     TabNavigator = createBottomTabNavigator(tabs, {
       initialRouteName,
@@ -727,7 +759,7 @@ const AppMain = () => {
         tabBarOnPress: ({navigation, defaultHandler}) => {
           if (navigation.state.routeName === 'homeTab') {
             if (navigation.state.index === 0) {
-              defaultHandler();
+              defaultHandler()
             } else {
               // const resetAction = StackActions.reset({
               //   index: 0,
@@ -737,7 +769,7 @@ const AppMain = () => {
               // NavigatorService.openDrawer()
             }
           } else {
-            defaultHandler();
+            defaultHandler()
           }
         },
       }),
@@ -755,7 +787,7 @@ const AppMain = () => {
           visible: true,
         },
       },
-    });
+    })
   } else {
     TabNavigator = createBottomTabNavigator(tabs, {
       initialRouteName,
@@ -796,7 +828,7 @@ const AppMain = () => {
         tabBarOnPress: ({navigation, defaultHandler}) => {
           if (navigation.state.routeName === 'homeTab') {
             if (navigation.state.index === 0) {
-              defaultHandler();
+              defaultHandler()
             } else {
               // const resetAction = StackActions.reset({
               //   index: 0,
@@ -806,7 +838,7 @@ const AppMain = () => {
               // NavigatorService.openDrawer()
             }
           } else {
-            defaultHandler();
+            defaultHandler()
           }
         },
       }),
@@ -824,7 +856,7 @@ const AppMain = () => {
           visible: true,
         },
       },
-    });
+    })
   }
 
   const RootStack = createDrawerNavigator(
@@ -844,34 +876,34 @@ const AppMain = () => {
           : 'locked-closed',
       },
     },
-  );
+  )
 
-  const screens = {};
+  const screens = {}
   if (token) {
-    screens.MainStack = RootStack;
+    screens.MainStack = RootStack
   } else {
-    screens.Level = {screen: Level};
-    screens.AskFeatured = {screen: AskFeatured};
-    screens.Login = {screen: Login};
-    screens.ForgotPassword = {screen: ForgotPassword};
-    screens.SignUp = { screen: SignUp };
+    screens.Level = {screen: Level}
+    screens.AskFeatured = {screen: AskFeatured}
+    screens.Login = {screen: Login}
+    screens.ForgotPassword = {screen: ForgotPassword}
+    screens.SignUp = {screen: SignUp}
   }
 
   const AuthStack = createStackNavigator(screens, {
     defaultNavigationOptions: ({navigation}) => {
       return {
         header: null,
-      };
+      }
     },
-  });
+  })
 
   if (!Apps) {
-    Apps = createAppContainer(AuthStack);
+    Apps = createAppContainer(AuthStack)
   }
 
   useEffect(() => {
-    console.log('generationg', screens);
-    Apps = createAppContainer(AuthStack);
+    console.log('generationg', screens)
+    Apps = createAppContainer(AuthStack)
   }, [
     token,
     profile?.Id,
@@ -886,24 +918,24 @@ const AppMain = () => {
     profile?.Availabilities?.length,
     profile?.BankAccount?.AccountName,
     toggle,
-  ]);
+  ])
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <NavigationContainer>
         <Apps
           ref={(navigatorRef) => {
-            NavigationService.setTopLevelNavigator(navigatorRef);
+            NavigationService.setTopLevelNavigator(navigatorRef)
           }}
         />
       </NavigationContainer>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = {
   tabContain: {marginTop: 7, alignItems: 'center'},
   icons: {fontSize: 20},
   textTab: {fontSize: 10, marginTop: 5},
-};
-export default AppMain;
+}
+export default AppMain

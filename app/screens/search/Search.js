@@ -487,9 +487,7 @@ const Search = (props) => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header
-        menu={true}
         hideCreatePost={true}
-        toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
         customButton={() => {
           return (

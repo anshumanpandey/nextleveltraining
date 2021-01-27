@@ -8,18 +8,18 @@ const ResponseDetails = (props) => {
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header
         title="Response"
-        hideCreatePost={true}
+        hideCreatePost
         customButton={() => (
           <Icon
-            onPress={() => {
-              props.navigation.goBack();
-            }}
+            onPress={() => props.navigation.goBack()}
             type="Feather"
             name="arrow-left"
             style={{
               position: 'absolute',
+              left: 15,
+              fontSize: 22,
               zIndex: 1,
-              color: 'black',
+              color: '#2D7AF0',
             }}
           />
         )}

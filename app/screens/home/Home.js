@@ -232,8 +232,6 @@ const Home = (props) => {
           />
       </View> */}
       <Header
-        menu={true}
-        toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
         customButton={() => {
           return (

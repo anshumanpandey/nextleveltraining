@@ -158,6 +158,10 @@ const Information = (props) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
+                  if (true) {
+                    props.navigation.navigate('Cart');
+                    return
+                  }
                   const resetAction = StackActions.reset({
                     index: 0,
                     key: null,

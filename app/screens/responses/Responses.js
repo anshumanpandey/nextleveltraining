@@ -1,271 +1,85 @@
 import React from 'react';
-import {View, TouchableOpacity, ScrollView, Text} from 'react-native';
-import Header from '../../components/header/Header';
+import {View, TouchableOpacity, Text, FlatList} from 'react-native';
 import {Icon} from 'native-base';
+import Header from '../../components/header/Header';
+import styles from './styles';
 
 const Responses = (props) => {
   return (
-    <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
-      <Header
-        title="Responses"
-        hideCreatePost={true}
-        customButton={() => (
-          <View
-            style={{
-              width: '100%',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-            }}>
-            <Icon
-              onPress={() => {}}
-              type="AntDesign"
-              name="filter"
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                color: 'black',
-              }}
-            />
-          </View>
+    <View style={styles.container}>
+      <Header title="Responses" hideCreatePost customButton={FilterButton} />
+      <FlatList
+        data={[
+          {name: 'Ashley'},
+          {name: 'Hayden'},
+          {name: 'Nikolas'},
+          {name: 'Glenn'},
+          ...Array(8).fill({name: 'Olie'}),
+        ]}
+        keyExtractor={(_, idx) => idx}
+        renderItem={({item}) => (
+          <ResponseItem item={item} navigation={props.navigation} />
         )}
+        ListHeaderComponent={ListHeader}
+        ListHeaderComponentStyle={{marginBottom: 15}}
+        ItemSeparatorComponent={Seperator}
       />
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <View
-          style={{
-            width: '100%',
-            height: 70,
-            // alignItems: 'center',
-            paddingLeft: 15,
-            backgroundColor: 'white',
-            // justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              marginTop: 10,
-            }}>
-            Showing 72 all responses
-          </Text>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              marginTop: 5,
-            }}>
-            Updated just now
-          </Text>
-        </View>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <View style={{backgroundColor: '#F4F4F7', height: 20}} />
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('ResponseDetails');
-          }}
-          style={{
-            height: 120,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-           props.navigation.navigate('ResponseDetails');
-          }}
-          style={{
-            height: 120,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-           props.navigation.navigate('ResponseDetails');
-          }}
-          style={{
-            height: 120,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('ResponseDetails');
-          }}
-          style={{
-            height: 120,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-           props.navigation.navigate('ResponseDetails');
-          }}
-          style={{
-            height: 120,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('ResponseDetails');
-          }}
-          style={{
-            height: 120,
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-          }}>
-          <Text style={{fontWeight: '600', fontSize: 17, paddingLeft: 15}}>
-            Olie
-          </Text>
-          <Text style={{fontWeight: '500', fontSize: 17, paddingLeft: 15}}>
-            Football Coaching
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 15}}>
-            <Icon
-              type="Feather"
-              name="map-pin"
-              style={{fontSize: 15, color: '#9FA2B7'}}
-            />
-            <Text
-              style={{
-                color: '#9FA2B7',
-                fontSize: 17,
-                fontWeight: '500',
-                paddingLeft: 5,
-              }}>
-              Royal Tunbridge Wells, Kent
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View style={{height: 1, backgroundColor: '#9FA2B7'}} />
-      </ScrollView>
     </View>
   );
 };
+
+const ResponseItem = ({item, navigation}) => {
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('ResponseDetails')}
+      style={styles.responseItem}>
+      <Text style={styles.responseName}>{item.name}</Text>
+      <Text style={styles.responseDetail}>Football Coaching</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
+        <Text style={styles.locationText}>Royal Tunbridge Wells, Kent</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const ListHeader = () => {
+  return (
+    <>
+      <Seperator opacity={0.2} />
+      <View style={styles.listHeaderStatus}>
+        <Text style={styles.totalShowing}>Showing all 72 responses</Text>
+        <Text style={styles.lastUpdated}>Updated just now</Text>
+      </View>
+      <Seperator opacity={0.2} />
+    </>
+  );
+};
+
+const FilterButton = () => {
+  return (
+    <TouchableOpacity
+      style={{
+        width: '100%',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+      }}>
+      <Icon
+        onPress={() => {}}
+        type="AntDesign"
+        name="filter"
+        style={{
+          position: 'absolute',
+          zIndex: 1,
+          color: 'black',
+        }}
+      />
+    </TouchableOpacity>
+  );
+};
+
+const Seperator = ({opacity = 0.3}) => (
+  <View style={{height: 1, backgroundColor: '#C7C9D6', opacity}} />
+);
 
 export default Responses;

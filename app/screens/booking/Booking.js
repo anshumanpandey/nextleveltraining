@@ -1,50 +1,49 @@
-import React, { Component, useEffect } from 'react'
-import { View, StatusBar, FlatList, TouchableOpacity } from 'react-native'
+import React, {useEffect} from 'react'
+import {View, FlatList, TouchableOpacity} from 'react-native'
+import {Spinner, Text, Icon} from 'native-base'
+import useAxios from 'axios-hooks'
+import {parseISO} from 'date-fns'
+
 import Header from '../../components/header/Header'
 import BookCard from './components/BookCard'
-import useAxios from 'axios-hooks'
-import { Spinner, Text, Icon } from 'native-base'
+import {useGlobalState} from '../../state/GlobalState'
 import Colors from '../../constants/color'
-import { useGlobalState } from '../../state/GlobalState'
-import { parseISO } from 'date-fns'
-
 
 const Booking = (props) => {
   const [profile] = useGlobalState('profile')
-  const [{ data, loading, error }, getBookings] = useAxios({
+  const [{data, loading}, getBookings] = useAxios({
     url: '/Users/GetBookings',
     method: 'POST',
     data: {
-      "userID": profile?.Id,
-      "role": profile?.Role
-    }
+      userID: profile?.Id,
+      role: profile?.Role,
+    },
   })
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
       getBookings({
         data: {
-          "userID": profile?.Id,
-          "role": profile?.Role
-        }
+          userID: profile?.Id,
+          role: profile?.Role,
+        },
       })
-    });
+    })
 
     return () => focusListener.remove()
   }, [])
 
-
   const NotificationCountComponent = ({currentNotifications}) => {
-    console.log(currentNotifications.length);
+    console.log(currentNotifications.length)
     return (
       <Text style={{color: 'white', textAlign: 'center', fontSize: 12}}>
         {currentNotifications.filter((i) => i.IsRead == false).length}
       </Text>
-    );
-  };
+    )
+  }
 
   const BadgeNotification = () => {
-    const [notifications] = useGlobalState('notifications');
+    const [notifications] = useGlobalState('notifications')
 
     return (
       <View style={{marginTop: 7, alignItems: 'center'}}>
@@ -82,16 +81,14 @@ const Booking = (props) => {
           </View>
         </View>
       </View>
-    );
-  };
+    )
+  }
 
   return (
     <View style={{flex: 1}}>
       <Header
-        menu={true}
         title="My Bookings"
         hideCreatePost={true}
-        toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
         customButton={() => {
           return (
@@ -99,14 +96,14 @@ const Booking = (props) => {
               <View style={{width: '70%'}} />
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('Notification');
+                  props.navigation.navigate('Notification')
                 }}
                 style={{marginHorizontal: 10}}>
                 <BadgeNotification />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('LastMessage');
+                  props.navigation.navigate('LastMessage')
                 }}
                 style={{marginHorizontal: 10}}>
                 <Icon
@@ -116,13 +113,13 @@ const Booking = (props) => {
                 />
               </TouchableOpacity>
             </>
-          );
+          )
         }}
       />
       {loading && <Spinner size={80} color={Colors.s_yellow} />}
       {!loading && data && data.length == 0 && (
-        <Text style={{textAlign: 'center', fontSize: 24}}>
-          No Bookings Yet.
+        <Text style={{textAlign: 'center', fontSize: 24, paddingVertical: 50}}>
+          No Bookings Yet
         </Text>
       )}
       {!loading && (
@@ -138,6 +135,6 @@ const Booking = (props) => {
         />
       )}
     </View>
-  );
+  )
 }
 export default Booking

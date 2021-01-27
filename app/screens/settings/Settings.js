@@ -31,33 +31,81 @@ const Settings = (props) => {
           title="My Profile"
           subTitle="Your profile is key to attracing customers. Update your profile to stand out"
           dividerFlag={true}
+          onPress={() => props.navigation.navigate('CoachSummary')}
         />
         <Button
+          height={100}
+          title="Personal Details"
+          subTitle="Personal details"
+          dividerFlag={true}
+          onPress={() => props.navigation.navigate('EditProfile')}
+        />
+        <Button
+          height={100}
+          title="About Me"
+          subTitle="About me"
+          dividerFlag={true}
+          onPress={() => props.navigation.navigate('AboutMe')}
+        />
+        <Button
+          height={100}
+          title="Availability"
+          subTitle="Availability"
+          dividerFlag={true}
+          onPress={() => props.navigation.navigate('Availability')}
+        />
+        <Button
+          height={100}
+          title="Training Location"
+          subTitle="Training Location"
+          dividerFlag={true}
+          onPress={() => props.navigation.navigate('TrainingLocation')}
+        />
+        <Button
+          height={100}
+          title="Calendar"
+          subTitle="Calendar"
+          dividerFlag={true}
+          onPress={() => props.navigation.navigate('Calendar')}
+        />
+        {/* <Button
           height={100}
           title="Reviews"
           subTitle="All reviews in one place"
           dividerFlag={true}
-        />
-        <Button
-          height={120}
-          title="Elite Pro"
-          subTitle="Find out more about how to boost your business on Bark with Elite Pro"
-          dividerFlag={true}
-        />
-        <Button
+        /> */}
+        {/* <Button
           height={120}
           title="Badges"
           subTitle="Badges help you to stand out. Learn how to use them to boost your business"
           dividerFlag={true}
-        />
-        <Button
+        /> */}
+        {/* <Button
           height={100}
           title="Account details"
           subTitle="View your account details"
           dividerFlag={false}
-        />
+        /> */}
 
         <Text
+          style={{
+            fontSize: 20,
+            color: '#9FA2B7',
+            paddingLeft: 20,
+            marginTop: 40,
+            marginBottom: 20,
+          }}>
+          Extra Services
+        </Text>
+        <Button
+          height={120}
+          title="Be Featured"
+          subTitle="Find out more about how to boost your business on Next Level by becoming Featured"
+          dividerFlag={false}
+          onPress={() => props.navigation.navigate('PayFeatured')}
+        />
+
+        {/* <Text
           style={{
             fontSize: 20,
             color: '#9FA2B7',
@@ -85,9 +133,9 @@ const Settings = (props) => {
           title="SMS templates"
           subTitle="Contact customers quickly with custom SMS templates"
           dividerFlag={false}
-        />
+        /> */}
 
-        <Text
+        {/* <Text
           style={{
             fontSize: 20,
             color: '#9FA2B7',
@@ -103,7 +151,7 @@ const Settings = (props) => {
           title="HubSpot"
           subTitle="Automatically link your purchased leads with your HubSpot CRM"
           dividerFlag={false}
-        />
+        /> */}
 
         <Text
           style={{
@@ -121,19 +169,20 @@ const Settings = (props) => {
           title="My credits"
           subTitle="View credit history and buy credits to contact more customers"
           dividerFlag={true}
+          onPress={() => props.navigation.navigate('Wallet')}
         />
-        <Button
+        {/* <Button
           height={120}
           title="Invoices and billing details"
           subTitle="View your invoices and manage your billing details"
           dividerFlag={true}
-        />
-        <Button
+        /> */}
+        {/* <Button
           height={100}
           title="My payment details"
           subTitle="Manage your saved card details"
           dividerFlag={false}
-        />
+        /> */}
 
         <Text
           style={{
@@ -153,13 +202,75 @@ const Settings = (props) => {
           dividerFlag={false}
         />
 
+        <Text
+          style={{
+            fontSize: 20,
+            color: '#9FA2B7',
+            paddingLeft: 20,
+            marginTop: 40,
+            marginBottom: 20,
+          }}>
+          Terms
+        </Text>
+
+        <Button
+          height={100}
+          title="Terms"
+          subTitle="Terms"
+          dividerFlag={false}
+          onPress={() => props.navigation.navigate('Terms')}
+        />
+        <Button
+          height={120}
+          title="Privacy"
+          subTitle="View our privary statement about how we collect, handle and process data"
+          dividerFlag={false}
+          onPress={() => props.navigation.navigate('Privacy')}
+        />
+        <Button
+          height={100}
+          title="Help"
+          subTitle="Help"
+          dividerFlag={false}
+          onPress={() => props.navigation.navigate('Help')}
+        />
+        <Button
+          height={100}
+          title="Contact Us"
+          subTitle="Contact Us"
+          dividerFlag={false}
+          onPress={() => props.navigation.navigate('ContactUs')}
+        />
+
+        <Text
+          style={{
+            fontSize: 20,
+            color: '#9FA2B7',
+            paddingLeft: 20,
+            marginTop: 40,
+            marginBottom: 20,
+          }}></Text>
+
+        <Button
+          height={100}
+          subTitle="Logout"
+          title="Logout"
+          dividerFlag={false}
+          onPress={() => props.navigation.navigate('Logout')}
+        />
+        <Button
+          height={100}
+          subTitle="Delete Account"
+          title="Delete Account"
+          dividerFlag={false}
+        />
         <View style={{height: 30}} />
       </ScrollView>
     </View>
   );
 };
 
-const Button = ({title, subTitle, dividerFlag, height}) => {
+const Button = ({title, subTitle, dividerFlag, height, onPress}) => {
   return (
     <TouchableOpacity
       style={{
@@ -167,7 +278,8 @@ const Button = ({title, subTitle, dividerFlag, height}) => {
         width: '100%',
         backgroundColor: 'white',
         justifyContent: 'flex-end',
-      }}>
+      }}
+      onPress={onPress}>
       <Text
         style={{
           fontSize: 20,
