@@ -52,7 +52,7 @@ const PaymentConcentScreen = (props) => {
       <View style={{ paddingHorizontal: '5%', alignItems: "center", marginTop: '5%' }}>
         <Image source={Images.PaypalLogo} />
         <Text style={{ fontSize: 20, textAlign: 'center' }}>
-          1 week on feature tab. Expose your profile to the wider audience which includes post on social media.
+          Find out more about how to boost your likes, comments and bookings on Next Level by becoming "Featured."
         </Text>
         <Text style={{ fontSize: 20, textAlign: 'center' }}>
           You will be redirected to PayPal's website to acess your account and submit your payment. Then you will return to Next Level App

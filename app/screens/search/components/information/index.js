@@ -12,7 +12,7 @@ const Information = (props) => {
   // console.log(props)
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.topContain}>
+      {/* <View style={styles.topContain}>
         <View style={styles.orgView}>
           <Icon
             onPress={() => NavigationService.goBack()}
@@ -90,9 +90,9 @@ const Information = (props) => {
             <Text style={styles.tab_text}>REVIEW</Text>
           </View>
         </View>
-      </View>
+      </View> */}
 
-      <InfoTabs />
+      <InfoTabs navigation={props.navigation} />
     </ScrollView>
   );
 }
