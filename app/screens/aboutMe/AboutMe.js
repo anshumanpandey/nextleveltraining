@@ -3,7 +3,7 @@ import { TouchableOpacity, Text } from 'react-native'
 import resolveRoleForm from '../profile/resolveRoleForm'
 import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
-import { Spinner, View, Tabs, Tab } from 'native-base'
+import { Spinner, View, Tabs, Tab, Icon } from 'native-base'
 import Colors from '../../constants/color'
 import { BankAccountForm } from '../profile/CoachProfile'
 
@@ -26,29 +26,63 @@ const AboutMeScreen = (props) => {
                     toggleDrawer={props.navigation.toggleDrawer}
                     navigate={props.navigation.navigate}
                     customButton={() => {
-                        if (currentTab == 0) return <></>
+                        // if (currentTab == 0) return <></>
 
                         return (
-                            <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
-                                {isSaving == true && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
-                                <TouchableOpacity
-                                    disabled={isSaving == true}
-                                    onPress={() => {
-                                        setIsSaving(true)
-                                        if (submitFn) {
-                                            submitFn()
-                                                .then(() => {
-                                                    setIsSaving(false)
-                                                })
-                                        }
-                                    }}>
-                                    <Text style={{ color: 'black', opacity: isSaving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
-                                </TouchableOpacity>
-                            </View>
-                        );
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              width: '100%',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              flexGrow: 1,
+                            }}>
+                            {isSaving == true && (
+                              <Spinner
+                                size={28}
+                                color="black"
+                                style={{
+                                  right: 20,
+                                  position: 'absolute',
+                                  marginRight: '10%',
+                                  height: '10%',
+                                }}
+                              />
+                            )}
+                            <Icon
+                              onPress={() => props.navigation.goBack()}
+                              type="Feather"
+                              name="arrow-left"
+                              style={{
+                                left: 15,
+                                fontSize: 22,
+                                color: '#2D7AF0',
+                              }}
+                            />
+                            <TouchableOpacity
+                              disabled={isSaving == true}
+                              onPress={() => {
+                                setIsSaving(true)
+                                if (submitFn) {
+                                  submitFn().then(() => {
+                                    setIsSaving(false)
+                                  })
+                                }
+                              }}>
+                              <Text
+                                style={{
+                                  color: 'black',
+                                  opacity: isSaving == true ? 0.5 : 1,
+                                  fontSize: 18,
+                                }}>
+                                Save
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        )
                     }}
                 />
-                {resolveRoleForm(profile, "AboutMe", { player: profile }, (cb) => {
+                {resolveRoleForm(profile, "AboutMe", { player: profile, submit: true }, (cb) => {
                     if (cb == null) {
                         setSubmitFn(null)
                     } else {

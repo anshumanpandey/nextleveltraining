@@ -24,6 +24,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.s_blue,
     fontWeight: '500',
+    width: '100%',
+    textAlign:'center'
   },
   ps_star_view: {
     flexDirection: 'row',

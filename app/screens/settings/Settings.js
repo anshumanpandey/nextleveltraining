@@ -33,7 +33,13 @@ const Settings = props => {
           title="My Profile"
           subTitle="Your profile is key to attracing customers. Update your profile to stand out"
           dividerFlag={true}
-          onPress={() => props.navigation.navigate('PlayerInfo')}
+          onPress={() => {
+            if (profile && profile.Role == 'Player') {
+              props.navigation.navigate('PlayerInfo')
+            } else {
+              props.navigation.navigate('MyProfileCoach')
+            }
+          }}
         />
         <Button
           height={120}
@@ -47,7 +53,7 @@ const Settings = props => {
           title="Personal Details"
           subTitle="Personal details"
           dividerFlag={true}
-          onPress={() => props.navigation.navigate('EditProfile')}
+          onPress={() => props.navigation.navigate('PersonalDetails')}
         />
         <Button
           height={100}
@@ -77,6 +83,16 @@ const Settings = props => {
           dividerFlag={true}
           onPress={() => props.navigation.navigate('Calendar')}
         />
+        {profile && profile.Role == 'Player' && (
+          <Button
+            height={100}
+            title="Find a coach"
+            subTitle="Find a coach to inhance your skills"
+            dividerFlag={true}
+            onPress={() => props.navigation.navigate('FindCoach')}
+          />
+        )}
+
         {/* <Button
           height={100}
           title="Reviews"

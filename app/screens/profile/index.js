@@ -12,7 +12,12 @@ const ProfileFactory = (props) => {
   const [profile] = useGlobalState('profile')
 
   if (profile && profile.Role == "Player") {
-    return <PlayerProfile {...props} goBackTo={"Profile"} />
+    return (
+      <PlayerProfile
+        {...props}
+        goBackTo={'Profile'}
+      />
+    )
   }
   if (profile && profile.Role == "Coach") {
     return <CoachProfile {...props} goBackTo={"Profile"} />

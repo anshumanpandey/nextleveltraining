@@ -41,7 +41,7 @@ import VerificationId from './screens/profile/VerificationId'
 import UpComingMatch from './screens/profile/UpCommingMatch'
 import {Icon} from 'native-base'
 import Comment from './screens/home/Comments'
-import Information from './screens/search/components/information/Information'
+import Information from './screens/search/components/information/index'
 import BookNow from './screens/search/components/BookNow'
 import Payments from './screens/payments'
 import JobDetails from './screens/bookingDetails'
@@ -97,6 +97,9 @@ import LeadDetails from './screens/leads/LeadDetails'
 import PayCredits from './screens/payCredits/PayCredits'
 import LeadPreferences from './screens/leadPreferences/LeadPreferences'
 import Wallet from './screens/wallet/Wallet'
+import MyProfileCoach from './screens/myProfile/MyProfileCoach'
+import PersonalDetails from './screens/myProfile/PersonalDetails'
+import FindCoach from './screens/myProfile/FindCoach'
 
 let initialRouteName = null
 let Apps = null
@@ -270,6 +273,9 @@ const AppMain = () => {
       ContactUs: {screen: ContactUsScreen},
       Logout: {screen: LogoutScreen},
       Information: {screen: Information},
+      MyProfileCoach: {screen: MyProfileCoach},
+      PersonalDetails: {screen: PersonalDetails},
+      FindCoach: {screen: FindCoach},
       PlayerInfo: {screen: PlayerInfoScreen},
     },
     {

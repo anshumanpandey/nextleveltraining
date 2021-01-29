@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import resolveRoleForm from '../profile/resolveRoleForm'
-import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { Spinner } from 'native-base'

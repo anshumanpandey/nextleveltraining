@@ -6,8 +6,11 @@ import {getDistance} from 'geolib'
 
 import Header from '../../components/header/Header'
 import styles from './styles'
-import {useGlobalState} from '../../state/GlobalState'
-import {Row, Screen, CreditIcon} from '../../components/styled'
+import { useGlobalState } from '../../state/GlobalState'
+import {Client} from '@ideal-postcodes/core-axios'
+import { Row, Screen, CreditIcon } from '../../components/styled'
+
+const client = new Client({api_key: 'ak_kgpgg5sceGe2S9cpVSSeU9UJo8YrI'})
 
 const Leads = props => {
   const [profile] = useGlobalState('profile')
@@ -83,6 +86,17 @@ const Leads = props => {
 }
 
 const LeadItem = ({ item, navigation }) => {
+  const [address, setAddress] = React.useState('')
+
+  React.useEffect(() => {
+    fetchState()
+  })
+
+  const fetchState = async () => {
+    const stateAddress = await client.lookupPostcode({postcode: item.PostCode})
+    if (stateAddress) { setAddress(`${stateAddress[0].county},${stateAddress[0].country}`)}
+  }
+
   return (
     <TouchableOpacity
       style={styles.leadItem}
@@ -95,7 +109,7 @@ const LeadItem = ({ item, navigation }) => {
       {!!item.Address && (
         <Row mb={4} style={{alignItems: 'flex-start'}}>
           <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
-          <Text style={styles.locationText}>{item.Address}</Text>
+          <Text style={styles.locationText}>{address}</Text>
         </Row>
       )}
 

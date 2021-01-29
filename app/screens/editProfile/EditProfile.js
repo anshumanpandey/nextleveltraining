@@ -10,7 +10,7 @@ import useAxios from 'axios-hooks'
 import { Input as TextInput } from 'native-base';
 import styles from './styles.js';
 import ErrorLabel from '../../components/ErrorLabel'
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState'
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState'
 import InfoLabel from '../../components/InfoLabel'
 
 const EditProfile = (props) => {

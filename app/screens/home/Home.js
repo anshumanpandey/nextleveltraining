@@ -233,6 +233,7 @@ const Home = (props) => {
       </View> */}
       <Header
         navigate={props.navigation.navigate}
+        home="home"
         customButton={() => {
           return (
             <>

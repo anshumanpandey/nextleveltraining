@@ -347,27 +347,35 @@ const TimeInput = ({ onSelected, value }) => {
     }, [value])
 
     return (
-        <>
-            {showPicker && (
-                <DateTimePickerModal
-                    headerTextIOS={"Pick a Time"}
-                    isVisible={showPicker}
-                    mode="time"
-                    onConfirm={(d) => {
-                        setShowPicker(false)
-                        //setDate(d)
-                        onSelected(d)
-                    }}
-                    onCancel={() => setShowPicker(false)}
-                />
-            )}
-            <TouchableOpacity style={{ width: '70%', height: '80%', justifyContent: 'flex-end' }} onPress={() => setShowPicker(true)}>
-                <View style={[styles.collapsedViewInner]}>
-                    <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>{hasValue() ? moment(date).format("hh:mm A") : "12:00 PM"}</Text>
-                </View>
-            </TouchableOpacity>
-        </>
-    );
+      <>
+        {showPicker && (
+          <DateTimePickerModal
+            headerTextIOS={'Pick a Time'}
+            isVisible={showPicker}
+            mode="time"
+            pickerContainerStyleIOS={{
+              backgroundColor: '#d1d3d8',
+              justifyContent: 'center',
+            }}
+            onConfirm={d => {
+              setShowPicker(false)
+              //setDate(d)
+              onSelected(d)
+            }}
+            onCancel={() => setShowPicker(false)}
+          />
+        )}
+        <TouchableOpacity
+          style={{width: '70%', height: '80%', justifyContent: 'flex-end'}}
+          onPress={() => setShowPicker(true)}>
+          <View style={[styles.collapsedViewInner]}>
+            <Text style={{color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)'}}>
+              {hasValue() ? moment(date).format('hh:mm A') : '12:00 PM'}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </>
+    )
 }
 
 export const AvailabiltyForm = ({ setSubmitFn }) => {

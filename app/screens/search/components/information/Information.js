@@ -27,11 +27,11 @@ const Information = (props) => {
   const inActiveColor = 'gray';
 
   const calculateMiles = useCallback(() => {
-    console.log(profile?.Lat)
-    console.log(profile?.Lng)
-    console.log(props.navigation.getParam("Coach.Lat"))
-    console.log(props.navigation.getParam("Lng"))
-    console.log(props.navigation.getParam("hideConnect"))
+    // console.log(profile?.Lat)
+    // console.log(profile?.Lng)
+    // console.log(props.navigation.getParam("Coach.Lat"))
+    // console.log(props.navigation.getParam("Lng"))
+    // console.log(props.navigation.getParam("hideConnect"))
 
     if (!profile || !profile.Lat || !profile.Lng || !props.navigation.getParam("Lat", null) || !props.navigation.getParam("Lng", null)) {
       setMilesAway(-1)
@@ -54,7 +54,7 @@ const Information = (props) => {
     return () => focusListener?.remove();
   }, [])
 
-  console.log(props.navigation.getParam("editable", false))
+  // console.log(props.navigation.getParam("editable", false))
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>

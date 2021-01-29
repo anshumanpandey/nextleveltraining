@@ -27,9 +27,9 @@ const Header = (props) => {
               />
             ) : undefined}
           </TouchableOpacity>
-        ) : (
+        ) : props.home ? (
           <View style={{marginLeft: '10.5%'}} />
-        )}
+        ) : undefined}
         {props.title && (
           <Text
             style={{
