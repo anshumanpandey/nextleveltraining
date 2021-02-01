@@ -26,7 +26,18 @@ const Wallet = (props) => {
         customButton={() => (
           <>
             <BackButton navigation={props.navigation} />
-            <AddButton />
+            <Icon
+              type="Feather"
+              name="plus"
+              onPress={() => props.navigation.navigate('Cart')}
+              style={{
+                position: 'absolute',
+                right: 0,
+                fontSize: 22,
+                zIndex: 1,
+                color: '#2D7AF0',
+              }}
+            />
           </>
         )}
       />
@@ -62,7 +73,7 @@ const Wallet = (props) => {
         </View>
       </View>
     </ScrollView>
-  );
+  )
 };
 
 const BackButton = ({navigation}) => (

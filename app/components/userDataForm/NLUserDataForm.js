@@ -72,7 +72,7 @@ const NLUserDataForm = ({
         emailID: props.navigation.getParam('EmailID') || '',
         mobileNo: props.navigation.getParam('MobileNo') || '',
         postCode: props.navigation.getParam('PostCode') || '',
-        state: props.navigation.getParam('state') || '',
+        // state: props.navigation.getParam('state') || '',
         role: props.navigation.getParam('role', 'Player'),
         password: '',
         confirmPassword: '',
@@ -250,7 +250,7 @@ const NLUserDataForm = ({
               <ErrorLabel text={errors.emailID} />
             )}
 
-            <View style={styles.signup_info_view}>
+            {/* <View style={styles.signup_info_view}>
               <TextInput
                 style={{color: 'black'}}
                 placeholderTextColor={'rgba(0,0,0,0.3)'}
@@ -262,7 +262,7 @@ const NLUserDataForm = ({
             </View>
             {errors.state && touched.state && (
               <ErrorLabel text={errors.state} />
-            )}
+            )} */}
 
             <View style={styles.signup_info_view}>
               <TextInput

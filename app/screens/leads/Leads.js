@@ -93,8 +93,16 @@ const LeadItem = ({ item, navigation }) => {
   })
 
   const fetchState = async () => {
-    const stateAddress = await client.lookupPostcode({postcode: item.PostCode})
-    if (stateAddress) { setAddress(`${stateAddress[0].county},${stateAddress[0].country}`)}
+    try {
+      const stateAddress = await client.lookupPostcode({
+        postcode: item.PostCode,
+      })
+      if (stateAddress) {
+        setAddress(`${stateAddress[0].county},${stateAddress[0].country}`)
+      }
+    } catch (e) {
+      // console.log(e.message)
+    }
   }
 
   return (

@@ -81,8 +81,8 @@ const PayCredits = (props) => {
         }}>
         <Image source={Images.PaypalLogo} />
         <Text style={{fontSize: 20, textAlign: 'center'}}>
-          1 week on feature tab. Expose your profile to the wider audience which
-          includes post on social media.
+          Find out more about how to boost your likes , comments and bookings on
+          Next Level by becoming “Featured.“
         </Text>
         <Text style={{fontSize: 20, textAlign: 'center'}}>
           You will be redirected to PayPal's website to acess your account and
@@ -98,9 +98,9 @@ const PayCredits = (props) => {
           <CheckBox
             color={Colors.g_text}
             checked={checked}
-            onPress={() => setChecked((p) => !p)}
+            onPress={() => setChecked(p => !p)}
           />
-          <TouchableWithoutFeedback onPress={() => setChecked((p) => !p)}>
+          <TouchableWithoutFeedback onPress={() => setChecked(p => !p)}>
             <View
               style={{width: '90%', flexDirection: 'row', flexWrap: 'wrap'}}>
               <Text style={{fontSize: 16}}>
@@ -126,21 +126,19 @@ const PayCredits = (props) => {
           disabled={!checked}
           style={[styles.buttonSave, {width: 200, opacity: checked ? 1 : 0.5}]}
           onPress={() => {
-            const json = GET_PAYPAL_JSON(amount);
-            console.log(json);
+            const json = GET_PAYPAL_JSON(amount)
+            console.log(json)
             generatePaymentOrderFor(json)
-              .then((res) => {
-                console.log(res.data);
-                setOpenModal(
-                  res.data.links.find((i) => i.rel == 'approve').href,
-                );
+              .then(res => {
+                console.log(res.data)
+                setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
               })
-              .catch((err) => {
-                console.log(err);
+              .catch(err => {
+                console.log(err)
                 if (err.response) {
-                  console.log(err.response.data);
+                  console.log(err.response.data)
                 }
-              });
+              })
           }}>
           <View
             style={{
@@ -157,33 +155,33 @@ const PayCredits = (props) => {
         <Modal>
           <WebView
             style={{flex: 1}}
-            ref={(ref) => (webview.current = ref)}
+            ref={ref => (webview.current = ref)}
             source={{uri: openModal}}
-            onNavigationStateChange={(e) => {
-              const {url} = e;
-              console.log('webview', url);
-              if (!url) return;
+            onNavigationStateChange={e => {
+              const {url} = e
+              console.log('webview', url)
+              if (!url) return
 
-              const parsed = new UrlParser(url);
-              const urlParams = qs.parse(parsed.query.substring(1));
+              const parsed = new UrlParser(url)
+              const urlParams = qs.parse(parsed.query.substring(1))
 
-              console.log('success', urlParams);
+              console.log('success', urlParams)
               if (url.includes('PayerID')) {
-                if (apiCalled == true || savePaymenReq.loading == true) return;
+                if (apiCalled == true || savePaymenReq.loading == true) return
                 capturePaymentForToken(urlParams.token, GET_PAYPAL_JSON()).then(
-                  (captureRes) => {
-                    console.log(captureRes.data);
+                  captureRes => {
+                    console.log(captureRes.data)
                     const data = {
                       paypalPaymentId: captureRes.data.id,
-                    };
-                    console.log(data);
+                    }
+                    console.log(data)
                     savePayment({data})
-                      .then((r) => {
-                        setApiCalled(true);
-                        console.log(r.data);
+                      .then(r => {
+                        setApiCalled(true)
+                        console.log(r.data)
                       })
                       .finally(() => {
-                        setOpenModal(false);
+                        setOpenModal(false)
                         const resetAction = StackActions.reset({
                           index: 0,
                           key: null,
@@ -195,22 +193,22 @@ const PayCredits = (props) => {
                               }),
                             }),
                           ],
-                        });
-                        props.navigation.dispatch(resetAction);
-                      });
+                        })
+                        props.navigation.dispatch(resetAction)
+                      })
                   },
-                );
+                )
               }
               if (url.includes('payment_failure')) {
-                console.log('cancelled');
-                setOpenModal(false);
+                console.log('cancelled')
+                setOpenModal(false)
               }
             }}
           />
         </Modal>
       )}
     </ScrollView>
-  );
+  )
 };
 
 export default PayCredits;

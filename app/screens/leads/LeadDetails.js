@@ -33,6 +33,119 @@ const LeadDetails = (props) => {
         contentContainerStyle={{flexGrow: 1, alignItems: 'center'}}>
         <View
           style={{
+            width: '100%',
+            height: 40,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Text style={{color: '#9FA2B7', fontSize: 18, marginLeft: 15}}>
+            15m ago
+          </Text>
+        </View>
+        <View style={{width: '100%'}}>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: '500',
+              paddingLeft: 15,
+            }}>
+            Ashley
+          </Text>
+        </View>
+        <View style={{width: '100%', marginTop: 10}}>
+          <Text
+            style={{
+              fontSize: 20,
+              paddingLeft: 15,
+            }}>
+            Football Coaching
+          </Text>
+        </View>
+        <View style={{width: '100%', marginTop: 10}}>
+          <Text
+            style={{
+              fontSize: 20,
+              paddingLeft: 15,
+            }}>
+            St Helens, St Helens
+          </Text>
+        </View>
+        <View style={{width: '100%', marginTop: 20, flexDirection: 'row'}}>
+          <Icon
+            onPress={() => {}}
+            type="Feather"
+            name="phone"
+            style={{
+              color: 'black',
+              fontSize: 18,
+              paddingLeft: 15,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 18,
+              paddingLeft: 15,
+            }}>
+            077271837833
+          </Text>
+        </View>
+
+        <View style={{width: '100%', marginTop: 10, flexDirection: 'row'}}>
+          <Icon
+            onPress={() => {}}
+            type="Feather"
+            name="mail"
+            style={{
+              color: 'black',
+              fontSize: 18,
+              paddingLeft: 15,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 18,
+              paddingLeft: 15,
+            }}>
+            ashley.hecker@hotmail.com
+          </Text>
+        </View>
+
+        <View style={{width: '100%', marginTop: 10, flexDirection: 'row'}}>
+          <Text
+            style={{
+              fontSize: 18,
+              paddingLeft: 15,
+            }}>
+            2 credits
+          </Text>
+        </View>
+
+        <View
+          style={{
+            marginTop: 15,
+            width: '90%',
+            height: 50,
+            backgroundColor: 'white',
+            borderColor: 'grey',
+            borderWidth: 1,
+            borderRadius: 5,
+            justifyContent: 'space-evenly',
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 15,
+              fontWeight: '600',
+              paddingLeft: 15,
+              textAlign: 'left',
+            }}>
+            0/5 professionals have responded.
+          </Text>
+        </View>
+
+        <View
+          style={{
             marginTop: 20,
             width: '90%',
             height: 120,
@@ -197,7 +310,7 @@ const LeadDetails = (props) => {
         </TouchableOpacity>
       </ScrollView>
     </View>
-  );
+  )
 };
 
 export default LeadDetails;
