@@ -65,9 +65,8 @@ const PaymentConcentScreen = (props) => {
           marginTop: '5%',
         }}>
         <Image source={Images.PaypalLogo} />
-        <Text style={{fontSize: 20, textAlign: 'center'}}>
-          Find out more about how to boost your likes , comments and bookings on
-          Next Level by becoming “Featured.“
+        <Text style={{ fontSize: 20, textAlign: 'center' }}>
+          Find out more about how to boost your likes, comments and bookings on Next Level by becoming "Featured."
         </Text>
         <Text style={{fontSize: 20, textAlign: 'center'}}>
           You will be redirected to PayPal's website to acess your account and
