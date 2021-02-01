@@ -6,6 +6,7 @@ import MapView, {Marker} from 'react-native-maps';
 
 const LeadDetails = (props) => {
   const player = props.navigation.getParam('player');
+  const address = props.navigation.getParam('address')
 
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
@@ -40,7 +41,7 @@ const LeadDetails = (props) => {
             justifyContent: 'space-between',
           }}>
           <Text style={{color: '#9FA2B7', fontSize: 18, marginLeft: 15}}>
-            15m ago
+            {player.Distance}m ago
           </Text>
         </View>
         <View style={{width: '100%'}}>
@@ -50,7 +51,7 @@ const LeadDetails = (props) => {
               fontWeight: '500',
               paddingLeft: 15,
             }}>
-            Ashley
+            {player.FullName}
           </Text>
         </View>
         <View style={{width: '100%', marginTop: 10}}>
@@ -68,7 +69,7 @@ const LeadDetails = (props) => {
               fontSize: 20,
               paddingLeft: 15,
             }}>
-            St Helens, St Helens
+            {address}
           </Text>
         </View>
         <View style={{width: '100%', marginTop: 20, flexDirection: 'row'}}>
@@ -87,7 +88,7 @@ const LeadDetails = (props) => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            077271837833
+            07*******
           </Text>
         </View>
 
@@ -107,7 +108,7 @@ const LeadDetails = (props) => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            ashley.hecker@hotmail.com
+            *******@***.com
           </Text>
         </View>
 

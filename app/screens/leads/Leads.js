@@ -108,7 +108,7 @@ const LeadItem = ({ item, navigation }) => {
   return (
     <TouchableOpacity
       style={styles.leadItem}
-      onPress={() => navigation.navigate('LeadDetails', {player: item})}>
+      onPress={() => navigation.navigate('LeadDetails', {player: item, address: address})}>
       {item.QuoteRequested && <Text style={styles.leadIndicator}>•</Text>}
 
       <Text style={styles.leadName}>{item.FullName}</Text>
