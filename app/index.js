@@ -98,6 +98,7 @@ import PayCredits from './screens/payCredits/PayCredits'
 import LeadPreferences from './screens/leadPreferences/LeadPreferences'
 import Wallet from './screens/wallet/Wallet'
 import MyProfileCoach from './screens/myProfile/MyProfileCoach'
+import MyProfilePlayer from './screens/myProfile/MyProfilePlayer'
 import PersonalDetails from './screens/myProfile/PersonalDetails'
 import FindCoach from './screens/myProfile/FindCoach'
 
@@ -276,7 +277,7 @@ const AppMain = () => {
       MyProfileCoach: {screen: MyProfileCoach},
       PersonalDetails: {screen: PersonalDetails},
       FindCoach: {screen: FindCoach},
-      PlayerInfo: {screen: PlayerInfoScreen},
+      MyProfilePlayer: {screen: MyProfilePlayer},
     },
     {
       defaultNavigationOptions: ({navigation}) => {

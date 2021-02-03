@@ -7,10 +7,10 @@ import {getDistance} from 'geolib'
 import Header from '../../components/header/Header'
 import styles from './styles'
 import { useGlobalState } from '../../state/GlobalState'
-import {Client} from '@ideal-postcodes/core-axios'
+// import {Client} from '@ideal-postcodes/core-axios'
 import { Row, Screen, CreditIcon } from '../../components/styled'
 
-const client = new Client({api_key: 'ak_kgpgg5sceGe2S9cpVSSeU9UJo8YrI'})
+// const client = new Client({api_key: 'ak_kgpgg5sceGe2S9cpVSSeU9UJo8YrI'})
 
 const Leads = props => {
   const [profile] = useGlobalState('profile')
@@ -86,29 +86,37 @@ const Leads = props => {
 }
 
 const LeadItem = ({ item, navigation }) => {
-  const [address, setAddress] = React.useState('')
+  console.log(item)
+  // const [address, setAddress] = React.useState('dummy')
 
-  React.useEffect(() => {
-    fetchState()
-  })
+  // React.useEffect(() => {
+  //   fetchState()
+  // })
 
-  const fetchState = async () => {
-    try {
-      const stateAddress = await client.lookupPostcode({
-        postcode: item.PostCode,
-      })
-      if (stateAddress) {
-        setAddress(`${stateAddress[0].county},${stateAddress[0].country}`)
-      }
-    } catch (e) {
-      // console.log(e.message)
-    }
-  }
+  // const fetchState = async () => {
+  //   try {
+  //     const stateAddress = await client.lookupPostcode({
+  //       postcode: item.PostCode,
+  //     })
+  //     if (stateAddress) {
+  //       setAddress(`${stateAddress[0].county},${stateAddress[0].country}`)
+  //     }
+  //   } catch (e) {
+  //     // console.log(e.message)
+  //   }
+  // }
 
   return (
     <TouchableOpacity
       style={styles.leadItem}
-      onPress={() => navigation.navigate('LeadDetails', {player: item, address: address})}>
+      onPress={() =>
+        navigation.navigate('LeadDetails', {
+          player: item,
+          address: item.State ? item.State : '',
+          AboutUs: item.AboutUs,
+          Id: item.Id
+        })
+      }>
       {item.QuoteRequested && <Text style={styles.leadIndicator}>•</Text>}
 
       <Text style={styles.leadName}>{item.FullName}</Text>
@@ -117,7 +125,9 @@ const LeadItem = ({ item, navigation }) => {
       {!!item.Address && (
         <Row mb={4} style={{alignItems: 'flex-start'}}>
           <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
-          <Text style={styles.locationText}>{address}</Text>
+          <Text style={styles.locationText}>
+            {item.State ? item.State : ''}
+          </Text>
         </Row>
       )}
 

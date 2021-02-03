@@ -86,6 +86,7 @@ const ProfilePicScreen = (props) => {
                     })
                     Upload.addListener('completed', uploadId, (data) => {
                         // data includes responseCode: number and responseBody: Object
+                        console.log(data)
                         console.log(`[${values.file.uri}] Completed!`)
                         setUploading(false)
                         return getUserData()

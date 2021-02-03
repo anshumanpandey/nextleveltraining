@@ -35,7 +35,7 @@ const Settings = props => {
           dividerFlag={true}
           onPress={() => {
             if (profile && profile.Role == 'Player') {
-              props.navigation.navigate('PlayerInfo')
+              props.navigation.navigate('MyProfilePlayer')
             } else {
               props.navigation.navigate('MyProfileCoach')
             }
@@ -62,13 +62,15 @@ const Settings = props => {
           dividerFlag={true}
           onPress={() => props.navigation.navigate('AboutMe')}
         />
-        <Button
-          height={100}
-          title="Availability"
-          subTitle="Availability"
-          dividerFlag={true}
-          onPress={() => props.navigation.navigate('Availability')}
-        />
+        {profile && profile.Role !== 'Player' && (
+          <Button
+            height={100}
+            title="Availability"
+            subTitle="Availability"
+            dividerFlag={true}
+            onPress={() => props.navigation.navigate('Availability')}
+          />
+        )}
         <Button
           height={100}
           title="Training Location"

@@ -1,9 +1,12 @@
-import React from 'react';
-import {View, TouchableOpacity, ScrollView, Text, Linking} from 'react-native';
-import Header from '../../components/header/Header';
-import {Icon} from 'native-base';
+import React from 'react'
+import {View, TouchableOpacity, ScrollView, Text, Linking} from 'react-native'
+import Header from '../../components/header/Header'
+import { Icon } from 'native-base'
+// import MapView, {Marker} from 'react-native-maps'
 
-const ResponseDetails = (props) => {
+const ResponseDetails = props => {
+  const response = props.navigation.getParam('lead')
+  const time = response.CreatedAt.split("T")
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header
@@ -38,7 +41,7 @@ const ResponseDetails = (props) => {
               justifyContent: 'space-between',
             }}>
             <Text style={{color: '#9FA2B7', fontSize: 18, marginLeft: 15}}>
-              15m ago
+              {time[0]}
             </Text>
             <TouchableOpacity
               style={{
@@ -77,7 +80,7 @@ const ResponseDetails = (props) => {
                 fontWeight: '500',
                 paddingLeft: 15,
               }}>
-              Ashley
+              {response.Lead.FullName}
             </Text>
           </View>
           <View style={{width: '100%', marginTop: 10}}>
@@ -95,7 +98,7 @@ const ResponseDetails = (props) => {
                 fontSize: 20,
                 paddingLeft: 15,
               }}>
-              St Helens, St Helens
+              {response.Lead.Location}
             </Text>
           </View>
           <View style={{width: '100%', marginTop: 20, flexDirection: 'row'}}>
@@ -114,7 +117,7 @@ const ResponseDetails = (props) => {
                 fontSize: 18,
                 paddingLeft: 15,
               }}>
-              077271837833
+              {response.Lead.MobileNo}
             </Text>
             <View
               style={{
@@ -158,7 +161,7 @@ const ResponseDetails = (props) => {
                 fontSize: 18,
                 paddingLeft: 15,
               }}>
-              ashley.hecker@hotmail.com
+              {response.Lead.EmailID}
             </Text>
           </View>
 
@@ -172,7 +175,7 @@ const ResponseDetails = (props) => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`mailto:ashley.hecker@hotmail.com`)
+                Linking.openURL(`mailto:${response.Lead.EmailID}`)
               }}
               style={{
                 backgroundColor: '#2D7AF0',
@@ -202,7 +205,7 @@ const ResponseDetails = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`tel:077271837833`)
+                Linking.openURL(`tel:${response.Lead.MobileNo}`)
               }}
               style={{
                 backgroundColor: '#2D7AF0',
@@ -232,7 +235,7 @@ const ResponseDetails = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`sms:077271837833`)
+                Linking.openURL(`sms:${response.Lead.MobileNo}`)
               }}
               style={{
                 backgroundColor: '#2D7AF0',
@@ -262,248 +265,207 @@ const ResponseDetails = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{backgroundColor: '#F4F4F7', height: 15}} />
-        <View style={{height: 700, backgroundColor: 'white'}}>
+        <View style={{width: '100%', alignItems: 'center'}}>
           <View
             style={{
-              width: '100%',
-              height: 45,
-              flexDirection: 'row',
-              marginTop: 10,
+              marginTop: 20,
+              width: '90%',
+              height: 120,
+              backgroundColor: '#00000008',
+              borderRadius: 5,
+              justifyContent: 'space-evenly',
             }}>
-            <TouchableOpacity style={{marginLeft: 15, marginTop: 10}}>
-              <Text style={{fontSize: 20}}>Activity</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{marginLeft: 15, marginTop: 10}}>
-              <Text style={{fontSize: 20, color: '#9FA2B7'}}>Lead Details</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{marginLeft: 15, marginTop: 10}}>
-              <Text style={{fontSize: 20, color: '#9FA2B7'}}>My Notes</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <View
+            <Text
               style={{
-                backgroundColor: '#000000',
-                height: 2,
-                width: '17%',
-                marginLeft: 15,
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: '#00000020',
-                height: 2,
-                width: '35%',
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: '#00000020',
-                height: 2,
-                width: '35%',
-              }}
-            />
-          </View>
-          <View
-            style={{
-              height: 80,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 16, color: '#9FA2B7'}}>Tue 15 Dec</Text>
-          </View>
-          <View
-            style={{
-              height: 100,
-              width: '100%',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: 35,
-                width: 35,
-                borderRadius: 17.5,
-                backgroundColor: 'black',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginLeft: 15,
+                color: '#9FA2B7',
+                fontSize: 18,
+                fontWeight: '500',
+                paddingLeft: 15,
+                lineHeight: 28,
               }}>
-              <View
-                style={{
-                  height: 17.5,
-                  width: 17.5,
-                  borderRadius: 8.75,
-                  backgroundColor: 'white',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text>b</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: '80%',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: '#00000020',
-                height: 80,
-                marginLeft: 15,
-                justifyContent: 'space-evenly',
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={{color: '#9FA2B7', paddingLeft: 10}}>You</Text>
-                <Text style={{color: '#9FA2B7', paddingRight: 10}}>09:11</Text>
-              </View>
-              <Text style={{paddingLeft: 10, fontSize: 18}}>
-                Purchased the lead
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              height: 80,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 16, color: '#9FA2B7'}}>Sat 12 Dec</Text>
-          </View>
-          <View
-            style={{
-              height: 100,
-              width: '100%',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: 35,
-                width: 35,
-                borderRadius: 17.5,
-                backgroundColor: '#00000020',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginLeft: 15,
-              }}>
-              <Icon
-                type="Feather"
-                name="user"
-                style={{
-                  color: 'black',
-                  fontSize: 20,
-                }}
-              />
-            </View>
-            <View
-              style={{
-                width: '80%',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: '#00000020',
-                height: 80,
-                marginLeft: 15,
-                justifyContent: 'space-evenly',
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={{color: '#9FA2B7', paddingLeft: 10}}>Ashley</Text>
-                <Text style={{color: '#9FA2B7', paddingRight: 10}}>15:41</Text>
-              </View>
-              <Text style={{paddingLeft: 10, fontSize: 18}}>
-                Viewed your profile
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              height: 80,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 16, color: '#9FA2B7'}}>
-              Thursday 10 Dec
+              What is the student's current level of experience?
+            </Text>
+            <Text style={{fontSize: 18, paddingLeft: 15}}>
+              {response.Lead.Experience}
             </Text>
           </View>
           <View
             style={{
-              height: 100,
-              width: '100%',
-              flexDirection: 'row',
-              alignItems: 'center',
+              marginTop: 5,
+              width: '90%',
+              height: 80,
+              backgroundColor: '#00000008',
+              borderRadius: 5,
+              justifyContent: 'space-evenly',
             }}>
-            <View
+            <Text
               style={{
-                height: 35,
-                width: 35,
-                borderRadius: 17.5,
-                backgroundColor: 'white',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginLeft: 15,
+                color: '#9FA2B7',
+                fontSize: 18,
+                fontWeight: '500',
+                paddingLeft: 15,
               }}>
-              <View
-                style={{
-                  height: 35,
-                  width: 35,
-                  borderRadius: 17.5,
-                  backgroundColor: '#00000020',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginLeft: 15,
-                }}>
-                <Icon
-                  type="Feather"
-                  name="user"
-                  style={{
-                    color: 'black',
-                    fontSize: 20,
-                  }}
-                />
-              </View>
-            </View>
-            <View
+              How old is the student?
+            </Text>
+            <Text style={{fontSize: 18, paddingLeft: 15}}>
+              {response.Lead.Age}
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 5,
+              width: '90%',
+              height: 120,
+              backgroundColor: '#00000008',
+              borderRadius: 5,
+              justifyContent: 'space-evenly',
+            }}>
+            <Text
               style={{
-                width: '80%',
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: '#00000020',
-                height: 80,
-                marginLeft: 15,
-                justifyContent: 'space-evenly',
+                color: '#9FA2B7',
+                fontSize: 18,
+                fontWeight: '500',
+                paddingLeft: 15,
+                lineHeight: 28,
               }}>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={{color: '#9FA2B7', paddingLeft: 10}}>Ashley</Text>
-                <Text style={{color: '#9FA2B7', paddingRight: 10}}>03:11</Text>
-              </View>
-              <Text style={{paddingLeft: 10, fontSize: 18}}>
-                Ashley requested the lead
-              </Text>
+              Which kind of coaching would you consider?
+            </Text>
+            <View style={{flexDirection: 'row'}}>
+              {response.Lead.CoachingType.map(item => (
+                <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+              ))}
             </View>
           </View>
+          <View
+            style={{
+              marginTop: 5,
+              width: '90%',
+              height: 120,
+              backgroundColor: '#00000008',
+              borderRadius: 5,
+              justifyContent: 'space-evenly',
+            }}>
+            <Text
+              style={{
+                color: '#9FA2B7',
+                fontSize: 18,
+                fontWeight: '500',
+                paddingLeft: 15,
+                lineHeight: 28,
+              }}>
+              Which day(s) would you consider for coaching?
+            </Text>
+            <View style={{flexDirection: 'row', flexWrap: 1}}>
+              {response.Lead.Days.map(item => (
+                <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+              ))}
+            </View>
+          </View>
+          <View
+            style={{
+              marginTop: 5,
+              width: '90%',
+              height: 120,
+              backgroundColor: '#00000008',
+              borderRadius: 5,
+              justifyContent: 'space-evenly',
+            }}>
+            <Text
+              style={{
+                color: '#9FA2B7',
+                fontSize: 18,
+                fontWeight: '500',
+                paddingLeft: 15,
+                lineHeight: 28,
+              }}>
+              Which time(s) of day would you consider for coaching?
+            </Text>
+            <View style={{flexDirection: 'row', flexWrap: 1}}>
+              {response.Lead.CoachingTime.map(item => (
+                <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+              ))}
+            </View>
+          </View>
+
+          <View
+            style={{
+              marginTop: 5,
+              marginBottom:15,
+              width: '90%',
+              height: 120,
+              backgroundColor: '#00000008',
+              borderRadius: 5,
+              justifyContent: 'space-evenly',
+            }}>
+            <Text
+              style={{
+                color: '#9FA2B7',
+                fontSize: 18,
+                fontWeight: '500',
+                paddingLeft: 15,
+                lineHeight: 28,
+              }}>
+              How many times a week does the player want to train?
+            </Text>
+            <Text style={{fontSize: 18, paddingLeft: 15}}>
+              {response.Lead.DaysOfWeek[0]}
+            </Text>
+          </View>
+          {/* <View style={{width: '100%', marginTop: 30, marginLeft: 15}}>
+            <Text style={{fontSize: 18, paddingLeft: 15}}>
+              Additional Details
+            </Text>
+          </View>
+
+          <View
+            style={{
+              width: '100%',
+              marginTop: 10,
+              marginLeft: 15,
+              marginBottom: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: 18,
+                paddingHorizontal: 15,
+                paddingRight: 30,
+                color: '#5E6488',
+                textAlign: 'left',
+              }}>
+              'I am looking for a one to one coach for my 7 year old son. He
+              currently plays for a team bug struggles to understand what is
+              being asked of him so I think he would get benefit from one to one
+              coaching.'
+            </Text>
+          </View> */}
+
+          {/* <View style={{height: 200, width: '90%', marginTop: 20}}>
+            <MapView
+            style={{flex: 1}}
+            initialRegion={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            camera={{
+              //   center: currentLocation,
+              heading: 0,
+              pitch: 10,
+              zoom: 15,
+              altitude: 10,
+            }}>
+            <Marker
+              coordinate={currentLocation}
+              title={'Current Location'}
+              description={'werw'}
+            />
+          </MapView>
+          </View> */}
         </View>
       </ScrollView>
     </View>
   )
-};
+}
 
-export default ResponseDetails;
+export default ResponseDetails

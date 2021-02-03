@@ -59,7 +59,12 @@ const CardItem = ({navigation, item}) => {
       </Row>
 
       <Button
-        onPress={() => navigation.navigate('PayCredits', {amount: item.price})}>
+        onPress={() =>
+          navigation.navigate('PayCredits', {
+            amount: item.price,
+            credits: item.credits,
+          })
+        }>
         <ButtonText>Buy credits</ButtonText>
       </Button>
 

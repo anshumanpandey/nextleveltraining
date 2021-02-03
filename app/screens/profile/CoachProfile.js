@@ -149,7 +149,8 @@ class MultiStep extends Component {
             profile.DBSCeritificate != null &&
             profile.VerificationDocument != null &&
             profile.Rate != 0 &&
-            profile.TravelMile != null
+            profile.TravelMile != null &&
+            profile.ProfileImage != null
     }
 
     stepTwoIsComplete = (profile) => {
@@ -196,20 +197,6 @@ class MultiStep extends Component {
             <Header
               toggleDrawer={this.props.navigation.toggleDrawer}
               hideCreatePost={true}
-              customButton={() => (
-                <Icon
-                  onPress={() => props.navigation.goBack()}
-                  type="Feather"
-                  name="arrow-left"
-                  style={{
-                    position: 'absolute',
-                    left: 15,
-                    fontSize: 22,
-                    zIndex: 1,
-                    color: '#2D7AF0',
-                  }}
-                />
-              )}
               title="Save Profile"
             />
             {this.about()}
@@ -1214,234 +1201,337 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
     }, [profile])
 
     return (
-        <ScrollView>
-            <View style={styles.containerAbout}>
-                <TouchableOpacity
-                    onPress={async () => {
-                        const d = NavigationActions.navigate({ routeName: 'ProfilePic', params: { goBackTo: props.goBackTo ? props.goBackTo: 'AboutMe' } })
-                        props.navigation.dispatch(d)
-                    }}
-                    style={{ position: 'relative', justifyContent: 'center', flexDirection: 'row', width: '25%', marginLeft: 'auto', marginRight: 'auto' }}>
-                    {triggerChange == true && (
-                        <Image
-                            resizeMode="stretch"
-                            source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
-                            style={styles.profileImage}
-                        />
-                    )}
-                    {triggerChange == false && (
-                        <Image
-                            resizeMode="stretch"
-                            source={profilePic ? { uri: profilePic } : Images.PlayerPlaceholder}
-                            style={styles.profileImage}
-                        />
-                    )}
-                    <View style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'absolute',
-                        width: Dimension.px30,
-                        height: Dimension.px30,
-                        backgroundColor: Colors.s_blue,
-                        borderRadius: Dimension.px30 / 2,
-                        right: 0,
-                        top: 3,
-                    }}>
-                        <Icon
-                            type="EvilIcons"
-                            name="pencil"
-                            style={{ color: 'white', fontSize: 25 }}
-                        />
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "About Me", data: profile?.AboutUs, goBackTo: props.goBackTo ? props.goBackTo: 'AboutMe' })}>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>About me</Text>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                        <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>{profile?.AboutUs}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Accomplishment", data: profile?.Accomplishment, goBackTo: 'AboutMe' })}>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Accomplishment</Text>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                        <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>
-                                {profile?.Accomplishment}
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-                <View style={styles.cardContainer}>
-                    <TouchableOpacity onPress={() => {
-                        NavigationService.navigate('AddExperience', {
-                            title: 'Add Experience',
-                            cb: (team) => { },
-                            goBackTo: 'AboutMe'
-                        })
-                    }}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Job Role</Text>
-                            <Icon name='plus' type='EvilIcons' style={{ fontSize: 30, color: Colors.s_yellow }} />
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.cardContainer}>
-                        {profile?.Experiences.map(e => {
-                            return (
-                                <TouchableOpacity onPress={() => {
-                                    NavigationService.navigate('AddExperience', {
-                                        title: 'Add Experience',
-                                        goBackTo: 'AboutMe',
-                                        cb: (team) => { },
-                                        ...e
-                                    })
-                                }}>
-                                    <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.1)' }}>
-                                        <View style={styles.editView}>
-                                            <Text style={{ fontWeight: 'bold' }}>{e.Club}</Text>
-                                            <Icon
-                                                type="EvilIcons"
-                                                name="pencil"
-                                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                                            />
-                                        </View>
-                                        <Text>{e.JobPosition}</Text>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
-                                            <Text>{' '}To{' '}</Text>
-
-                                            {e.CurrentlyWorking == true && <Text>{' '}Till Date</Text>}
-                                            {e.CurrentlyWorking == false && <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>}
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })}
-                    </View>
-                </View>
-                <View style={styles.cardContainer}>
-                    <TouchableOpacity onPress={() => {
-                        NavigationService.navigate('AddQualifications', {
-                            title: 'Add Experience',
-                            cb: (team) => { },
-                            goBackTo: 'AboutMe',
-                            Qualifications: profile?.Qualifications
-                        })
-                    }}>
-                        <View style={styles.cardInner}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.textProfile}>Qualifications</Text>
-                            </View>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                        {profile?.Qualifications && (
-                            <View style={styles.cardContainer}>
-                                {profile?.Qualifications.map(q => {
-                                    return <Text style={styles.profileDescription}>{q.Qualification}</Text>
-                                })}
-                            </View>
-                        )}
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.cardContainer}>
-                    <TouchableOpacity onPress={() => {
-                        NavigationService.navigate('AddDbsCertificate', {
-                            title: 'Add Experience',
-                            goBackTo: 'AboutMe',
-                            cb: (team) => { },
-                            ...profile.DBSCeritificate
-                        })
-                    }}>
-                        <View style={styles.cardInner}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.textProfile}>DBS Certificate</Text>
-                                {profile?.DBSCeritificate && profile?.DBSCeritificate.Verified == true && <Text style={{ marginLeft: '5%', fontSize: 14, color: 'green' }}>Verified</Text>}
-                                {(!profile?.DBSCeritificate || profile?.DBSCeritificate.Verified == false) && <Text style={{ marginLeft: '5%', fontSize: 14, color: 'red' }}>Not Verified</Text>}
-                            </View>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.cardContainer}>
-                    <TouchableOpacity onPress={() => {
-                        NavigationService.navigate('VerificationId', {
-                            title: 'Add Experience',
-                            goBackTo: 'AboutMe',
-                            cb: (team) => { },
-                            ...profile.VerificationDocument
-                        })
-                    }}>
-                        <View style={styles.cardInner}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.textProfile}>Valid ID</Text>
-                                {profile?.VerificationDocument?.Verified == true && <Text style={{ marginLeft: '5%', fontSize: 14, color: 'green' }}>Verified</Text>}
-                                {(!profile?.VerificationDocument || profile?.VerificationDocument.Verified == false) && <Text style={{ marginLeft: '5%', fontSize: 14, color: 'red' }}>Not Verified</Text>}
-                            </View>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Price Per Hour", data: profile.Rate, screen: "EditInput", keyboardType: "numeric", goBackTo: 'AboutMe' })}>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Price Per Hour</Text>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                        <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>£ {profile?.Rate}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => handleOnCardPress({ title: "Travel Miles", data: profile.TravelMile ? profile.TravelMile.TravelDistance : "", screen: "EditInput", keyboardType: "numeric", goBackTo: 'AboutMe', })}>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.cardInner}>
-                            <Text style={styles.textProfile}>Travel Miles</Text>
-                            <Icon
-                                type="EvilIcons"
-                                name="pencil"
-                                style={{ color: Colors.s_blue, fontSize: 25 }}
-                            />
-                        </View>
-                        <View style={styles.cardContainer}>
-                            <Text style={styles.profileDescription}>{profile?.TravelMile ? profile.TravelMile.TravelDistance : ""}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
+      <ScrollView>
+        <View style={styles.containerAbout}>
+          <TouchableOpacity
+            onPress={async () => {
+              const d = NavigationActions.navigate({
+                routeName: 'ProfilePic',
+                params: {goBackTo: props.goBackTo ? props.goBackTo : 'AboutMe'},
+              })
+              props.navigation.dispatch(d)
+            }}
+            style={{
+              position: 'relative',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              width: '25%',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}>
+            {triggerChange == true && (
+              <Image
+                resizeMode="stretch"
+                source={
+                  profilePic ? {uri: profilePic} : Images.PlayerPlaceholder
+                }
+                style={styles.profileImage}
+              />
+            )}
+            {triggerChange == false && (
+              <Image
+                resizeMode="stretch"
+                source={
+                  profilePic ? {uri: profilePic} : Images.PlayerPlaceholder
+                }
+                style={styles.profileImage}
+              />
+            )}
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'absolute',
+                width: Dimension.px30,
+                height: Dimension.px30,
+                backgroundColor: Colors.s_blue,
+                borderRadius: Dimension.px30 / 2,
+                right: 0,
+                top: 3,
+              }}>
+              <Icon
+                type="EvilIcons"
+                name="pencil"
+                style={{color: 'white', fontSize: 25}}
+              />
             </View>
-        </ScrollView>
-    );
+          </TouchableOpacity>
+
+          <Text style={{alignSelf: 'center', color: 'red'}}>
+            *Required
+          </Text>
+
+          <TouchableOpacity
+            onPress={() =>
+              handleOnCardPress({
+                title: 'About Me',
+                data: profile?.AboutUs,
+                goBackTo: props.goBackTo ? props.goBackTo : 'AboutMe',
+              })
+            }>
+            <View style={styles.cardContainer}>
+              <View style={styles.cardInner}>
+                <Text style={styles.textProfile}>About me</Text>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+              <View style={styles.cardContainer}>
+                <Text style={styles.profileDescription}>
+                  {profile?.AboutUs}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              handleOnCardPress({
+                title: 'Accomplishment',
+                data: profile?.Accomplishment,
+                goBackTo: 'AboutMe',
+              })
+            }>
+            <View style={styles.cardContainer}>
+              <View style={styles.cardInner}>
+                <Text style={styles.textProfile}>Accomplishment</Text>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+              <View style={styles.cardContainer}>
+                <Text style={styles.profileDescription}>
+                  {profile?.Accomplishment}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('AddExperience', {
+                  title: 'Add Experience',
+                  cb: team => {},
+                  goBackTo: 'AboutMe',
+                })
+              }}>
+              <View style={styles.cardInner}>
+                <Text style={styles.textProfile}>Job Role</Text>
+                <Icon
+                  name="plus"
+                  type="EvilIcons"
+                  style={{fontSize: 30, color: Colors.s_yellow}}
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={styles.cardContainer}>
+              {profile?.Experiences.map(e => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      NavigationService.navigate('AddExperience', {
+                        title: 'Add Experience',
+                        goBackTo: 'AboutMe',
+                        cb: team => {},
+                        ...e,
+                      })
+                    }}>
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: 'rgba(0,0,0,0.1)',
+                      }}>
+                      <View style={styles.editView}>
+                        <Text style={{fontWeight: 'bold'}}>{e.Club}</Text>
+                        <Icon
+                          type="EvilIcons"
+                          name="pencil"
+                          style={{color: Colors.s_blue, fontSize: 25}}
+                        />
+                      </View>
+                      <Text>{e.JobPosition}</Text>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
+                        <Text> To </Text>
+
+                        {e.CurrentlyWorking == true && <Text> Till Date</Text>}
+                        {e.CurrentlyWorking == false && (
+                          <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>
+                        )}
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          </View>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('AddQualifications', {
+                  title: 'Add Experience',
+                  cb: team => {},
+                  goBackTo: 'AboutMe',
+                  Qualifications: profile?.Qualifications,
+                })
+              }}>
+              <View style={styles.cardInner}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.textProfile}>Qualifications</Text>
+                </View>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+              {profile?.Qualifications && (
+                <View style={styles.cardContainer}>
+                  {profile?.Qualifications.map(q => {
+                    return (
+                      <Text style={styles.profileDescription}>
+                        {q.Qualification}
+                      </Text>
+                    )
+                  })}
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('AddDbsCertificate', {
+                  title: 'Add Experience',
+                  goBackTo: 'AboutMe',
+                  cb: team => {},
+                  ...profile.DBSCeritificate,
+                })
+              }}>
+              <View style={styles.cardInner}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.textProfile}>DBS Certificate</Text>
+                  {profile?.DBSCeritificate &&
+                    profile?.DBSCeritificate.Verified == true && (
+                      <Text
+                        style={{
+                          marginLeft: '5%',
+                          fontSize: 14,
+                          color: 'green',
+                        }}>
+                        Verified
+                      </Text>
+                    )}
+                  {(!profile?.DBSCeritificate ||
+                    profile?.DBSCeritificate.Verified == false) && (
+                    <Text
+                      style={{marginLeft: '5%', fontSize: 14, color: 'red'}}>
+                      Not Verified
+                    </Text>
+                  )}
+                </View>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.cardContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('VerificationId', {
+                  title: 'Add Experience',
+                  goBackTo: 'AboutMe',
+                  cb: team => {},
+                  ...profile.VerificationDocument,
+                })
+              }}>
+              <View style={styles.cardInner}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.textProfile}>Valid ID</Text>
+                  {profile?.VerificationDocument?.Verified == true && (
+                    <Text
+                      style={{marginLeft: '5%', fontSize: 14, color: 'green'}}>
+                      Verified
+                    </Text>
+                  )}
+                  {(!profile?.VerificationDocument ||
+                    profile?.VerificationDocument.Verified == false) && (
+                    <Text
+                      style={{marginLeft: '5%', fontSize: 14, color: 'red'}}>
+                      Not Verified
+                    </Text>
+                  )}
+                </View>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              handleOnCardPress({
+                title: 'Price Per Hour',
+                data: profile.Rate,
+                screen: 'EditInput',
+                keyboardType: 'numeric',
+                goBackTo: 'AboutMe',
+              })
+            }>
+            <View style={styles.cardContainer}>
+              <View style={styles.cardInner}>
+                <Text style={styles.textProfile}>Price Per Hour</Text>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+              <View style={styles.cardContainer}>
+                <Text style={styles.profileDescription}>£ {profile?.Rate}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() =>
+              handleOnCardPress({
+                title: 'Travel Miles',
+                data: profile.TravelMile
+                  ? profile.TravelMile.TravelDistance
+                  : '',
+                screen: 'EditInput',
+                keyboardType: 'numeric',
+                goBackTo: 'AboutMe',
+              })
+            }>
+            <View style={styles.cardContainer}>
+              <View style={styles.cardInner}>
+                <Text style={styles.textProfile}>Travel Miles</Text>
+                <Icon
+                  type="EvilIcons"
+                  name="pencil"
+                  style={{color: Colors.s_blue, fontSize: 25}}
+                />
+              </View>
+              <View style={styles.cardContainer}>
+                <Text style={styles.profileDescription}>
+                  {profile?.TravelMile ? profile.TravelMile.TravelDistance : ''}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    )
 })
 
 export const BankAccountForm = ({ setSubmitFn }) => {

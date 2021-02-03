@@ -7,19 +7,21 @@ import {
   Text,
   StatusBar,
   TextInput,
+  ActivityIndicator,
 } from 'react-native'
-import {
-  useGlobalState,
-} from '../../state/GlobalState'
+import {useGlobalState} from '../../state/GlobalState'
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button'
 import CheckBox from '@react-native-community/checkbox'
+import useAxios from 'axios-hooks'
 
 const FindCoachForm = props => {
   const [profile] = useGlobalState('profile')
+
+  // console.log(profile)
 
   const [experience, setExperience] = React.useState(null)
   const [age, setAge] = React.useState(null)
@@ -37,10 +39,19 @@ const FindCoachForm = props => {
   const [daysFlag, setDaysFlag] = React.useState(false)
   const [timingFlag, setTimingFlag] = React.useState(false)
   const [weeksFlag, setWeaksFlag] = React.useState(false)
+  const [successFlag, setSuccessFlag] = React.useState(false)
+
   const [nameFlag, setNameFlag] = React.useState(false)
   const [emailFlag, setEmailFlag] = React.useState(false)
   const [phoneFlag, setPhoneFlag] = React.useState(false)
 
+  const [{data, loading, error}, saveLead] = useAxios(
+    {
+      url: '/Users/SaveLead',
+      method: 'POST',
+    },
+    {manual: true},
+  )
 
   const PlayerInfoForm = () => {
     const ExperienceComponent = () => {
@@ -1156,8 +1167,8 @@ const FindCoachForm = props => {
                       onPress={value => {
                         setValue(value)
                         setWeaks(radio_props[value])
-                        setWeaksFlag(false)
-                        setNameFlag(true)
+                        // setWeaksFlag(false)
+                        // setSuccessFlag(true)
                       }}
                       borderWidth={1}
                       buttonInnerColor={'#5BADFE'}
@@ -1174,8 +1185,9 @@ const FindCoachForm = props => {
                       onPress={value => {
                         setValue(value)
                         setWeaks(radio_props[value])
-                        setWeaksFlag(false)
-                        setNameFlag(true)
+                        // setWeaksFlag(false)
+                        // setSuccessFlag(true)
+                        // setNameFlag(true)
                       }}
                       labelStyle={{fontSize: 20, color: 'black', width: '100%'}}
                       labelWrapStyle={{}}
@@ -1213,8 +1225,79 @@ const FindCoachForm = props => {
               onPress={() => {
                 if (!weeks) {
                 } else {
-                  setWeaksFlag(false)
-                  setNameFlag(true)
+                  let coachingArr = []
+                  let daysArr = []
+                  let timingArr = []
+                  if (coaching[0]) {
+                    coachingArr.push('1-1 coaching')
+                  }
+                  if (coaching[1]) {
+                    coachingArr.push('Small group sessions')
+                  }
+                  if (coaching[2]) {
+                    coachingArr.push('Large group sessions (team)')
+                  }
+
+                  if (days[0]) {
+                    daysArr.push('Monday')
+                  }
+                  if (days[1]) {
+                    daysArr.push('Tuesday')
+                  }
+                  if (days[2]) {
+                    daysArr.push('Wednesday')
+                  }
+                  if (days[3]) {
+                    daysArr.push('Thursday')
+                  }
+                  if (days[4]) {
+                    daysArr.push('Friday')
+                  }
+                  if (days[5]) {
+                    daysArr.push('Saturday')
+                  }
+                  if (days[6]) {
+                    daysArr.push('Sunday')
+                  }
+
+                  if (timing[0]) {
+                    timingArr.push('Early morning (06:00 - 09:00)')
+                  }
+                  if (timing[1]) {
+                    timingArr.push('Late morning (09:00 - 12:00)')
+                  }
+                  if (timing[2]) {
+                    timingArr.push('Early afternoon (12:00 - 15:00)')
+                  }
+                  if (timing[3]) {
+                    timingArr.push('Late afternoon (15:00 - 18:00)')
+                  }
+                  if (timing[4]) {
+                    timingArr.push('Evening (18:00 - 22:00)')
+                  }
+
+                  const data = {
+                    fullName: profile.FullName,
+                    emailID: profile.EmailID,
+                    mobileNo: profile.MobileNo,
+                    location: profile.State,
+                    experience: experience.label,
+                    age: age.label,
+                    coachingType: coachingArr,
+                    days: daysArr,
+                    coachingTime: timingArr,
+                    daysOfWeek: [weeks.label],
+                  }
+                  // console.log(data)
+                  saveLead({data})
+                    .then(response => {
+                      // console.log('hello', response.data)
+                      setWeaksFlag(false)
+                      setSuccessFlag(true)
+                    })
+                    .catch(e => {
+                      // console.log('error', e)
+                    })
                 }
               }}
               style={{
@@ -1227,7 +1310,7 @@ const FindCoachForm = props => {
                 justifyContent: 'center',
               }}>
               <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                NEXT
+                SUBMIT
               </Text>
             </TouchableOpacity>
           </View>
@@ -1397,6 +1480,31 @@ const FindCoachForm = props => {
       )
     }
 
+    const SuccessComponent = () => {
+      return (
+        <View
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            borderRadius: 10,
+            height: 350,
+            marginBottom: 20,
+            backgroundColor: 'white',
+            alignItems: 'center',
+            justifyContent: 'space-evenly',
+          }}>
+          {loading ? (
+            <ActivityIndicator size="large" color="#1967CD" />
+          ) : (
+            <Text
+              style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+              Lead Created Successfully.
+            </Text>
+          )}
+        </View>
+      )
+    }
+
     const PhoneComponent = () => {
       return (
         <View
@@ -1456,9 +1564,7 @@ const FindCoachForm = props => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-              
-              }}
+              onPress={() => {}}
               style={{
                 backgroundColor: '#031D70',
                 width: '40%',
@@ -1510,18 +1616,17 @@ const FindCoachForm = props => {
             {daysFlag && <DaysComponent />}
             {timingFlag && <TimingComponent />}
             {weeksFlag && <TrainTimeComponent />}
-            {nameFlag && <NameComponent />}
+            {successFlag && <SuccessComponent />}
+            {/* {nameFlag && <NameComponent />}
             {emailFlag && <EmailComponent />}
-            {phoneFlag && <PhoneComponent />}
+            {phoneFlag && <PhoneComponent />} */}
           </ScrollView>
         </SafeAreaView>
       </>
     )
   }
 
-  return (
-        <PlayerInfoForm />
-  )
+  return <PlayerInfoForm />
 }
 
 export default FindCoachForm

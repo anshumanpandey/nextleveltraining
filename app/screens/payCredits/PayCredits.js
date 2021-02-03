@@ -24,6 +24,7 @@ var UrlParser = require('url-parse');
 
 const PayCredits = (props) => {
   const amount = props.navigation.getParam('amount', 0);
+  const credits = props.navigation.getParam('credits', 0)
 
   const webview = useRef(null);
   const [profile] = useGlobalState('profile');
@@ -46,6 +47,14 @@ const PayCredits = (props) => {
     },
     {manual: true},
   );
+
+  const [buyCreditsReq, buyCredits] = useAxios(
+    {
+      url: '/Users/BuyCredits',
+      method: 'POST',
+    },
+    {manual: true},
+  )
 
   const isLoading = () =>
     getAccessTokenReq.loading || generatePaymentOrderReq.loading;
@@ -130,6 +139,17 @@ const PayCredits = (props) => {
             console.log(json)
             generatePaymentOrderFor(json)
               .then(res => {
+                const data = {
+                  credits: credits,
+                  amountPaid: amount,
+                }
+                buyCredits({data})
+                  .then(response => {
+                    if (response.status === 200) {
+                      // console.log(response.data)
+                    }
+                  })
+                  .catch(e => {})
                 console.log(res.data)
                 setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
               })

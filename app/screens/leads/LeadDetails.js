@@ -1,12 +1,53 @@
-import React from 'react';
-import {View, TouchableOpacity, ScrollView, Text} from 'react-native';
-import Header from '../../components/header/Header';
-import {Icon} from 'native-base';
-import MapView, {Marker} from 'react-native-maps';
+import React from 'react'
+import {View, TouchableOpacity, ScrollView, Text, Alert} from 'react-native'
+import Header from '../../components/header/Header'
+import {Icon} from 'native-base'
+import styles from './styles'
+import MapView, {Marker} from 'react-native-maps'
+import useAxios from 'axios-hooks'
+import { CreditIcon } from '../../components/styled'
+import {useGlobalState} from '../../state/GlobalState'
 
-const LeadDetails = (props) => {
-  const player = props.navigation.getParam('player');
+const LeadDetails = props => {
+  const player = props.navigation.getParam('player')
   const address = props.navigation.getParam('address')
+  const about = props.navigation.getParam('AboutUs')
+  const Id = props.navigation.getParam('Id')
+
+  const [profile] = useGlobalState("profile")
+
+  const [lead, setLead] = React.useState(null)
+  const [loading, setLoading] = React.useState(true)
+
+  const [getLeadReq, getLead] = useAxios({ url: `/Users/GetLead/${Id}` })
+  
+  const [purchaseLeadReq, purchaseLead] = useAxios(
+    {
+      url: `/Users/PurchaseLead`,
+      method: 'POST',
+    },
+    {manual: true},
+  )
+
+  React.useEffect(() => {
+    fetchLead()
+  }, [])
+
+  const fetchLead = () => {
+    getLead()
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res.data)
+          setLead(res.data)
+          setLoading(false)
+        } else {
+          setLoading(false)
+        }
+      })
+      .catch(e => {
+        console.log(e.message)
+      })
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
@@ -41,7 +82,7 @@ const LeadDetails = (props) => {
             justifyContent: 'space-between',
           }}>
           <Text style={{color: '#9FA2B7', fontSize: 18, marginLeft: 15}}>
-            {player.Distance}m ago
+            {player.Distance} meters away
           </Text>
         </View>
         <View style={{width: '100%'}}>
@@ -88,7 +129,7 @@ const LeadDetails = (props) => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            07*******
+            0********
           </Text>
         </View>
 
@@ -113,13 +154,8 @@ const LeadDetails = (props) => {
         </View>
 
         <View style={{width: '100%', marginTop: 10, flexDirection: 'row'}}>
-          <Text
-            style={{
-              fontSize: 18,
-              paddingLeft: 15,
-            }}>
-            2 credits
-          </Text>
+          <CreditIcon style={{marginLeft: 10}} />
+          <Text style={styles.creditText}>1 Credit</Text>
         </View>
 
         <View
@@ -145,112 +181,167 @@ const LeadDetails = (props) => {
           </Text>
         </View>
 
-        <View
-          style={{
-            marginTop: 20,
-            width: '90%',
-            height: 120,
-            backgroundColor: '#00000008',
-            borderRadius: 5,
-            justifyContent: 'space-evenly',
-          }}>
-          <Text
+        {lead ? (
+          <>
+            <View
+              style={{
+                marginTop: 20,
+                width: '90%',
+                height: 120,
+                backgroundColor: '#00000008',
+                borderRadius: 5,
+                justifyContent: 'space-evenly',
+              }}>
+              <Text
+                style={{
+                  color: '#9FA2B7',
+                  fontSize: 18,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                  lineHeight: 28,
+                }}>
+                What is the student's current level of experience?
+              </Text>
+              <Text style={{fontSize: 18, paddingLeft: 15}}>
+                {lead.Experience}
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                width: '90%',
+                height: 80,
+                backgroundColor: '#00000008',
+                borderRadius: 5,
+                justifyContent: 'space-evenly',
+              }}>
+              <Text
+                style={{
+                  color: '#9FA2B7',
+                  fontSize: 18,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                }}>
+                How old is the student?
+              </Text>
+              <Text style={{fontSize: 18, paddingLeft: 15}}>{lead.Age}</Text>
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                width: '90%',
+                height: 120,
+                backgroundColor: '#00000008',
+                borderRadius: 5,
+                justifyContent: 'space-evenly',
+              }}>
+              <Text
+                style={{
+                  color: '#9FA2B7',
+                  fontSize: 18,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                  lineHeight: 28,
+                }}>
+                Which kind of coaching would you consider?
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+                {lead.CoachingType.map(item => (
+                  <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+                ))}
+              </View>
+              <Text style={{fontSize: 18, paddingLeft: 15}}></Text>
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                width: '90%',
+                height: 120,
+                backgroundColor: '#00000008',
+                borderRadius: 5,
+                justifyContent: 'space-evenly',
+              }}>
+              <Text
+                style={{
+                  color: '#9FA2B7',
+                  fontSize: 18,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                  lineHeight: 28,
+                }}>
+                Which day(s) would you consider for coaching?
+              </Text>
+              <View style={{flexDirection: 'row', flexWrap: 1}}>
+                {lead.Days.map(item => (
+                  <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+                ))}
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                width: '90%',
+                height: 120,
+                backgroundColor: '#00000008',
+                borderRadius: 5,
+                justifyContent: 'space-evenly',
+              }}>
+              <Text
+                style={{
+                  color: '#9FA2B7',
+                  fontSize: 18,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                  lineHeight: 28,
+                }}>
+                Which time(s) of day would you consider for coaching?
+              </Text>
+              <View style={{flexDirection: 'row', flexWrap: 1}}>
+                {lead.CoachingTime.map(item => (
+                  <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+                ))}
+              </View>
+            </View>
+
+            <View
+              style={{
+                marginTop: 5,
+                width: '90%',
+                height: 120,
+                backgroundColor: '#00000008',
+                borderRadius: 5,
+                justifyContent: 'space-evenly',
+              }}>
+              <Text
+                style={{
+                  color: '#9FA2B7',
+                  fontSize: 18,
+                  fontWeight: '500',
+                  paddingLeft: 15,
+                  lineHeight: 28,
+                }}>
+                How many times a week does the player want to train?
+              </Text>
+              <Text style={{fontSize: 18, paddingLeft: 15}}>
+                {lead.DaysOfWeek[0]}
+              </Text>
+            </View>
+          </>
+        ) : loading ? undefined : (
+          <View
             style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-              lineHeight: 28,
+              width: '100%',
+              paddingHorizontal: 15,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 20,
             }}>
-            What is the student's current level of experience?
-          </Text>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>Beginner</Text>
-        </View>
-        <View
-          style={{
-            marginTop: 5,
-            width: '90%',
-            height: 80,
-            backgroundColor: '#00000008',
-            borderRadius: 5,
-            justifyContent: 'space-evenly',
-          }}>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-            }}>
-            How old is the student?
-          </Text>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>Child</Text>
-        </View>
-        <View
-          style={{
-            marginTop: 5,
-            width: '90%',
-            height: 120,
-            backgroundColor: '#00000008',
-            borderRadius: 5,
-            justifyContent: 'space-evenly',
-          }}>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-              lineHeight: 28,
-            }}>
-            Which kind of coaching would you consider?
-          </Text>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>1-1 coaching</Text>
-        </View>
-        <View
-          style={{
-            marginTop: 5,
-            width: '90%',
-            height: 120,
-            backgroundColor: '#00000008',
-            borderRadius: 5,
-            justifyContent: 'space-evenly',
-          }}>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-              lineHeight: 28,
-            }}>
-            Which day(s) would you consider for coaching?
-          </Text>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>Monday</Text>
-        </View>
-        <View
-          style={{
-            marginTop: 5,
-            width: '90%',
-            height: 120,
-            backgroundColor: '#00000008',
-            borderRadius: 5,
-            justifyContent: 'space-evenly',
-          }}>
-          <Text
-            style={{
-              color: '#9FA2B7',
-              fontSize: 18,
-              fontWeight: '500',
-              paddingLeft: 15,
-              lineHeight: 28,
-            }}>
-            Which time(s) of day would you consider for coaching?
-          </Text>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>
-            Evening (1800-2200)
-          </Text>
-        </View>
+            <Text style={{fontSize: 18}}>
+              Player hasn't filled his detail form yet.
+            </Text>
+          </View>
+        )}
+
         <View style={{width: '100%', marginTop: 30, marginLeft: 15}}>
           <Text style={{fontSize: 18, paddingLeft: 15}}>
             Additional Details
@@ -266,8 +357,7 @@ const LeadDetails = (props) => {
               color: '#5E6488',
               textAlign: 'left',
             }}>
-            {player.AboutUs ||
-              'I am looking for a one to one coach for my 7 year old son. He currently plays for a team bug struggles to understand what is being asked of him so I think he would get benefit from one to one coaching.'}
+            {about}
           </Text>
         </View>
 
@@ -294,24 +384,49 @@ const LeadDetails = (props) => {
             />
           </MapView> */}
         </View>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('Cart')}
-          style={{
-            width: '90%',
-            height: 50,
-            borderRadius: 5,
-            backgroundColor: '#2D7AF0',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginVertical: 20,
-          }}>
-          <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
-            Buy Lead
-          </Text>
-        </TouchableOpacity>
+
+        {lead && (
+          <TouchableOpacity
+            onPress={() => {
+              if (profile.Credits > 0) {
+                const data = {leadId: lead.Id}
+                purchaseLead({data})
+                  .then(res => {
+                    if (res.status === 200) {
+                      console.log(res.data)
+                      Alert.alert(
+                        'Lead Purchased',
+                        'You have successfully purchased this lead. Go to responses tab to see it.',
+                      )
+                    }
+                  })
+                  .catch(e => {
+                    console.log("err",e)
+                  })
+              } else {
+                Alert.alert(
+                  'Not enough Credits',
+                  'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
+                )
+              }
+            }}
+            style={{
+              width: '90%',
+              height: 50,
+              borderRadius: 5,
+              backgroundColor: '#2D7AF0',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: 20,
+            }}>
+            <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
+              Buy Lead
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </View>
   )
-};
+}
 
-export default LeadDetails;
+export default LeadDetails

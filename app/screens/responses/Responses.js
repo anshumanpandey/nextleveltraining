@@ -1,60 +1,97 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, FlatList} from 'react-native';
-import {Icon} from 'native-base';
+import {Icon, Spinner} from 'native-base';
 import Header from '../../components/header/Header';
-import styles from './styles';
+import styles from './styles'
+import { useGlobalState } from '../../state/GlobalState'
+import useAxios from 'axios-hooks'
 
 const Responses = (props) => {
+  const [profile] = useGlobalState('profile')
+  const [responses, setResponses] = React.useState(null)
+
+const [getResponsesReq, getResponses] = useAxios(
+  {
+    url: `Users/GetResponses`
+  }
+)
+
+React.useEffect(() => {
+  fetchResponses()
+}, [])
+  
+  const fetchResponses = () => {
+    getResponses().then(res => {
+      if (res.status === 200) {
+        console.log(res.data)
+        setResponses(res.data)
+      }
+    }).catch(e => {
+      console.log(e)
+    })
+  }
+
   return (
     <View style={styles.container}>
-      <Header title="Responses" hideCreatePost customButton={FilterButton} />
-      <FlatList
-        data={[
-          {name: 'Ashley'},
-          {name: 'Hayden'},
-          {name: 'Nikolas'},
-          {name: 'Glenn'},
-          ...Array(8).fill({name: 'Olie'}),
-        ]}
-        keyExtractor={(_, idx) => idx}
-        renderItem={({item}) => (
-          <ResponseItem item={item} navigation={props.navigation} />
-        )}
-        ListHeaderComponent={ListHeader}
-        ListHeaderComponentStyle={{marginBottom: 15}}
-        ItemSeparatorComponent={Seperator}
-      />
+      <Header title="Responses" hideCreatePost />
+      {getResponsesReq.loading ? (
+        <Spinner size={30} color="#80849D" />
+      ) : (
+        <FlatList
+          data={responses}
+          keyExtractor={(_, idx) => idx}
+          renderItem={({item}) => (
+            <ResponseItem item={item} navigation={props.navigation} />
+          )}
+          ListHeaderComponent={() => (
+            <ListHeader
+              numResponses={responses ? responses.length : 0}
+            />
+          )}
+          ListHeaderComponentStyle={{marginBottom: 15}}
+          ItemSeparatorComponent={Seperator}
+        />
+      )}
     </View>
-  );
+  )
 };
 
 const ResponseItem = ({item, navigation}) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ResponseDetails')}
+      onPress={() => navigation.navigate('ResponseDetails', {lead: item})}
       style={styles.responseItem}>
-      <Text style={styles.responseName}>{item.name}</Text>
+      <Text style={styles.responseName}>{item.Lead.FullName}</Text>
       <Text style={styles.responseDetail}>Football Coaching</Text>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
-        <Text style={styles.locationText}>Royal Tunbridge Wells, Kent</Text>
+        <Text style={styles.locationText}>{item.Lead.Location}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-const ListHeader = () => {
+const ListHeader = ({numResponses}) => {
   return (
     <>
       <Seperator opacity={0.2} />
       <View style={styles.listHeaderStatus}>
-        <Text style={styles.totalShowing}>Showing all 72 responses</Text>
+        {numResponses > 1 ? (
+          <Text style={styles.totalShowing}>
+            Showing all {numResponses} responses
+          </Text>
+        ) : (
+          <Text style={styles.totalShowing}>
+            Showing {numResponses} response
+          </Text>
+        )}
+
         <Text style={styles.lastUpdated}>Updated just now</Text>
       </View>
       <Seperator opacity={0.2} />
     </>
-  );
-};
+  )
+}
 
 const FilterButton = () => {
   return (

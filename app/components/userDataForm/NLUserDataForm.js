@@ -72,7 +72,7 @@ const NLUserDataForm = ({
         emailID: props.navigation.getParam('EmailID') || '',
         mobileNo: props.navigation.getParam('MobileNo') || '',
         postCode: props.navigation.getParam('PostCode') || '',
-        // state: props.navigation.getParam('state') || '',
+        state: props.navigation.getParam('state') || '',
         role: props.navigation.getParam('role', 'Player'),
         password: '',
         confirmPassword: '',
@@ -82,13 +82,13 @@ const NLUserDataForm = ({
       validate={values => {
         const errors = {}
 
-          console.log(values)
+        console.log(values)
         if (!values.fullName) errors.fullName = 'Required'
         if (!values.address) errors.address = 'Required'
         if (!values.emailID) errors.emailID = 'Required'
         if (!values.mobileNo) errors.mobileNo = 'Required'
         if (!values.postCode) errors.postCode = 'Required'
-        // if (!values.state) errors.state = 'Required'
+        if (!values.state) errors.state = 'Required'
 
         if (props.hidePasswordInput != true) {
           if (!values.password) {
@@ -122,7 +122,6 @@ const NLUserDataForm = ({
         return errors
       }}
       onSubmit={async values => {
-        
         const deviceToken = await RequestDeviceToken()
 
         console.log('saving user data')
@@ -222,6 +221,10 @@ const NLUserDataForm = ({
                 setFieldValue('lat', selected.latitude)
                 setFieldValue('lng', selected.longitude)
                 setFieldValue('postCode', selected.postcode)
+                setFieldValue(
+                  'state',
+                  `${selected.county}, ${selected.country}`,
+                )
               }}
               options={addresses.map(a => ({
                 label: getFullSuggestionAddress(a),
@@ -250,19 +253,20 @@ const NLUserDataForm = ({
               <ErrorLabel text={errors.emailID} />
             )}
 
-            {/* <View style={styles.signup_info_view}>
+            <View style={styles.signup_info_view}>
               <TextInput
                 style={{color: 'black'}}
+                disabled={true}
                 placeholderTextColor={'rgba(0,0,0,0.3)'}
-                placeholder="State"
-                onChangeText={handleChange('state')}
-                onBlur={handleBlur('state')}
+                placeholder="County"
+                // onChangeText={handleChange('state')}
+                // onBlur={handleBlur('state')}
                 value={values.state}
               />
             </View>
             {errors.state && touched.state && (
               <ErrorLabel text={errors.state} />
-            )} */}
+            )}
 
             <View style={styles.signup_info_view}>
               <TextInput

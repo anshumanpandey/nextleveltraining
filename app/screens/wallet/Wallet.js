@@ -1,20 +1,58 @@
-import {Icon} from 'native-base';
-import React from 'react';
-import {Image, ScrollView, Text, View} from 'react-native';
-import Header from '../../components/header/Header';
-import Images from '../../constants/image';
-import styles from './styles';
+import {Icon} from 'native-base'
+import React from 'react'
+import {Image, ScrollView, Text, View, FlatList} from 'react-native'
+import Header from '../../components/header/Header'
+import Images from '../../constants/image'
+import styles from './styles'
+import useAxios from 'axios-hooks'
 
-const Wallet = (props) => {
-  const amount = props.navigation.getParam('amount', 0);
+const Wallet = props => {
+  // const amount = props.navigation.getParam('amount', 0);
 
-  // const [savePaymenReq, savePayment] = useAxios(
-  //   {
-  //     url: '/Users/UpdatePaymentDetails',
-  //     method: 'POST',
-  //   },
-  //   {manual: true},
-  // );
+  const [total, setTotal] = React.useState(0)
+  const [creditsData, setCredidtsData] = React.useState([])
+  const [creditsHistoryData, getCreditsHistory] = useAxios(
+    {
+      url: '/Users/GetCreditHistory',
+      method: 'GET',
+    },
+    {manual: true},
+  )
+
+  React.useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = () => {
+    getCreditsHistory()
+      .then(res => {
+        if (res.status === 200) {
+          let count = 0
+          res.data.forEach(item => {
+            count = count + item.Credits 
+          })
+          setTotal(count)
+          setCredidtsData(res.data)
+        }
+      })
+      .catch(e => {})
+  }
+
+  const renderItem = ({ item, index }) => {
+    const date = item.CreatedAt.split("T")
+    return (
+      <View style={styles.historyItem}>
+        <View style={styles.itemRow}>
+          <Text style={styles.titleText}>Paypal</Text>
+          <Text style={styles.amountText}>£ {item.AmountPaid}</Text>
+        </View>
+        <View style={styles.itemRow}>
+          <Text style={styles.infoText}>{date[0]}</Text>
+          <Text style={styles.infoText}>{item.Credits} Credits</Text>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -43,7 +81,9 @@ const Wallet = (props) => {
       />
       <View style={styles.creditSection}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={{fontSize: 35}}>{amount}</Text>
+          <Text style={{fontSize: 35}}>
+            {creditsData.length === 0 ? 0 : total}
+          </Text>
           <Image
             style={{width: 30, height: 20}}
             resizeMode="contain"
@@ -52,29 +92,20 @@ const Wallet = (props) => {
         </View>
         <Text style={styles.infoText}>Credits</Text>
       </View>
-      <View style={styles.historyItem}>
-        <View style={styles.itemRow}>
-          <Text style={styles.titleText}>Paypal</Text>
-          <Text style={styles.amountText}>£ 20</Text>
-        </View>
-        <View style={styles.itemRow}>
-          <Text style={styles.infoText}>Sat 12 Dec 09:48</Text>
-          <Text style={styles.infoText}>+20 credits</Text>
-        </View>
-      </View>
-      <View style={styles.historyItem}>
-        <View style={styles.itemRow}>
-          <Text style={styles.titleText}>Paypal</Text>
-          <Text style={styles.amountText}>£ 5</Text>
-        </View>
-        <View style={styles.itemRow}>
-          <Text style={styles.infoText}>Thu 9 Dec 02:11</Text>
-          <Text style={styles.infoText}>+5 credits</Text>
-        </View>
-      </View>
+      <FlatList
+        data={creditsData}
+        renderItem={renderItem}
+        ListEmptyComponent={() => (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={styles.infoText}>No credit history</Text>
+          </View>
+        )}
+        keyExtractor={item => item.id}
+      />
     </ScrollView>
   )
-};
+}
 
 const BackButton = ({navigation}) => (
   <Icon
@@ -89,7 +120,7 @@ const BackButton = ({navigation}) => (
       color: '#2D7AF0',
     }}
   />
-);
+)
 
 const AddButton = () => (
   <Icon
@@ -103,6 +134,6 @@ const AddButton = () => (
       color: '#2D7AF0',
     }}
   />
-);
+)
 
-export default Wallet;
+export default Wallet
