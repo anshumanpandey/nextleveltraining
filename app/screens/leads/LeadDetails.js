@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, TouchableOpacity, ScrollView, Text, Alert} from 'react-native'
+import {View, TouchableOpacity, ScrollView, Text, Alert, Platform} from 'react-native'
 import Header from '../../components/header/Header'
 import {Icon} from 'native-base'
 import styles from './styles'
@@ -271,7 +271,7 @@ const LeadDetails = props => {
                 }}>
                 Which day(s) would you consider for coaching?
               </Text>
-              <View style={{flexDirection: 'row', flexWrap: 1}}>
+              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                 {lead.Days.map(item => (
                   <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
                 ))}
@@ -296,7 +296,7 @@ const LeadDetails = props => {
                 }}>
                 Which time(s) of day would you consider for coaching?
               </Text>
-              <View style={{flexDirection: 'row', flexWrap: 1}}>
+              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                 {lead.CoachingTime.map(item => (
                   <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
                 ))}

@@ -355,7 +355,7 @@ const ResponseDetails = props => {
               }}>
               Which day(s) would you consider for coaching?
             </Text>
-            <View style={{flexDirection: 'row', flexWrap: 1}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
               {response.Lead.Days.map(item => (
                 <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
               ))}
@@ -380,7 +380,7 @@ const ResponseDetails = props => {
               }}>
               Which time(s) of day would you consider for coaching?
             </Text>
-            <View style={{flexDirection: 'row', flexWrap: 1}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
               {response.Lead.CoachingTime.map(item => (
                 <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
               ))}
