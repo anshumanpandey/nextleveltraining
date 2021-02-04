@@ -47,6 +47,6 @@ export const CreditIcon = styled.Image.attrs(() => ({
   resizeMode: 'contain',
   source: Images.LogoOnly,
 }))`
-  width: 30px;
+  width: 20px;
   height: 20px;
 `

@@ -167,6 +167,7 @@ const NLAddressSuggestionInput = ({
           placeholder={placeholder || 'Search by a post code'}
           placeholderTextColor={'rgba(0,0,0,0.3)'}
           value={currentDisaplyValue}
+          style={{fontSize:14}}
           onChangeText={(t) => {
             setCurrentValue(t)
             setCurrentDisaplyValue(t)
@@ -214,7 +215,7 @@ const NLAddressSuggestionInput = ({
 const styles = StyleSheet.create({
   input_wrapper: {
     color: 'black',
-    padding: 1,
+    // padding: 1,
     borderBottomWidth: 0.8,
     borderBottomColor: 'lightgrey',
     marginTop: Dimension.px1,

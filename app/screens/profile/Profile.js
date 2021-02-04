@@ -1571,7 +1571,7 @@ const PlayerProfile = (props) => {
            ) : (
              <Text
                style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
-               Lead Created Successfully.
+               {`Lead created successfully. \n A coach will contact you.`}
              </Text>
            )}
          </View>

@@ -1099,7 +1099,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                             <View style={styles.containerCommon}>
                                 <View style={styles.inputContainer}>
                                     <RNTextInput
-                                        style={{ height: 50, color: 'black' }}
+                                        style={{ height: 50, color: 'black', paddingLeft:5 }}
                                         placeholderTextColor={'rgba(0,0,0,0.3)'}
                                         placeholder={"Location Name"}
                                         onChangeText={handleChange('locationName')}
@@ -1120,7 +1120,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                                 {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
                                 <View style={[styles.inputContainer, { marginTop: '2%' }]}>
-                                    <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
+                                    <Text numberOfLines={1} style={{ paddingLeft:5, color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
                                 </View>
                                 <NLCropperImagePicker onFileSelected={(file) => {
                                     console.log(file)

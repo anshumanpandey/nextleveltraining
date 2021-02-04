@@ -7,8 +7,9 @@ export const scaleSize = (size) => (WINDOW_WIDTH / guidelineBaseWidth) * size;
 
 const styles = StyleSheet.create({
     containerCommon: {
-        width: WINDOW_WIDTH * 0.8,
-        margin: scaleSize(20),
+        width: WINDOW_WIDTH,
+        // margin: scaleSize(20),
+        paddingHorizontal: scaleSize(20),
         flexDirection: "column",
     },
     containerAbout: {

@@ -114,7 +114,7 @@ const LeadItem = ({ item, navigation }) => {
           player: item,
           address: item.State ? item.State : '',
           AboutUs: item.AboutUs,
-          Id: item.Id
+          Id: item.Id,
         })
       }>
       {item.QuoteRequested && <Text style={styles.leadIndicator}>•</Text>}
@@ -131,7 +131,7 @@ const LeadItem = ({ item, navigation }) => {
         </Row>
       )}
 
-      <Row>
+      <Row mb={4} style={{alignItems: 'flex-start'}}>
         <CreditIcon />
         <Text style={styles.creditText}>1 Credit</Text>
       </Row>

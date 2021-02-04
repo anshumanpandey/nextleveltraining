@@ -18,10 +18,36 @@ const TrainingLocationScreen = (props) => {
                 title="Training Locations"
                 customButton={() => {
                     return (
-                        <TouchableOpacity style={{ marginLeft: '80%'}} onPress={() => props.navigation.navigate("TrainingLocationEdit", { item: undefined })}>
-                            <Text>Create</Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          flexGrow: 1,
+                        }}>
+                        <Icon
+                          onPress={() => props.navigation.goBack()}
+                          type="Feather"
+                          name="arrow-left"
+                          style={{
+                            left: 15,
+                            fontSize: 22,
+                            color: '#2D7AF0',
+                          }}
+                        />
+                        <TouchableOpacity
+                          style={{backgroundColor: '#0F2F80', width:70, height:40, borderRadius:5, alignItems:'center', justifyContent:'center'}}
+
+                          onPress={() =>
+                            props.navigation.navigate('TrainingLocationEdit', {
+                              item: undefined,
+                            })
+                          }>
+                                <Text style={{ color:'white'}}>Create</Text>
                         </TouchableOpacity>
-                    );
+                      </View>
+                    )
                 }}
                 hideCreatePost={true}
                 toggleDrawer={props.navigation.toggleDrawer}
