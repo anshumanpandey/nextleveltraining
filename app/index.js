@@ -278,6 +278,8 @@ const AppMain = () => {
       PersonalDetails: {screen: PersonalDetails},
       FindCoach: {screen: FindCoach},
       MyProfilePlayer: {screen: MyProfilePlayer},
+      Cart: {screen: Cart},
+      PayCredits: {screen: PayCredits},
     },
     {
       defaultNavigationOptions: ({navigation}) => {
@@ -301,6 +303,8 @@ const AppMain = () => {
       Notification: {screen: Notifications},
       Message: {screen: Message},
       LastMessage: {screen: LastMessage},
+      Cart: {screen: Cart},
+      PayCredits: {screen: PayCredits},
     },
     {
       defaultNavigationOptions: ({navigation}) => {

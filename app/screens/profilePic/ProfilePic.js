@@ -124,11 +124,11 @@ const ProfilePicScreen = (props) => {
                             />
                             <View>
 
-                                <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
+                                {/* <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
                                     {values.file?.uri && <Text numberOfLines={1} style={{ color: 'black', paddingVertical: '4%' }}>{values.file.uri}</Text>}
                                     {values.file && !values.file?.uri && <Text numberOfLines={1} style={{ color: 'black', paddingVertical: '4%' }}>{values.file}</Text>}
                                     {!values.file && <Text numberOfLines={1} style={{ color: 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>Upload profile pic</Text>}
-                                </View>
+                                </View> */}
                                 <NLCropperImagePicker onFileSelected={(file) => {
                                     console.log(file)
                                     setFieldValue("file", file)

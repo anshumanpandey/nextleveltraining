@@ -28,7 +28,40 @@ const styles = {
     fontWeight: '700',
   },
   personal_detail_text: {
-    padding: 10, marginLeft: 5
+    padding: 10,
+    marginLeft: 5,
+  },
+  signup_btn_view: {
+    width: Dimension.pro100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    marginTop: Dimension.px40,
+  },
+  signup_btn_player: {
+    width: Dimension.pro80,
+    height: Dimension.px50,
+    backgroundColor: Colors.s_blue,
+    borderRadius: 25,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  signup_btn_player_view: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
+  },
+  signup_btn_icon_size: {
+    width: 40,
+    height: 40,
+    marginLeft: 20,
+  },
+  signup_player_text: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: '500',
   },
   editView: {
     alignItems: 'center',

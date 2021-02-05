@@ -15,11 +15,13 @@ import {
   useGlobalState,
 } from '../../state/GlobalState'
 import InfoLabel from '../../components/InfoLabel'
+import PersonalDetailsEdit from './PersonalDetailsEdit'
 
 const PersonalDetails = props => {
   const [isSaving, setIsSaving] = useState(false)
   const [submitDetailsFn, setDetailsSubmitFn] = useState()
   const [currentSubmitFn, setCurrentSubmitFn] = useState()
+  const [edit, setEdit] = React.useState(false)
   const paswordFormikRef = useRef()
   const [profile] = useGlobalState('profile')
 
@@ -119,32 +121,60 @@ const PersonalDetails = props => {
             tabStyle={{backgroundColor: 'white'}}
             activeTabStyle={{backgroundColor: 'white'}}
             heading="Personal details">
-            <View style={styles.personal_detail_view}>
-              <Text style={styles.personal_detail_label}>Full Name:</Text>
-              <Text style={styles.personal_detail_text}>
-                {profile.FullName}
-              </Text>
-            </View>
-            <View style={styles.personal_detail_view}>
-              <Text style={styles.personal_detail_label}>Post Code:</Text>
-              <Text style={styles.personal_detail_text}>
-                {profile.PostCode}
-              </Text>
-            </View>
-            <View style={styles.personal_detail_view}>
-              <Text style={styles.personal_detail_label}>Address:</Text>
-              <Text style={styles.personal_detail_text}>{profile.Address}</Text>
-            </View>
-            <View style={styles.personal_detail_view}>
-              <Text style={styles.personal_detail_label}>Email:</Text>
-              <Text style={styles.personal_detail_text}>{profile.EmailID}</Text>
-            </View>
-            <View style={styles.personal_detail_view}>
-              <Text style={styles.personal_detail_label}>Mobile No:</Text>
-              <Text style={styles.personal_detail_text}>
-                {profile.MobileNo}
-              </Text>
-            </View>
+            {edit ? (
+              <PersonalDetailsEdit
+                FullName={profile.FullName}
+                Address={profile.Address}
+                MobileNo={profile.MobileNo}
+                postCode={profile.PostCode}
+                state={profile.State}
+                cancelEdit={() => setEdit(false)}
+              />
+            ) : (
+              <>
+                <View style={styles.personal_detail_view}>
+                  <Text style={styles.personal_detail_label}>Full Name:</Text>
+                  <Text style={styles.personal_detail_text}>
+                    {profile.FullName}
+                  </Text>
+                </View>
+                <View style={styles.personal_detail_view}>
+                  <Text style={styles.personal_detail_label}>Post Code:</Text>
+                  <Text style={styles.personal_detail_text}>
+                    {profile.PostCode}
+                  </Text>
+                </View>
+                <View style={styles.personal_detail_view}>
+                  <Text style={styles.personal_detail_label}>Address:</Text>
+                  <Text style={styles.personal_detail_text}>
+                    {profile.Address}
+                  </Text>
+                </View>
+                <View style={styles.personal_detail_view}>
+                  <Text style={styles.personal_detail_label}>Email:</Text>
+                  <Text style={styles.personal_detail_text}>
+                    {profile.EmailID}
+                  </Text>
+                </View>
+                <View style={styles.personal_detail_view}>
+                  <Text style={styles.personal_detail_label}>Mobile No:</Text>
+                  <Text style={styles.personal_detail_text}>
+                    {profile.MobileNo}
+                  </Text>
+                </View>
+                <View style={styles.signup_btn_view}>
+                  <TouchableOpacity
+                    style={[styles.signup_btn_player, {width: 200}]}
+                    onPress={() => setEdit(true)}>
+                    <View style={styles.signup_btn_player_view}>
+                      <Text style={styles.signup_player_text}>
+                        Edit Details
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </Tab>
           <Tab
             activeTextStyle={{color: Colors.s_blue}}

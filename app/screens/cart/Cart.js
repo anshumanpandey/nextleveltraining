@@ -46,7 +46,12 @@ const CardItem = ({navigation, item}) => {
   return (
     <Card>
       <CardTitle>Buy Credits</CardTitle>
-      <Text style={{fontWeight: '500'}}>About {item.credits} responses</Text>
+      {item.credits === 1 ? (
+        <Text style={{fontWeight: '500'}}>About {item.credits} response</Text>
+      ) : (
+        <Text style={{fontWeight: '500'}}>About {item.credits} responses</Text>
+      )}
+
       {item.credits === 1 ? (
         <Text style={{fontWeight: '500'}}>{item.credits} credit</Text>
       ) : (
@@ -59,7 +64,7 @@ const CardItem = ({navigation, item}) => {
       </Row>
 
       <Button
-        onPress={() =>
+        onPress={() =>  
           navigation.navigate('PayCredits', {
             amount: item.price,
             credits: item.credits,

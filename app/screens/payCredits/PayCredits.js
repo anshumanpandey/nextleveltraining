@@ -1,44 +1,48 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react'
 import {
   ScrollView,
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
   Modal,
-} from 'react-native';
-import styles from './styles';
-import {Text, View, CheckBox, Spinner} from 'native-base';
-import Header from '../../components/header/Header';
-import Images from '../../constants/image';
-import Colors from '../../constants/color';
-import {GET_PAYPAL_JSON} from './PaypalUtils';
-import {WebView} from 'react-native-webview';
-import useAxios from 'axios-hooks';
-import {useGlobalState} from '../../state/GlobalState';
-import {NavigationActions, StackActions} from 'react-navigation';
-import GlobalContants from '../../constants/GlobalContants';
-import AsyncStorage from '@react-native-community/async-storage';
-import {UsePaypalHook} from '../../utils/UsePaypalHook';
-var qs = require('qs');
-var UrlParser = require('url-parse');
+} from 'react-native'
+import styles from './styles'
+import {Text, View, CheckBox, Spinner} from 'native-base'
+import Header from '../../components/header/Header'
+import Images from '../../constants/image'
+import Colors from '../../constants/color'
+import {GET_PAYPAL_JSON} from './PaypalUtils'
+import {WebView} from 'react-native-webview'
+import useAxios from 'axios-hooks'
+import {useGlobalState} from '../../state/GlobalState'
+import {NavigationActions, StackActions} from 'react-navigation'
+import GlobalContants from '../../constants/GlobalContants'
+import AsyncStorage from '@react-native-community/async-storage'
+import { UsePaypalHook } from '../../utils/UsePaypalHook'
+import {
+  dispatchGlobalState,
+  GLOBAL_STATE_ACTIONS,
+} from '../../state/GlobalState'
+var qs = require('qs')
+var UrlParser = require('url-parse')
 
-const PayCredits = (props) => {
-  const amount = props.navigation.getParam('amount', 0);
+const PayCredits = props => {
+  const amount = props.navigation.getParam('amount', 0)
   const credits = props.navigation.getParam('credits', 0)
 
-  const webview = useRef(null);
-  const [profile] = useGlobalState('profile');
+  const webview = useRef(null)
+  const [profile] = useGlobalState('profile')
 
-  const [apiCalled, setApiCalled] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [apiCalled, setApiCalled] = useState(false)
+  const [checked, setChecked] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
 
   const {
     generatePaymentOrderReq,
     getAccessTokenReq,
     generatePaymentOrderFor,
     capturePaymentForToken,
-  } = UsePaypalHook();
+  } = UsePaypalHook()
 
   const [savePaymenReq, savePayment] = useAxios(
     {
@@ -46,7 +50,7 @@ const PayCredits = (props) => {
       method: 'POST',
     },
     {manual: true},
-  );
+  )
 
   const [buyCreditsReq, buyCredits] = useAxios(
     {
@@ -56,13 +60,20 @@ const PayCredits = (props) => {
     {manual: true},
   )
 
+  const [getUserReq, getUserData] = useAxios(
+    {
+      url: '/Users/GetUser',
+    },
+    {manual: true},
+  )
+
   const isLoading = () =>
-    getAccessTokenReq.loading || generatePaymentOrderReq.loading;
+    getAccessTokenReq.loading || generatePaymentOrderReq.loading
 
   useEffect(() => {
-    AsyncStorage.removeItem('wantToBeFeatured');
-    AsyncStorage.removeItem('askToBeFeatured');
-  }, []);
+    AsyncStorage.removeItem('wantToBeFeatured')
+    AsyncStorage.removeItem('askToBeFeatured')
+  }, [])
 
   return (
     <ScrollView hide style={{flex: 1, backgroundColor: 'white'}}>
@@ -139,18 +150,6 @@ const PayCredits = (props) => {
             console.log(json)
             generatePaymentOrderFor(json)
               .then(res => {
-                const data = {
-                  credits: credits,
-                  amountPaid: amount,
-                }
-                buyCredits({data})
-                  .then(response => {
-                    if (response.status === 200) {
-                      // console.log(response.data)
-                    }
-                  })
-                  .catch(e => {})
-                console.log(res.data)
                 setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
               })
               .catch(err => {
@@ -194,11 +193,29 @@ const PayCredits = (props) => {
                     const data = {
                       paypalPaymentId: captureRes.data.id,
                     }
-                    console.log(data)
+                    // console.log(data)
                     savePayment({data})
                       .then(r => {
                         setApiCalled(true)
-                        console.log(r.data)
+                        // console.log(r.data)
+                        const newData = {
+                          credits: credits,
+                          amountPaid: amount,
+                        }
+                        console.log(newData)
+                        buyCredits({data: newData})
+                          .then(response => {
+                            if (response.status === 200) {
+                              getUserData().then(res => {
+                                dispatchGlobalState({
+                                  type: GLOBAL_STATE_ACTIONS.PROFILE,
+                                  state: res.data,
+                                })
+                              }).catch(e => {console.log(e)})
+                              
+                            }
+                          })
+                          .catch(e => {})
                       })
                       .finally(() => {
                         setOpenModal(false)
@@ -229,6 +246,6 @@ const PayCredits = (props) => {
       )}
     </ScrollView>
   )
-};
+}
 
-export default PayCredits;
+export default PayCredits

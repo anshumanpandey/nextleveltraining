@@ -125,7 +125,7 @@ const PaymentConcentScreen = (props) => {
             source={{ uri: openModal }}
             onNavigationStateChange={(e) => {
               const { url } = e;
-              console.log('webview', url)
+              // console.log('webview', url)
               if (!url) return;
 
               const parsed = new UrlParser(url)
@@ -147,7 +147,7 @@ const PaymentConcentScreen = (props) => {
                       "transactionID": captureRes.data.id,
                       "bookingStatus": "Done"
                     }
-                    console.log(data)
+                    // console.log(data)
                     saveBooking({ data })
                       .then(r => {
                         setApiCalled(true)

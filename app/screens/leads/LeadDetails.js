@@ -6,7 +6,12 @@ import styles from './styles'
 import MapView, {Marker} from 'react-native-maps'
 import useAxios from 'axios-hooks'
 import { CreditIcon } from '../../components/styled'
-import {useGlobalState} from '../../state/GlobalState'
+import {
+  useGlobalState,
+  dispatchGlobalState,
+  GLOBAL_STATE_ACTIONS,
+} from '../../state/GlobalState'
+
 
 const LeadDetails = props => {
   const player = props.navigation.getParam('player')
@@ -25,6 +30,13 @@ const LeadDetails = props => {
     {
       url: `/Users/PurchaseLead`,
       method: 'POST',
+    },
+    {manual: true},
+  )
+
+  const [getUserReq, getUserData] = useAxios(
+    {
+      url: '/Users/GetUser',
     },
     {manual: true},
   )
@@ -393,7 +405,16 @@ const LeadDetails = props => {
                 purchaseLead({data})
                   .then(res => {
                     if (res.status === 200) {
-                      console.log(res.data)
+                      getUserData()
+                        .then(res => {
+                          dispatchGlobalState({
+                            type: GLOBAL_STATE_ACTIONS.PROFILE,
+                            state: res.data,
+                          })
+                        })
+                        .catch(e => {
+                          console.log(e)
+                        })
                       Alert.alert(
                         'Lead Purchased',
                         'You have successfully purchased this lead. Go to responses tab to see it.',
@@ -407,6 +428,17 @@ const LeadDetails = props => {
                 Alert.alert(
                   'Not enough Credits',
                   'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
+                  [
+                    {
+                      text: 'Cancel',
+                      onPress: () => {},
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Buy Now',
+                      onPress: () => props.navigation.navigate('Cart'),
+                    },
+                  ],
                 )
               }
             }}
