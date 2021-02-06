@@ -223,7 +223,7 @@ const NLUserDataForm = ({
                 setFieldValue('postCode', selected.postcode)
                 setFieldValue(
                   'state',
-                  `${selected.county}, ${selected.country}`,
+                  `${selected.district} ${selected.county}, ${selected.country}`,
                 )
               }}
               options={addresses.map(a => ({
