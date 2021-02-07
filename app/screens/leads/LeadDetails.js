@@ -1,17 +1,16 @@
 import React from 'react'
-import {View, TouchableOpacity, ScrollView, Text, Alert, Platform} from 'react-native'
+import {View, TouchableOpacity, ScrollView, Text, Alert} from 'react-native'
 import Header from '../../components/header/Header'
 import {Icon} from 'native-base'
 import styles from './styles'
 import MapView, {Marker} from 'react-native-maps'
 import useAxios from 'axios-hooks'
-import { CreditIcon } from '../../components/styled'
+import {CreditIcon} from '../../components/styled'
 import {
   useGlobalState,
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
 } from '../../state/GlobalState'
-
 
 const LeadDetails = props => {
   const player = props.navigation.getParam('player')
@@ -19,13 +18,14 @@ const LeadDetails = props => {
   const about = props.navigation.getParam('AboutUs')
   const Id = props.navigation.getParam('Id')
 
-  const [profile] = useGlobalState("profile")
+  const [profile] = useGlobalState('profile')
 
-  const [lead, setLead] = React.useState(null)
-  const [loading, setLoading] = React.useState(true)
+  const [getLeadReq] = useAxios(`/Users/GetLead/${Id}`)
 
-  const [getLeadReq, getLead] = useAxios({ url: `/Users/GetLead/${Id}` })
-  
+  const lead = getLeadReq.data || null
+  const loading = getLeadReq.loading || false
+  const numResponses = lead ? Math.min(lead.NumResponses, 5) : 0
+
   const [purchaseLeadReq, purchaseLead] = useAxios(
     {
       url: `/Users/PurchaseLead`,
@@ -40,26 +40,6 @@ const LeadDetails = props => {
     },
     {manual: true},
   )
-
-  React.useEffect(() => {
-    fetchLead()
-  }, [])
-
-  const fetchLead = () => {
-    getLead()
-      .then(res => {
-        if (res.status === 200) {
-          console.log(res.data)
-          setLead(res.data)
-          setLoading(false)
-        } else {
-          setLoading(false)
-        }
-      })
-      .catch(e => {
-        console.log(e.message)
-      })
-  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
@@ -189,7 +169,7 @@ const LeadDetails = props => {
               paddingLeft: 15,
               textAlign: 'left',
             }}>
-            0/5 professionals have responded.
+            {numResponses}/5 professionals have responded.
           </Text>
         </View>
 
@@ -422,7 +402,7 @@ const LeadDetails = props => {
                     }
                   })
                   .catch(e => {
-                    console.log("err",e)
+                    console.log('err', e)
                   })
               } else {
                 Alert.alert(
