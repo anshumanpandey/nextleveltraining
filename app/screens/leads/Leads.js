@@ -6,9 +6,9 @@ import {getDistance} from 'geolib'
 
 import Header from '../../components/header/Header'
 import styles from './styles'
-import { useGlobalState } from '../../state/GlobalState'
+import {useGlobalState} from '../../state/GlobalState'
 // import {Client} from '@ideal-postcodes/core-axios'
-import { Row, Screen, CreditIcon } from '../../components/styled'
+import {Row, Screen, CreditIcon} from '../../components/styled'
 
 // const client = new Client({api_key: 'ak_kgpgg5sceGe2S9cpVSSeU9UJo8YrI'})
 
@@ -24,12 +24,23 @@ const Leads = props => {
     },
     {manual: true},
   )
+  const [getResponsesReq, getResponses] = useAxios(
+    {url: 'Users/GetResponses'},
+    {manual: true},
+  )
 
   React.useEffect(() => {
     searchCoaches({data: {search: ''}})
   }, [])
 
-  const players = searchCoachesReq?.data?.Players || []
+  React.useEffect(() => {
+    getResponses()
+  }, [profile?.Credits])
+
+  const players =
+    searchCoachesReq?.data?.Players.filter(p =>
+      !getResponsesReq.data.find(r => r.Lead.UserId === p.Id),
+    ) || []
 
   const distanceToLead = lead => {
     return getDistance(
@@ -62,7 +73,7 @@ const Leads = props => {
         hideCreatePost
         customButton={() => <FilterButton navigation={props.navigation} />}
       />
-      {searchCoachesReq.loading ? (
+      {getResponsesReq.loading || searchCoachesReq.loading ? (
         <Spinner size={30} color="#80849D" />
       ) : (
         <FlatList
@@ -85,7 +96,7 @@ const Leads = props => {
   )
 }
 
-const LeadItem = ({ item, navigation }) => {
+const LeadItem = ({item, navigation}) => {
   console.log(item)
   // const [address, setAddress] = React.useState('dummy')
 
