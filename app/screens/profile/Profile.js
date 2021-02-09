@@ -9,7 +9,8 @@ import {
   Text,
   StatusBar,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import {Icon} from 'native-base';
 import Header from '../../components/header/Header';
@@ -1364,6 +1365,8 @@ const PlayerProfile = (props) => {
                        setSuccessFlag(true)
                      })
                      .catch(e => {
+                       setLoading(false)
+                       Alert.alert("Error", "Something went wrong, Try Again.")
                        // console.log('error', e)
                      })
                  }

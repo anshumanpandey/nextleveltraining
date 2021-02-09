@@ -8,6 +8,7 @@ import {
   StatusBar,
   TextInput,
   ActivityIndicator,
+  Alert
 } from 'react-native'
 import {useGlobalState} from '../../state/GlobalState'
 import RadioForm, {
@@ -1299,6 +1300,8 @@ const FindCoachForm = props => {
                       setSuccessFlag(true)
                     })
                     .catch(e => {
+                      setLoading(false)
+                      Alert.alert('Error', 'Something went wrong, Try Again.')
                       // console.log('error', e)
                     })
                 }
