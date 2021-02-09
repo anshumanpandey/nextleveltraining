@@ -44,6 +44,7 @@ const FindCoachForm = props => {
   const [nameFlag, setNameFlag] = React.useState(false)
   const [emailFlag, setEmailFlag] = React.useState(false)
   const [phoneFlag, setPhoneFlag] = React.useState(false)
+  const [loadFlag, setLoading] = React.useState(false)
 
   const [{data, loading, error}, saveLead] = useAxios(
     {
@@ -1225,6 +1226,7 @@ const FindCoachForm = props => {
               onPress={() => {
                 if (!weeks) {
                 } else {
+                  setLoading(true)
                   let coachingArr = []
                   let daysArr = []
                   let timingArr = []
@@ -1293,6 +1295,7 @@ const FindCoachForm = props => {
                     .then(response => {
                       // console.log('hello', response.data)
                       setWeaksFlag(false)
+                      setLoading(false)
                       setSuccessFlag(true)
                     })
                     .catch(e => {
@@ -1493,14 +1496,10 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          {loading ? (
-            <ActivityIndicator size="large" color="#1967CD" />
-          ) : (
             <Text
               style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
               {`Lead created successfully. \n A coach will contact you.`}
             </Text>
-          )}
         </View>
       )
     }
@@ -1622,6 +1621,19 @@ const FindCoachForm = props => {
             {phoneFlag && <PhoneComponent />} */}
           </ScrollView>
         </SafeAreaView>
+        {loadFlag && (
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#00000020',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+            }}>
+            <ActivityIndicator color="white" size="large" />
+          </View>
+        )}
       </>
     )
   }

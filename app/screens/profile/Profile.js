@@ -9,6 +9,7 @@ import {
   Text,
   StatusBar,
   TextInput,
+  ActivityIndicator
 } from 'react-native';
 import {Icon} from 'native-base';
 import Header from '../../components/header/Header';
@@ -53,6 +54,7 @@ const PlayerProfile = (props) => {
   const [name, setName] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const [phone, setPhone] = React.useState(null);
+  const [loadFlag, setLoading] = React.useState(false)
 
   const [experienceFlag, setExperienceFlag] = React.useState(true);
   const [ageFlag, setAgeFlag] = React.useState(false);
@@ -1289,6 +1291,7 @@ const PlayerProfile = (props) => {
                onPress={() => {
                  if (!weeks) {
                  } else {
+                   setLoading(true)
                    let coachingArr = []
                    let daysArr = []
                    let timingArr = []
@@ -1357,6 +1360,7 @@ const PlayerProfile = (props) => {
                      .then(response => {
                        // console.log('hello', response.data)
                        setWeaksFlag(false)
+                       setLoading(false)
                        setSuccessFlag(true)
                      })
                      .catch(e => {
@@ -1566,14 +1570,10 @@ const PlayerProfile = (props) => {
              alignItems: 'center',
              justifyContent: 'space-evenly',
            }}>
-           {loading ? (
-             <ActivityIndicator size="large" color="#1967CD" />
-           ) : (
              <Text
                style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
                {`Lead created successfully. \n A coach will contact you.`}
              </Text>
-           )}
          </View>
        )
      }
@@ -1695,6 +1695,19 @@ const PlayerProfile = (props) => {
             {phoneFlag && <PhoneComponent />} */}
            </ScrollView>
          </SafeAreaView>
+         {loadFlag && (
+           <View
+             style={{
+               width: '100%',
+               height: '100%',
+               backgroundColor: '#00000020',
+               alignItems: 'center',
+               justifyContent: 'center',
+               position: 'absolute',
+             }}>
+             <ActivityIndicator color="white" size="large" />
+           </View>
+         )}
        </>
      )
    }
