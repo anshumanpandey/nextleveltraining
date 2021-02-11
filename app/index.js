@@ -101,6 +101,7 @@ import MyProfileCoach from './screens/myProfile/MyProfileCoach'
 import MyProfilePlayer from './screens/myProfile/MyProfilePlayer'
 import PersonalDetails from './screens/myProfile/PersonalDetails'
 import FindCoach from './screens/myProfile/FindCoach'
+import SuccessPayCredits from './screens/successPayCredits/SuccessPayCredits'
 
 let initialRouteName = null
 let Apps = null
@@ -280,6 +281,7 @@ const AppMain = () => {
       MyProfilePlayer: {screen: MyProfilePlayer},
       Cart: {screen: Cart},
       PayCredits: {screen: PayCredits},
+      SuccessPayCredits: {screen: SuccessPayCredits},
     },
     {
       defaultNavigationOptions: ({navigation}) => {
@@ -433,6 +435,13 @@ const AppMain = () => {
         tabBarButtonComponent: ({tintColor}) => <></>,
       }),
     },
+    SuccessPayCredits: {
+      screen: SuccessPayCredits,
+      navigationOptions: () => ({
+        tabBarVisible: false,
+        tabBarButtonComponent: () => <></>,
+      }),
+    }
   }
 
   if (HasCompletedVerificationProcess(profile) == true && token) {

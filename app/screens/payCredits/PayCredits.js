@@ -1,41 +1,44 @@
 import React, {useState, useRef, useEffect} from 'react'
 import {
+  Alert,
+  SafeAreaView,
   ScrollView,
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
   Modal,
 } from 'react-native'
-import styles from './styles'
 import {Text, View, CheckBox, Spinner} from 'native-base'
+import {WebView} from 'react-native-webview'
+import useAxios from 'axios-hooks'
+import qs from 'qs'
+import UrlParser from 'url-parse'
+import styles from './styles'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
 import Colors from '../../constants/color'
 import {GET_PAYPAL_JSON} from './PaypalUtils'
-import {WebView} from 'react-native-webview'
-import useAxios from 'axios-hooks'
-import {useGlobalState} from '../../state/GlobalState'
-import {NavigationActions, StackActions} from 'react-navigation'
-import GlobalContants from '../../constants/GlobalContants'
-import AsyncStorage from '@react-native-community/async-storage'
-import { UsePaypalHook } from '../../utils/UsePaypalHook'
+import {UsePaypalHook} from '../../utils/UsePaypalHook'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
 } from '../../state/GlobalState'
-var qs = require('qs')
-var UrlParser = require('url-parse')
 
 const PayCredits = props => {
   const amount = props.navigation.getParam('amount', 0)
   const credits = props.navigation.getParam('credits', 0)
 
   const webview = useRef(null)
-  const [profile] = useGlobalState('profile')
 
+  const [json, setJson] = useState()
   const [apiCalled, setApiCalled] = useState(false)
   const [checked, setChecked] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [pageLoading, setPageLoading] = useState(false)
+
+  useEffect(() => {
+    setJson(GET_PAYPAL_JSON(amount))
+  }, [amount])
 
   const {
     generatePaymentOrderReq,
@@ -43,14 +46,6 @@ const PayCredits = props => {
     generatePaymentOrderFor,
     capturePaymentForToken,
   } = UsePaypalHook()
-
-  const [savePaymenReq, savePayment] = useAxios(
-    {
-      url: '/Users/UpdatePaymentDetails',
-      method: 'POST',
-    },
-    {manual: true},
-  )
 
   const [buyCreditsReq, buyCredits] = useAxios(
     {
@@ -67,13 +62,75 @@ const PayCredits = props => {
     {manual: true},
   )
 
+  const generateOrder = async () => {
+    console.log('json', json)
+    try {
+      const {data} = await generatePaymentOrderFor(json)
+      setOpenModal(data.links.find(i => i.rel == 'approve').href)
+    } catch (error) {
+      console.log(error)
+      if (error.response) console.log(error.response.data)
+    }
+  }
+
+  const onPageLoad = async ({nativeEvent: {url}}) => {
+    console.log('webview', url)
+    if (!url) return
+
+    const parsed = new UrlParser(url)
+    const urlParams = qs.parse(parsed.query.substring(1))
+
+    console.log('urlParams', urlParams)
+
+    if (url.includes('PayerID')) {
+      setPageLoading(true)
+      if (apiCalled) return
+      try {
+        const {data} = await capturePaymentForToken(urlParams.token, json)
+        console.log(data)
+
+        await onPaymentSuccess(data.id)
+        setApiCalled(true)
+        setOpenModal(false)
+        props.navigation.navigate('SuccessPayCredits')
+      } catch (error) {
+        console.log('capturePaymentForToken error', error)
+        setOpenModal(false)
+        Alert.alert('Payment failed', 'Unable to capture payment')
+      }
+    }
+
+    if (url.includes('payment_failure')) {
+      console.log('cancelled')
+      setOpenModal(false)
+      props.navigation.goBack()
+    }
+    setPageLoading(false)
+  }
+
+  const onPaymentSuccess = async paymentId => {
+    const newData = {
+      credits: credits,
+      amountPaid: amount,
+      paypalPaymentId: paymentId,
+    }
+    console.log('buyCredits', newData)
+
+    try {
+      const response = await buyCredits({data: newData})
+      if (response.status !== 200) return
+      const {data} = await getUserData()
+      dispatchGlobalState({
+        type: GLOBAL_STATE_ACTIONS.PROFILE,
+        state: data,
+      })
+    } catch (error) {
+      console.log('buyCredits error', error)
+    }
+  }
+
   const isLoading = () =>
     getAccessTokenReq.loading || generatePaymentOrderReq.loading
-
-  useEffect(() => {
-    AsyncStorage.removeItem('wantToBeFeatured')
-    AsyncStorage.removeItem('askToBeFeatured')
-  }, [])
 
   return (
     <ScrollView hide style={{flex: 1, backgroundColor: 'white'}}>
@@ -128,13 +185,13 @@ const PayCredits = props => {
               </Text>
               <Text style={{fontSize: 16}}> Next Level </Text>
               <Text
-                onPress={() => navigation.navigate('TermsConditions')}
+                onPress={() => props.navigation.navigate('TermsConditions')}
                 style={{color: Colors.g_text, fontSize: 16}}>
                 Terms & Conditions
               </Text>
               <Text style={{fontSize: 16}}> and </Text>
               <Text
-                onPress={() => navigation.navigate('Policy')}
+                onPress={() => props.navigation.navigate('Policy')}
                 style={{color: Colors.g_text, fontSize: 16}}>
                 Privacy Policy.
               </Text>
@@ -145,103 +202,35 @@ const PayCredits = props => {
         <TouchableOpacity
           disabled={!checked}
           style={[styles.buttonSave, {width: 200, opacity: checked ? 1 : 0.5}]}
-          onPress={() => {
-            const json = GET_PAYPAL_JSON(amount)
-            console.log(json)
-            generatePaymentOrderFor(json)
-              .then(res => {
-                setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
-              })
-              .catch(err => {
-                console.log(err)
-                if (err.response) {
-                  console.log(err.response.data)
-                }
-              })
-          }}>
+          onPress={generateOrder}>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{color: 'white'}}>Pay Now</Text>
+            <Text style={{color: 'white', marginHorizontal: 10}}>Pay Now</Text>
             {isLoading() && <Spinner color={Colors.s_yellow} />}
           </View>
         </TouchableOpacity>
       </View>
+
       {openModal && (
         <Modal>
-          <WebView
-            style={{flex: 1}}
-            ref={ref => (webview.current = ref)}
-            source={{uri: openModal}}
-            onNavigationStateChange={e => {
-              const {url} = e
-              console.log('webview', url)
-              if (!url) return
-
-              const parsed = new UrlParser(url)
-              const urlParams = qs.parse(parsed.query.substring(1))
-
-              console.log('success', urlParams)
-              if (url.includes('PayerID')) {
-                if (apiCalled == true || savePaymenReq.loading == true) return
-                capturePaymentForToken(urlParams.token, GET_PAYPAL_JSON()).then(
-                  captureRes => {
-                    console.log(captureRes.data)
-                    const data = {
-                      paypalPaymentId: captureRes.data.id,
-                    }
-                    // console.log(data)
-                    savePayment({data})
-                      .then(r => {
-                        setApiCalled(true)
-                        // console.log(r.data)
-                        const newData = {
-                          credits: credits,
-                          amountPaid: amount,
-                        }
-                        console.log(newData)
-                        buyCredits({data: newData})
-                          .then(response => {
-                            if (response.status === 200) {
-                              getUserData().then(res => {
-                                dispatchGlobalState({
-                                  type: GLOBAL_STATE_ACTIONS.PROFILE,
-                                  state: res.data,
-                                })
-                              }).catch(e => {console.log(e)})
-                              
-                            }
-                          })
-                          .catch(e => {})
-                      })
-                      .finally(() => {
-                        setOpenModal(false)
-                        const resetAction = StackActions.reset({
-                          index: 0,
-                          key: null,
-                          actions: [
-                            NavigationActions.navigate({
-                              routeName: 'MainStack',
-                              action: NavigationActions.navigate({
-                                routeName: 'succesPayFeatured',
-                              }),
-                            }),
-                          ],
-                        })
-                        props.navigation.dispatch(resetAction)
-                      })
-                  },
-                )
-              }
-              if (url.includes('payment_failure')) {
-                console.log('cancelled')
-                setOpenModal(false)
-              }
-            }}
-          />
+          <SafeAreaView style={{flex: 1}}>
+            {pageLoading && (
+              <View style={{height: '100%', justifyContent: 'center'}}>
+                <Spinner color={Colors.g_text} />
+              </View>
+            )}
+            <WebView
+              style={{flex: 1}}
+              ref={ref => (webview.current = ref)}
+              source={{uri: openModal}}
+              onLoadStart={() => setPageLoading(true)}
+              onLoadEnd={onPageLoad}
+            />
+          </SafeAreaView>
         </Modal>
       )}
     </ScrollView>
