@@ -26,7 +26,7 @@ const SuccessPayCredits = props => {
     <Container>
       <SuccessIcon />
       <Title>Payment Successful</Title>
-      <Info>Thank you for your payment</Info>
+      <Info>Thankyou for purchasing credits. Checkout your wallet.</Info>
 
       <Button onPress={onContinue}>
         <ButtonText>Continue</ButtonText>

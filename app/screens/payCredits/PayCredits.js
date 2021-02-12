@@ -27,6 +27,7 @@ import {
 const PayCredits = props => {
   const amount = props.navigation.getParam('amount', 0)
   const credits = props.navigation.getParam('credits', 0)
+  const purchaseType = props.navigation.getParam('purchaseType', null)
 
   const webview = useRef(null)
 

@@ -343,8 +343,14 @@ const Search = (props) => {
 
   useEffect(() => {
     if (notificationsReq.data) {
-      console.log('dispaching notigfication from home', notificationsReq.data.Notifications.length)
-      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: [...notificationsReq.data.Notifications] })
+      let notifications = notificationsReq.data.Notifications
+      if (notifications.length > 0) {
+        notifications = notifications.filter(
+          item => !item.Text.toLowerCase().includes('train'),
+        )
+      }
+      console.log('dispaching notigfication from home', notifications.length)
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: notifications })
     }
   }, [notificationsReq.data?.Notifications?.length]);
 

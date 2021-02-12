@@ -12,7 +12,8 @@ const Wallet = props => {
   const [{loading, data}] = useAxios('/Users/GetCreditHistory')
 
   const renderItem = ({item}) => {
-    const date = item.CreatedAt.split('T')
+    const temp = item.CreatedAt.split('T')
+    const date = temp[0].split('-')
     return (
       <View style={styles.historyItem}>
         <View style={styles.itemRow}>
@@ -20,7 +21,8 @@ const Wallet = props => {
           <Text style={styles.amountText}>£ {item.AmountPaid}</Text>
         </View>
         <View style={styles.itemRow}>
-          <Text style={styles.infoText}>{date[0]}</Text>
+          <Text
+            style={styles.infoText}>{`${date[2]}-${date[1]}-${date[0]}`}</Text>
           <Text style={styles.infoText}>{item.Credits} Credits</Text>
         </View>
       </View>

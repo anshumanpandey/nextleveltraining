@@ -57,12 +57,15 @@ const Leads = props => {
   }
 
   const nearest = useMemo(
-    () =>
-      players
+    () => {
+      // const sameCity = players.filter(item => profile.State.toLowerCase().includes(item.State))
+      return players
         .filter(a => a.Lat && a.Lng)
         .map(l => ({...l, Distance: distanceToLead(l)}))
         .sort(distanceFilter)
-        .filter(l => l.Distance < Number(preferences?.range || 50) * 1000),
+        .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
+    }
+    ,  
     [players.length, preferences?.range, preferences?.lat, preferences?.lng],
   )
 

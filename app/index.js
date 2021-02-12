@@ -218,6 +218,11 @@ const AppMain = () => {
       Notification: {screen: Notifications},
       Message: {screen: Message},
       LastMessage: {screen: LastMessage},
+      Leads: {screen: Leads},
+      LeadDetails: {screen: LeadDetails},
+      Cart: {screen: Cart},
+      PayCredits: {screen: PayCredits},
+      LeadPreferences: {screen: LeadPreferences},
     },
     {
       defaultNavigationOptions: ({navigation}) => {

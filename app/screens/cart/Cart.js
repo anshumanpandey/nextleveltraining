@@ -68,6 +68,7 @@ const CardItem = ({navigation, item}) => {
           navigation.navigate('PayCredits', {
             amount: item.price,
             credits: item.credits,
+            purchaseType : "coins"
           })
         }>
         <ButtonText>Buy credits</ButtonText>
