@@ -217,12 +217,26 @@ const Information = props => {
               <TouchableOpacity
                 onPress={() => {
                   if (profile.Credits > 0) {
-                    props.navigation.navigate('Message', 
-                    {
-                        RecieverId: props.navigation.getParam('Id'),
-                        SenderId: profile?.Id,
-                        friendName: props.navigation.getParam('FullName'),
-                      },
+                    Alert.alert(
+                      'Are you sure?',
+                      'One credit will be consumed to start chating with this coaach',
+                      [
+                        {
+                          text: 'Cancel',
+                          onPress: () => {},
+                          style: 'cancel',
+                        },
+                        {
+                          text: 'Proceed',
+                          onPress: () => {
+                            props.navigation.navigate('Message', {
+                              RecieverId: props.navigation.getParam('Id'),
+                              SenderId: profile?.Id,
+                              friendName: props.navigation.getParam('FullName'),
+                            })
+                          },
+                        },
+                      ],
                     )
                   } else {
                     Alert.alert(
