@@ -1,32 +1,45 @@
-import React from 'react'
-import {View, TouchableOpacity, Text, FlatList} from 'react-native'
-import {Icon, Spinner} from 'native-base'
+import React, {useEffect} from 'react'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  RefreshControl,
+} from 'react-native'
+import {Icon} from 'native-base'
 import Header from '../../components/header/Header'
 import styles from './styles'
 import useAxios from 'axios-hooks'
+import {useGlobalState} from '../../state/GlobalState'
 
 const Responses = props => {
-  const [{loading, data: responses}] = useAxios('Users/GetResponses')
+  const [profile] = useGlobalState('profile')
+  const [{loading, data: responses}, getResponses] = useAxios(
+    'Users/GetResponses',
+  )
+
+  useEffect(() => {
+    getResponses()
+  }, [profile?.Credits])
 
   return (
     <View style={styles.container}>
       <Header title="Responses" hideCreatePost />
-      {loading ? (
-        <Spinner size={30} color="#80849D" />
-      ) : (
-        <FlatList
-          data={responses}
-          keyExtractor={(_, idx) => idx}
-          renderItem={({item}) => (
-            <ResponseItem item={item} navigation={props.navigation} />
-          )}
-          ListHeaderComponent={() => (
-            <ListHeader numResponses={responses ? responses.length : 0} />
-          )}
-          ListHeaderComponentStyle={{marginBottom: 15}}
-          ItemSeparatorComponent={Seperator}
-        />
-      )}
+      <FlatList
+        data={responses}
+        keyExtractor={(_, idx) => idx}
+        renderItem={({item}) => (
+          <ResponseItem item={item} navigation={props.navigation} />
+        )}
+        ListHeaderComponent={() => (
+          <ListHeader numResponses={responses ? responses.length : 0} />
+        )}
+        ListHeaderComponentStyle={{marginBottom: 15}}
+        ItemSeparatorComponent={Seperator}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getResponses} />
+        }
+      />
     </View>
   )
 }
