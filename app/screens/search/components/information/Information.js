@@ -27,12 +27,18 @@ var convert = require('convert-units')
 
 const Information = props => {
   const [profile] = useGlobalState('profile')
-  console.log(profile)
+  // console.log(profile)
+  const coachId = props.navigation.getParam('Id')
+
   const [token] = useGlobalState('token')
   const [selectedTab, setSelectedTab] = useState(0)
   const [milesAway, setMilesAway] = useState()
   const activeColor = Colors.nl_yellow
   const inActiveColor = 'gray'
+
+  const [getMessageExist, messageExist] = useAxios(
+    `/Users/MessagesExist/${coachId}`,
+  )
 
   const calculateMiles = useCallback(() => {
     // console.log(profile?.Lat)
@@ -216,45 +222,64 @@ const Information = props => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  if (profile.Credits > 0) {
-                    Alert.alert(
-                      'Are you sure?',
-                      'One credit will be consumed to start chating with this coaach',
-                      [
-                        {
-                          text: 'Cancel',
-                          onPress: () => {},
-                          style: 'cancel',
-                        },
-                        {
-                          text: 'Proceed',
-                          onPress: () => {
-                            props.navigation.navigate('Message', {
-                              RecieverId: props.navigation.getParam('Id'),
-                              SenderId: profile?.Id,
-                              friendName: props.navigation.getParam('FullName'),
-                            })
-                          },
-                        },
-                      ],
-                    )
-                  } else {
-                    Alert.alert(
-                      'Not enough Credits',
-                      'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
-                      [
-                        {
-                          text: 'Cancel',
-                          onPress: () => {},
-                          style: 'cancel',
-                        },
-                        {
-                          text: 'Buy Now',
-                          onPress: () => props.navigation.navigate('Cart'),
-                        },
-                      ],
-                    )
-                  }
+                  messageExist()
+                    .then(res => {
+                      if (res.status === 200) {
+                        if (res.data) {
+                          props.navigation.navigate('Message', {
+                            RecieverId: props.navigation.getParam('Id'),
+                            SenderId: profile?.Id,
+                            friendName: props.navigation.getParam('FullName'),
+                          })
+                        } else {
+                          if (profile.Credits > 0) {
+                             Alert.alert(
+                               'Are you sure?',
+                               'One credit will be consumed to start chating with this coaach',
+                               [
+                                 {
+                                   text: 'Cancel',
+                                   onPress: () => {},
+                                   style: 'cancel',
+                                 },
+                                 {
+                                   text: 'Proceed',
+                                   onPress: () => {
+                                     props.navigation.navigate('Message', {
+                                       RecieverId: props.navigation.getParam(
+                                         'Id',
+                                       ),
+                                       SenderId: profile?.Id,
+                                       friendName: props.navigation.getParam(
+                                         'FullName',
+                                       ),
+                                     })
+                                   },
+                                 },
+                               ],
+                             )
+                          } else {
+                            Alert.alert(
+                              'Not enough Credits',
+                              'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
+                              [
+                                {
+                                  text: 'Cancel',
+                                  onPress: () => {},
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: 'Buy Now',
+                                  onPress: () =>
+                                    props.navigation.navigate('Cart'),
+                                },
+                              ],
+                            )
+                          }
+                        }
+                      }
+                    })
+                    .catch(e => {})
                 }}
                 style={styles.button_view}>
                 <Icon

@@ -3,17 +3,16 @@ import {View, TouchableOpacity, Text, FlatList} from 'react-native'
 import {Icon, Spinner} from 'native-base'
 import useAxios from 'axios-hooks'
 import {getDistance} from 'geolib'
-
 import Header from '../../components/header/Header'
 import styles from './styles'
 import {useGlobalState} from '../../state/GlobalState'
-// import {Client} from '@ideal-postcodes/core-axios'
 import {Row, Screen, CreditIcon} from '../../components/styled'
-
-// const client = new Client({api_key: 'ak_kgpgg5sceGe2S9cpVSSeU9UJo8YrI'})
 
 const Leads = props => {
   const [profile] = useGlobalState('profile')
+  const stateArr = profile.State.split(',')
+  const countyArr = stateArr[0].split(' ')
+  const county = countyArr[countyArr.length - 1]
   const [preferences] = useGlobalState('preferences')
 
   const [searchCoachesReq, searchCoaches] = useAxios(
@@ -25,21 +24,24 @@ const Leads = props => {
     {manual: true},
   )
   const [getResponsesReq, getResponses] = useAxios(
-    {url: 'Users/GetResponses'},
+    {url: '/Users/GetResponses'},
     {manual: true},
   )
+
+   const [getWebLeadsReq, getWebLeads] = useAxios(`/Users/GetLeads/${county}`)
 
   React.useEffect(() => {
     searchCoaches({data: {search: ''}})
   }, [])
 
   React.useEffect(() => {
+    getWebLeads()
     getResponses()
   }, [profile?.Credits])
 
   const players =
-    searchCoachesReq?.data?.Players.filter(p =>
-      !getResponsesReq.data.find(r => r.Lead.UserId === p.Id),
+    searchCoachesReq?.data?.Players.filter(
+      p => !getResponsesReq.data.find(r => r.Lead.UserId === p.Id),
     ) || []
 
   const distanceToLead = lead => {
@@ -58,12 +60,16 @@ const Leads = props => {
 
   const nearest = useMemo(
     () => {
-      // const sameCity = players.filter(item => profile.State.toLowerCase().includes(item.State))
       return players
         .filter(a => a.Lat && a.Lng)
         .map(l => ({...l, Distance: distanceToLead(l)}))
         .sort(distanceFilter)
         .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
+        .concat(
+          getWebLeadsReq?.data.filter(
+            item => !getResponsesReq.data.find(r => r.Lead.Id === item.Id),
+          ),
+        ) 
     }
     ,  
     [players.length, preferences?.range, preferences?.lat, preferences?.lng],
@@ -76,14 +82,18 @@ const Leads = props => {
         hideCreatePost
         customButton={() => <FilterButton navigation={props.navigation} />}
       />
-      {getResponsesReq.loading || searchCoachesReq.loading ? (
+      {getResponsesReq.loading || searchCoachesReq.loading || getWebLeadsReq.loading ? (
         <Spinner size={30} color="#80849D" />
       ) : (
         <FlatList
           data={nearest}
           keyExtractor={item => item.Id}
           renderItem={({item}) => (
-            <LeadItem item={item} navigation={props.navigation} />
+            <LeadItem
+              item={item}
+              navigation={props.navigation}
+              country={stateArr[stateArr.length - 1]}
+            />
           )}
           ListHeaderComponent={() => (
             <ListHeader
@@ -99,27 +109,7 @@ const Leads = props => {
   )
 }
 
-const LeadItem = ({item, navigation}) => {
-  console.log(item)
-  // const [address, setAddress] = React.useState('dummy')
-
-  // React.useEffect(() => {
-  //   fetchState()
-  // })
-
-  // const fetchState = async () => {
-  //   try {
-  //     const stateAddress = await client.lookupPostcode({
-  //       postcode: item.PostCode,
-  //     })
-  //     if (stateAddress) {
-  //       setAddress(`${stateAddress[0].county},${stateAddress[0].country}`)
-  //     }
-  //   } catch (e) {
-  //     // console.log(e.message)
-  //   }
-  // }
-
+const LeadItem = ({item, navigation, country}) => {
   return (
     <TouchableOpacity
       style={styles.leadItem}
@@ -141,6 +131,15 @@ const LeadItem = ({item, navigation}) => {
           <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
           <Text style={styles.locationText}>
             {item.State ? item.State : ''}
+          </Text>
+        </Row>
+      )}
+
+      {item.Web && (
+        <Row mb={4} style={{alignItems: 'flex-start'}}>
+          <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
+          <Text style={styles.locationText}>
+            {`${item.Location}, ${country}`}
           </Text>
         </Row>
       )}

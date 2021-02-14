@@ -19,6 +19,7 @@ const LeadDetails = props => {
   const Id = props.navigation.getParam('Id')
 
   const [profile] = useGlobalState('profile')
+  const country = profile.State.split(',')
 
   const [getLeadReq] = useAxios(`/Users/GetLead/${Id}`)
 
@@ -73,9 +74,9 @@ const LeadDetails = props => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={{color: '#9FA2B7', fontSize: 18, marginLeft: 15}}>
+          {/* <Text style={{color: '#9FA2B7', fontSize: 18, marginLeft: 15}}>
             {player.Distance} meters away
-          </Text>
+          </Text> */}
         </View>
         <View style={{width: '100%'}}>
           <Text
@@ -102,7 +103,9 @@ const LeadDetails = props => {
               fontSize: 20,
               paddingLeft: 15,
             }}>
-            {address}
+            {player.Web
+              ? `${player.Location}, ${country[country.length - 1]}`
+              : address}
           </Text>
         </View>
         <View style={{width: '100%', marginTop: 20, flexDirection: 'row'}}>
@@ -173,7 +176,7 @@ const LeadDetails = props => {
           </Text>
         </View>
 
-        {lead ? (
+        {player.Web ? (
           <>
             <View
               style={{
@@ -195,7 +198,7 @@ const LeadDetails = props => {
                 What is the student's current level of experience?
               </Text>
               <Text style={{fontSize: 18, paddingLeft: 15}}>
-                {lead.Experience}
+                {player.Experience}
               </Text>
             </View>
             <View
@@ -216,7 +219,7 @@ const LeadDetails = props => {
                 }}>
                 How old is the student?
               </Text>
-              <Text style={{fontSize: 18, paddingLeft: 15}}>{lead.Age}</Text>
+              <Text style={{fontSize: 18, paddingLeft: 15}}>{player.Age}</Text>
             </View>
             <View
               style={{
@@ -237,8 +240,8 @@ const LeadDetails = props => {
                 }}>
                 Which kind of coaching would you consider?
               </Text>
-              <View style={{flexDirection: 'row'}}>
-                {lead.CoachingType.map(item => (
+              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                {player.CoachingType.map(item => (
                   <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
                 ))}
               </View>
@@ -264,7 +267,7 @@ const LeadDetails = props => {
                 Which day(s) would you consider for coaching?
               </Text>
               <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                {lead.Days.map(item => (
+                {player.Days.map(item => (
                   <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
                 ))}
               </View>
@@ -289,7 +292,7 @@ const LeadDetails = props => {
                 Which time(s) of day would you consider for coaching?
               </Text>
               <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                {lead.CoachingTime.map(item => (
+                {player.CoachingTime.map(item => (
                   <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
                 ))}
               </View>
@@ -315,23 +318,181 @@ const LeadDetails = props => {
                 How many times a week does the player want to train?
               </Text>
               <Text style={{fontSize: 18, paddingLeft: 15}}>
-                {lead.DaysOfWeek[0]}
+                {player.DaysOfWeek[0]}
               </Text>
             </View>
           </>
-        ) : loading ? undefined : (
-          <View
-            style={{
-              width: '100%',
-              paddingHorizontal: 15,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 20,
-            }}>
-            <Text style={{fontSize: 18}}>
-              Player hasn't filled his detail form yet.
-            </Text>
-          </View>
+        ) : (
+          <>
+            {lead ? (
+              <>
+                <View
+                  style={{
+                    marginTop: 20,
+                    width: '90%',
+                    height: 120,
+                    backgroundColor: '#00000008',
+                    borderRadius: 5,
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#9FA2B7',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      paddingLeft: 15,
+                      lineHeight: 28,
+                    }}>
+                    What is the student's current level of experience?
+                  </Text>
+                  <Text style={{fontSize: 18, paddingLeft: 15}}>
+                    {lead.Experience}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 5,
+                    width: '90%',
+                    height: 80,
+                    backgroundColor: '#00000008',
+                    borderRadius: 5,
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#9FA2B7',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      paddingLeft: 15,
+                    }}>
+                    How old is the student?
+                  </Text>
+                  <Text style={{fontSize: 18, paddingLeft: 15}}>
+                    {lead.Age}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 5,
+                    width: '90%',
+                    height: 120,
+                    backgroundColor: '#00000008',
+                    borderRadius: 5,
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#9FA2B7',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      paddingLeft: 15,
+                      lineHeight: 28,
+                    }}>
+                    Which kind of coaching would you consider?
+                  </Text>
+                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {lead.CoachingType.map(item => (
+                      <Text style={{fontSize: 18, paddingLeft: 15}}>
+                        {item}
+                      </Text>
+                    ))}
+                  </View>
+                  <Text style={{fontSize: 18, paddingLeft: 15}}></Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 5,
+                    width: '90%',
+                    height: 120,
+                    backgroundColor: '#00000008',
+                    borderRadius: 5,
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#9FA2B7',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      paddingLeft: 15,
+                      lineHeight: 28,
+                    }}>
+                    Which day(s) would you consider for coaching?
+                  </Text>
+                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {lead.Days.map(item => (
+                      <Text style={{fontSize: 18, paddingLeft: 15}}>
+                        {item}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+                <View
+                  style={{
+                    marginTop: 5,
+                    width: '90%',
+                    height: 120,
+                    backgroundColor: '#00000008',
+                    borderRadius: 5,
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#9FA2B7',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      paddingLeft: 15,
+                      lineHeight: 28,
+                    }}>
+                    Which time(s) of day would you consider for coaching?
+                  </Text>
+                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {lead.CoachingTime.map(item => (
+                      <Text style={{fontSize: 18, paddingLeft: 15}}>
+                        {item}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    marginTop: 5,
+                    width: '90%',
+                    height: 120,
+                    backgroundColor: '#00000008',
+                    borderRadius: 5,
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#9FA2B7',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      paddingLeft: 15,
+                      lineHeight: 28,
+                    }}>
+                    How many times a week does the player want to train?
+                  </Text>
+                  <Text style={{fontSize: 18, paddingLeft: 15}}>
+                    {lead.DaysOfWeek[0]}
+                  </Text>
+                </View>
+              </>
+            ) : loading ? undefined : (
+              <View
+                style={{
+                  width: '100%',
+                  paddingHorizontal: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 20,
+                }}>
+                <Text style={{fontSize: 18}}>
+                  Player hasn't filled his detail form yet.
+                </Text>
+              </View>
+            )}
+          </>
         )}
 
         <View style={{width: '100%', marginTop: 30, marginLeft: 15}}>
@@ -377,64 +538,128 @@ const LeadDetails = props => {
           </MapView> */}
         </View>
 
-        {lead && (
-          <TouchableOpacity
-            onPress={() => {
-              if (profile.Credits > 0) {
-                const data = {leadId: lead.Id}
-                purchaseLead({data})
-                  .then(res => {
-                    if (res.status === 200) {
-                      getUserData()
-                        .then(res => {
-                          dispatchGlobalState({
-                            type: GLOBAL_STATE_ACTIONS.PROFILE,
-                            state: res.data,
+        {player.Web ? (
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                if (profile.Credits > 0) {
+                  const data = {leadId: player.Id}
+                  purchaseLead({data})
+                    .then(res => {
+                      if (res.status === 200) {
+                        getUserData()
+                          .then(res => {
+                            dispatchGlobalState({
+                              type: GLOBAL_STATE_ACTIONS.PROFILE,
+                              state: res.data,
+                            })
                           })
-                        })
-                        .catch(e => {
-                          console.log(e)
-                        })
-                      Alert.alert(
-                        'Lead Purchased',
-                        'You have successfully purchased this lead. Go to responses tab to see it.',
-                      )
-                    }
-                  })
-                  .catch(e => {
-                    console.log('err', e)
-                  })
-              } else {
-                Alert.alert(
-                  'Not enough Credits',
-                  'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
-                  [
-                    {
-                      text: 'Cancel',
-                      onPress: () => {},
-                      style: 'cancel',
-                    },
-                    {
-                      text: 'Buy Now',
-                      onPress: () => props.navigation.navigate('Cart'),
-                    },
-                  ],
-                )
-              }
-            }}
-            style={{
-              width: '90%',
-              height: 50,
-              borderRadius: 5,
-              backgroundColor: '#2D7AF0',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: 20,
-            }}>
-            <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
-              Buy Lead
-            </Text>
-          </TouchableOpacity>
+                          .catch(e => {
+                            console.log(e)
+                          })
+                        Alert.alert(
+                          'Lead Purchased',
+                          'You have successfully purchased this lead. Go to responses tab to see it.',
+                        )
+                      }
+                    })
+                    .catch(e => {
+                      console.log('err', e)
+                    })
+                } else {
+                  Alert.alert(
+                    'Not enough Credits',
+                    'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
+                    [
+                      {
+                        text: 'Cancel',
+                        onPress: () => {},
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'Buy Now',
+                        onPress: () => props.navigation.navigate('Cart'),
+                      },
+                    ],
+                  )
+                }
+              }}
+              style={{
+                width: '90%',
+                height: 50,
+                borderRadius: 5,
+                backgroundColor: '#2D7AF0',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: 20,
+              }}>
+              <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
+                Buy Lead
+              </Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            {lead && (
+              <TouchableOpacity
+                onPress={() => {
+                  if (profile.Credits > 0) {
+                    const data = {leadId: lead.Id}
+                    purchaseLead({data})
+                      .then(res => {
+                        if (res.status === 200) {
+                          getUserData()
+                            .then(res => {
+                              dispatchGlobalState({
+                                type: GLOBAL_STATE_ACTIONS.PROFILE,
+                                state: res.data,
+                              })
+                            })
+                            .catch(e => {
+                              console.log(e)
+                            })
+                          Alert.alert(
+                            'Lead Purchased',
+                            'You have successfully purchased this lead. Go to responses tab to see it.',
+                          )
+                        }
+                      })
+                      .catch(e => {
+                        console.log('err', e)
+                      })
+                  } else {
+                    Alert.alert(
+                      'Not enough Credits',
+                      'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
+                      [
+                        {
+                          text: 'Cancel',
+                          onPress: () => {},
+                          style: 'cancel',
+                        },
+                        {
+                          text: 'Buy Now',
+                          onPress: () => props.navigation.navigate('Cart'),
+                        },
+                      ],
+                    )
+                  }
+                }}
+                style={{
+                  width: '90%',
+                  height: 50,
+                  borderRadius: 5,
+                  backgroundColor: '#2D7AF0',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginVertical: 20,
+                }}>
+                <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
+                  Buy Lead
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </ScrollView>
     </View>
