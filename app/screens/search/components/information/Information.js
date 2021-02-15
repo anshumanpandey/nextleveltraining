@@ -239,7 +239,7 @@ const Information = props => {
                           if (profile.Credits > 0) {
                              Alert.alert(
                                'Are you sure?',
-                               'One credit will be consumed to start chating with this coaach',
+                               'One credit will be consumed to start chatting with this coach',
                                [
                                  {
                                    text: 'Cancel',

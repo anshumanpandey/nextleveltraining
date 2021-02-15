@@ -13,7 +13,6 @@ const Leads = props => {
   const stateArr = profile?.State.split(',') || []
   const countyArr = stateArr?.[0].split(' ') || []
   const county = countyArr?.length ? countyArr[countyArr.length - 1] : ''
-  console.log(county)
   const [preferences] = useGlobalState('preferences')
 
   const [searchCoachesReq, searchCoaches] = useAxios(
