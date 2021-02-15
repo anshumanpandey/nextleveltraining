@@ -69,6 +69,7 @@ const Leads = props => {
           item => !getResponsesReq.data.find(r => r.Lead.Id === item?.Id),
         ),
       )
+      // .sort((a, b) => new Date(a.CreatedAt) - new Date(b.CreatedAt))
   }, [players.length, preferences?.range, preferences?.lat, preferences?.lng])
 
   return (

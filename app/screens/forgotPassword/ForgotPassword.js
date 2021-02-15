@@ -11,8 +11,9 @@ import GlobalStyles from '../../constants/GlobalStyles';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Spinner, Input as TextInput } from 'native-base';
+import { Spinner, Input as TextInput, Icon } from 'native-base';
 import Colors from '../../constants/color';
+import Header from '../../components/header/Header'
 
 const ForgotPassword = (props) => {
   const [{ data, loading, error }, resetPassword] = useAxios({
@@ -26,6 +27,24 @@ const ForgotPassword = (props) => {
 
   return (
     <ScrollView style={styles.login_layout}>
+      <Header
+        title="Forget Password"
+        hideCreatePost={true}
+        customButton={() => (
+          <Icon
+            onPress={() => props.navigation.goBack()}
+            type="Feather"
+            name="arrow-left"
+            style={{
+              position: 'absolute',
+              left: 15,
+              fontSize: 22,
+              zIndex: 1,
+              color: '#2D7AF0',
+            }}
+          />
+        )}
+      />
       <View style={styles.login_container}>
         <View style={styles.login_logo_view}>
           <Image source={Images.Mlogo} />
@@ -33,8 +52,8 @@ const ForgotPassword = (props) => {
         </View>
 
         <Formik
-          initialValues={{ emailID: '', password: '' }}
-          validate={(values) => {
+          initialValues={{emailID: '', password: ''}}
+          validate={values => {
             const errors = {}
 
             if (!values.emailID) errors.emailID = 'Required'
@@ -42,19 +61,24 @@ const ForgotPassword = (props) => {
             return errors
           }}
           onSubmit={values => {
-            resetPassword({ data: values })
-              .then((r) => {
-                Alert.alert("","A new password has been sent to this email")
-                props.navigation.navigate("Login")
-              })
-          }}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            resetPassword({data: values}).then(r => {
+              Alert.alert('', 'A new password has been sent to this email')
+              props.navigation.navigate('Login')
+            })
+          }}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
             <>
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{ color: "black"}}
+                    style={{color: 'black'}}
                     placeholderTextColor={'rgba(0,0,0,0.3)'}
                     placeholder="Email ID"
                     keyboardType="email-address"
@@ -63,16 +87,18 @@ const ForgotPassword = (props) => {
                     value={values.emailID}
                   />
                 </View>
-                {errors.emailID && touched.emailID && <ErrorLabel text={errors.emailID} />}
-
-
+                {errors.emailID && touched.emailID && (
+                  <ErrorLabel text={errors.emailID} />
+                )}
               </View>
               <View style={styles.login_btn_view}>
                 <TouchableOpacity
                   disabled={isLoginDisabled()}
                   onPress={handleSubmit}
-                  style={[styles.login_btn_player, isLoginDisabled() && GlobalStyles.disabled_button]}
-                >
+                  style={[
+                    styles.login_btn_player,
+                    isLoginDisabled() && GlobalStyles.disabled_button,
+                  ]}>
                   <View style={styles.login_btn_player_view}>
                     <Text style={styles.login_player_text}>Reset</Text>
                     {isLoginDisabled() && <Spinner color={Colors.s_yellow} />}
@@ -82,7 +108,6 @@ const ForgotPassword = (props) => {
             </>
           )}
         </Formik>
-
       </View>
     </ScrollView>
   )

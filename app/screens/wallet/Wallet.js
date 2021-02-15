@@ -25,6 +25,8 @@ const Wallet = props => {
     }
   }, [getUserReq.data?.Credits])
 
+
+
   const renderItem = ({item}) => {
     const temp = item.CreatedAt.split('T')
     const date = temp[0].split('-')
@@ -42,6 +44,10 @@ const Wallet = props => {
       </View>
     )
   }
+
+  const transactions = React.useMemo(() => {
+    return data?.reverse();
+  }, [data?.length])
 
   return (
     <ScrollView style={styles.container}>
@@ -85,7 +91,7 @@ const Wallet = props => {
         <Spinner size={30} color="#80849D" />
       ) : (
         <FlatList
-          data={data}
+          data={transactions}
           renderItem={renderItem}
           ListEmptyComponent={() => (
             <View
