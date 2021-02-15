@@ -1,44 +1,120 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
-import styles from './styles';
-import NavigationService from '../../navigation/NavigationService';
-import { Text, View, CheckBox, Spinner } from 'native-base';
-import Header from '../../components/header/Header';
-import Images from '../../constants/image';
-import Colors from '../../constants/color';
-import { GET_PAYPAL_JSON } from "./PaypalUtils"
-import { WebView } from 'react-native-webview';
+import React, {useState, useRef, useEffect} from 'react'
+import {
+  ScrollView,
+  Image,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Modal,
+} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+import {Text, View, CheckBox, Spinner} from 'native-base'
+import {WebView} from 'react-native-webview'
 import useAxios from 'axios-hooks'
-import { useGlobalState } from '../../state/GlobalState';
-import { NavigationActions, StackActions } from 'react-navigation';
-import GlobalContants from '../../constants/GlobalContants';
-import AsyncStorage from '@react-native-community/async-storage';
-import { UsePaypalHook } from '../../utils/UsePaypalHook';
-var qs = require('qs');
-var UrlParser = require('url-parse');
+import qs from 'qs'
+import UrlParser from 'url-parse'
+import styles from './styles'
+import Header from '../../components/header/Header'
+import Images from '../../constants/image'
+import Colors from '../../constants/color'
+import {GET_PAYPAL_JSON} from './PaypalUtils'
+import {NavigationActions, StackActions} from 'react-navigation'
+import GlobalContants from '../../constants/GlobalContants'
+import {UsePaypalHook} from '../../utils/UsePaypalHook'
+import {SafeAreaView} from 'react-native'
 
-
-const PaymentConcentScreen = (props) => {
+const PaymentConcentScreen = props => {
   const webview = useRef(null)
-  const [profile] = useGlobalState('profile')
 
-  const [apiCalled, setApiCalled] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [json, setJson] = useState()
+  const [apiCalled, setApiCalled] = useState(false)
+  const [checked, setChecked] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [pageLoading, setPageLoading] = useState(false)
 
-  const { generatePaymentOrderReq, getAccessTokenReq,generatePaymentOrderFor, capturePaymentForToken } = UsePaypalHook();
+  const {
+    generatePaymentOrderReq,
+    getAccessTokenReq,
+    generatePaymentOrderFor,
+    capturePaymentForToken,
+  } = UsePaypalHook()
 
-  const [savePaymenReq, savePayment] = useAxios({
-    url: '/Users/UpdatePaymentDetails',
-    method: 'POST'
-  }, { manual: true })
+  const [savePaymenReq, savePayment] = useAxios(
+    {
+      url: '/Users/UpdatePaymentDetails',
+      method: 'POST',
+    },
+    {manual: true},
+  )
 
-  const isLoading = () => getAccessTokenReq.loading || generatePaymentOrderReq.loading
+  const isLoading = () =>
+    getAccessTokenReq.loading || generatePaymentOrderReq.loading
 
   useEffect(() => {
-    AsyncStorage.removeItem("wantToBeFeatured")
-    AsyncStorage.removeItem("askToBeFeatured")
-  },[])
+    setJson(GET_PAYPAL_JSON())
+    AsyncStorage.removeItem('wantToBeFeatured')
+    AsyncStorage.removeItem('askToBeFeatured')
+  }, [])
+
+  const generateOrder = async () => {
+    console.log('json', json)
+    try {
+      const {data} = await generatePaymentOrderFor(json)
+      setOpenModal(data.links.find(i => i.rel == 'approve').href)
+    } catch (error) {
+      console.log(error)
+      if (error.response) console.log(error.response.data)
+    }
+  }
+
+  const onPageLoad = async ({nativeEvent: {url}}) => {
+    console.log('webview', url)
+    if (!url) return
+
+    const parsed = new UrlParser(url)
+    const urlParams = qs.parse(parsed.query.substring(1))
+
+    console.log('urlParams', urlParams)
+    if (url.includes('PayerID')) {
+      setPageLoading(true)
+      if (apiCalled || savePaymenReq.loading == true) return
+      try {
+        const {data} = capturePaymentForToken(urlParams.token, json)
+        console.log(data)
+
+        await onPaymentSuccess(data)
+        setApiCalled(true)
+        setOpenModal(false)
+        const resetAction = StackActions.reset({
+          index: 0,
+          key: null,
+          actions: [
+            NavigationActions.navigate({
+              routeName: 'MainStack',
+              action: NavigationActions.navigate({
+                routeName: 'succesPayFeatured',
+              }),
+            }),
+          ],
+        })
+        props.navigation.dispatch(resetAction)
+      } catch (error) {
+        console.log('capturePaymentForToken error', error)
+        setOpenModal(false)
+      }
+    }
+
+    if (url.includes('payment_failure')) {
+      console.log('cancelled')
+      setOpenModal(false)
+    }
+    setPageLoading(false)
+  }
+
+  const onPaymentSuccess = async paymentId => {
+    const data = {paypalPaymentId: paymentId}
+    const res = await savePayment({data})
+    console.log(res)
+  }
 
   return (
     <ScrollView hide style={{flex: 1, backgroundColor: 'white'}}>
@@ -65,8 +141,9 @@ const PaymentConcentScreen = (props) => {
           marginTop: '5%',
         }}>
         <Image source={Images.PaypalLogo} />
-        <Text style={{ fontSize: 20, textAlign: 'center' }}>
-          Find out more about how to boost your likes, comments and bookings on Next Level by becoming "Featured."
+        <Text style={{fontSize: 20, textAlign: 'center'}}>
+          Find out more about how to boost your likes, comments and bookings on
+          Next Level by becoming "Featured."
         </Text>
         <Text style={{fontSize: 20, textAlign: 'center'}}>
           You will be redirected to PayPal's website to acess your account and
@@ -109,20 +186,7 @@ const PaymentConcentScreen = (props) => {
         <TouchableOpacity
           disabled={!checked}
           style={[styles.buttonSave, {width: 200, opacity: checked ? 1 : 0.5}]}
-          onPress={() => {
-            console.log(GET_PAYPAL_JSON())
-            generatePaymentOrderFor(GET_PAYPAL_JSON())
-              .then(res => {
-                console.log(res.data)
-                setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
-              })
-              .catch(err => {
-                console.log(err)
-                if (err.response) {
-                  console.log(err.response.data)
-                }
-              })
-          }}>
+          onPress={generateOrder}>
           <View
             style={{
               flexDirection: 'row',
@@ -136,62 +200,24 @@ const PaymentConcentScreen = (props) => {
       </View>
       {openModal && (
         <Modal>
-          <WebView
-            style={{flex: 1}}
-            ref={ref => (webview.current = ref)}
-            source={{uri: openModal}}
-            onNavigationStateChange={e => {
-              const {url} = e
-              console.log('webview', url)
-              if (!url) return
-
-              const parsed = new UrlParser(url)
-              const urlParams = qs.parse(parsed.query.substring(1))
-
-              console.log('success', urlParams)
-              if (url.includes('PayerID')) {
-                if (apiCalled == true || savePaymenReq.loading == true) return
-                capturePaymentForToken(urlParams.token, GET_PAYPAL_JSON()).then(
-                  captureRes => {
-                    console.log(captureRes.data)
-                    const data = {
-                      paypalPaymentId: captureRes.data.id,
-                    }
-                    console.log(data)
-                    savePayment({data})
-                      .then(r => {
-                        setApiCalled(true)
-                        console.log(r.data)
-                      })
-                      .finally(() => {
-                        setOpenModal(false)
-                        const resetAction = StackActions.reset({
-                          index: 0,
-                          key: null,
-                          actions: [
-                            NavigationActions.navigate({
-                              routeName: 'MainStack',
-                              action: NavigationActions.navigate({
-                                routeName: 'succesPayFeatured',
-                              }),
-                            }),
-                          ],
-                        })
-                        props.navigation.dispatch(resetAction)
-                      })
-                  },
-                )
-              }
-              if (url.includes('payment_failure')) {
-                console.log('cancelled')
-                setOpenModal(false)
-              }
-            }}
-          />
+          <SafeAreaView style={{flex: 1}}>
+            {pageLoading && (
+              <View style={{height: '100%', justifyContent: 'center'}}>
+                <Spinner color={Colors.g_text} />
+              </View>
+            )}
+            <WebView
+              style={{flex: 1}}
+              ref={ref => (webview.current = ref)}
+              source={{uri: openModal}}
+              onLoadStart={() => setPageLoading(true)}
+              onLoadEnd={onPageLoad}
+            />
+          </SafeAreaView>
         </Modal>
       )}
     </ScrollView>
   )
-};
+}
 
-export default PaymentConcentScreen;
+export default PaymentConcentScreen

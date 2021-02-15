@@ -1,15 +1,29 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Icon, Spinner} from 'native-base'
 import {Image, ScrollView, Text, View, FlatList} from 'react-native'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
 import styles from './styles'
 import useAxios from 'axios-hooks'
-import {useGlobalState} from '../../state/GlobalState'
+import {
+  dispatchGlobalState,
+  GLOBAL_STATE_ACTIONS,
+  useGlobalState,
+} from '../../state/GlobalState'
 
 const Wallet = props => {
   const [profile] = useGlobalState('profile')
   const [{loading, data}] = useAxios('/Users/GetCreditHistory')
+  const [getUserReq] = useAxios('/Users/GetUser')
+
+  useEffect(() => {
+    if (getUserReq.data) {
+      dispatchGlobalState({
+        type: GLOBAL_STATE_ACTIONS.PROFILE,
+        state: getUserReq.data,
+      })
+    }
+  }, [getUserReq.data?.Credits])
 
   const renderItem = ({item}) => {
     const temp = item.CreatedAt.split('T')
@@ -57,7 +71,7 @@ const Wallet = props => {
 
       <View style={styles.creditSection}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={{fontSize: 35}}>{profile.Credits || 0}</Text>
+          <Text style={{fontSize: 35}}>{profile?.Credits || 0}</Text>
           <Image
             style={{width: 30, height: 20}}
             resizeMode="contain"

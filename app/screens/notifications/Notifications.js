@@ -94,8 +94,8 @@ const Notifications = props => {
 
   useEffect(() => {
     if (getUserReq.data) {
-      let notifications = getUserReq.data.Notifications
-      if (notifications.length > 0) {
+      let notifications = getUserReq.data?.Notifications
+      if (notifications?.length > 0) {
         notifications = notifications.filter(
           item => !item.Text.toLowerCase().includes('train'),
         )
@@ -145,7 +145,7 @@ const Notifications = props => {
       />
       <View style={[styles.signup_container]}>
         <View style={[styles.fullFlatListContainer]}>
-          {notifications.length > 0 && (
+          {notifications?.length > 0 && (
             <>
               <FlatList
                 contentContainerStyle={{flexGrow: 1}}
@@ -166,7 +166,7 @@ const Notifications = props => {
             </>
           )}
         </View>
-        {notifications.length === 0 && (
+        {!!notifications?.length && (
           <Text style={styles.notFoundText}>No Notifications</Text>
         )}
         {getUserReq.loading && (

@@ -10,9 +10,8 @@ import {Row, Screen, CreditIcon} from '../../components/styled'
 
 const Leads = props => {
   const [profile] = useGlobalState('profile')
-  const stateArr = profile.State.split(',')
-  const countyArr = stateArr[0].split(' ')
-  const county = countyArr[countyArr.length - 1]
+  const countyArr = profile?.State.split(',')[0].split(' ') || []
+  const county = countyArr.length ? countyArr[countyArr.length - 1] : ''
   const [preferences] = useGlobalState('preferences')
 
   const [searchCoachesReq, searchCoaches] = useAxios(
@@ -28,7 +27,7 @@ const Leads = props => {
     {manual: true},
   )
 
-   const [getWebLeadsReq, getWebLeads] = useAxios(`/Users/GetLeads/${county}`)
+  const [getWebLeadsReq, getWebLeads] = useAxios(`/Users/GetLeads/${county}`)
 
   React.useEffect(() => {
     searchCoaches({data: {search: ''}})
@@ -58,22 +57,18 @@ const Leads = props => {
     return a.Distance - b.Distance
   }
 
-  const nearest = useMemo(
-    () => {
-      return players
-        .filter(a => a.Lat && a.Lng)
-        .map(l => ({...l, Distance: distanceToLead(l)}))
-        .sort(distanceFilter)
-        .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
-        .concat(
-          getWebLeadsReq?.data.filter(
-            item => !getResponsesReq.data.find(r => r.Lead.Id === item.Id),
-          ),
-        ) 
-    }
-    ,  
-    [players.length, preferences?.range, preferences?.lat, preferences?.lng],
-  )
+  const nearest = useMemo(() => {
+    return players
+      .filter(a => a.Lat && a.Lng)
+      .map(l => ({...l, Distance: distanceToLead(l)}))
+      .sort(distanceFilter)
+      .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
+      .concat(
+        getWebLeadsReq?.data?.filter(
+          item => !getResponsesReq.data.find(r => r.Lead.Id === item?.Id),
+        ),
+      )
+  }, [players.length, preferences?.range, preferences?.lat, preferences?.lng])
 
   return (
     <Screen>
@@ -82,7 +77,9 @@ const Leads = props => {
         hideCreatePost
         customButton={() => <FilterButton navigation={props.navigation} />}
       />
-      {getResponsesReq.loading || searchCoachesReq.loading || getWebLeadsReq.loading ? (
+      {getResponsesReq.loading ||
+      searchCoachesReq.loading ||
+      getWebLeadsReq.loading ? (
         <Spinner size={30} color="#80849D" />
       ) : (
         <FlatList

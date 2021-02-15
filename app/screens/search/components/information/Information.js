@@ -33,6 +33,7 @@ const Information = props => {
   const [token] = useGlobalState('token')
   const [selectedTab, setSelectedTab] = useState(0)
   const [milesAway, setMilesAway] = useState()
+  const [verifiying, setVerifiying] = useState(false)
   const activeColor = Colors.nl_yellow
   const inActiveColor = 'gray'
 
@@ -222,8 +223,11 @@ const Information = props => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
+                  if (verifiying) return
+                  setVerifiying(true)
                   messageExist()
                     .then(res => {
+                      setVerifiying(false)
                       if (res.status === 200) {
                         if (res.data) {
                           props.navigation.navigate('Message', {
@@ -279,14 +283,24 @@ const Information = props => {
                         }
                       }
                     })
-                    .catch(e => {})
+                    .catch(e => {
+                      setVerifiying(false)
+                    })
                 }}
                 style={styles.button_view}>
-                <Icon
-                  type="MaterialIcons"
-                  name="comment"
-                  style={styles.post_comment}
-                />
+                {verifiying ? (
+                  <Spinner
+                    color={Colors.s_yellow}
+                    style={{height: 17, marginRight: 10}}
+                    size="small"
+                  />
+                ) : (
+                    <Icon
+                      type="MaterialIcons"
+                      name="comment"
+                      style={styles.post_comment}
+                    />
+                )}
                 <Text style={styles.btn_text}>{'Message'}</Text>
               </TouchableOpacity>
             </View>

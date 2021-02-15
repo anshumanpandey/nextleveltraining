@@ -21,6 +21,7 @@ import {
 import database from '@react-native-firebase/database'
 import sendImage from '../../assets/images/send-button.png'
 import {axiosInstance} from '../../api/AxiosBootstrap'
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState'
 export default class Message extends React.Component {
   chatFlatList = null
 
@@ -143,6 +144,7 @@ export default class Message extends React.Component {
         sentDate: new Date(),
       },
     }).then(r => {
+      this.updateUser()
       console.log(r, 'hheeee')
       if (r.data && r.data.length !== 0) {
         console.log(r.data, 'here')
@@ -152,6 +154,19 @@ export default class Message extends React.Component {
     this.setState({
       textMessage: '',
     })
+  }
+
+  updateUser = async () => {
+    const config = {
+      url: '/Users/GetUser',
+    }
+    const res = await axiosInstance({...config})
+    if (res.status === 200) {
+      dispatchGlobalState({
+        type: GLOBAL_STATE_ACTIONS.PROFILE,
+        state: res.data,
+      })
+    }
   }
 
   getChat = async () => {
