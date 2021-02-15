@@ -10,8 +10,10 @@ import {Row, Screen, CreditIcon} from '../../components/styled'
 
 const Leads = props => {
   const [profile] = useGlobalState('profile')
-  const countyArr = profile?.State.split(',')[0].split(' ') || []
-  const county = countyArr.length ? countyArr[countyArr.length - 1] : ''
+  const stateArr = profile?.State.split(',') || []
+  const countyArr = stateArr?.[0].split(' ') || []
+  const county = countyArr?.length ? countyArr[countyArr.length - 1] : ''
+  console.log(county)
   const [preferences] = useGlobalState('preferences')
 
   const [searchCoachesReq, searchCoaches] = useAxios(
