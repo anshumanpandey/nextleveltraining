@@ -133,8 +133,8 @@ android {
         applicationId "com.nextleveltraining"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 8
+        versionName "2.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -142,7 +142,7 @@ android {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
+            universalApk true  // If true, also generate a universal APK
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
