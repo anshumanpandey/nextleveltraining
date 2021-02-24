@@ -58,6 +58,10 @@ const Leads = props => {
     return a.Distance - b.Distance
   }
 
+  // const latestFilter = (a, b) => {
+  //   return a.CreatedAt - b.CreatedAt
+  // }
+
   const nearest = useMemo(() => {
     return players
       .filter(a => a.Lat && a.Lng)
