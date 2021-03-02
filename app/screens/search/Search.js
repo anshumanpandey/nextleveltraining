@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, TextInput, Text, FlatList, TouchableOpacity, Platform } from 'react-native';
+import { View, TextInput, Text, FlatList, TouchableOpacity, Platform, Linking } from 'react-native';
 import { Icon, Spinner, Tabs, Tab, Button } from 'native-base';
 import Header from '../../components/header/Header';
 import useAxios from 'axios-hooks'
@@ -287,6 +287,18 @@ const Search = (props) => {
   const [getconnectedUserReq, refetch] = useAxios({
     url: '/Users/GetConnectedUsers',
   }, { manual: true })
+
+  useEffect(() => {
+    const onReceiveUrl = ({ url }) => {
+      if (url === 'nextlevel://app') {
+        console.log(`url ${url}`)
+        props.navigation.navigate('Leads')
+      }
+    }
+
+    Linking.addEventListener('url', onReceiveUrl)
+    return () => Linking.addEventListener('url', onReceiveUrl)
+  }, [])
 
   useEffect(() => {
     if (getconnectedUserReq.loading == false) {
