@@ -45,6 +45,7 @@
     "fuzzy-search": "^3.2.1",
     "geolib": "^3.3.1",
     "i": "^0.3.6",
+    "javascript-time-ago": "^2.3.4",
     "jwt-decode": "^2.2.0",
     "moment": "^2.27.0",
     "nanoid": "^3.1.16",

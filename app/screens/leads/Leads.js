@@ -6,7 +6,14 @@ import {getDistance} from 'geolib'
 import Header from '../../components/header/Header'
 import styles from './styles'
 import {useGlobalState} from '../../state/GlobalState'
-import {Row, Screen, CreditIcon} from '../../components/styled'
+import { Row, Screen, CreditIcon } from '../../components/styled'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addDefaultLocale(en)
+
+
+var monthOldDate = new Date()
+monthOldDate.setDate(monthOldDate.getDate() - 30)
 
 const Leads = props => {
   const [profile] = useGlobalState('profile')
@@ -73,6 +80,7 @@ const Leads = props => {
           item => !getResponsesReq.data.find(r => r.Lead.Id === item?.Id),
         ),
       )
+      .filter(a => monthOldDate < new Date(a?.CreatedAt))
       .sort((a, b) =>
         a.CreatedAt && b.CreatedAt
           ? new Date(b.CreatedAt) - new Date(a.CreatedAt)
@@ -116,7 +124,10 @@ const Leads = props => {
   )
 }
 
-const LeadItem = ({item, navigation, country}) => {
+const LeadItem = ({ item, navigation, country }) => {
+  const timeAgo = new TimeAgo('en-US')
+
+  // if (monthOldDate > new Date(item.CreatedAt)) return null
   return (
     <TouchableOpacity
       style={styles.leadItem}
@@ -129,10 +140,13 @@ const LeadItem = ({item, navigation, country}) => {
         })
       }>
       {item.QuoteRequested && <Text style={styles.leadIndicator}>•</Text>}
-
-      <Text style={styles.leadName}>{item.FullName}</Text>
+      <Row style={{alignItems: 'flex-start', justifyContent: 'space-between'}}>
+        <Text style={styles.leadName}>{item.FullName}</Text>
+        <Text style={styles.creditText}>
+          {timeAgo.format(new Date(item.CreatedAt))}
+        </Text>
+      </Row>
       <Text style={styles.leadDetail}>Football Coaching</Text>
-
       {!!item.Address && (
         <Row mb={4} style={{alignItems: 'flex-start'}}>
           <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
@@ -141,7 +155,6 @@ const LeadItem = ({item, navigation, country}) => {
           </Text>
         </Row>
       )}
-
       {item.Web && (
         <Row mb={4} style={{alignItems: 'flex-start'}}>
           <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
@@ -150,7 +163,6 @@ const LeadItem = ({item, navigation, country}) => {
           </Text>
         </Row>
       )}
-
       <Row mb={4} style={{alignItems: 'flex-start'}}>
         <CreditIcon />
         <Text style={styles.creditText}>1 Credit</Text>
