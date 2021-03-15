@@ -91,7 +91,7 @@ const Leads = props => {
   return (
     <Screen>
       <Header
-        title="Leads"
+        title="Customers"
         hideCreatePost
         customButton={() => <FilterButton navigation={props.navigation} />}
       />
@@ -183,15 +183,15 @@ const ListHeader = ({numLeads, navigation}) => {
     <>
       <Seperator opacity={0.2} />
       <View style={styles.listHeaderPref}>
-        <Text style={styles.prefText}>{numLeads} leads matching your </Text>
+        <Text style={styles.prefText}>{numLeads} customers matching your </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('LeadPreferences')}>
-          <Text style={styles.prefLink}>Lead preferences</Text>
+          <Text style={styles.prefLink}>Customer preferences</Text>
         </TouchableOpacity>
       </View>
       <Seperator opacity={0.2} />
       <View style={styles.listHeaderStatus}>
-        <Text style={styles.totalShowing}>Showing all {numLeads} leads</Text>
+        <Text style={styles.totalShowing}>Showing all {numLeads} customers</Text>
         <Text style={styles.lastUpdated}>Updated just now</Text>
       </View>
       <Seperator opacity={0.2} />

@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, Text} from 'react-native'
+import {FlatList, Text, Alert} from 'react-native'
 import CheckBox from '@react-native-community/checkbox'
 
 import Header from '../../components/header/Header'
@@ -64,12 +64,34 @@ const CardItem = ({navigation, item}) => {
       </Row>
 
       <Button
-        onPress={() =>  
-          navigation.navigate('PayCredits', {
-            amount: item.price,
-            credits: item.credits,
-            purchaseType : "coins"
-          })
+        onPress={() =>
+          Alert.alert(
+            'Choose payment method',
+            'How you wana pay for the credits?',
+            [
+              {
+                text: 'Pay with Paypal',
+                onPress: () => {
+                  navigation.navigate('PayCredits', {
+                    amount: item.price,
+                    credits: item.credits,
+                    purchaseType: 'coins',
+                  })
+                },
+              },
+              {
+                text: 'Pay with Credit/Debit Card',
+                onPress: () => {
+                  navigation.navigate('CardPayment', {
+                    amount: item.price,
+                    credits: item.credits,
+                    purchaseType: 'coins',
+                  })
+                },
+              },
+            ],
+            {cancelable: true},
+          )
         }>
         <ButtonText>Buy credits</ButtonText>
       </Button>

@@ -53,7 +53,7 @@ const LeadPreferences = (props) => {
   return (
     <View style={styles.container}>
       <Header
-        title="Lead Preferences"
+        title="Customer Preferences"
         hideCreatePost
         customButton={() => (
           <>

@@ -102,6 +102,7 @@ import MyProfilePlayer from './screens/myProfile/MyProfilePlayer'
 import PersonalDetails from './screens/myProfile/PersonalDetails'
 import FindCoach from './screens/myProfile/FindCoach'
 import SuccessPayCredits from './screens/successPayCredits/SuccessPayCredits'
+import CardPayment from './screens/cardPayment/CardPayment'
 
 let initialRouteName = null
 let Apps = null
@@ -221,7 +222,8 @@ const AppMain = () => {
       Leads: {screen: Leads},
       LeadDetails: {screen: LeadDetails},
       Cart: {screen: Cart},
-      PayCredits: {screen: PayCredits},
+      PayCredits: { screen: PayCredits },
+      CardPayment: {screen: CardPayment},
       LeadPreferences: {screen: LeadPreferences},
     },
     {
@@ -238,7 +240,8 @@ const AppMain = () => {
       Leads: {screen: Leads},
       LeadDetails: {screen: LeadDetails},
       Cart: {screen: Cart},
-      PayCredits: {screen: PayCredits},
+      PayCredits: { screen: PayCredits },
+      CardPayment: {screen: CardPayment},
       LeadPreferences: {screen: LeadPreferences},
     },
     {
@@ -286,7 +289,8 @@ const AppMain = () => {
       MyProfilePlayer: {screen: MyProfilePlayer},
       Cart: {screen: Cart},
       PayCredits: {screen: PayCredits},
-      SuccessPayCredits: {screen: SuccessPayCredits},
+      SuccessPayCredits: { screen: SuccessPayCredits },
+      CardPayment: {screen: CardPayment},
     },
     {
       defaultNavigationOptions: ({navigation}) => {
@@ -311,7 +315,8 @@ const AppMain = () => {
       Message: {screen: Message},
       LastMessage: {screen: LastMessage},
       Cart: {screen: Cart},
-      PayCredits: {screen: PayCredits},
+      PayCredits: { screen: PayCredits },
+      CardPayment: {screen: CardPayment},
     },
     {
       defaultNavigationOptions: ({navigation}) => {

@@ -45,7 +45,7 @@ const LeadDetails = props => {
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header
-        title="Lead Details"
+        title="Customer Details"
         hideCreatePost={true}
         customButton={() => (
           <Icon
