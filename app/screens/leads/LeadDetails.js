@@ -495,26 +495,30 @@ const LeadDetails = props => {
           </>
         )}
 
-        <View style={{width: '100%', marginTop: 30, marginLeft: 15}}>
-          <Text style={{fontSize: 18, paddingLeft: 15}}>
-            Additional Details
-          </Text>
-        </View>
+        {about ? (
+          <>
+            <View style={{width: '100%', marginTop: 30, marginLeft: 15}}>
+              <Text style={{fontSize: 18, paddingLeft: 15}}>
+                Additional Details
+              </Text>
+            </View>
 
-        <View style={{width: '100%', marginTop: 10, marginLeft: 15}}>
-          <Text
-            style={{
-              fontSize: 18,
-              paddingHorizontal: 15,
-              paddingRight: 30,
-              color: '#5E6488',
-              textAlign: 'left',
-            }}>
-            {about}
-          </Text>
-        </View>
+            <View style={{width: '100%', marginTop: 10, marginLeft: 15}}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingHorizontal: 15,
+                  paddingRight: 30,
+                  color: '#5E6488',
+                  textAlign: 'left',
+                }}>
+                {about}
+              </Text>
+            </View>
+          </>
+        ) : undefined}
 
-        <View style={{height: 200, width: '90%', marginTop: 20}}>
+        {/* <View style={{height: 200, width: '90%', marginTop: 20}}> */}
           {/* <MapView
             style={{flex: 1}}
             initialRegion={{
@@ -536,7 +540,7 @@ const LeadDetails = props => {
               description={'werw'}
             />
           </MapView> */}
-        </View>
+        {/* </View> */}
 
         {player.Web ? (
           <>
