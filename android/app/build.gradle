@@ -133,8 +133,8 @@ android {
         applicationId "com.nextleveltraining"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "2.1"
+        versionCode 23
+        versionName "2.3"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -199,6 +199,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-video')
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
