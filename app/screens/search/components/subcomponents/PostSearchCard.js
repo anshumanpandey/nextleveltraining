@@ -130,7 +130,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
             </View>
           </View>
         )}
-        {props.Role == "Coach" && (
+        {/* {props.Role == "Coach" && (
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: '5%', marginTop: 10 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.ps_dbs_check}>Valid ID</Text>
@@ -143,7 +143,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
               {!props?.DBSCeritificate?.Verified && (<Icon type="MaterialIcons" name="close" style={{ fontSize: 20, color: 'red' }} />)}
             </View>
           </View>
-        )}
+        )} */}
       </View>
       {props.Qualifications && props.Qualifications.length != 0 && (
         <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', width: '80%', marginTop: 10, justifyContent: 'space-between', marginBottom: 10 }}>

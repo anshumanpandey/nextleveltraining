@@ -30,6 +30,7 @@ const FindCoachForm = props => {
   const [days, setDays] = React.useState(null)
   const [timing, setTiming] = React.useState(null)
   const [weeks, setWeaks] = React.useState(null)
+  const [price, setPrice] = React.useState(null)
   const [name, setName] = React.useState(null)
   const [email, setEmail] = React.useState(null)
   const [phone, setPhone] = React.useState(null)
@@ -41,6 +42,7 @@ const FindCoachForm = props => {
   const [timingFlag, setTimingFlag] = React.useState(false)
   const [weeksFlag, setWeaksFlag] = React.useState(false)
   const [successFlag, setSuccessFlag] = React.useState(false)
+  const [priceFlag, setPriceFlag] = React.useState(false)
 
   const [nameFlag, setNameFlag] = React.useState(false)
   const [emailFlag, setEmailFlag] = React.useState(false)
@@ -1102,6 +1104,136 @@ const FindCoachForm = props => {
                     toggleCheckBox5,
                   ])
                   setTimingFlag(false)
+                  setPriceFlag(true)
+                }
+              }}
+              style={{
+                backgroundColor: '#031D70',
+                width: '40%',
+                height: 45,
+                alignSelf: 'center',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+                NEXT
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
+
+    const PriceComponent = () => {
+      const [value, setValue] = React.useState(price ? price.value : null)
+      var radio_props = [
+        {label: '£10', value: 0},
+        {label: '£20', value: 1},
+        {label: '£30', value: 2},
+        {label: '£40', value: 3},
+        {label: '£50', value: 4},
+        {label: 'No Limit Depends on coach', value: 5},
+      ]
+
+      return (
+        <View
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            borderRadius: 10,
+            height: 500,
+            marginBottom: 20,
+            backgroundColor: 'white',
+            alignItems: 'center',
+            justifyContent: 'space-evenly',
+          }}>
+          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+            Maximum Price Per Hour ?
+          </Text>
+          <View style={{width: '90%'}}>
+            <RadioForm animation={true}>
+              {radio_props.map((obj, i) => (
+                <View
+                  style={{
+                    width: '100%',
+                    height: 50,
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#00000050',
+                    justifyContent: 'center',
+                    marginTop: 10,
+                    backgroundColor: value === i ? '#D7EBFF' : 'white',
+                  }}>
+                  <RadioButton labelHorizontal={true} key={i}>
+                    <RadioButtonInput
+                      obj={obj}
+                      index={i}
+                      isSelected={value === i}
+                      onPress={value => {
+                        setValue(value)
+                        setPrice(radio_props[value])
+                        setPriceFlag(false)
+                        setWeaksFlag(true)
+                      }}
+                      borderWidth={1}
+                      buttonInnerColor={'#5BADFE'}
+                      buttonOuterColor={value === i ? '#2196f3' : '#00000050'}
+                      buttonSize={13}
+                      buttonOuterSize={20}
+                      buttonWrapStyle={{marginLeft: 10}}
+                    />
+                    <RadioButtonLabel
+                      obj={obj}
+                      index={i}
+                      labelHorizontal={true}
+                      onPress={value => {
+                        setValue(value)
+                        setPrice(radio_props[value])
+                        setPriceFlag(false)
+                        setWeaksFlag(true)
+                      }}
+                      labelStyle={{
+                        fontSize: 20,
+                        color: 'black',
+                        width: '100%',
+                      }}
+                      labelWrapStyle={{}}
+                    />
+                  </RadioButton>
+                </View>
+              ))}
+            </RadioForm>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              width: '100%',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setPriceFlag(false)
+                 setTimingFlag(true)
+              }}
+              style={{
+                backgroundColor: '#031D70',
+                width: '40%',
+                height: 45,
+                alignSelf: 'center',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+                PREVIOUS
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (!price) {
+                } else {
+                  setPriceFlag(false)
                   setWeaksFlag(true)
                 }
               }}
@@ -1208,7 +1340,7 @@ const FindCoachForm = props => {
             <TouchableOpacity
               onPress={() => {
                 setWeaksFlag(false)
-                setTimingFlag(true)
+                setPriceFlag(true)
               }}
               style={{
                 backgroundColor: '#031D70',
@@ -1289,6 +1421,7 @@ const FindCoachForm = props => {
                     coachingType: coachingArr,
                     days: daysArr,
                     coachingTime: timingArr,
+                    maximumPrice: price.label,
                     daysOfWeek: [weeks.label],
                   }
                   // console.log(data)
@@ -1617,6 +1750,7 @@ const FindCoachForm = props => {
             {coachingFlag && <CoachingTypeComponent />}
             {daysFlag && <DaysComponent />}
             {timingFlag && <TimingComponent />}
+            {priceFlag && <PriceComponent />}
             {weeksFlag && <TrainTimeComponent />}
             {successFlag && <SuccessComponent />}
             {/* {nameFlag && <NameComponent />}

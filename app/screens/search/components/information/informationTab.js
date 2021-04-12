@@ -22,7 +22,7 @@ const InformationTab = (props) => {
   console.log(props)
   return (
     <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
-      <View style={styles.tab1Contain}>
+      {/* <View style={styles.tab1Contain}>
         <View style={styles.tab1Container}>
           <View style={styles.tabs1}>
             <Text style={[styles.tab_text, { color: Colors.s_blue }]}>
@@ -39,7 +39,7 @@ const InformationTab = (props) => {
             {(!props.coach.VerificationDocument || props.coach?.VerificationDocument?.Verified == false) && <Icon type="MaterialIcons" name="close" style={[styles.icons, { color: 'red' }]} />}
           </View>
         </View>
-      </View>
+      </View> */}
       <DetailsCard
         onPress={() => handleOnCardPress({ title: "About Me", data: props.coach.AboutUs, goBackTo: 'Profile' })}
         editable={props.editable}

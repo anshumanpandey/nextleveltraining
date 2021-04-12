@@ -17,9 +17,9 @@ import {
 
 const Cart = ({navigation}) => {
   const items = [
-    {credits: 1, price: 5},
-    {credits: 5, price: 15},
-    {credits: 10, price: 20},
+    {credits: 1, price: 1.99},
+    {credits: 5, price: 9.95},
+    {credits: 10, price: 19.9},
   ]
 
   return (
