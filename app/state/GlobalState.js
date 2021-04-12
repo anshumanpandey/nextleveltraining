@@ -54,7 +54,6 @@ const reducer = (state, action) => {
       let toggle = state.toggle
       let goto = undefined
       AsyncStorage.setItem('profile', JSON.stringify(action.state))
-      console.log("1", toggle)
       if (state.profile == null && action?.state?.Id) {
         console.log('setting profile first tinme')
         toggle = !state.toggle
@@ -92,9 +91,7 @@ const reducer = (state, action) => {
           toggle = !state.toggle
         }
       }
-      console.log("2", toggle)
       if (state.toggle !== toggle) {
-        console.log("trugerring rerender of stack")
         return { ...state, ...{ profile: action.state }, toggle: toggle, goto };
       }
       return { ...state, ...{ profile: action.state } };

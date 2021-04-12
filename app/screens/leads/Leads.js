@@ -6,11 +6,10 @@ import {getDistance} from 'geolib'
 import Header from '../../components/header/Header'
 import styles from './styles'
 import {useGlobalState} from '../../state/GlobalState'
-import { Row, Screen, CreditIcon } from '../../components/styled'
+import {Row, Screen, CreditIcon} from '../../components/styled'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 TimeAgo.addDefaultLocale(en)
-
 
 var monthOldDate = new Date()
 monthOldDate.setDate(monthOldDate.getDate() - 30)
@@ -35,7 +34,10 @@ const Leads = props => {
     {manual: true},
   )
 
-  const [getWebLeadsReq, getWebLeads] = useAxios(`/Users/GetLeads/${county}`)
+  const [getWebLeadsReq, getWebLeads] = useAxios(
+    {url: `/Users/GetLeads/${county}`},
+    {manual: true},
+  )
 
   React.useEffect(() => {
     searchCoaches({data: {search: ''}})
@@ -48,7 +50,7 @@ const Leads = props => {
 
   const players =
     searchCoachesReq?.data?.Players.filter(
-      p => !getResponsesReq.data.find(r => r.Lead.UserId === p.Id),
+      p => !getResponsesReq.data?.find(r => r.Lead.UserId === p.Id),
     ) || []
 
   const distanceToLead = lead => {
@@ -124,7 +126,7 @@ const Leads = props => {
   )
 }
 
-const LeadItem = ({ item, navigation, country }) => {
+const LeadItem = ({item, navigation, country}) => {
   const timeAgo = new TimeAgo('en-US')
 
   // if (monthOldDate > new Date(item.CreatedAt)) return null
@@ -191,7 +193,9 @@ const ListHeader = ({numLeads, navigation}) => {
       </View>
       <Seperator opacity={0.2} />
       <View style={styles.listHeaderStatus}>
-        <Text style={styles.totalShowing}>Showing all {numLeads} customers</Text>
+        <Text style={styles.totalShowing}>
+          Showing all {numLeads} customers
+        </Text>
         <Text style={styles.lastUpdated}>Updated just now</Text>
       </View>
       <Seperator opacity={0.2} />

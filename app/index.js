@@ -148,13 +148,13 @@ const AppMain = () => {
   const [currentNotifications, setCurrentNotifications] = useState([])
 
   const listenTokens = () => {
-    messaging().onTokenRefresh((fcmToken) => {
+    messaging().onTokenRefresh(fcmToken => {
       sendAndroidToken(fcmToken)
     })
   }
 
   const listenForNotificationOpening = () => {
-    messaging().onNotificationOpenedApp((e) => {
+    messaging().onNotificationOpenedApp(e => {
       NavigationService.navigate('Notifications')
     })
   }
@@ -163,10 +163,10 @@ const AppMain = () => {
     listenForNotificationOpening()
     listenTokens()
     SplashScreen.hide()
-    PushNotificationIOS.addEventListener('register', (deviceToken) => {
+    PushNotificationIOS.addEventListener('register', deviceToken => {
       AsyncStorage.setItem('AppleDeviceToken', deviceToken)
     })
-    PushNotificationIOS.addEventListener('registrationError', (err) => {
+    PushNotificationIOS.addEventListener('registrationError', err => {
       Alert.alert(
         'PushNotification registrationError',
         `${err.message}\n${err.details}`,
@@ -175,15 +175,14 @@ const AppMain = () => {
   }, [])
 
   useEffect(() => {
-    console.log('notifications.length', notifications.length)
+    console.group('notifications')
+    console.log('total', notifications.length)
+    console.log('read', notifications.filter(i => i.IsRead == false).length)
     console.log(
-      'readednotifications',
-      notifications.filter((i) => i.IsRead == false).length,
+      'current',
+      currentNotifications.filter(i => i.IsRead == false).length,
     )
-    console.log(
-      'currentNotifications',
-      currentNotifications.filter((i) => i.IsRead == false).length,
-    )
+    console.groupEnd()
     setCurrentNotifications([...notifications])
   }, [...notifications, toggle])
 
@@ -197,7 +196,6 @@ const AppMain = () => {
   }, [goto])
 
   useEffect(() => {
-    console.log('error', error)
     if (error) {
       Alert.alert('Error', error.toString())
       dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.ERROR, state: null})
@@ -205,7 +203,6 @@ const AppMain = () => {
   }, [error])
 
   useEffect(() => {
-    console.log('success', error)
     if (success) {
       Toast.show(success, Toast.LONG)
       dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.SUCCESS, state: null})
@@ -222,16 +219,14 @@ const AppMain = () => {
       Leads: {screen: Leads},
       LeadDetails: {screen: LeadDetails},
       Cart: {screen: Cart},
-      PayCredits: { screen: PayCredits },
+      PayCredits: {screen: PayCredits},
       CardPayment: {screen: CardPayment},
       LeadPreferences: {screen: LeadPreferences},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
 
@@ -240,16 +235,14 @@ const AppMain = () => {
       Leads: {screen: Leads},
       LeadDetails: {screen: LeadDetails},
       Cart: {screen: Cart},
-      PayCredits: { screen: PayCredits },
+      PayCredits: {screen: PayCredits},
       CardPayment: {screen: CardPayment},
       LeadPreferences: {screen: LeadPreferences},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
 
@@ -259,11 +252,9 @@ const AppMain = () => {
       ResponseDetails: {screen: ResponseDetails},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
 
@@ -289,15 +280,13 @@ const AppMain = () => {
       MyProfilePlayer: {screen: MyProfilePlayer},
       Cart: {screen: Cart},
       PayCredits: {screen: PayCredits},
-      SuccessPayCredits: { screen: SuccessPayCredits },
+      SuccessPayCredits: {screen: SuccessPayCredits},
       CardPayment: {screen: CardPayment},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
 
@@ -315,15 +304,13 @@ const AppMain = () => {
       Message: {screen: Message},
       LastMessage: {screen: LastMessage},
       Cart: {screen: Cart},
-      PayCredits: { screen: PayCredits },
+      PayCredits: {screen: PayCredits},
       CardPayment: {screen: CardPayment},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
 
@@ -336,11 +323,9 @@ const AppMain = () => {
       LastMessage: {screen: LastMessage},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
 
@@ -361,11 +346,9 @@ const AppMain = () => {
       LastMessage: {screen: LastMessage},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
   const ConfirmedProfileStack = createStackNavigator(
@@ -380,11 +363,9 @@ const AppMain = () => {
       UpComingMatch: {screen: UpComingMatch},
     },
     {
-      defaultNavigationOptions: ({navigation}) => {
-        return {
-          header: null,
-        }
-      },
+      defaultNavigationOptions: () => ({
+        headerShown: false,
+      }),
     },
   )
   const tabs = {
@@ -451,7 +432,7 @@ const AppMain = () => {
         tabBarVisible: false,
         tabBarButtonComponent: () => <></>,
       }),
-    }
+    },
   }
 
   if (HasCompletedVerificationProcess(profile) == true && token) {
@@ -922,11 +903,9 @@ const AppMain = () => {
   }
 
   const AuthStack = createStackNavigator(screens, {
-    defaultNavigationOptions: ({navigation}) => {
-      return {
-        header: null,
-      }
-    },
+    defaultNavigationOptions: () => ({
+      headerShown: false,
+    }),
   })
 
   if (!Apps) {
@@ -934,7 +913,6 @@ const AppMain = () => {
   }
 
   useEffect(() => {
-    console.log('generationg', screens)
     Apps = createAppContainer(AuthStack)
   }, [
     token,
@@ -956,7 +934,7 @@ const AppMain = () => {
     <SafeAreaView style={{flex: 1}}>
       <NavigationContainer>
         <Apps
-          ref={(navigatorRef) => {
+          ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef)
           }}
         />

@@ -1,10 +1,10 @@
-import {NavigationActions, StackActions} from 'react-navigation';
-import {DrawerActions} from 'react-navigation-drawer';
+import {NavigationActions, StackActions} from 'react-navigation'
+import {DrawerActions} from 'react-navigation-drawer'
 
-let _navigator;
+let _navigator
 
 function setTopLevelNavigator(navigatorRef) {
-  _navigator = navigatorRef;
+  _navigator = navigatorRef
 }
 
 function navigate(routeName, params) {
@@ -13,21 +13,21 @@ function navigate(routeName, params) {
       routeName,
       params,
     }),
-  );
+  )
 }
 
 function dispatch(action) {
-  _navigator.dispatch(action);
+  _navigator.dispatch(action)
 }
 
 function goBack(params) {
   // params?
-  _navigator.dispatch(NavigationActions.back(params));
+  _navigator.dispatch(NavigationActions.back(params))
 }
 
 function replace(routeName) {
   console.log(_navigator)
-  _navigator.actions.replace(routeName);
+  _navigator.actions.replace(routeName)
 }
 
 function navigateAndReset(routeName) {
@@ -40,7 +40,7 @@ function navigateAndReset(routeName) {
         }),
       ],
     }),
-  );
+  )
 }
 
 function navigateAndResetWithParams(routeName, params) {
@@ -54,14 +54,15 @@ function navigateAndResetWithParams(routeName, params) {
         }),
       ],
     }),
-  );
+  )
 }
 
 function openDrawer() {
-  _navigator.dispatch(DrawerActions.openDrawer());
+  _navigator.dispatch(DrawerActions.openDrawer())
 }
+
 function closeDrawer() {
-  _navigator.dispatch(DrawerActions.closeDrawer());
+  _navigator.dispatch(DrawerActions.closeDrawer())
 }
 
 export default {
@@ -73,5 +74,5 @@ export default {
   replace,
   openDrawer,
   closeDrawer,
-  dispatch
-};
+  dispatch,
+}

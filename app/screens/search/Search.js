@@ -361,7 +361,6 @@ const Search = (props) => {
           item => !item.Text.toLowerCase().includes('train'),
         )
       }
-      console.log('dispaching notigfication from home', notifications.length)
       dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.NOTIFICATIONS, state: notifications })
     }
   }, [notificationsReq.data?.Notifications?.length]);

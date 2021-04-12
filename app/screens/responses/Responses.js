@@ -15,7 +15,8 @@ import {useGlobalState} from '../../state/GlobalState'
 const Responses = props => {
   const [profile] = useGlobalState('profile')
   const [{loading, data: responses}, getResponses] = useAxios(
-    'Users/GetResponses',
+    {url: 'Users/GetResponses'},
+    {manual: true},
   )
 
   useEffect(() => {
