@@ -1,45 +1,77 @@
 import React from 'react'
-import { View } from 'react-native'
+import {View} from 'react-native'
 import Header from '../../components/header/Header'
 import {Icon} from 'native-base'
-import stripe from 'react-native-stripe-payments';
-import {
-  CreditCardInput
-} from 'react-native-credit-card-input'
+import stripe from 'tipsi-stripe'
+import {CreditCardInput} from 'react-native-credit-card-input'
+import useAxios from 'axios-hooks'
 
-stripe.setOptions({ publishingKey: 'pk_live_hsdDdRGSyYxs38fMNIaAY1CD00rAm7kvcW' });
+stripe.setOptions({
+  publishableKey: 'pk_test_x7ILp8ZkceqUqaIxDWAiBsLi00Fz2vPqrZ',
+})
 
-const CardPayment = (props) => {
+const CardPayment = props => {
+  const amount = props.navigation.getParam('amount', 0)
+  const credits = props.navigation.getParam('credits', 0)
+  const purchaseType = props.navigation.getParam('purchaseType', null)
 
-  _cardValid = () => {
+  const [spritePaymentReq, stripePaymentSecret] = useAxios(
+    {
+      url: `/Users/PayWithStripe`,
+      method: 'POST',
+      data: {
+        amount: amount * 100,
+        currency: 'gbp',
+        statementDescriptor: 'next_level_descriptor',
+      },
+    },
+    {manual: true},
+  )
+
+  React.useEffect(() => {
+    _confirmPayment()
+  }, [])
+
+  const _cardValid = () => {
     const isCardValid = stripe.isCardValid({
       number: '4242424242424242',
       expMonth: 10,
-      expYear: 21,
+      expYear: 25,
       cvc: '888',
-    });
-    return isCardValid;
+    })
+    return isCardValid
   }
 
-  _confirmPayment = () => {
-    const cardDetails = {
-      number: '4242424242424242',
-      expMonth: 10,
-      expYear: 21,
-      cvc: '888',
+  const _confirmPayment = async () => {
+    try {
+      const result = await stripePaymentSecret()
+      if (result.status === 200) {
+        const params = {
+          number: '4242424242424242',
+          expMonth: 12,
+          expYear: 2025,
+          cvc: '888',
+        }
+
+        const paymentMethod = await stripe.createPaymentMethod({
+          card: params,
+        })
+        
+        console.log("method:", paymentMethod)
+        const payment = await stripe.confirmSetupIntent({
+          clientSecret: result.data.ClientSecret,
+          paymentMethodId: paymentMethod.id,
+          paymentMethod,
+        })
+        console.log('payment:', payment)
+      }
+    } catch (e) {
+      console.log('err:', e)
     }
-    stripe.confirmPayment('client_secret_from_backend', cardDetails)
-      .then(result => {
-        // result of type PaymentResult
-      })
-      .catch(err =>
-        // error performing payment
-        console.log(err)
-      )
   }
 
   const _onChange = form => console.log(form)
-  
+
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header
@@ -65,4 +97,4 @@ const CardPayment = (props) => {
   )
 }
 
-export default CardPayment;
+export default CardPayment

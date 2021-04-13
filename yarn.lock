@@ -8225,11 +8225,6 @@ react-native-star-rating@^1.1.0:
     react-native-button "^2.3.0"
     react-native-vector-icons "^4.5.0"
 
-react-native-stripe-payments@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-stripe-payments/-/react-native-stripe-payments-1.0.6.tgz#22c46a62fd9193fb564ddb92cda923d69477ae98"
-  integrity sha512-fvHcutVkNrFPKjSh3TpD8vQztEnFDTRk9SX1Zjjec0wdBHKYgg/+nb9QWiLvOsyEI+tpgjXkfYCzF+COsqZBcw==
-
 react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
@@ -9726,6 +9721,11 @@ tiny-warning@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
   integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
+
+tipsi-stripe@8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/tipsi-stripe/-/tipsi-stripe-8.0.2.tgz#7f3d83ab632ba0a88f84e1bf4a611bf7e0c6b776"
+  integrity sha512-LV2JegJlK0SEwB/auxDS5jnxnVNI2vju+IPNt3Uq1hmzV40li7UIyLQA5w6rihe/JDk2IdmRMFQUTuSoBzf1mQ==
 
 tmp@^0.0.33:
   version "0.0.33"

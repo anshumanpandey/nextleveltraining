@@ -27,6 +27,8 @@ const LeadDetails = props => {
   const loading = getLeadReq.loading || false
   const numResponses = lead ? Math.min(lead.NumResponses, 5) : 0
 
+  console.log(player)
+
   const [purchaseLeadReq, purchaseLead] = useAxios(
     {
       url: `/Users/PurchaseLead`,

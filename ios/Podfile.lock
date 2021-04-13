@@ -128,13 +128,13 @@ PODS:
   - GTMSessionFetcher/Core (1.5.0)
   - GTMSessionFetcher/Full (1.5.0):
     - GTMSessionFetcher/Core (= 1.5.0)
-  - leveldb-library (1.22)
+  - leveldb-library (1.22.1)
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
-  - PromisesObjC (1.2.11)
+  - PromisesObjC (1.2.12)
   - Protobuf (3.14.0)
   - RCTRequired (0.62.2)
   - RCTTypeSafety (0.62.2):
@@ -336,9 +336,6 @@ PODS:
     - Toast (~> 4.0.0)
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-stripe-payments (1.0.6):
-    - React
-    - Stripe (~> 19.0)
   - react-native-video (4.4.5):
     - React
     - react-native-video/Video (= 4.4.5)
@@ -459,9 +456,12 @@ PODS:
     - React
   - RNScreens (2.9.0):
     - React
-  - Stripe (19.4.0)
+  - Stripe (20.0.0)
+  - tipsi-stripe (8.0.2):
+    - React
+    - Stripe (>= 19.0.1)
   - Toast (4.0.0)
-  - TOCropViewController (2.5.5)
+  - TOCropViewController (2.6.0)
   - toolbar-android (0.1.0-rc.2):
     - React
   - Yoga (1.14.0)
@@ -496,7 +496,6 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
-  - react-native-stripe-payments (from `../node_modules/react-native-stripe-payments`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -529,6 +528,8 @@ DEPENDENCIES:
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - Stripe (~> 20.0.0)
+  - tipsi-stripe (from `../node_modules/tipsi-stripe`)
   - "toolbar-android (from `../node_modules/@react-native-community/toolbar-android`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -612,8 +613,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-simple-toast"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
-  react-native-stripe-payments:
-    :path: "../node_modules/react-native-stripe-payments"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-webview:
@@ -676,6 +675,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  tipsi-stripe:
+    :path: "../node_modules/tipsi-stripe"
   toolbar-android:
     :path: "../node_modules/@react-native-community/toolbar-android"
   Yoga:
@@ -706,9 +707,9 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
-  leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
-  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 0cde852566359049847168e51bd1c690e0f70056
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
@@ -730,7 +731,6 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 344b969c45af3d8464d36e8dea264942992ef033
   react-native-simple-toast: bf002828cf816775a6809f7a9ec3907509bce11f
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-stripe-payments: 03bbd16051394c9e481f12f99d55d15c17b0515d
   react-native-video: eee541262ada11bc7ffe8ec5508e6a877937c462
   react-native-webview: 1ad70b21fb9e44811e33a99e43a4b68b94806a6d
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -762,12 +762,13 @@ SPEC CHECKSUMS:
   RNImageCropPicker: f0557a908758c4a3f83978894ec7227651529b45
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
-  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
+  Stripe: 339e8c50d3a27dcbe9a4f35b98c260fb9715d962
+  tipsi-stripe: 6f4d2805c174b5109f455932d5e9f302bf2a3b9a
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
+  TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   toolbar-android: 85f3ef4d691469f2d304e7dee4bca013aa1ba1ff
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
 
-PODFILE CHECKSUM: f482bb6544ce88ce6cada16c805eb5db8483919c
+PODFILE CHECKSUM: dd7da968ce65b91824b1b9184355f774e9c6e628
 
 COCOAPODS: 1.10.1
