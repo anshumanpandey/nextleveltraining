@@ -1,13 +1,19 @@
 import React from 'react'
-import {View} from 'react-native'
+import {View, ActivityIndicator, TouchableOpacity, Text} from 'react-native'
 import Header from '../../components/header/Header'
+import styles from './styles'
 import {Icon} from 'native-base'
 import stripe from 'tipsi-stripe'
 import {CreditCardInput} from 'react-native-credit-card-input'
 import useAxios from 'axios-hooks'
+import {
+  dispatchGlobalState,
+  GLOBAL_STATE_ACTIONS,
+} from '../../state/GlobalState'
+import {Alert} from 'react-native'
 
 stripe.setOptions({
-  publishableKey: 'pk_test_x7ILp8ZkceqUqaIxDWAiBsLi00Fz2vPqrZ',
+  publishableKey: 'pk_live_hsdDdRGSyYxs38fMNIaAY1CD00rAm7kvcW',
 })
 
 const CardPayment = props => {
@@ -15,62 +21,96 @@ const CardPayment = props => {
   const credits = props.navigation.getParam('credits', 0)
   const purchaseType = props.navigation.getParam('purchaseType', null)
 
-  const [spritePaymentReq, stripePaymentSecret] = useAxios(
+  const [cardDetails, setCardDetails] = React.useState(null)
+  const [disabled, setDisabled] = React.useState(true)
+
+  const [stripePaymentCreateIntentRes, stripePaymentCreateIntent] = useAxios(
     {
       url: `/Users/PayWithStripe`,
       method: 'POST',
-      data: {
-        amount: amount * 100,
-        currency: 'gbp',
-        statementDescriptor: 'next_level_descriptor',
-      },
     },
     {manual: true},
   )
 
-  React.useEffect(() => {
-    _confirmPayment()
-  }, [])
+  const [buyCreditsReq, buyCredits] = useAxios(
+    {
+      url: '/Users/BuyCredits',
+      method: 'POST',
+    },
+    {manual: true},
+  )
 
-  const _cardValid = () => {
-    const isCardValid = stripe.isCardValid({
-      number: '4242424242424242',
-      expMonth: 10,
-      expYear: 25,
-      cvc: '888',
-    })
-    return isCardValid
-  }
+  const [getUserReq, getUserData] = useAxios(
+    {
+      url: '/Users/GetUser',
+    },
+    {manual: true},
+  )
 
   const _confirmPayment = async () => {
     try {
-      const result = await stripePaymentSecret()
-      if (result.status === 200) {
-        const params = {
-          number: '4242424242424242',
-          expMonth: 12,
-          expYear: 2025,
-          cvc: '888',
-        }
-
-        const paymentMethod = await stripe.createPaymentMethod({
-          card: params,
-        })
-        
-        console.log("method:", paymentMethod)
-        const payment = await stripe.confirmSetupIntent({
-          clientSecret: result.data.ClientSecret,
+      setDisabled(true)
+      const expiry = cardDetails.expiry.split('/')
+      const month = expiry[0]
+      const year = `20${expiry[1]}`
+      const params = {
+        number: cardDetails.number,
+        expMonth: month,
+        expYear: year,
+        cvc: cardDetails.cvc,
+      }
+      console.log(params)
+      const paymentMethod = await stripe.createPaymentMethod({
+        card: params,
+      })
+      // console.log('method:', paymentMethod)
+      const result = await stripePaymentCreateIntent({
+        data: {
+          amount: amount * 100,
+          currency: 'gbp',
+          statementDescriptor: 'next_level_descriptor',
           paymentMethodId: paymentMethod.id,
-          paymentMethod,
+        },
+      })
+      if (result.status === 200) {
+        // console.log(result.data)
+        const payment = await stripe.confirmPaymentIntent({
+          clientSecret: result.data.ClientSecret,
         })
-        console.log('payment:', payment)
+        // console.log('payment:', payment)
+        if (payment.status === 'succeeded') {
+          const newData = {
+            credits: credits,
+            amountPaid: Math.round(amount),
+          }
+          const response = await buyCredits({data: newData})
+          if (response.status !== 200) return
+          const {data} = await getUserData()
+          dispatchGlobalState({
+            type: GLOBAL_STATE_ACTIONS.PROFILE,
+            state: data,
+          })
+          Alert.alert('Succeed', 'Payment Successful!')
+        }
       }
     } catch (e) {
       console.log('err:', e)
     }
   }
 
-  const _onChange = form => console.log(form)
+  const _onChange = form => {
+    setCardDetails(form.values)
+    if (
+      form.status.cvc === 'valid' &&
+      form.status.expiry === 'valid' &&
+      form.status.number === 'valid'
+    ) {
+      setDisabled(false)
+    }
+    else {
+      setDisabled(true)
+    }
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
@@ -93,6 +133,20 @@ const CardPayment = props => {
         )}
       />
       <CreditCardInput onChange={_onChange} />
+
+      <TouchableOpacity
+        disabled={disabled}
+        style={[styles.buttonSave, {width: 200, opacity: disabled ? 0.5 : 1}]}
+        onPress={_confirmPayment}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white', marginHorizontal: 10}}>Pay Now</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }
