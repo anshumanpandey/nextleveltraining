@@ -29,7 +29,7 @@ const ContactUsScreen = (props) => {
               How to receive more bookings
             </Text>
             <Text>- Appear on feature page</Text>
-            <Text>- Add dbs and valid ID</Text>
+            {/* <Text>- Add dbs and valid ID</Text> */}
             <Text>- Set the radius your willing to travel for training</Text>
             <Text>- Add more hours on availability</Text>
             <Text>- Showcase your training sessions</Text>
