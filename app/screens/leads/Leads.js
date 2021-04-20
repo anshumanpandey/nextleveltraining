@@ -56,7 +56,7 @@ const Leads = props => {
   const distanceToLead = lead => {
     return getDistance(
       {
-        latitude: preferences?.lat || profile?.Lat,
+        latitude: preferences?.county || county,
         longitude: preferences?.lng || profile?.Lng,
       },
       {latitude: lead.Lat, longitude: lead.Lng},
@@ -73,8 +73,8 @@ const Leads = props => {
 
   const nearest = useMemo(() => {
     return players
-      .filter(a => a.Lat && a.Lng)
-      .map(l => ({...l, Distance: distanceToLead(l)}))
+      // .filter(a => a.Lat && a.Lng)
+      // .map(l => ({...l, Distance: distanceToLead(l)}))
       .sort(distanceFilter)
       .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
       .concat(
@@ -83,12 +83,13 @@ const Leads = props => {
         ),
       )
       .filter(a => monthOldDate < new Date(a?.CreatedAt))
+      .filter(a => a.Location.includes(preferences ? preferences.county : county))
       .sort((a, b) =>
         a.CreatedAt && b.CreatedAt
           ? new Date(b.CreatedAt) - new Date(a.CreatedAt)
           : -1,
       )
-  }, [players.length, preferences?.range, preferences?.lat, preferences?.lng])
+  }, [players.length, preferences?.range, preferences?.lat, preferences?.lng, preferences?.county])
 
   return (
     <Screen>

@@ -728,7 +728,7 @@ const AppMain = () => {
 
   initialRouteName =
     HasCompletedVerificationProcess(profile) == true && token
-      ? 'Search'
+      ? 'Home'
       : 'Profile'
 
   let TabNavigator = null

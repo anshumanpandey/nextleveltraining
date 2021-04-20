@@ -31,6 +31,7 @@ const LeadPreferences = (props) => {
     postCode: preferences?.postCode,
     lat: preferences?.lat,
     lng: preferences?.lng,
+    county: preferences?.county
   });
   const [postCode, setPostCode] = useState(
     preferences?.postCode || profile.PostCode,
@@ -45,8 +46,9 @@ const LeadPreferences = (props) => {
         lat: address?.latitude,
         lng: address?.longitude,
         range,
+        county: address?.county,
       },
-    });
+    })
     props.navigation.goBack();
   };
 

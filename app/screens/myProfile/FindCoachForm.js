@@ -22,8 +22,6 @@ import useAxios from 'axios-hooks'
 const FindCoachForm = props => {
   const [profile] = useGlobalState('profile')
 
-  // console.log(profile)
-
   const [experience, setExperience] = React.useState(null)
   const [age, setAge] = React.useState(null)
   const [coaching, setCoaching] = React.useState(null)
@@ -31,9 +29,6 @@ const FindCoachForm = props => {
   const [timing, setTiming] = React.useState(null)
   const [weeks, setWeaks] = React.useState(null)
   const [price, setPrice] = React.useState(null)
-  const [name, setName] = React.useState(null)
-  const [email, setEmail] = React.useState(null)
-  const [phone, setPhone] = React.useState(null)
 
   const [experienceFlag, setExperienceFlag] = React.useState(true)
   const [ageFlag, setAgeFlag] = React.useState(false)
@@ -43,10 +38,7 @@ const FindCoachForm = props => {
   const [weeksFlag, setWeaksFlag] = React.useState(false)
   const [successFlag, setSuccessFlag] = React.useState(false)
   const [priceFlag, setPriceFlag] = React.useState(false)
-
-  const [nameFlag, setNameFlag] = React.useState(false)
-  const [emailFlag, setEmailFlag] = React.useState(false)
-  const [phoneFlag, setPhoneFlag] = React.useState(false)
+  
   const [loadFlag, setLoading] = React.useState(false)
 
   const [{data, loading, error}, saveLead] = useAxios(
@@ -1424,10 +1416,8 @@ const FindCoachForm = props => {
                     maximumPrice: price.label,
                     daysOfWeek: [weeks.label],
                   }
-                  // console.log(data)
                   saveLead({data})
                     .then(response => {
-                      // console.log('hello', response.data)
                       setWeaksFlag(false)
                       setLoading(false)
                       setSuccessFlag(true)

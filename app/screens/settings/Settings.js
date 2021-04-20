@@ -1,11 +1,39 @@
 import React from 'react'
-import {View, TouchableOpacity, Text, Image, ScrollView} from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  ScrollView,
+  Alert,
+} from 'react-native'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
-import {useGlobalState} from '../../state/GlobalState'
+import { useGlobalState } from '../../state/GlobalState'
+import useAxios from 'axios-hooks'
 
 const Settings = props => {
   const [profile] = useGlobalState('profile')
+
+  const [getDeleteRes, deleteAccount] = useAxios(
+    {url: `/Account/DeleteAccount/${profile.EmailID}`},
+    {manual: true},
+  )
+
+  const _deleteAccount = async () => {
+    try {
+      const res = await deleteAccount()
+      if (res.status === 200) {
+        // console.log(res.data)
+        props.navigation.navigate('Logout')
+      } else {
+        // console.log(res.data)
+        Alert.alert("Error", "Something went wrong.")
+      }
+    } catch (e) {
+      // console.log(e)
+    }
+  }
   return (
     <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
       <Header title="Settings" hideCreatePost={true} />
@@ -290,6 +318,21 @@ const Settings = props => {
           subTitle="Delete Account"
           title="Delete Account"
           dividerFlag={false}
+          onPress={() => {
+            Alert.alert('Are you sure?', 'All your data will be lost.', [
+              {
+                text: 'Yes',
+                onPress: () => {
+                  _deleteAccount()
+                },
+              },
+              {
+                text: 'No',
+                onPress: () => {},
+                style: 'cancel',
+              },
+            ])
+          }}
         />
         <View style={{height: 30}} />
       </ScrollView>

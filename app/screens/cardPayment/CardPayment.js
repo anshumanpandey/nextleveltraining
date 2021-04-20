@@ -10,7 +10,8 @@ import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
 } from '../../state/GlobalState'
-import {Alert} from 'react-native'
+import { Alert } from 'react-native'
+import {NavigationActions, StackActions} from 'react-navigation'
 
 stripe.setOptions({
   publishableKey: 'pk_live_hsdDdRGSyYxs38fMNIaAY1CD00rAm7kvcW',
@@ -91,6 +92,20 @@ const CardPayment = props => {
             state: data,
           })
           Alert.alert('Succeed', 'Payment Successful!')
+          const resetAction = StackActions.reset({
+            index: 0,
+            key: null,
+            actions: [
+              NavigationActions.navigate({
+                routeName: 'MainStack',
+                action: NavigationActions.navigate({
+                  routeName: 'Profile',
+                  action: NavigationActions.navigate({routeName: 'Wallet'}),
+                }),
+              }),
+            ],
+          })
+          props.navigation.dispatch(resetAction)
         }
       }
     } catch (e) {

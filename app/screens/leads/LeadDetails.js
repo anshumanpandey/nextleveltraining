@@ -27,6 +27,9 @@ const LeadDetails = props => {
   const loading = getLeadReq.loading || false
   const numResponses = lead ? Math.min(lead.NumResponses, 5) : 0
 
+  const email = player.EmailID.split("@")
+  const providers = email[1].split('.')
+
   console.log(player)
 
   const [purchaseLeadReq, purchaseLead] = useAxios(
@@ -126,7 +129,7 @@ const LeadDetails = props => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            0********
+            {player.MobileNo ? `${player.MobileNo.substring(0,4)}*****`: '34*****798'}
           </Text>
         </View>
 
@@ -146,7 +149,9 @@ const LeadDetails = props => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            *******@***.com
+            {`${email[0].substring(0, 2)}****@${
+              providers[0]
+            }.${providers[1].substring(0, 1)}**`}
           </Text>
         </View>
 
@@ -323,6 +328,32 @@ const LeadDetails = props => {
                 {player.DaysOfWeek[0]}
               </Text>
             </View>
+
+            {player.MaximumPrice && (
+              <View
+                style={{
+                  marginTop: 5,
+                  width: '90%',
+                  height: 120,
+                  backgroundColor: '#00000008',
+                  borderRadius: 5,
+                  justifyContent: 'space-evenly',
+                }}>
+                <Text
+                  style={{
+                    color: '#9FA2B7',
+                    fontSize: 18,
+                    fontWeight: '500',
+                    paddingLeft: 15,
+                    lineHeight: 28,
+                  }}>
+                  Price per hour?
+                </Text>
+                <Text style={{fontSize: 18, paddingLeft: 15}}>
+                  {player.MaximumPrice}
+                </Text>
+              </View>
+            )}
           </>
         ) : (
           <>
@@ -479,6 +510,32 @@ const LeadDetails = props => {
                     {lead.DaysOfWeek[0]}
                   </Text>
                 </View>
+
+                {lead.MaximumPrice && (
+                  <View
+                    style={{
+                      marginTop: 5,
+                      width: '90%',
+                      height: 120,
+                      backgroundColor: '#00000008',
+                      borderRadius: 5,
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <Text
+                      style={{
+                        color: '#9FA2B7',
+                        fontSize: 18,
+                        fontWeight: '500',
+                        paddingLeft: 15,
+                        lineHeight: 28,
+                      }}>
+                      Price per hour?
+                    </Text>
+                    <Text style={{fontSize: 18, paddingLeft: 15}}>
+                      {lead.MaximumPrice}
+                    </Text>
+                  </View>
+                )}
               </>
             ) : loading ? undefined : (
               <View
@@ -521,7 +578,7 @@ const LeadDetails = props => {
         ) : undefined}
 
         {/* <View style={{height: 200, width: '90%', marginTop: 20}}> */}
-          {/* <MapView
+        {/* <MapView
             style={{flex: 1}}
             initialRegion={{
               latitude: 37.78825,
