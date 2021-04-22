@@ -35,7 +35,7 @@ const Leads = props => {
   )
 
   const [getWebLeadsReq, getWebLeads] = useAxios(
-    {url: `/Users/GetLeads/${county}`},
+    {url: `/Users/GetLeads/${preferences ? preferences.county : county}`},
     {manual: true},
   )
 
@@ -44,9 +44,11 @@ const Leads = props => {
   }, [])
 
   React.useEffect(() => {
+    console.log("hekk")
+    searchCoaches({data: {search: preferences ? preferences.county : ''}})
     getWebLeads()
     getResponses()
-  }, [profile?.Credits])
+  }, [profile?.Credits, preferences?.county])
 
   const players =
     searchCoachesReq?.data?.Players.filter(
@@ -83,7 +85,7 @@ const Leads = props => {
         ),
       )
       .filter(a => monthOldDate < new Date(a?.CreatedAt))
-      .filter(a => a.Location.includes(preferences ? preferences.county : county))
+      // .filter(a => a.Location.includes(preferences ? preferences.county : county))
       .sort((a, b) =>
         a.CreatedAt && b.CreatedAt
           ? new Date(b.CreatedAt) - new Date(a.CreatedAt)
@@ -111,6 +113,7 @@ const Leads = props => {
               item={item}
               navigation={props.navigation}
               country={stateArr[stateArr.length - 1]}
+              preferences={preferences}
             />
           )}
           ListHeaderComponent={() => (
@@ -127,7 +130,7 @@ const Leads = props => {
   )
 }
 
-const LeadItem = ({item, navigation, country}) => {
+const LeadItem = ({item, navigation, country, preferences}) => {
   const timeAgo = new TimeAgo('en-US')
 
   // if (monthOldDate > new Date(item.CreatedAt)) return null
@@ -162,7 +165,7 @@ const LeadItem = ({item, navigation, country}) => {
         <Row mb={4} style={{alignItems: 'flex-start'}}>
           <Icon type="Feather" name="map-pin" style={styles.locationIcon} />
           <Text style={styles.locationText}>
-            {`${item.Location}, ${country}`}
+            {`${item.Location}, ${preferences ? preferences.state : country}`}
           </Text>
         </Row>
       )}
