@@ -44,7 +44,6 @@ const Leads = props => {
   }, [])
 
   React.useEffect(() => {
-    console.log("hekk")
     searchCoaches({data: {search: preferences ? preferences.county : ''}})
     getWebLeads()
     getResponses()
@@ -74,23 +73,35 @@ const Leads = props => {
   // }
 
   const nearest = useMemo(() => {
-    return players
-      // .filter(a => a.Lat && a.Lng)
-      // .map(l => ({...l, Distance: distanceToLead(l)}))
-      .sort(distanceFilter)
-      .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
-      .concat(
-        getWebLeadsReq?.data?.filter(
-          item => !getResponsesReq.data.find(r => r.Lead.Id === item?.Id),
-        ),
-      )
-      .filter(a => monthOldDate < new Date(a?.CreatedAt))
-      // .filter(a => a.Location.includes(preferences ? preferences.county : county))
-      .sort((a, b) =>
-        a.CreatedAt && b.CreatedAt
-          ? new Date(b.CreatedAt) - new Date(a.CreatedAt)
-          : -1,
-      )
+    const data = players
+        // .filter(a => a.Lat && a.Lng)
+        // .map(l => ({...l, Distance: distanceToLead(l)}))
+        .sort(distanceFilter)
+        .filter(l => l.Distance < Number(preferences?.range || 50) * 1000)
+        .concat(
+          getWebLeadsReq?.data?.filter(
+            item => !getResponsesReq.data.find(r => r.Lead.Id === item?.Id),
+          ),
+        )
+        .filter(a => monthOldDate < new Date(a?.CreatedAt))
+        // .filter(a => a.Location.includes(preferences ? preferences.county : county))
+        .sort((a, b) =>
+          a.CreatedAt && b.CreatedAt
+            ? new Date(b.CreatedAt) - new Date(a.CreatedAt)
+            : -1,
+    )
+
+    var newArr = []
+    
+    data?.forEach(item => {
+      const found = newArr?.find(element => element.EmailID === item.EmailID);
+      if (!found) {
+        newArr.push(item)
+      }
+    })
+
+    return newArr;
+
   }, [players.length, preferences?.range, preferences?.lat, preferences?.lng, preferences?.county])
 
   return (

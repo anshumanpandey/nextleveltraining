@@ -16,7 +16,7 @@ const Settings = props => {
   const [profile] = useGlobalState('profile')
 
   const [getDeleteRes, deleteAccount] = useAxios(
-    {url: `/Account/DeleteAccount/${profile.EmailID}`},
+    {url: `/Account/DeleteAccount/${profile?.EmailID}`},
     {manual: true},
   )
 

@@ -133,8 +133,8 @@ android {
         applicationId "com.nextleveltraining"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 24
-        versionName "2.4"
+        versionCode 30
+        versionName "2.6.2"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }

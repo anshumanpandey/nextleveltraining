@@ -9,21 +9,34 @@ const LogoutScreen = (props) => {
     const [, setToggle] = useGlobalState("toggle")
 
     useEffect(() => {
-        const focusListener = props.navigation.addListener('didFocus', () => {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
-            console.log('dispatching 1 logout')
-        });
-        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
-        console.log('dispatching 2 logout')
-        return () => {
-            focusListener?.remove();
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE })
+        try {
+            const focusListener = props.navigation.addListener(
+              'didFocus',
+              () => {
+                dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.LOGOUT})
+                console.log('dispatching 1 logout')
+              },
+            )
+            dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.LOGOUT})
+            console.log('dispatching 2 logout')
+            return () => {
+              focusListener?.remove()
+              dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.TOGGLE})
+            }
+         }
+        catch (e) {
+            console.log(e.message)
         }
+        
     }, [])
 
     useEffect(() => {
-        if (profile == null) {
-            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE })
+        try {
+             if (profile == null) {
+               dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.TOGGLE})
+             }
+        } catch (e) {
+            console.log(e.message)
         }
     }, [profile])
 

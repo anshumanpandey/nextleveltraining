@@ -373,7 +373,7 @@ const AppMain = () => {
       screen: ProfileStack,
       navigationOptions: () => ({
         tabBarVisible:
-          HasCompletedVerificationProcess(profile) && profile.ProfileImage,
+          HasCompletedVerificationProcess(profile) && profile?.ProfileImage,
         tabBarIcon: ({tintColor}) => (
           <View style={styles.tabContain}>
             <Icon
@@ -391,7 +391,7 @@ const AppMain = () => {
       screen: ConfirmedProfileStack,
       navigationOptions: () => ({
         tabBarVisible:
-          HasCompletedVerificationProcess(profile) && profile.ProfileImage,
+          HasCompletedVerificationProcess(profile) && profile?.ProfileImage,
         tabBarIcon: ({tintColor}) => (
           <View style={styles.tabContain}>
             <Icon
