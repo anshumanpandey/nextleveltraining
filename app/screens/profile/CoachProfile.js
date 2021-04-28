@@ -1401,7 +1401,7 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
               )}
             </TouchableOpacity>
           </View>
-          <View style={styles.cardContainer}>
+          {/* <View style={styles.cardContainer}>
             <TouchableOpacity
               onPress={() => {
                 NavigationService.navigate('AddDbsCertificate', {
@@ -1440,8 +1440,8 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                 />
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.cardContainer}>
+          </View> */}
+          {/* <View style={styles.cardContainer}>
             <TouchableOpacity
               onPress={() => {
                 NavigationService.navigate('VerificationId', {
@@ -1475,7 +1475,7 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                 />
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <TouchableOpacity
             onPress={() =>
               handleOnCardPress({
