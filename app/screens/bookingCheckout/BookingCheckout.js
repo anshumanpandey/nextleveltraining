@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { parseISO, format } from 'date-fns'
 import Header from '../../components/header/Header'
 import Colors from '../../constants/color'
@@ -75,7 +75,37 @@ const BookingCheckout = (props) => {
 
         <NLButton
           color={Colors.s_blue}
-          onPress={() => NavigationService.navigate('PaymentConcent', { coach, selectedLocation, sessions: currentSessions })}
+          onPress={() => {
+            Alert.alert(
+              'Choose payment method',
+              'How you wana pay for the credits?',
+              [
+                {
+                  text: 'Pay with Paypal',
+                  onPress: () => {
+                    NavigationService.navigate('PaymentConcent', {
+                      coach,
+                      selectedLocation,
+                      sessions: currentSessions,
+                    })
+                  },
+                },
+                {
+                  text: 'Pay with Credit/Debit Card',
+                  onPress: () => {
+                    props.navigation.navigate('CardPayment', {
+                      amount: parseInt(getTotalBookingPrice(coach, currentSessions)),
+                      coach,
+                      selectedLocation,
+                      sessions: currentSessions,
+                      purchaseType: 'booking',
+                    })
+                  },
+                },
+              ],
+              {cancelable: true},
+            )
+          }}
           value={`Pay`}
           style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: '10%' }}
         />

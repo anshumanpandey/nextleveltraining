@@ -7,6 +7,7 @@ import Colors from '../../constants/color';
 import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
+import GlobalContants from '../../constants/GlobalContants';
 
 const AskFeatured = (props) => {
 
@@ -23,16 +24,50 @@ const AskFeatured = (props) => {
         <TouchableOpacity
           style={styles.level_btn_player}
           onPress={() => {
-            if (props.navigation.getParam('redirect', false)) {
-              props.navigation.navigate('PayFeatured')
-            } else {
-              AsyncStorage.setItem('wantToBeFeatured', 'yes').then(() => {
-                NavigationService.navigate(Screens.SignUp, {
-                  isFeatured: true,
-                  role: props.navigation.getParam('role', 'Player'),
-                })
-              })
-            }
+            Alert.alert(
+              'Choose payment method',
+              'How you wana pay for the credits?',
+              [
+                {
+                  text: 'Pay with Paypal',
+                  onPress: () => {
+                    if (props.navigation.getParam('redirect', false)) {
+                      props.navigation.navigate('PayFeatured')
+                    } else {
+                      AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
+                        () => {
+                          NavigationService.navigate(Screens.SignUp, {
+                            isFeatured: true,
+                            role: props.navigation.getParam('role', 'Player'),
+                          })
+                        },
+                      )
+                    }
+                  },
+                },
+                {
+                  text: 'Pay with Credit/Debit Card',
+                  onPress: () => {
+                    if (props.navigation.getParam('redirect', false)) {
+                      props.navigation.navigate('CardPayment', {
+                        amount: parseInt(GlobalContants.FEATURED_PRICE),
+                        purchaseType: 'featured',
+                      })
+                    } else {
+                      AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
+                        () => {
+                          NavigationService.navigate(Screens.SignUp, {
+                            isFeatured: true,
+                            role: props.navigation.getParam('role', 'Player'),
+                          })
+                        },
+                      )
+                    }
+                  },
+                },
+              ],
+              {cancelable: true},
+            )
           }}>
           <View style={styles.level_btn_player_view}>
             <Text style={styles.level_player_text}>Go Featured</Text>

@@ -11,6 +11,7 @@ import Header from '../../components/header/Header'
 import Images from '../../constants/image'
 import { useGlobalState } from '../../state/GlobalState'
 import useAxios from 'axios-hooks'
+import GlobalContants from '../../constants/GlobalContants'
 
 const Settings = props => {
   const [profile] = useGlobalState('profile')
@@ -157,7 +158,30 @@ const Settings = props => {
           title="Be Featured"
           subTitle="Find out more about how to boost your likes , comments and bookings on Next Level by becoming “Featured“."
           dividerFlag={false}
-          onPress={() => props.navigation.navigate('PayFeatured')}
+          onPress={() => {
+            Alert.alert(
+              'Choose payment method',
+              'How you wana pay for the credits?',
+              [
+                {
+                  text: 'Pay with Paypal',
+                  onPress: () => {
+                    props.navigation.navigate('PayFeatured')
+                  },
+                },
+                {
+                  text: 'Pay with Credit/Debit Card',
+                  onPress: () => {
+                      props.navigation.navigate('CardPayment', {
+                        amount: parseInt(GlobalContants.FEATURED_PRICE),
+                        purchaseType: 'featured',
+                      })
+                  },
+                },
+              ],
+              {cancelable: true},
+            )
+          }}
         />
 
         {/* <Text

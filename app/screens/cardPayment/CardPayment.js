@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ActivityIndicator, TouchableOpacity, Text} from 'react-native'
+import {View, TouchableOpacity, Text} from 'react-native'
 import Header from '../../components/header/Header'
 import styles from './styles'
 import {Icon} from 'native-base'
@@ -11,13 +11,17 @@ import {
   GLOBAL_STATE_ACTIONS,
 } from '../../state/GlobalState'
 import { Alert } from 'react-native'
-import {NavigationActions, StackActions} from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation'
+import { nanoid } from 'nanoid'
+import {useGlobalState} from '../../state/GlobalState'
 
 stripe.setOptions({
   publishableKey: 'pk_live_hsdDdRGSyYxs38fMNIaAY1CD00rAm7kvcW',
 })
 
 const CardPayment = props => {
+
+  const [profile] = useGlobalState('profile')
   const amount = props.navigation.getParam('amount', 0)
   const credits = props.navigation.getParam('credits', 0)
   const purchaseType = props.navigation.getParam('purchaseType', null)
@@ -44,6 +48,22 @@ const CardPayment = props => {
   const [getUserReq, getUserData] = useAxios(
     {
       url: '/Users/GetUser',
+    },
+    {manual: true},
+  )
+
+  const [saveBookingReq, saveBooking] = useAxios(
+    {
+      url: '/Users/SaveBooking',
+      method: 'POST',
+    },
+    {manual: true},
+  )
+
+  const [savePaymenReq, savePayment] = useAxios(
+    {
+      url: '/Users/UpdatePaymentDetails',
+      method: 'POST',
     },
     {manual: true},
   )
@@ -80,32 +100,85 @@ const CardPayment = props => {
         })
         // console.log('payment:', payment)
         if (payment.status === 'succeeded') {
-          const newData = {
-            credits: credits,
-            amountPaid: Math.round(amount),
-          }
-          const response = await buyCredits({data: newData})
-          if (response.status !== 200) return
-          const {data} = await getUserData()
-          dispatchGlobalState({
-            type: GLOBAL_STATE_ACTIONS.PROFILE,
-            state: data,
-          })
-          Alert.alert('Succeed', 'Payment Successful!')
-          const resetAction = StackActions.reset({
-            index: 0,
-            key: null,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'MainStack',
-                action: NavigationActions.navigate({
-                  routeName: 'Profile',
-                  action: NavigationActions.navigate({routeName: 'Wallet'}),
+          if (purchaseType === 'booking') {
+            const data = {
+              playerID: profile.Id,
+              coachID: props.navigation.getParam('coach').Id,
+              sessions: props.navigation.getParam('sessions'),
+              bookingDate: props.navigation.getParam('selectedDate'),
+              trainingLocationID: props.navigation.getParam('selectedLocation')
+                .id,
+              amount: props.navigation.getParam('coach').Rate,
+              paymentStatus: 'Processed',
+              transactionID: nanoid(),
+              bookingStatus: 'Done',
+            }
+            // console.log(data)
+            saveBooking({data})
+              .then(r => {
+                console.log(r.data)
+              })
+              .finally(() => {
+                Alert.alert('Succeed', 'Payment Successful!')
+                const resetAction = StackActions.reset({
+                  index: 0,
+                  key: null,
+                  actions: [
+                    NavigationActions.navigate({
+                      routeName: 'MainStack',
+                      action: NavigationActions.navigate({
+                        routeName: 'Booking',
+                      }),
+                    }),
+                  ],
+                })
+                props.navigation.dispatch(resetAction)
+              })
+          } else if (purchaseType === 'featured') {
+            const data = {paypalPaymentId: nanoid()}
+            const res = await savePayment({ data })
+            Alert.alert('Succeed', 'Payment Successful!')
+            const resetAction = StackActions.reset({
+              index: 0,
+              key: null,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: 'MainStack',
+                  action: NavigationActions.navigate({
+                    routeName: 'succesPayFeatured',
+                  }),
                 }),
-              }),
-            ],
-          })
-          props.navigation.dispatch(resetAction)
+              ],
+            })
+            props.navigation.dispatch(resetAction)
+          } else {
+            const newData = {
+              credits: credits,
+              amountPaid: Math.round(amount),
+            }
+            const response = await buyCredits({data: newData})
+            if (response.status !== 200) return
+            const {data} = await getUserData()
+            dispatchGlobalState({
+              type: GLOBAL_STATE_ACTIONS.PROFILE,
+              state: data,
+            })
+            Alert.alert('Succeed', 'Payment Successful!')
+            const resetAction = StackActions.reset({
+              index: 0,
+              key: null,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: 'MainStack',
+                  action: NavigationActions.navigate({
+                    routeName: 'Profile',
+                    action: NavigationActions.navigate({routeName: 'Wallet'}),
+                  }),
+                }),
+              ],
+            })
+            props.navigation.dispatch(resetAction)
+          }
         }
       }
     } catch (e) {
