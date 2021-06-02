@@ -42,7 +42,7 @@ const Home = ({navigation}) => {
     if (!data) return
     if (!data.length) return
 
-    const dateFormat = 'DD MMM HH:mm'
+    const dateFormat = 'DD MMM YYYY HH:mm'
     const posts = data.map(p => {
       return AsyncStorage.getItem(`post-${p.Id}-file`).then(fileString => {
         const j = {
@@ -92,10 +92,12 @@ const Home = ({navigation}) => {
     })
     Promise.all(posts).then(p => {
       setDataToShow(
-        p.sort((left, right) =>
-          moment
+        p.sort((left, right) => {
+          console.log(left.time, right.time)
+          return moment
             .utc(right.time, dateFormat)
-            .diff(moment.utc(left.time, dateFormat)),
+            .diff(moment.utc(left.time, dateFormat))
+        },
         ),
       )
     })
