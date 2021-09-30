@@ -1,8 +1,8 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 
-let { width, height } = Dimensions.get('window')
-let multiplier = width / 400
-export default Dimension = {
+const { width, height } = Dimensions.get('window')
+const multiplier = width / 400
+const Dimension = {
   deviceWidth: width,
   deviceHeight: height,
   pro2_5: '2.5%',
@@ -64,3 +64,4 @@ export default Dimension = {
   px380: 380 * multiplier,
   px440: 440 * multiplier,
 }
+export default Dimension
