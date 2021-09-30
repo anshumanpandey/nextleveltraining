@@ -1,7 +1,8 @@
 import React from 'react'
 import useAxios from 'axios-hooks'
 import { Spinner } from 'native-base';
-import { TouchableOpacity, Image, Text } from "react-native"
+import PropTypes from 'prop-types';
+import { TouchableOpacity, Image, Text, View, StyleSheet } from "react-native"
 import Colors from '../constants/color';
 import Images from '../constants/image';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../state/GlobalState';
@@ -18,24 +19,26 @@ const ConnectedWidget = ({ userToConnectTo }) => {
     }, { manual: true })
 
     const isConnectedLoading = () => connectedUserReq.loading || getconnectedUserReq.loading
-    const isConnected = () => connectedUsers.length != 0 && connectedUsers.find(u => u.Id == userToConnectTo) != null
+    const isConnected = () => connectedUsers.length !== 0 && connectedUsers.find(u => u.Id === userToConnectTo) != null
+    const onPress = () => {
+        const data = {
+            "userId": userToConnectTo,
+            "isConnected": !isConnected()
+        }
+        doConnect({ data })
+            .then(() => refetch())
+            .then(r => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: r.data }))
+    }
 
     return (
         <>
             {!isConnectedLoading() && (
-                <TouchableOpacity style={{ alignItems: 'center', opacity: isConnectedLoading() ? 0.3 : 1 }} disabled={isConnectedLoading()} onPress={() => {
-                    const data = {
-                        "userId": userToConnectTo,
-                        "isConnected": !isConnected()
-                    }
-                    console.log(data)
-                    doConnect({ data })
-                        .then(() => refetch())
-                        .then(r => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.CONNECTED_USER, state: r.data }))
-                }}>
-                    <Image style={{ height: 40, width: 40, marginRight: '15%' }} source={Images.UserPlus} />
-                    {isConnected() && <Text style={{ fontSize: 12 }}>Connected</Text>}
-                    {!isConnected() && <Text style={{ fontSize: 12 }}>Connect</Text>}
+                <TouchableOpacity style={styles.root} disabled={isConnectedLoading()} onPress={onPress}>
+                    <View style={styles.wrapper}>
+                        <Image style={styles.image} source={Images.UserPlus} />
+                        {isConnected() && <Text style={styles.text}>Connected</Text>}
+                        {!isConnected() && <Text style={styles.text}>Connect</Text>}
+                    </View>
                 </TouchableOpacity>
             )}
             {isConnectedLoading() && (
@@ -43,7 +46,23 @@ const ConnectedWidget = ({ userToConnectTo }) => {
             )}
         </>
     );
-
 }
+
+ConnectedWidget.propTypes = {
+    userToConnectTo: PropTypes.string.isRequired,
+};
+
+const styles = StyleSheet.create({
+    root: {
+        opacity: 1
+    },
+    wrapper: {
+        alignItems: 'center'
+    },
+    image: { height: 40, width: 40 },
+    text: {
+        fontSize: 12
+    }
+});
 
 export default ConnectedWidget
