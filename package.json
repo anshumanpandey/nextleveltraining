@@ -112,8 +112,9 @@
     "redux-thunk": "^2.3.0",
     "rn-fetch-blob": "^0.12.0",
     "styled-components": "^4.4.0",
-    "tipsi-stripe": "^9.0.0",
-    "url-parse": "^1.4.7"
+    "tipsi-stripe": "8.0.2",
+    "url-parse": "^1.4.7",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",

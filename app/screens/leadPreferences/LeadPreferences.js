@@ -10,7 +10,7 @@ import { Icon, Picker } from 'native-base';
 import Header from '../../components/header/Header';
 import NLDropdownMenu from '../../components/NLDropdownMenu';
 import styles from './styles';
-import NLAddressSuggestionInput from '../../components/postcodeInput/NLAddressSuggestionInput';
+import NLAddressSuggestionInput from '../../components/postcodeInput';
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
