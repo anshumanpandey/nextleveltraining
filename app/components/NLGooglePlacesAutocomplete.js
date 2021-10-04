@@ -3,8 +3,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import MapView, { Marker } from 'react-native-maps';
 import { View } from 'native-base';
 import Colors from '../constants/color';
+import { GOOGLE_API_KEY } from '../constants/google';
 
-const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = undefined, style = {}, placeholder = null }) => {
+const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false, defaultValue = undefined, style = {}, placeholder = null }) => {
     const inputRef = useRef()
     const [currentLocation, setCurrentLocation] = useState()
     const [inputValue, setInputValue] = useState(undefined)
@@ -59,7 +60,7 @@ const NLGooglePlacesAutocomplete = ({ onPress, hideMap = false,defaultValue = un
                     setInputValue(data.description, details)
                 }}
                 query={{
-                    key: 'AIzaSyB21yZhxBVgSsRmFXnoJeFhWz_3WjCNt2M',
+                    key: GOOGLE_API_KEY,
                     language: 'en',
                     components: 'country:gbr',
                 }}

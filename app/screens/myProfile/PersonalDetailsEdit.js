@@ -1,30 +1,27 @@
-import React, {useState, useRef, useEffect} from 'react'
-import {Text, TouchableOpacity, Dimensions} from 'react-native'
-import GlobalStyles from '../../constants/GlobalStyles'
-import {Formik} from 'formik'
-import ErrorLabel from '../../components/ErrorLabel'
-import {View, Input as TextInput} from 'native-base'
-import styles from '../../components/userDataForm/styles.js'
+import React, { useState, useRef, useEffect } from 'react'
+import { Text, TouchableOpacity } from 'react-native'
+import { Formik } from 'formik'
+import { View, Input as TextInput } from 'native-base'
 import useAxios from 'axios-hooks'
+import ErrorLabel from '../../components/ErrorLabel'
+import styles from '../../components/userDataForm/styles'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
 } from '../../state/GlobalState'
-import NLAddressSuggestionInput, {
-  getFullSuggestionAddress,
-} from '../../components/NLAddressSuggestionInput'
-import NLDropdownMenu from '../../components/NLDropdownMenu'
+import NLAddressSuggestionInput from '../../components/postcodeInput/NLAddressSuggestionInput'
+import { usePostCodeSearch } from '../../components/postcodeInput/state';
 
 const PersonalDetailsEdit = (props) => {
+  const postCodeSearch = usePostCodeSearch()
   const formikRef = useRef()
-  const [addresses, setAddresses] = useState([])
 
-  const [{data, loading, error}, editDetails] = useAxios(
+  const [, editDetails] = useAxios(
     {
       url: '/Users/UpdateProfile',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   useEffect(() => {
@@ -38,7 +35,7 @@ const PersonalDetailsEdit = (props) => {
         fullName: props.FullName,
         address: props.Address,
         mobileNo: props.MobileNo,
-        postCode: props.PostCode,
+        postCode: props.postCode,
         state: props.state,
         lat: '',
         lng: '',
@@ -46,25 +43,23 @@ const PersonalDetailsEdit = (props) => {
       validate={values => {
         const errors = {}
 
-        console.log(values)
         if (!values.fullName) errors.fullName = 'Required'
         if (!values.address) errors.address = 'Required'
         if (!values.mobileNo) errors.mobileNo = 'Required'
         if (!values.postCode) errors.postCode = 'Required'
         if (!values.state) errors.state = 'Required'
+
         return errors
       }}
-      onSubmit={async values => {
-        return editDetails({data: values})
-          .then(r => {
-            dispatchGlobalState({
-              type: GLOBAL_STATE_ACTIONS.PROFILE,
-              state: r.data,
-            })
-            props.cancelEdit()
+      onSubmit={async values => editDetails({ data: values })
+        .then(r => {
+          dispatchGlobalState({
+            type: GLOBAL_STATE_ACTIONS.PROFILE,
+            state: r.data,
           })
-          .catch(r => console.log(r))
-      }}>
+          props.cancelEdit()
+        })
+        .catch(r => console.log(r))}>
       {({
         handleChange,
         handleBlur,
@@ -78,8 +73,8 @@ const PersonalDetailsEdit = (props) => {
           <View style={styles.signup_info_input_view}>
             <View style={styles.signup_info_view}>
               <TextInput
-                style={{color: 'black'}}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
+                style={{ color: 'black' }}
+                placeholderTextColor="rgba(0,0,0,0.3)"
                 placeholder="Full Name"
                 keyboardType="default"
                 onChangeText={handleChange('fullName')}
@@ -92,72 +87,29 @@ const PersonalDetailsEdit = (props) => {
             )}
 
             <NLAddressSuggestionInput
-              style={{width: '85%'}}
-              placeholder={'Home Postcode'}
-              defaultValue={values.postCode}
-              onSuggestionsUpdated={suggetions => {
-                setAddresses(suggetions)
+              style={{ width: '85%' }}
+              placeholder="Address"
+              defaultValue={values.address}
+              onLocationSelected={location => {
+                postCodeSearch.getSiteDetails(location)
+                  .then(details => {
+                    setFieldValue('address', details.getAddress())
+                    const coordinates = details.getPlaceLatLong()
+                    setFieldValue('lat', coordinates.lat)
+                    setFieldValue('lng', coordinates.lng)
+                    setFieldValue('postCode', details.getPlacePostCode())
+                    setFieldValue('state', `${details.getPlaceDistrict()} ${details.getPlaceCounty()}, ${details.getPlaceCountry()}`.trim())
+                  })
               }}
             />
             {errors.address && touched.address && (
               <ErrorLabel text={errors.address} />
             )}
 
-            <NLDropdownMenu
-              disabled={addresses.length == 0}
-              placeholder={
-                addresses.length == 0 ? 'No options' : 'Select an address'
-              }
-              theme={{
-                menu: {width: '80%'},
-                textButton: {
-                  fontSize: 18,
-                  color: 'rgba(0,0,0,0.3)',
-                  paddingLeft: 0,
-                },
-                button: {
-                  ...styles.signup_info_view,
-                  width: Dimensions.get('screen').width * 0.83,
-                },
-              }}
-              onSelect={selected => {
-                setFieldValue('address', getFullSuggestionAddress(selected))
-                setFieldValue('lat', selected.latitude)
-                setFieldValue('lng', selected.longitude)
-                setFieldValue('postCode', selected.postcode)
-                setFieldValue(
-                  'state',
-                  `${selected.county}, ${selected.country}`,
-                )
-              }}
-              options={addresses.map(a => ({
-                label: getFullSuggestionAddress(a),
-                value: a,
-              }))}
-            />
-            {errors.postCode && touched.postCode && (
-              <ErrorLabel text={errors.postCode} />
-            )}
-
             <View style={styles.signup_info_view}>
               <TextInput
-                style={{color: 'black'}}
-                disabled={true}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                placeholder="County"
-                // onChangeText={handleChange('state')}
-                // onBlur={handleBlur('state')}
-                value={values.state}
-              />
-            </View>
-            {errors.state && touched.state && (
-              <ErrorLabel text={errors.state} />
-            )}
-
-            <View style={styles.signup_info_view}>
-              <TextInput
-                style={{color: 'black'}}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
+                style={{ color: 'black' }}
+                placeholderTextColor="rgba(0,0,0,0.3)"
                 placeholder="Mobile Number"
                 keyboardType="numeric"
                 onChangeText={handleChange('mobileNo')}
@@ -174,7 +126,7 @@ const PersonalDetailsEdit = (props) => {
               <TouchableOpacity
                 style={[
                   styles.signup_btn_player,
-                  {width: 200},
+                  { width: 200 },
                 ]}
                 onPress={handleSubmit}>
                 <View style={styles.signup_btn_player_view}>
@@ -187,7 +139,7 @@ const PersonalDetailsEdit = (props) => {
             <TouchableOpacity
               style={[
                 styles.signup_btn_player,
-                {width: 200}
+                { width: 200 }
               ]}
               onPress={props.cancelEdit}>
               <View style={styles.signup_btn_player_view}>

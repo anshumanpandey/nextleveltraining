@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import React from 'react';
 import { View } from "react-native"
-import PlayerProfile from './Profile';
-import CoachProfile from './CoachProfile';
-import Colors from '../../constants/color';
 import { Spinner } from 'native-base';
-import NavigationService from '../../navigation/NavigationService';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { useGlobalState } from '../../state/GlobalState';
+import PlayerProfile from './Profile';
+import CoachProfile from './coachProfile/CoachProfile';
+import Colors from '../../constants/color';
 
 const ProfileFactory = (props) => {
   const [profile] = useGlobalState('profile')
@@ -15,12 +13,12 @@ const ProfileFactory = (props) => {
     return (
       <PlayerProfile
         {...props}
-        goBackTo={'Profile'}
+        goBackTo="Profile"
       />
     )
   }
   if (profile && profile.Role == "Coach") {
-    return <CoachProfile {...props} goBackTo={"Profile"} />
+    return <CoachProfile {...props} goBackTo="Profile" />
   }
 
   return (

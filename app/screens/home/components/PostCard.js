@@ -7,25 +7,21 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import Images from '../../../constants/image';
 import { Icon, Spinner } from 'native-base';
+import useAxios from 'axios-hooks'
+import Video from 'react-native-video';
+import Images from '../../../constants/image';
 import styles from './styles';
 import Dimension from '../../../constants/dimensions';
-import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../../state/GlobalState';
-import Video from 'react-native-video';
 import Colors from '../../../constants/color';
-import ParsedText from 'react-native-parsed-text';
 import NavigationService from '../../../navigation/NavigationService';
-import dimensions from '../../../constants/dimensions';
 import NLFormatedShowMore from '../../../components/NLFormatedShowMore';
 
 const maxHeight = (Dimensions.get("screen").height / 100) * 45
 
-const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
-  const [videoHeight, setVideoHeight] = useState(dimensions.px160);
-  const [maxNumOfLines, setMaxNumOfLines] = useState(3);
-  const [numOfLines, setNumOfLines] = useState(null);
+const PostCard = ({ item, refreshCb, onPressOfComment }) => {
+  const [videoHeight, setVideoHeight] = useState(Dimension.px160);
   const [triggerChange, setTriggerChange] = useState(true);
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
@@ -43,9 +39,6 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
     method: 'POST',
   }, { manual: true })
 
-  const onClickingItem = (item) => {
-    onClickItem(item);
-  };
   useEffect(() => {
     setLikes(item.likes)
   }, [])
@@ -109,11 +102,11 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
         <View
           style={styles.post_news_content}>
           {item.fileType && !item.fileType.includes('video') && (
-            <View style={{ alignItems: 'center', maxHeight: maxHeight }}>
+            <View style={{ alignItems: 'center', maxHeight }}>
               <Image
                 resizeMode="contain"
                 source={{ uri: item.imageUri }}
-                style={{ width: item.width, height: item.height, maxHeight: maxHeight }}
+                style={{ width: item.width || "100%", height: item.height || "100%", maxHeight }}
                 onLoadEnd={() => {
                   console.log("Image loaded 1")
                   setImageLoaded(true)
@@ -122,22 +115,23 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
             </View>
           )}
           {item.fileType && item.fileType.includes('video') && (
-            <TouchableOpacity
-              onPress={() => onClickingItem(item)}
+            <View
             >
               <Video
                 source={{ uri: item.imageUri }}
-                paused={true}
+                paused
                 onLoadStart={(d) => {
-                  console.log('onLoadStart', item.imageUri)
+                  console.log('POSTCARD onLoadStart', item.imageUri)
                 }}
                 onLoad={(d) => {
-                  console.log('onLoad')
+                  console.log('onLoad', d)
                   setVideoIsReady(true)
-                  setVideoHeight(d.naturalSize.height)
+                  const screenWidth = Dimensions.get("screen").width
+                  const h = d.naturalSize.orientation === "landscape" ? screenWidth : screenWidth * 2
+                  setVideoHeight(h)
                 }}
                 currentPosition={1}
-                controls={true}
+                controls
                 resizeMode="contain"
                 onError={(err) => {
                   console.log(err)
@@ -158,7 +152,7 @@ const PostCard = ({ item, onClickItem, refreshCb, onPressOfComment }) => {
                   <Text style={{ textAlign: 'center', opacity: 0.8, color: 'white' }}>Error Loading Video :(</Text>
                 </View>
               )}
-            </TouchableOpacity>
+            </View>
           )}
 
         </View>

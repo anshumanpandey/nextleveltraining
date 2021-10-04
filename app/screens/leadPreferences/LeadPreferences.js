@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,22 +6,20 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import {Icon, Picker} from 'native-base';
+import { Icon, Picker } from 'native-base';
 import Header from '../../components/header/Header';
 import NLDropdownMenu from '../../components/NLDropdownMenu';
 import styles from './styles';
-import NLAddressSuggestionInput from '../../components/NLAddressSuggestionInput';
+import NLAddressSuggestionInput from '../../components/postcodeInput/NLAddressSuggestionInput';
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
   useGlobalState,
 } from '../../state/GlobalState';
 
-const width = Dimensions.get('screen').width;
+const { width } = Dimensions.get('screen');
 
-const getFullSuggestionAddress = (suggestion) => {
-  return `${suggestion.line_1} ${suggestion.line_2} ${suggestion.line_3} ${suggestion.district} ${suggestion.county} ${suggestion.country}`;
-};
+const getFullSuggestionAddress = (suggestion) => `${suggestion.line_1} ${suggestion.line_2} ${suggestion.line_3} ${suggestion.district} ${suggestion.county} ${suggestion.country}`;
 
 const LeadPreferences = (props) => {
   const [profile] = useGlobalState('profile');
@@ -114,18 +112,17 @@ const LeadPreferences = (props) => {
           Select Location
         </Text>
         <NLAddressSuggestionInput
-          style={{borderBottomWidth: 0, padding: 0}}
           placeholder="Postcode"
           defaultValue={postCode}
           onSuggestionsUpdated={setAddresses}
-          lookUpButtonStyle={{backgroundColor: '#2D7AF0', borderRadius: 5}}
+          lookUpButtonStyle={{ backgroundColor: '#2D7AF0', borderRadius: 5 }}
           lookUpInitial
         />
         <NLDropdownMenu
           disabled={!addresses.length}
           placeholder={!addresses.length ? 'No options' : 'Select an address'}
           theme={{
-            menu: {width: '80%'},
+            menu: { width: '80%' },
             textButton: {
               fontSize: 18,
               color: 'rgba(0,0,0,0.3)',
@@ -146,19 +143,8 @@ const LeadPreferences = (props) => {
             value: a,
           }))}
         />
-      </View>
-      <Seperator />
-      <View
-        style={{
-          backgroundColor: 'white',
-          paddingVertical: 15,
-          paddingLeft: 25,
-          paddingRight: 10,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={{fontSize: 18}}>Range</Text>
+
+        <Text style={{ fontSize: 18 }}>Range</Text>
         <Picker
           mode="dropdown"
           renderHeader={(back) => (
@@ -183,7 +169,7 @@ const LeadPreferences = (props) => {
               />
             </SafeAreaView>
           )}
-          style={{paddingLeft: 10}}
+          style={{ paddingLeft: 10 }}
           selectedValue={range}
           onValueChange={setRange}>
           <Picker.Item label="20 KM" value="20" />
@@ -193,12 +179,12 @@ const LeadPreferences = (props) => {
           <Picker.Item label="100 KM" value="100" />
         </Picker>
       </View>
-    </View>
+    </View >
   );
 };
 
-const Seperator = ({opacity = 0.3}) => (
-  <View style={{height: 1, backgroundColor: '#C7C9D6', opacity}} />
+const Seperator = ({ opacity = 0.3 }) => (
+  <View style={{ height: 1, backgroundColor: '#C7C9D6', opacity }} />
 );
 
 export default LeadPreferences;

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {
   View,
   ScrollView,
@@ -10,16 +10,17 @@ import {
   ActivityIndicator,
   Alert
 } from 'react-native'
-import {useGlobalState} from '../../state/GlobalState'
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button'
+import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from '@react-native-community/checkbox'
 import useAxios from 'axios-hooks'
+import { useGlobalState } from '../../state/GlobalState'
 
-const FindCoachForm = props => {
+const FindCoachForm = () => {
   const [profile] = useGlobalState('profile')
 
   const [experience, setExperience] = React.useState(null)
@@ -38,15 +39,15 @@ const FindCoachForm = props => {
   const [weeksFlag, setWeaksFlag] = React.useState(false)
   const [successFlag, setSuccessFlag] = React.useState(false)
   const [priceFlag, setPriceFlag] = React.useState(false)
-  
+
   const [loadFlag, setLoading] = React.useState(false)
 
-  const [{data, loading, error}, saveLead] = useAxios(
+  const [, saveLead] = useAxios(
     {
       url: '/Users/SaveLead',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const PlayerInfoForm = () => {
@@ -54,11 +55,11 @@ const FindCoachForm = props => {
       const [value, setValue] = React.useState(
         experience ? experience.value : null,
       )
-      var radio_props = [
-        {label: 'No Experience', value: 0},
-        {label: 'Beginner', value: 1},
-        {label: 'Intermediate', value: 2},
-        {label: 'Advance', value: 3},
+      const radioProps = [
+        { label: 'No Experience', value: 0 },
+        { label: 'Beginner', value: 1 },
+        { label: 'Intermediate', value: 2 },
+        { label: 'Advance', value: 3 },
       ]
 
       return (
@@ -73,12 +74,12 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
-            What is the player's current level of experience?
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+            What is the player&apos;s current level of experience?
           </Text>
-          <View style={{width: '90%'}}>
-            <RadioForm animation={true}>
-              {radio_props.map((obj, i) => (
+          <View style={{ width: '90%' }}>
+            <RadioForm animation>
+              {radioProps.map((obj, i) => (
                 <View
                   style={{
                     width: '100%',
@@ -90,35 +91,35 @@ const FindCoachForm = props => {
                     marginTop: 10,
                     backgroundColor: value === i ? '#D7EBFF' : 'white',
                   }}>
-                  <RadioButton labelHorizontal={true} key={i}>
+                  <RadioButton labelHorizontal key={i}>
                     <RadioButtonInput
                       obj={obj}
                       index={i}
                       isSelected={value === i}
-                      onPress={value => {
-                        setValue(value)
-                        setExperience(radio_props[value])
+                      onPress={e => {
+                        setValue(e)
+                        setExperience(radioProps[e])
                         setExperienceFlag(false)
                         setAgeFlag(true)
                       }}
                       borderWidth={1}
-                      buttonInnerColor={'#5BADFE'}
+                      buttonInnerColor="#5BADFE"
                       buttonOuterColor={value === i ? '#2196f3' : '#00000050'}
                       buttonSize={13}
                       buttonOuterSize={20}
-                      buttonWrapStyle={{marginLeft: 10}}
+                      buttonWrapStyle={{ marginLeft: 10 }}
                     />
                     <RadioButtonLabel
                       obj={obj}
                       index={i}
-                      labelHorizontal={true}
+                      labelHorizontal
                       onPress={value => {
                         setValue(value)
-                        setExperience(radio_props[value])
+                        setExperience(radioProps[value])
                         setExperienceFlag(false)
                         setAgeFlag(true)
                       }}
-                      labelStyle={{fontSize: 20, color: 'black', width: '100%'}}
+                      labelStyle={{ fontSize: 20, color: 'black', width: '100%' }}
                       labelWrapStyle={{}}
                     />
                   </RadioButton>
@@ -127,6 +128,7 @@ const FindCoachForm = props => {
             </RadioForm>
           </View>
           <TouchableOpacity
+            disabled={value === null}
             onPress={() => {
               if (!experience) {
               } else {
@@ -135,7 +137,7 @@ const FindCoachForm = props => {
               }
             }}
             style={{
-              backgroundColor: '#031D70',
+              backgroundColor: value === null ? '#031D7050' : '#031D70',
               width: '40%',
               height: 45,
               alignSelf: 'center',
@@ -143,7 +145,7 @@ const FindCoachForm = props => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
               NEXT
             </Text>
           </TouchableOpacity>
@@ -153,10 +155,10 @@ const FindCoachForm = props => {
 
     const AgeComponent = () => {
       const [value, setValue] = React.useState(age ? age.value : null)
-      var radio_props = [
-        {label: 'Child', value: 0},
-        {label: 'Teen', value: 1},
-        {label: 'Adult', value: 2},
+      const radioProps = [
+        { label: 'Child', value: 0 },
+        { label: 'Teen', value: 1 },
+        { label: 'Adult', value: 2 },
       ]
 
       return (
@@ -171,12 +173,12 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
             How old is the player?
           </Text>
-          <View style={{width: '90%'}}>
-            <RadioForm animation={true}>
-              {radio_props.map((obj, i) => (
+          <View style={{ width: '90%' }}>
+            <RadioForm animation>
+              {radioProps.map((obj, i) => (
                 <View
                   style={{
                     width: '100%',
@@ -188,36 +190,36 @@ const FindCoachForm = props => {
                     marginTop: 10,
                     backgroundColor: value === i ? '#D7EBFF' : 'white',
                   }}>
-                  <RadioButton labelHorizontal={true} key={i}>
+                  <RadioButton labelHorizontal key={i}>
                     <RadioButtonInput
                       obj={obj}
                       index={i}
                       isSelected={value === i}
-                      onPress={value => {
-                        setValue(value)
-                        setAge(radio_props[value])
+                      onPress={e => {
+                        setValue(e)
+                        setAge(radioProps[e])
                         setAgeFlag(false)
                         setCoachingFlag(true)
                       }}
                       borderWidth={1}
-                      buttonInnerColor={'#5BADFE'}
+                      buttonInnerColor="#5BADFE"
                       buttonOuterColor={value === i ? '#2196f3' : '#00000050'}
                       buttonSize={13}
                       buttonOuterSize={20}
                       buttonStyle={{}}
-                      buttonWrapStyle={{marginLeft: 10}}
+                      buttonWrapStyle={{ marginLeft: 10 }}
                     />
                     <RadioButtonLabel
                       obj={obj}
                       index={i}
-                      labelHorizontal={true}
-                      onPress={value => {
+                      labelHorizontal
+                      onPress={e => {
                         setValue(value)
-                        setAge(radio_props[value])
+                        setAge(radioProps[e])
                         setAgeFlag(false)
                         setCoachingFlag(true)
                       }}
-                      labelStyle={{fontSize: 20, color: 'black', width: '100%'}}
+                      labelStyle={{ fontSize: 20, color: 'black', width: '100%' }}
                       labelWrapStyle={{}}
                     />
                   </RadioButton>
@@ -245,11 +247,12 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 PREVIOUS
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={value === null}
               onPress={() => {
                 if (!age) {
                 } else {
@@ -258,7 +261,7 @@ const FindCoachForm = props => {
                 }
               }}
               style={{
-                backgroundColor: '#031D70',
+                backgroundColor: value === null ? '#031D7050' : '#031D70',
                 width: '40%',
                 height: 45,
                 alignSelf: 'center',
@@ -266,7 +269,7 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 NEXT
               </Text>
             </TouchableOpacity>
@@ -286,6 +289,8 @@ const FindCoachForm = props => {
         coaching ? coaching[2] : false,
       )
 
+      const btnNextIsDisabled = () => toggleCheckBox1 === false && toggleCheckBox2 === false && toggleCheckBox3 === false
+
       return (
         <View
           style={{
@@ -298,10 +303,10 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
             What type of coaching would you consider?
           </Text>
-          <View style={{width: '90%'}}>
+          <View style={{ width: '90%' }}>
             <View
               style={{
                 width: '100%',
@@ -316,7 +321,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox1 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox1}
                 onValueChange={newValue => setToggleCheckBox1(newValue)}
@@ -326,7 +331,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox1(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -353,7 +358,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox2 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox2}
                 onValueChange={newValue => setToggleCheckBox2(newValue)}
@@ -363,7 +368,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox2(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -390,7 +395,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox3 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox3}
                 onValueChange={newValue => setToggleCheckBox3(newValue)}
@@ -400,7 +405,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox3(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -434,11 +439,12 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 PREVIOUS
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={btnNextIsDisabled()}
               onPress={() => {
                 if (!toggleCheckBox1 && !toggleCheckBox2 && !toggleCheckBox3) {
                 } else {
@@ -452,7 +458,7 @@ const FindCoachForm = props => {
                 }
               }}
               style={{
-                backgroundColor: '#031D70',
+                backgroundColor: btnNextIsDisabled() ? '#031D7050' : '#031D70',
                 width: '40%',
                 height: 45,
                 alignSelf: 'center',
@@ -460,7 +466,7 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 NEXT
               </Text>
             </TouchableOpacity>
@@ -492,6 +498,33 @@ const FindCoachForm = props => {
         days ? days[6] : false,
       )
 
+      const btnNextIsDisabled = () => toggleCheckBox1 === false &&
+        toggleCheckBox2 === false &&
+        toggleCheckBox3 === false &&
+        toggleCheckBox4 === false &&
+        toggleCheckBox5 === false &&
+        toggleCheckBox6 === false &&
+        toggleCheckBox7 === false
+
+      const allIsChecked = () => toggleCheckBox1 === true &&
+        toggleCheckBox2 === true &&
+        toggleCheckBox3 === true &&
+        toggleCheckBox4 === true &&
+        toggleCheckBox5 === true &&
+        toggleCheckBox6 === true &&
+        toggleCheckBox7 === true
+
+      const toggleAll = () => {
+        const toggle = () => btnNextIsDisabled()
+        setToggleCheckBox1(toggle)
+        setToggleCheckBox2(toggle)
+        setToggleCheckBox3(toggle)
+        setToggleCheckBox4(toggle)
+        setToggleCheckBox5(toggle)
+        setToggleCheckBox6(toggle)
+        setToggleCheckBox7(toggle)
+      }
+
       return (
         <View
           style={{
@@ -504,10 +537,10 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
             Which day(s) would you consider for coaching ?
           </Text>
-          <View style={{width: '90%'}}>
+          <View style={{ width: '90%' }}>
             <View
               style={{
                 width: '100%',
@@ -522,7 +555,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox1 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox1}
                 onValueChange={newValue => setToggleCheckBox1(newValue)}
@@ -532,7 +565,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox1(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -559,7 +592,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox2 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox2}
                 onValueChange={newValue => setToggleCheckBox2(newValue)}
@@ -569,7 +602,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox2(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -596,7 +629,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox3 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox3}
                 onValueChange={newValue => setToggleCheckBox3(newValue)}
@@ -606,7 +639,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox3(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -633,7 +666,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox4 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox4}
                 onValueChange={newValue => setToggleCheckBox4(newValue)}
@@ -643,7 +676,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox4(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -670,7 +703,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox5 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox5}
                 onValueChange={newValue => setToggleCheckBox5(newValue)}
@@ -680,7 +713,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox5(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -707,7 +740,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox6 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox6}
                 onValueChange={newValue => setToggleCheckBox6(newValue)}
@@ -717,7 +750,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox6(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -744,7 +777,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox7 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox7}
                 onValueChange={newValue => setToggleCheckBox7(newValue)}
@@ -754,7 +787,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox7(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -764,6 +797,42 @@ const FindCoachForm = props => {
                     marginTop: 25,
                   }}>
                   Sunday
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                width: '100%',
+                height: 50,
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: '#00000050',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginTop: 10,
+                backgroundColor: allIsChecked() ? '#D7EBFF' : 'white',
+              }}>
+              <CheckBox
+                style={{ height: '40%' }}
+                disabled={false}
+                value={allIsChecked()}
+                onTouchEnd={toggleAll}
+              />
+              <TouchableOpacity
+                onPress={toggleAll}
+                activeOpacity={1}
+                style={{ width: '80%' }}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: 'black',
+                    width: '100%',
+                    height: '100%',
+                    marginTop: 25,
+                  }}>
+                  All Day
                 </Text>
               </TouchableOpacity>
             </View>
@@ -788,11 +857,12 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 PREVIOUS
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={btnNextIsDisabled()}
               onPress={() => {
                 if (
                   !toggleCheckBox1 &&
@@ -818,7 +888,7 @@ const FindCoachForm = props => {
                 }
               }}
               style={{
-                backgroundColor: '#031D70',
+                backgroundColor: btnNextIsDisabled() ? '#031D7050' : '#031D70',
                 width: '40%',
                 height: 45,
                 alignSelf: 'center',
@@ -826,7 +896,7 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 NEXT
               </Text>
             </TouchableOpacity>
@@ -852,6 +922,12 @@ const FindCoachForm = props => {
         timing ? timing[4] : false,
       )
 
+      const btnNextIsDisabled = () => toggleCheckBox1 === false &&
+        toggleCheckBox2 === false &&
+        toggleCheckBox3 === false &&
+        toggleCheckBox4 === false &&
+        toggleCheckBox5 === false
+
       return (
         <View
           style={{
@@ -864,10 +940,10 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
             Which time(s) of day would you consider for coaching ?
           </Text>
-          <View style={{width: '90%'}}>
+          <View style={{ width: '90%' }}>
             <View
               style={{
                 width: '100%',
@@ -882,7 +958,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox1 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox1}
                 onValueChange={newValue => setToggleCheckBox1(newValue)}
@@ -892,7 +968,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox1(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -919,7 +995,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox2 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox2}
                 onValueChange={newValue => setToggleCheckBox2(newValue)}
@@ -929,7 +1005,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox2(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -956,7 +1032,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox3 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox3}
                 onValueChange={newValue => setToggleCheckBox3(newValue)}
@@ -966,7 +1042,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox3(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -993,7 +1069,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox4 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox4}
                 onValueChange={newValue => setToggleCheckBox4(newValue)}
@@ -1003,7 +1079,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox4(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -1030,7 +1106,7 @@ const FindCoachForm = props => {
                 backgroundColor: toggleCheckBox5 ? '#D7EBFF' : 'white',
               }}>
               <CheckBox
-                style={{height: '40%'}}
+                style={{ height: '40%' }}
                 disabled={false}
                 value={toggleCheckBox5}
                 onValueChange={newValue => setToggleCheckBox5(newValue)}
@@ -1040,7 +1116,7 @@ const FindCoachForm = props => {
                   setToggleCheckBox5(prev => !prev)
                 }}
                 activeOpacity={1}
-                style={{width: '80%'}}>
+                style={{ width: '80%' }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -1074,11 +1150,12 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 PREVIOUS
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={btnNextIsDisabled()}
               onPress={() => {
                 if (
                   !toggleCheckBox1 &&
@@ -1100,7 +1177,7 @@ const FindCoachForm = props => {
                 }
               }}
               style={{
-                backgroundColor: '#031D70',
+                backgroundColor: btnNextIsDisabled() ? '#031D7050' : '#031D70',
                 width: '40%',
                 height: 45,
                 alignSelf: 'center',
@@ -1108,7 +1185,7 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 NEXT
               </Text>
             </TouchableOpacity>
@@ -1119,14 +1196,16 @@ const FindCoachForm = props => {
 
     const PriceComponent = () => {
       const [value, setValue] = React.useState(price ? price.value : null)
-      var radio_props = [
-        {label: '£10', value: 0},
-        {label: '£20', value: 1},
-        {label: '£30', value: 2},
-        {label: '£40', value: 3},
-        {label: '£50', value: 4},
-        {label: 'No Limit Depends on coach', value: 5},
+      const radioProps = [
+        { label: '£10', value: 0 },
+        { label: '£20', value: 1 },
+        { label: '£30', value: 2 },
+        { label: '£40', value: 3 },
+        { label: '£50', value: 4 },
+        { label: 'No Limit Depends on coach', value: 5 },
       ]
+
+      const btnIsDisabled = () => value === null
 
       return (
         <View
@@ -1140,12 +1219,12 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
             Maximum Price Per Hour ?
           </Text>
-          <View style={{width: '90%'}}>
-            <RadioForm animation={true}>
-              {radio_props.map((obj, i) => (
+          <View style={{ width: '90%' }}>
+            <RadioForm animation>
+              {radioProps.map((obj, i) => (
                 <View
                   style={{
                     width: '100%',
@@ -1157,31 +1236,31 @@ const FindCoachForm = props => {
                     marginTop: 10,
                     backgroundColor: value === i ? '#D7EBFF' : 'white',
                   }}>
-                  <RadioButton labelHorizontal={true} key={i}>
+                  <RadioButton labelHorizontal key={i}>
                     <RadioButtonInput
                       obj={obj}
                       index={i}
                       isSelected={value === i}
                       onPress={value => {
                         setValue(value)
-                        setPrice(radio_props[value])
+                        setPrice(radioProps[value])
                         setPriceFlag(false)
                         setWeaksFlag(true)
                       }}
                       borderWidth={1}
-                      buttonInnerColor={'#5BADFE'}
+                      buttonInnerColor="#5BADFE"
                       buttonOuterColor={value === i ? '#2196f3' : '#00000050'}
                       buttonSize={13}
                       buttonOuterSize={20}
-                      buttonWrapStyle={{marginLeft: 10}}
+                      buttonWrapStyle={{ marginLeft: 10 }}
                     />
                     <RadioButtonLabel
                       obj={obj}
                       index={i}
-                      labelHorizontal={true}
+                      labelHorizontal
                       onPress={value => {
                         setValue(value)
-                        setPrice(radio_props[value])
+                        setPrice(radioProps[value])
                         setPriceFlag(false)
                         setWeaksFlag(true)
                       }}
@@ -1206,7 +1285,7 @@ const FindCoachForm = props => {
             <TouchableOpacity
               onPress={() => {
                 setPriceFlag(false)
-                 setTimingFlag(true)
+                setTimingFlag(true)
               }}
               style={{
                 backgroundColor: '#031D70',
@@ -1217,11 +1296,12 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 PREVIOUS
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={btnIsDisabled()}
               onPress={() => {
                 if (!price) {
                 } else {
@@ -1230,7 +1310,7 @@ const FindCoachForm = props => {
                 }
               }}
               style={{
-                backgroundColor: '#031D70',
+                backgroundColor: btnIsDisabled() ? '#031D7050' : '#031D70',
                 width: '40%',
                 height: 45,
                 alignSelf: 'center',
@@ -1238,7 +1318,7 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 NEXT
               </Text>
             </TouchableOpacity>
@@ -1249,12 +1329,14 @@ const FindCoachForm = props => {
 
     const TrainTimeComponent = () => {
       const [value, setValue] = React.useState(weeks ? weeks.value : null)
-      var radio_props = [
-        {label: '1', value: 0},
-        {label: '2', value: 1},
-        {label: '3', value: 2},
-        {label: '4 +', value: 3},
+      const radioProps = [
+        { label: '1', value: 0 },
+        { label: '2', value: 1 },
+        { label: '3', value: 2 },
+        { label: '4 +', value: 3 },
       ]
+
+      const btnNextIsDisabled = () => value === null
 
       return (
         <View
@@ -1268,12 +1350,12 @@ const FindCoachForm = props => {
             alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
+          <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
             How many times a week does the player want to train?
           </Text>
-          <View style={{width: '90%'}}>
-            <RadioForm animation={true}>
-              {radio_props.map((obj, i) => (
+          <View style={{ width: '90%' }}>
+            <RadioForm animation>
+              {radioProps.map((obj, i) => (
                 <View
                   style={{
                     width: '100%',
@@ -1285,37 +1367,37 @@ const FindCoachForm = props => {
                     marginTop: 10,
                     backgroundColor: value === i ? '#D7EBFF' : 'white',
                   }}>
-                  <RadioButton labelHorizontal={true} key={i}>
+                  <RadioButton labelHorizontal key={i}>
                     <RadioButtonInput
                       obj={obj}
                       index={i}
                       isSelected={value === i}
                       onPress={value => {
                         setValue(value)
-                        setWeaks(radio_props[value])
+                        setWeaks(radioProps[value])
                         // setWeaksFlag(false)
                         // setSuccessFlag(true)
                       }}
                       borderWidth={1}
-                      buttonInnerColor={'#5BADFE'}
+                      buttonInnerColor="#5BADFE"
                       buttonOuterColor={value === i ? '#2196f3' : '#00000050'}
                       buttonSize={13}
                       buttonOuterSize={20}
                       buttonStyle={{}}
-                      buttonWrapStyle={{marginLeft: 10}}
+                      buttonWrapStyle={{ marginLeft: 10 }}
                     />
                     <RadioButtonLabel
                       obj={obj}
                       index={i}
-                      labelHorizontal={true}
+                      labelHorizontal
                       onPress={value => {
                         setValue(value)
-                        setWeaks(radio_props[value])
+                        setWeaks(radioProps[value])
                         // setWeaksFlag(false)
                         // setSuccessFlag(true)
                         // setNameFlag(true)
                       }}
-                      labelStyle={{fontSize: 20, color: 'black', width: '100%'}}
+                      labelStyle={{ fontSize: 20, color: 'black', width: '100%' }}
                       labelWrapStyle={{}}
                     />
                   </RadioButton>
@@ -1343,18 +1425,19 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 PREVIOUS
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={btnNextIsDisabled()}
               onPress={() => {
                 if (!weeks) {
                 } else {
                   setLoading(true)
-                  let coachingArr = []
-                  let daysArr = []
-                  let timingArr = []
+                  const coachingArr = []
+                  const daysArr = []
+                  const timingArr = []
                   if (coaching[0]) {
                     coachingArr.push('1-1 coaching')
                   }
@@ -1416,13 +1499,14 @@ const FindCoachForm = props => {
                     maximumPrice: price.label,
                     daysOfWeek: [weeks.label],
                   }
-                  saveLead({data})
-                    .then(response => {
+                  saveLead({ data })
+                    .then(() => {
                       setWeaksFlag(false)
                       setLoading(false)
                       setSuccessFlag(true)
+                      AsyncStorage.removeItem("justRegistered")
                     })
-                    .catch(e => {
+                    .catch(() => {
                       setLoading(false)
                       Alert.alert('Error', 'Something went wrong, Try Again.')
                       // console.log('error', e)
@@ -1430,7 +1514,7 @@ const FindCoachForm = props => {
                 }
               }}
               style={{
-                backgroundColor: '#031D70',
+                backgroundColor: btnNextIsDisabled() ? '#031D7050' : '#031D70',
                 width: '40%',
                 height: 45,
                 alignSelf: 'center',
@@ -1438,7 +1522,7 @@ const FindCoachForm = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
+              <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
                 SUBMIT
               </Text>
             </TouchableOpacity>
@@ -1447,266 +1531,258 @@ const FindCoachForm = props => {
       )
     }
 
-    const NameComponent = () => {
-      return (
-        <View
-          style={{
-            width: '95%',
-            alignSelf: 'center',
-            borderRadius: 10,
-            height: 350,
-            marginBottom: 20,
-            backgroundColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-          }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
-            Name
-          </Text>
-          <View style={{width: '90%'}}>
-            <View
-              style={{
-                width: '100%',
-                height: 50,
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: '#00000050',
-                justifyContent: 'center',
-                marginTop: 10,
-                backgroundColor: 'white',
-              }}>
-              <TextInput
-                placeholder="Enter your name"
-                style={{width: '100%', paddingLeft: 10}}
-              />
-            </View>
-          </View>
+    const NameComponent = () => (
+      <View
+        style={{
+          width: '95%',
+          alignSelf: 'center',
+          borderRadius: 10,
+          height: 350,
+          marginBottom: 20,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}>
+        <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+          Name
+        </Text>
+        <View style={{ width: '90%' }}>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
               width: '100%',
+              height: 50,
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: '#00000050',
+              justifyContent: 'center',
+              marginTop: 10,
+              backgroundColor: 'white',
             }}>
-            <TouchableOpacity
-              onPress={() => {
-                setNameFlag(false)
-                setWeaksFlag(true)
-              }}
-              style={{
-                backgroundColor: '#031D70',
-                width: '40%',
-                height: 45,
-                alignSelf: 'center',
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                PREVIOUS
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setNameFlag(false)
-                setEmailFlag(true)
-              }}
-              style={{
-                backgroundColor: '#031D70',
-                width: '40%',
-                height: 45,
-                alignSelf: 'center',
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                NEXT
-              </Text>
-            </TouchableOpacity>
+            <TextInput
+              placeholder="Enter your name"
+              style={{ width: '100%', paddingLeft: 10 }}
+            />
           </View>
         </View>
-      )
-    }
-
-    const EmailComponent = () => {
-      return (
         <View
           style={{
-            width: '95%',
-            alignSelf: 'center',
-            borderRadius: 10,
-            height: 350,
-            marginBottom: 20,
-            backgroundColor: 'white',
-            alignItems: 'center',
+            flexDirection: 'row',
             justifyContent: 'space-evenly',
+            width: '100%',
           }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
-            Email
-          </Text>
-          <View style={{width: '90%'}}>
-            <View
-              style={{
-                width: '100%',
-                height: 50,
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: '#00000050',
-                justifyContent: 'center',
-                marginTop: 10,
-                backgroundColor: 'white',
-              }}>
-              <TextInput
-                placeholder="Enter your email"
-                style={{width: '100%', paddingLeft: 10}}
-              />
-            </View>
-          </View>
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              setNameFlag(false)
+              setWeaksFlag(true)
+            }}
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              width: '100%',
+              backgroundColor: '#031D70',
+              width: '40%',
+              height: 45,
+              alignSelf: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            <TouchableOpacity
-              onPress={() => {
-                setEmailFlag(false)
-                setNameFlag(true)
-              }}
-              style={{
-                backgroundColor: '#031D70',
-                width: '40%',
-                height: 45,
-                alignSelf: 'center',
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                PREVIOUS
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setEmailFlag(false)
-                setPhoneFlag(true)
-              }}
-              style={{
-                backgroundColor: '#031D70',
-                width: '40%',
-                height: 45,
-                alignSelf: 'center',
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                NEXT
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )
-    }
-
-    const SuccessComponent = () => {
-      return (
-        <View
-          style={{
-            width: '95%',
-            alignSelf: 'center',
-            borderRadius: 10,
-            height: 350,
-            marginBottom: 20,
-            backgroundColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-          }}>
-            <Text
-              style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
-              {`Lead created successfully. \n A coach will contact you.`}
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
+              PREVIOUS
             </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setNameFlag(false)
+              setEmailFlag(true)
+            }}
+            style={{
+              backgroundColor: '#031D70',
+              width: '40%',
+              height: 45,
+              alignSelf: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
+              NEXT
+            </Text>
+          </TouchableOpacity>
         </View>
-      )
-    }
+      </View>
+    )
 
-    const PhoneComponent = () => {
-      return (
-        <View
-          style={{
-            width: '95%',
-            alignSelf: 'center',
-            borderRadius: 10,
-            height: 350,
-            marginBottom: 20,
-            backgroundColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-          }}>
-          <Text style={{fontSize: 20, fontWeight: '500', textAlign: 'center'}}>
-            Phone
-          </Text>
-          <View style={{width: '90%'}}>
-            <View
-              style={{
-                width: '100%',
-                height: 50,
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: '#00000050',
-                justifyContent: 'center',
-                marginTop: 10,
-                backgroundColor: 'white',
-              }}>
-              <TextInput
-                placeholder="Enter your phone number"
-                style={{width: '100%', paddingLeft: 10}}
-              />
-            </View>
-          </View>
+    const EmailComponent = () => (
+      <View
+        style={{
+          width: '95%',
+          alignSelf: 'center',
+          borderRadius: 10,
+          height: 350,
+          marginBottom: 20,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}>
+        <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+          Email
+        </Text>
+        <View style={{ width: '90%' }}>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
               width: '100%',
+              height: 50,
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: '#00000050',
+              justifyContent: 'center',
+              marginTop: 10,
+              backgroundColor: 'white',
             }}>
-            <TouchableOpacity
-              onPress={() => {
-                setPhoneFlag(false)
-                setEmailFlag(true)
-              }}
-              style={{
-                backgroundColor: '#031D70',
-                width: '40%',
-                height: 45,
-                alignSelf: 'center',
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                PREVIOUS
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {}}
-              style={{
-                backgroundColor: '#031D70',
-                width: '40%',
-                height: 45,
-                alignSelf: 'center',
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '500', color: 'white'}}>
-                SUBMIT
-              </Text>
-            </TouchableOpacity>
+            <TextInput
+              placeholder="Enter your email"
+              style={{ width: '100%', paddingLeft: 10 }}
+            />
           </View>
         </View>
-      )
-    }
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            width: '100%',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setEmailFlag(false)
+              setNameFlag(true)
+            }}
+            style={{
+              backgroundColor: '#031D70',
+              width: '40%',
+              height: 45,
+              alignSelf: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
+              PREVIOUS
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setEmailFlag(false)
+              setPhoneFlag(true)
+            }}
+            style={{
+              backgroundColor: '#031D70',
+              width: '40%',
+              height: 45,
+              alignSelf: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
+              NEXT
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+
+    const SuccessComponent = () => (
+      <View
+        style={{
+          width: '95%',
+          alignSelf: 'center',
+          borderRadius: 10,
+          height: 350,
+          marginBottom: 20,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}>
+        <Text
+          style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+          {`Lead created successfully. \n A coach will contact you.`}
+        </Text>
+      </View>
+    )
+
+    const PhoneComponent = () => (
+      <View
+        style={{
+          width: '95%',
+          alignSelf: 'center',
+          borderRadius: 10,
+          height: 350,
+          marginBottom: 20,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}>
+        <Text style={{ fontSize: 20, fontWeight: '500', textAlign: 'center' }}>
+          Phone
+        </Text>
+        <View style={{ width: '90%' }}>
+          <View
+            style={{
+              width: '100%',
+              height: 50,
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: '#00000050',
+              justifyContent: 'center',
+              marginTop: 10,
+              backgroundColor: 'white',
+            }}>
+            <TextInput
+              placeholder="Enter your phone number"
+              style={{ width: '100%', paddingLeft: 10 }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            width: '100%',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setPhoneFlag(false)
+              setEmailFlag(true)
+            }}
+            style={{
+              backgroundColor: '#031D70',
+              width: '40%',
+              height: 45,
+              alignSelf: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
+              PREVIOUS
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => { }}
+            style={{
+              backgroundColor: '#031D70',
+              width: '40%',
+              height: 45,
+              alignSelf: 'center',
+              borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 18, fontWeight: '500', color: 'white' }}>
+              SUBMIT
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
 
     return (
       <>

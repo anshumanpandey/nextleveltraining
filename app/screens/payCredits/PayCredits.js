@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   Alert,
   SafeAreaView,
@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native'
-import {Text, View, CheckBox, Spinner} from 'native-base'
-import {WebView} from 'react-native-webview'
+import { Text, View, CheckBox, Spinner } from 'native-base'
+import { WebView } from 'react-native-webview'
 import useAxios from 'axios-hooks'
 import qs from 'qs'
 import UrlParser from 'url-parse'
@@ -17,8 +17,8 @@ import styles from './styles'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
 import Colors from '../../constants/color'
-import {GET_PAYPAL_JSON} from './PaypalUtils'
-import {UsePaypalHook} from '../../utils/UsePaypalHook'
+import { GET_PAYPAL_JSON } from './PaypalUtils'
+import { UsePaypalHook } from '../../utils/UsePaypalHook'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
@@ -48,25 +48,25 @@ const PayCredits = props => {
     capturePaymentForToken,
   } = UsePaypalHook()
 
-  const [buyCreditsReq, buyCredits] = useAxios(
+  const [, buyCredits] = useAxios(
     {
       url: '/Users/BuyCredits',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const [getUserReq, getUserData] = useAxios(
     {
       url: '/Users/GetUser',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const generateOrder = async () => {
     console.log('json', json)
     try {
-      const {data} = await generatePaymentOrderFor(json)
+      const { data } = await generatePaymentOrderFor(json)
       setOpenModal(data.links.find(i => i.rel == 'approve').href)
     } catch (error) {
       console.log(error)
@@ -74,7 +74,7 @@ const PayCredits = props => {
     }
   }
 
-  const onPageLoad = async ({nativeEvent: {url}}) => {
+  const onPageLoad = async ({ nativeEvent: { url } }) => {
     console.log('webview', url)
     if (!url) return
 
@@ -87,7 +87,7 @@ const PayCredits = props => {
       setPageLoading(true)
       if (apiCalled) return
       try {
-        const {data} = await capturePaymentForToken(urlParams.token, json)
+        const { data } = await capturePaymentForToken(urlParams.token, json)
         console.log(data)
 
         await onPaymentSuccess(data.id)
@@ -111,16 +111,16 @@ const PayCredits = props => {
 
   const onPaymentSuccess = async paymentId => {
     const newData = {
-      credits: credits,
+      credits,
       amountPaid: amount,
       paypalPaymentId: paymentId,
     }
     console.log('buyCredits', newData)
 
     try {
-      const response = await buyCredits({data: newData})
+      const response = await buyCredits({ data: newData })
       if (response.status !== 200) return
-      const {data} = await getUserData()
+      const { data } = await getUserData()
       dispatchGlobalState({
         type: GLOBAL_STATE_ACTIONS.PROFILE,
         state: data,
@@ -134,21 +134,21 @@ const PayCredits = props => {
     getAccessTokenReq.loading || generatePaymentOrderReq.loading
 
   return (
-    <ScrollView hide style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView hide style={{ flex: 1, backgroundColor: 'white' }}>
       <Header
         toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
-        hideCreatePost={true}
+        hideCreatePost
       />
-      <View style={{backgroundColor: '#f0f2f3', marginTop: '10%'}}>
+      <View style={{ backgroundColor: '#f0f2f3', marginTop: '10%' }}>
         <View
           style={{
             paddingHorizontal: '5%',
             justifyContent: 'space-between',
             flexDirection: 'row',
           }}>
-          <Text style={{fontSize: 30}}>£ {amount}</Text>
-          <Text style={{fontSize: 30}}>Pay now</Text>
+          <Text style={{ fontSize: 30 }}>£ {amount}</Text>
+          <Text style={{ fontSize: 30 }}>Pay now</Text>
         </View>
       </View>
       <View
@@ -158,11 +158,11 @@ const PayCredits = props => {
           marginTop: '5%',
         }}>
         <Image source={Images.PaypalLogo} />
-        <Text style={{fontSize: 20, textAlign: 'center'}}>
+        <Text style={{ fontSize: 20, textAlign: 'center' }}>
           Find out more about how to boost your likes , comments and bookings on
           Next Level by becoming “Featured.“
         </Text>
-        <Text style={{fontSize: 20, textAlign: 'center'}}>
+        <Text style={{ fontSize: 20, textAlign: 'center' }}>
           You will be redirected to PayPal's website to acess your account and
           submit your payment. Then you will return to Next Level App
         </Text>
@@ -180,20 +180,20 @@ const PayCredits = props => {
           />
           <TouchableWithoutFeedback onPress={() => setChecked(p => !p)}>
             <View
-              style={{width: '90%', flexDirection: 'row', flexWrap: 'wrap'}}>
-              <Text style={{fontSize: 16}}>
+              style={{ width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Text style={{ fontSize: 16 }}>
                 I have read understood and accepted
               </Text>
-              <Text style={{fontSize: 16}}> Next Level </Text>
+              <Text style={{ fontSize: 16 }}> Next Level </Text>
               <Text
                 onPress={() => props.navigation.navigate('TermsConditions')}
-                style={{color: Colors.g_text, fontSize: 16}}>
+                style={{ color: Colors.g_text, fontSize: 16 }}>
                 Terms & Conditions
               </Text>
-              <Text style={{fontSize: 16}}> and </Text>
+              <Text style={{ fontSize: 16 }}> and </Text>
               <Text
                 onPress={() => props.navigation.navigate('Policy')}
-                style={{color: Colors.g_text, fontSize: 16}}>
+                style={{ color: Colors.g_text, fontSize: 16 }}>
                 Privacy Policy.
               </Text>
             </View>
@@ -202,7 +202,7 @@ const PayCredits = props => {
 
         <TouchableOpacity
           disabled={!checked}
-          style={[styles.buttonSave, {width: 200, opacity: checked ? 1 : 0.5}]}
+          style={[styles.buttonSave, { width: 200, opacity: checked ? 1 : 0.5 }]}
           onPress={generateOrder}>
           <View
             style={{
@@ -210,7 +210,7 @@ const PayCredits = props => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{color: 'white', marginHorizontal: 10}}>Pay Now</Text>
+            <Text style={{ color: 'white', marginHorizontal: 10 }}>Pay Now</Text>
             {isLoading() && <Spinner color={Colors.s_yellow} />}
           </View>
         </TouchableOpacity>
@@ -218,16 +218,16 @@ const PayCredits = props => {
 
       {openModal && (
         <Modal>
-          <SafeAreaView style={{flex: 1}}>
+          <SafeAreaView style={{ flex: 1 }}>
             {pageLoading && (
-              <View style={{height: '100%', justifyContent: 'center'}}>
+              <View style={{ height: '100%', justifyContent: 'center' }}>
                 <Spinner color={Colors.g_text} />
               </View>
             )}
             <WebView
-              style={{flex: 1}}
+              style={{ flex: 1 }}
               ref={ref => (webview.current = ref)}
-              source={{uri: openModal}}
+              source={{ uri: openModal }}
               onLoadStart={() => setPageLoading(true)}
               onLoadEnd={onPageLoad}
             />

@@ -62,6 +62,7 @@ const AddTeam = (props) => {
       onSubmit={values => {
         const data = values.qualifications || []
         data.push(...values.extraQualifications.filter(i => i.Qualification !== ""))
+        console.log("aaaaaa", { data })
         postQulifications({ data })
           .then(() => getUserData())
           .then((r) => {

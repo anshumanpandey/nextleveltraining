@@ -1,20 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, TextInput, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
-import styles from './styles';
-import { Icon, Spinner } from 'native-base';
-import HeaderClosePlus from '../../components/header/HeaderClosePlus';
-import NavigationService from '../../navigation/NavigationService';
-import Dimension from '../../constants/dimensions';
+import React, { useRef } from 'react';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { Spinner } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
-import ErrorLabel from '../../components/ErrorLabel';
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import moment from 'moment'
 import Menu, { MenuItem } from 'react-native-material-menu';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
-import ImagePicker from 'react-native-image-picker';
-import { syncDbs } from '../../utils/SyncProfileAssets';
 import LoaderImage from 'react-native-image-progress';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState';
+import ErrorLabel from '../../components/ErrorLabel';
+import NavigationService from '../../navigation/NavigationService';
+import HeaderClosePlus from '../../components/header/HeaderClosePlus';
+import styles from './styles';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
 import NLCropperImagePicker from '../../components/NLCropperImagePicker';
 
@@ -27,7 +23,6 @@ const options = [
 
 const AddTeam = (props) => {
   const [profile] = useGlobalState('profile')
-  const [file, setFile] = useState();
   const formikRef = useRef()
   const menuRef = useRef()
 
@@ -39,21 +34,6 @@ const AddTeam = (props) => {
   const [getUserReq, getUserData] = useAxios({
     url: '/Users/GetUser',
   }, { manual: true })
-
-  useEffect(() => {
-    const focusListener = props.navigation.addListener('didFocus', () => {
-      if (!profile?.DBSCeritificate?.Path) {
-        AsyncStorage.getItem(`DbsCert-file-${profile.Id}`)
-          .then(file => {
-            if (!file) return
-            setFile(JSON.parse(file).file)
-            formikRef.current.setFieldValue("file", JSON.parse(file).file)
-          })
-      }
-    });
-
-    return () => focusListener.remove()
-  }, [])
 
   return (
     <Formik
@@ -76,18 +56,7 @@ const AddTeam = (props) => {
           "file": values.file || '',
         }
         postDbsCertificate({ data })
-          .then(r => {
-
-          })
-          .then(r => {
-            if (values.file.uploadPath) {
-              delete values.file.data
-              return AsyncStorage.setItem(`DbsCert-file-${profile.Id}`, JSON.stringify({ file: values.file, uploaded: false }))
-            } else {
-              return Promise.resolve()
-            }
-          })
-          .then(r => getUserData())
+          .then(() => getUserData())
           .then((r) => {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
             if (HasCompletedVerificationProcess(profile)) {
@@ -95,20 +64,10 @@ const AddTeam = (props) => {
             } else {
               NavigationService.goBack()
             }
-            return AsyncStorage.getItem(`DbsCert-file-${profile.Id}`)
-          })
-          .then((fileString) => {
-            if (fileString && values.file.uploadPath) {
-              return syncDbs(values.file)
-                .then(() => {
-                  console.log('deleting')
-                  AsyncStorage.removeItem(`DbsCert-file-${profile.Id}`)
-                })
-            }
-          })
+          });
       }}
     >
-      {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
+      {({ handleSubmit, setFieldValue, values, errors, touched }) => {
         console.log(values.file)
         return (
           <>
@@ -122,7 +81,7 @@ const AddTeam = (props) => {
                   }
                 } : undefined}
                 isLoading={postTeamReq.loading || getUserReq.loading}
-                isSaveButton={true}
+                isSaveButton
                 saveOnPress={handleSubmit}
               />
               <View>
@@ -135,12 +94,10 @@ const AddTeam = (props) => {
                     </TouchableOpacity>
                   }
                 >
-                  {options.map(o => {
-                    return <MenuItem style={{ maxWidth: 'auto', width: '200%' }} onPress={() => {
-                      setFieldValue('type', o)
-                      menuRef.current?.hide()
-                    }}>{o}</MenuItem>;
-                  })}
+                  {options.map(o => <MenuItem style={{ maxWidth: 'auto', width: '200%' }} onPress={() => {
+                    setFieldValue('type', o)
+                    menuRef.current?.hide()
+                  }}>{o}</MenuItem>)}
                 </Menu>
                 {errors.type && touched.type && <ErrorLabel text={errors.type} />}
 

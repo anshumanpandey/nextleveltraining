@@ -1,24 +1,22 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, TouchableWithoutFeedback, Image} from 'react-native';
-import Header from '../../components/header/Header';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, FlatList, TouchableWithoutFeedback } from 'react-native';
 import useAxios from 'axios-hooks';
-import {Spinner, Text, Icon} from 'native-base';
-import Colors from '../../constants/color';
-import {useGlobalState} from '../../state/GlobalState';
-import {CalendarListItem} from '../Calendar/CalendarScreen';
-import {setHours, parseISO, getHours} from 'date-fns';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import NavigationService from '../../navigation/NavigationService';
+import { Spinner, Text, Icon } from 'native-base';
+import { setHours, parseISO, getHours } from 'date-fns';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import LoaderImage from 'react-native-image-progress';
-import Images from '../../constants/image';
+import Header from '../../components/header/Header';
+import { useGlobalState } from '../../state/GlobalState';
+import { CalendarListItem } from '../Calendar/CalendarScreen';
+import NavigationService from '../../navigation/NavigationService';
 
 const CoachsummaryScreen = (props) => {
   const [idx, setIdx] = useState(0);
   const listRef = useRef();
   const [profile] = useGlobalState('profile');
-  const [{data, loading}, getSummary] = useAxios({
+  const [{ data = {}, loading }, getSummary] = useAxios({
     url: `/users/GetCoachSummary/${profile?.Id}`,
-  });
+  }, { manual: true });
   const isCoach = profile?.Role === 'Coach';
 
   useEffect(() => {
@@ -29,21 +27,21 @@ const CoachsummaryScreen = (props) => {
     return () => focusListener.remove();
   }, []);
 
-  if (loading) {
+  if (loading === true || data.Level === undefined) {
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Header
-          hideCreatePost={true}
+          hideCreatePost
           toggleDrawer={props.navigation.toggleDrawer}
           navigate={props.navigation.navigate}
         />
-        <Spinner size={40} color={'#2D7AF0'} />
+        <Spinner size={40} color="#2D7AF0" />
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
       <Header
         hideCreatePost
         title="Summary"
@@ -64,7 +62,7 @@ const CoachsummaryScreen = (props) => {
           />
         )}
       />
-      <View style={{padding: '5%'}}>
+      <View style={{ padding: '5%' }}>
         <Text
           style={{
             color: '#2D7AF0',
@@ -75,8 +73,8 @@ const CoachsummaryScreen = (props) => {
           }}>
           Welcome {profile?.FullName}
         </Text>
-        <View style={{paddingTop: 10}}>
-          <Text style={{marginBottom: 10}}>Profile Summary</Text>
+        <View style={{ paddingTop: 10 }}>
+          <Text style={{ marginBottom: 10 }}>Profile Summary</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -99,7 +97,7 @@ const CoachsummaryScreen = (props) => {
                 }}>
                 {data.Level}
               </Text>
-              <Text style={{textAlign: 'center', fontSize: 14}}>
+              <Text style={{ textAlign: 'center', fontSize: 14 }}>
                 {isCoach ? 'Coach Level' : 'Player Level'}
               </Text>
             </View>
@@ -120,7 +118,7 @@ const CoachsummaryScreen = (props) => {
                 }}>
                 {isCoach ? data.BookingsCount : profile?.Coaches?.length || 0}
               </Text>
-              <Text style={{textAlign: 'center', fontSize: 14}}>
+              <Text style={{ textAlign: 'center', fontSize: 14 }}>
                 {isCoach ? 'Player Under Coaching' : 'Coaches Played With'}
               </Text>
             </View>
@@ -138,9 +136,9 @@ const CoachsummaryScreen = (props) => {
                   color: '#2D7AF0',
                   fontSize: 30,
                 }}>
-                {isCoach ? data.Players.length : profile?.Bookings?.length || 0}
+                {isCoach ? data.Players?.length : profile?.Bookings?.length || 0}
               </Text>
-              <Text style={{textAlign: 'center', fontSize: 14}}>
+              <Text style={{ textAlign: 'center', fontSize: 14 }}>
                 {isCoach ? 'All Time Players Coaching' : 'Bookings'}
               </Text>
             </View>
@@ -157,7 +155,7 @@ const CoachsummaryScreen = (props) => {
           }}>
           {isCoach ? 'Players Quick View' : 'Coaches Quick View'}
         </Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           {isCoach && data.Players && data.Players.length != 0 && (
             <TouchableWithoutFeedback
               onPress={() => {
@@ -173,17 +171,17 @@ const CoachsummaryScreen = (props) => {
                   return newIdx;
                 });
               }}>
-              <View style={{justifyContent: 'center'}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon type="AntDesign" name="left" />
               </View>
             </TouchableWithoutFeedback>
           )}
           {isCoach && (
             <FlatList
-              style={{flex: 1}}
-              contentContainerStyle={{flexGrow: 1}}
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
               ref={(r) => (listRef.current = r)}
-              horizontal={true}
+              horizontal
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={
                 <Text
@@ -197,38 +195,36 @@ const CoachsummaryScreen = (props) => {
               }
               data={data.Players}
               keyExtractor={(i) => i.Id}
-              renderItem={({item}) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() =>
-                      NavigationService.navigate('PlayerInfo', {player: item})
-                    }
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    NavigationService.navigate('PlayerInfo', { player: item })
+                  }
+                  style={{
+                    flexGrow: 1,
+                    padding: '1%',
+                    flexDirection: 'column',
+                  }}>
+                  <LoaderImage
                     style={{
-                      flexGrow: 1,
-                      padding: '1%',
-                      flexDirection: 'column',
-                    }}>
-                    <LoaderImage
-                      style={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: 60 / 2,
-                        borderColor: '#2D7AF0',
-                        borderWidth: 1,
-                      }}
-                      imageStyle={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: 60 / 2,
-                        borderColor: '#2D7AF0',
-                        borderWidth: 1,
-                      }}
-                      source={{uri: item.ProfileImage}}
-                    />
-                    <Text>{item.FullName}</Text>
-                  </TouchableOpacity>
-                );
-              }}
+                      width: 60,
+                      height: 60,
+                      borderRadius: 60 / 2,
+                      borderColor: '#2D7AF0',
+                      borderWidth: 1,
+                    }}
+                    imageStyle={{
+                      width: 60,
+                      height: 60,
+                      borderRadius: 60 / 2,
+                      borderColor: '#2D7AF0',
+                      borderWidth: 1,
+                    }}
+                    source={{ uri: item.ProfileImage }}
+                  />
+                  <Text>{item.FullName}</Text>
+                </TouchableOpacity>
+              )}
             />
           )}
           {isCoach && data.Players && data.Players.length != 0 && (
@@ -246,7 +242,7 @@ const CoachsummaryScreen = (props) => {
                   return newIdx;
                 });
               }}>
-              <View style={{marginTop: 'auto', marginBottom: 'auto'}}>
+              <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
                 <Icon type="AntDesign" name="right" />
               </View>
             </TouchableWithoutFeedback>
@@ -259,12 +255,12 @@ const CoachsummaryScreen = (props) => {
             justifyContent: 'space-between',
             flexDirection: 'row',
           }}>
-          <Text style={{color: '#2D7AF0', fontSize: 20, fontWeight: 'bold'}}>
+          <Text style={{ color: '#2D7AF0', fontSize: 20, fontWeight: 'bold' }}>
             Upcoming Training
           </Text>
           <TouchableOpacity
             onPress={() => NavigationService.navigate('Calendar')}>
-            <Text style={{color: '#2D7AF0', fontSize: 16, fontWeight: 'bold'}}>
+            <Text style={{ color: '#2D7AF0', fontSize: 16, fontWeight: 'bold' }}>
               View more
             </Text>
           </TouchableOpacity>
@@ -280,7 +276,7 @@ const CoachsummaryScreen = (props) => {
               Currently you dont have uncoming matches
             </Text>
           }
-          data={data.Bookings.sort((a, b) => {
+          data={data.Bookings?.sort((a, b) => {
             const dateA = setHours(
               parseISO(a.BookingDate),
               getHours(parseISO(a.FromTime)),
@@ -291,16 +287,14 @@ const CoachsummaryScreen = (props) => {
             );
             return dateB - dateA;
           }).slice(0, 3)}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           keyExtractor={(i) => i.Id}
-          renderItem={({item}) => {
-            return (
-              <CalendarListItem
-                {...item}
-                Address={item.Location.LocationAddress}
-              />
-            );
-          }}
+          renderItem={({ item }) => (
+            <CalendarListItem
+              {...item}
+              Address={item.Location.LocationAddress}
+            />
+          )}
         />
       </View>
     </ScrollView>
