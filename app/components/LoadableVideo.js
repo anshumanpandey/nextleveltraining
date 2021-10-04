@@ -1,11 +1,11 @@
-import React ,{ useState } from "react";
+import React, { useState } from "react";
 import Video from 'react-native-video';
 import { Spinner } from "native-base";
 import { Text, Alert } from "react-native";
 import Colors from "../constants/color";
 
 const LoadableVideo = ({ source, style }) => {
-  const [videoIsReady, setVideoIsReady] = useState(false);
+    const [videoIsReady, setVideoIsReady] = useState(false);
 
     return (
         <>
@@ -20,7 +20,7 @@ const LoadableVideo = ({ source, style }) => {
                     setVideoIsReady(true)
                 }}
                 currentPosition={1}
-                controls={true}
+                controls
                 onError={() => {
                     Alert.alert('Error', 'We could not load the video')
                 }}               // Callback when video cannot be loaded

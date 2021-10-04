@@ -32,7 +32,7 @@ const BookingCheckout = (props) => {
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
       <Header
         title="Checkout"
-        hideCreatePost={true}
+        hideCreatePost
         toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
       />
@@ -50,23 +50,21 @@ const BookingCheckout = (props) => {
         </View>
 
         <View style={{ marginLeft: '5%', marginTop: '5%', backgroundColor: '#00000010' }}>
-          {currentSessions.map(session => {
-            return (
-              <View style={{ paddingHorizontal: '8%', paddingVertical: '3%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ffffff' }}>
-                <View>
-                  <Text style={{ fontSize: 16 }}>Day: {format(parseISO(session.BookingDate), "EEEE, dd-MM-yyyy")}</Text>
-                  <Text style={{ fontSize: 15 }}>Starting at {session.FromTime} to {session.ToTime}</Text>
-                  <Text style={{ fontSize: 15 }}>Price of £{coach.Rate}</Text>
-                  <Text style={{ fontSize: 12 }}>Next Level comission of £{GlobalContants.BOOKING_COMISSION}</Text>
-                </View>
-                {currentSessions.length > 1 && (
-                  <TouchableOpacity onPress={() => deleteSession(session)} style={{ backgroundColor: '#ffffff90', padding: 10, borderRadius: 10 * 2 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>X</Text>
-                  </TouchableOpacity>
-                )}
+          {currentSessions.map(session => (
+            <View style={{ paddingHorizontal: '8%', paddingVertical: '3%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ffffff' }}>
+              <View>
+                <Text style={{ fontSize: 16 }}>Day: {format(parseISO(session.BookingDate), "EEEE, dd-MM-yyyy")}</Text>
+                <Text style={{ fontSize: 15 }}>Starting at {session.FromTime} to {session.ToTime}</Text>
+                <Text style={{ fontSize: 15 }}>Price of £{coach.Rate}</Text>
+                <Text style={{ fontSize: 12 }}>Next Level comission of £{GlobalContants.BOOKING_COMISSION}</Text>
               </View>
-            );
-          })}
+              {currentSessions.length > 1 && (
+                <TouchableOpacity onPress={() => deleteSession(session)} style={{ backgroundColor: '#ffffff90', padding: 10, borderRadius: 10 * 2 }}>
+                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>X</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ))}
         </View>
 
         <View style={{ marginTop: 'auto', backgroundColor: '#00000010', marginTop: '5%', marginBottom: '5%' }}>
@@ -103,10 +101,10 @@ const BookingCheckout = (props) => {
                   },
                 },
               ],
-              {cancelable: true},
+              { cancelable: true },
             )
           }}
-          value={`Pay`}
+          value="Pay"
           style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: '10%' }}
         />
       </View>

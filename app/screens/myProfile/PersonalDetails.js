@@ -1,12 +1,11 @@
-import React, {useState, useRef} from 'react'
-import {View, Text, Alert} from 'react-native'
-import Header from '../../components/header/Header'
-import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler'
-import {Spinner, Tabs, Tab, Icon} from 'native-base'
-import {Colors} from 'react-native/Libraries/NewAppScreen'
-import {Formik} from 'formik'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { View, Text, Alert } from 'react-native'
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
+import { Spinner, Tabs, Tab, Icon, Input as TextInput } from 'native-base'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { Formik } from 'formik'
 import useAxios from 'axios-hooks'
-import {Input as TextInput} from 'native-base'
+import Header from '../../components/header/Header'
 import styles from './styles.js'
 import ErrorLabel from '../../components/ErrorLabel'
 import {
@@ -18,6 +17,8 @@ import InfoLabel from '../../components/InfoLabel'
 import PersonalDetailsEdit from './PersonalDetailsEdit'
 
 const PersonalDetails = props => {
+  const [currentTab, setCurrentTab] = useState(0)
+  const [isReadyToSave, setIsReadyToSave] = useState(0)
   const [isSaving, setIsSaving] = useState(false)
   const [submitDetailsFn, setDetailsSubmitFn] = useState()
   const [currentSubmitFn, setCurrentSubmitFn] = useState()
@@ -25,13 +26,83 @@ const PersonalDetails = props => {
   const paswordFormikRef = useRef()
   const [profile] = useGlobalState('profile')
 
-  const [changePasswordReq, changePassword] = useAxios(
+  const [, changePassword] = useAxios(
     {
       url: '/Users/ChangePassword',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
+
+  useEffect(() => {
+    onBlur()
+  }, [])
+
+  const onBlur = () => {
+    const isDisabled = saveBtnIsDisabled()
+    console.log({ isDisabled })
+    setIsReadyToSave(!isDisabled)
+  }
+
+  const saveBtnIsDisabled = () => (
+    paswordFormikRef.current === undefined ||
+    Object.keys(paswordFormikRef.current?.errors || {}).length !== 0 ||
+    isSaving === true
+  )
+
+  const customeHeader = () => {
+    if (currentTab === 0) return <></>
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '70%',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexGrow: 1,
+        }}>
+        {isSaving && (
+          <Spinner
+            size={28}
+            color="black"
+            style={{
+              right: 20,
+              position: 'absolute',
+              marginRight: '10%',
+              height: '10%',
+            }}
+          />
+        )}
+        <Icon
+          onPress={() => props.navigation.goBack()}
+          type="Feather"
+          name="arrow-left"
+          style={{
+            left: 15,
+            fontSize: 22,
+            color: '#2D7AF0',
+          }}
+        />
+        <TouchableOpacity
+          disabled={isReadyToSave === false}
+          onPress={() => {
+            if (currentSubmitFn) {
+              setIsSaving(true)
+              currentSubmitFn().then(() => setIsSaving(false))
+            }
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              opacity: isReadyToSave === false ? 0.5 : 1,
+              fontSize: 18,
+            }}>
+            Save
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   return (
     <ScrollView
@@ -49,77 +120,26 @@ const PersonalDetails = props => {
         }}>
         <Header
           title="Personal Details"
-          hideCreatePost={true}
+          hideCreatePost
           toggleDrawer={props.navigation.toggleDrawer}
           navigate={props.navigation.navigate}
-          customButton={() => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '70%',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexGrow: 1,
-                }}>
-                {isSaving && (
-                  <Spinner
-                    size={28}
-                    color="black"
-                    style={{
-                      right: 20,
-                      position: 'absolute',
-                      marginRight: '10%',
-                      height: '10%',
-                    }}
-                  />
-                )}
-                <Icon
-                  onPress={() => props.navigation.goBack()}
-                  type="Feather"
-                  name="arrow-left"
-                  style={{
-                    left: 15,
-                    fontSize: 22,
-                    color: '#2D7AF0',
-                  }}
-                />
-                <TouchableOpacity
-                  disabled={isSaving == true}
-                  onPress={() => {
-                    if (currentSubmitFn) {
-                      setIsSaving(true)
-                      currentSubmitFn().then(() => setIsSaving(false))
-                    }
-                  }}>
-                  <Text
-                    style={{
-                      color: 'black',
-                      opacity: isSaving == true ? 0.5 : 1,
-                      fontSize: 18,
-                    }}>
-                    Save
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )
-          }}
+          customButton={customeHeader}
         />
         <Tabs
           onChangeTab={e => {
-            console.log(e.i)
-            if (e.i == 0) {
+            setCurrentTab(e.i)
+            if (e.i === 0) {
               setCurrentSubmitFn(() => submitDetailsFn)
             }
-            if (e.i == 1) {
+            if (e.i === 1) {
               setCurrentSubmitFn(() => paswordFormikRef.current.submitForm)
             }
           }}
-          tabBarUnderlineStyle={{backgroundColor: Colors.s_blue}}>
+          tabBarUnderlineStyle={{ backgroundColor: Colors.s_blue }}>
           <Tab
-            activeTextStyle={{color: Colors.s_blue}}
-            tabStyle={{backgroundColor: 'white'}}
-            activeTabStyle={{backgroundColor: 'white'}}
+            activeTextStyle={{ color: Colors.s_blue }}
+            tabStyle={{ backgroundColor: 'white' }}
+            activeTabStyle={{ backgroundColor: 'white' }}
             heading="Personal details">
             {edit ? (
               <PersonalDetailsEdit
@@ -164,7 +184,7 @@ const PersonalDetails = props => {
                 </View>
                 <View style={styles.signup_btn_view}>
                   <TouchableOpacity
-                    style={[styles.signup_btn_player, {width: 200}]}
+                    style={[styles.signup_btn_player, { width: 200 }]}
                     onPress={() => setEdit(true)}>
                     <View style={styles.signup_btn_player_view}>
                       <Text style={styles.signup_player_text}>
@@ -177,9 +197,9 @@ const PersonalDetails = props => {
             )}
           </Tab>
           <Tab
-            activeTextStyle={{color: Colors.s_blue}}
-            tabStyle={{backgroundColor: 'white'}}
-            activeTabStyle={{backgroundColor: 'white'}}
+            activeTextStyle={{ color: Colors.s_blue }}
+            tabStyle={{ backgroundColor: 'white' }}
+            activeTabStyle={{ backgroundColor: 'white' }}
             heading="Change Password">
             <Formik
               innerRef={r => (paswordFormikRef.current = r)}
@@ -189,6 +209,7 @@ const PersonalDetails = props => {
                 newPassword: '',
               }}
               validate={values => {
+                onBlur()
                 const errors = {}
 
                 if (!values.password) errors.password = 'Required'
@@ -222,73 +243,76 @@ const PersonalDetails = props => {
                   oldPassword: values.password,
                   newPassword: values.newPassword,
                 }
-                return changePassword({data}).then(() => {
+                return changePassword({ data }).then(() => {
                   Alert.alert('', 'Your password has been changed')
-                  dispatchGlobalState({type: GLOBAL_STATE_ACTIONS.LOGOUT})
+                  dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.LOGOUT })
                 })
               }}>
               {({
                 handleChange,
                 handleBlur,
-                handleSubmit,
-                setFieldValue,
                 values,
                 errors,
                 touched,
-              }) => {
-                return (
-                  <View style={{padding: '5%'}}>
+              }) => (
+                <View style={{ padding: '5%' }}>
+                  <View style={styles.signup_info_view}>
                     <View style={styles.signup_info_view}>
-                      <View style={styles.signup_info_view}>
-                        <TextInput
-                          style={{color: 'black'}}
-                          placeholderTextColor={'rgba(0,0,0,0.3)'}
-                          placeholder="Password"
-                          secureTextEntry={true}
-                          onChangeText={handleChange('password')}
-                          onBlur={handleBlur('password')}
-                          value={values.password}
-                        />
-                      </View>
-                      {errors.password && touched.password && (
-                        <ErrorLabel text={errors.password} />
-                      )}
                       <TextInput
-                        style={{color: 'black'}}
-                        placeholderTextColor={'rgba(0,0,0,0.3)'}
-                        placeholder="New Password"
-                        secureTextEntry={true}
-                        onChangeText={handleChange('newPassword')}
-                        onBlur={handleBlur('newPassword')}
-                        value={values.newPassword}
+                        style={{ color: 'black' }}
+                        placeholderTextColor="rgba(0,0,0,0.3)"
+                        placeholder="Password"
+                        secureTextEntry
+                        onChangeText={(e) => {
+                          onBlur()
+                          handleChange('password')(e)
+                        }}
+                        onBlur={handleBlur('password')}
+                        value={values.password}
                       />
                     </View>
-                    {errors.newPassword && touched.newPassword && (
-                      <ErrorLabel text={errors.newPassword} />
+                    {errors.password && touched.password && (
+                      <ErrorLabel text={errors.password} />
                     )}
-                    <View style={styles.signup_info_view}>
-                      <TextInput
-                        style={{color: 'black'}}
-                        placeholderTextColor={'rgba(0,0,0,0.3)'}
-                        placeholder="Confirm Password"
-                        secureTextEntry={true}
-                        onChangeText={handleChange('confirmPassword')}
-                        onBlur={handleBlur('confirmPassword')}
-                        value={values.confirmPassword}
-                      />
-                    </View>
-                    <InfoLabel
-                      style={{width: '85%'}}
-                      text={
-                        'Password should contain at least 1 number, 1 alphabet in caps and 1 special character.'
-                      }
+                    <TextInput
+                      style={{ color: 'black' }}
+                      placeholderTextColor="rgba(0,0,0,0.3)"
+                      placeholder="New Password"
+                      secureTextEntry
+                      onChangeText={(e) => {
+                        onBlur()
+                        handleChange('newPassword')(e)
+                      }}
+                      onBlur={handleBlur('newPassword')}
+                      value={values.newPassword}
                     />
-                    {errors.confirmPassword && touched.confirmPassword && (
-                      <ErrorLabel text={errors.confirmPassword} />
-                    )}
                   </View>
-                )
-              }}
+                  {errors.newPassword && touched.newPassword && (
+                    <ErrorLabel text={errors.newPassword} />
+                  )}
+                  <View style={styles.signup_info_view}>
+                    <TextInput
+                      style={{ color: 'black' }}
+                      placeholderTextColor="rgba(0,0,0,0.3)"
+                      placeholder="Confirm Password"
+                      secureTextEntry
+                      onChangeText={(e) => {
+                        onBlur()
+                        handleChange('confirmPassword')(e)
+                      }}
+                      onBlur={handleBlur('confirmPassword')}
+                      value={values.confirmPassword}
+                    />
+                  </View>
+                  <InfoLabel
+                    style={{ width: '85%' }}
+                    text="Password should contain at least 1 number, 1 alphabet in caps and 1 special character."
+                  />
+                  {errors.confirmPassword && touched.confirmPassword && (
+                    <ErrorLabel text={errors.confirmPassword} />
+                  )}
+                </View>
+              )}
             </Formik>
           </Tab>
         </Tabs>

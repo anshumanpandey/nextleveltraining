@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native'
 import StarRating from 'react-native-star-rating';
-import Images from '../../../../constants/image'
 import { Icon, Spinner } from 'native-base'
-import styles from './styles/post-search-style'
 import useAxios from 'axios-hooks'
-import { useGlobalState } from '../../../../state/GlobalState';
 import ImageProgress from 'react-native-image-progress';
-import Colors from '../../../../constants/color';
 import getDistance from 'geolib/es/getDistance';
+import Images from '../../../../constants/image'
+import styles from './styles/post-search-style'
+import { useGlobalState } from '../../../../state/GlobalState';
+import Colors from '../../../../constants/color';
 import ConnectedWidget from '../../../../components/ConnectedWidget';
 import NLFormatedShowMore from '../../../../components/NLFormatedShowMore';
-var convert = require('convert-units')
+
+const convert = require('convert-units')
 
 const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props }) => {
   const [profile] = useGlobalState('profile')
@@ -50,7 +51,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                 disabled={false}
                 maxStars={1}
                 rating={props.AverageBookingRating}
-                fullStarColor={'#38A663'}
+                fullStarColor="#38A663"
                 starSize={16}
               // selectedStar={(rating) => this.onStarRatingPress(rating)}
               />
@@ -62,7 +63,9 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'column', width: '70%' }}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>{props.FullName}</Text>
+                <Text style={{ color: Colors.s_blue, fontSize: 18, fontWeight: '500' }}>
+                  {props.Role} {(props.FullName || "").split(" ")[0]}
+                </Text>
                 <View style={{ marginLeft: '2%', justifyContent: 'center' }}>
                   {props.Role == "Coach" && (
                     <View style={{ backgroundColor: Colors.s_blue, position: 'absolute', minHeight: 14, minWidth: 14, borderRadius: 14 / 2, alignItems: 'center', justifyContent: 'center' }}>
@@ -72,7 +75,7 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
                 </View>
               </View>
               {milesAway != -1 && (
-                <View style={{ flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Icon style={{ fontSize: 16 }} type="Entypo" name="location-pin" />
                   <Text style={{ fontSize: 12 }}>{parseInt(milesAway)} Miles from you</Text>
                 </View>
@@ -108,14 +111,12 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
           </View>
           {props.Teams && props.Teams.length != 0 && (
             <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', width: '80%', marginTop: 10, justifyContent: 'space-between', marginBottom: 10 }}>
-              {props.Teams.map(q => {
-                return (
-                  <View style={{ flexDirection: 'row' }}>
-                    <Icon type="Feather" name="check-square" style={{ fontSize: 16, color: '#38A663' }} />
-                    <Text>{q.TeamName}</Text>
-                  </View>
-                );
-              })}
+              {props.Teams.map(q => (
+                <View style={{ flexDirection: 'row' }}>
+                  <Icon type="Feather" name="check-square" style={{ fontSize: 16, color: '#38A663' }} />
+                  <Text>{q.TeamName}</Text>
+                </View>
+              ))}
             </View>
           )}
 
@@ -147,14 +148,12 @@ const PostSearchCard = ({ onPress, refreshCb, hideHeartIcon = false, ...props })
       </View>
       {props.Qualifications && props.Qualifications.length != 0 && (
         <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', width: '80%', marginTop: 10, justifyContent: 'space-between', marginBottom: 10 }}>
-          {props.Qualifications.map(q => {
-            return (
-              <View style={{ flexDirection: 'row' }}>
-                <Icon type="Feather" name="check-square" style={{ fontSize: 16, color: '#38A663' }} />
-                <Text>{q.Qualification}</Text>
-              </View>
-            );
-          })}
+          {props.Qualifications.map(q => (
+            <View style={{ flexDirection: 'row' }}>
+              <Icon type="Feather" name="check-square" style={{ fontSize: 16, color: '#38A663' }} />
+              <Text>{q.Qualification}</Text>
+            </View>
+          ))}
         </View>
       )}
 

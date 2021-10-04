@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native'
-import Images from '../../constants/image'
-import styles from './styles.js';
+import { View, Text, Image, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native'
 import useAxios from 'axios-hooks'
-import Screen from '../../utils/screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
 import { GoogleSignin } from 'react-native-google-signin';
@@ -13,10 +10,13 @@ import appleAuth, {
   AppleAuthRequestScope,
   AppleAuthError
 } from '@invertase/react-native-apple-authentication';
-import { askToBefeatured, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
 import DeviceInfo from 'react-native-device-info';
 import JwtDecode from 'jwt-decode';
+import { askToBefeatured, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
+import NLUserDataForm from '../../components/userDataForm/NLUserDataForm';
+import Screen from '../../utils/screen';
+import styles from './styles';
+import Images from '../../constants/image'
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
 import GlobalContants from '../../constants/GlobalContants';
 
@@ -69,7 +69,7 @@ const Signup = (props) => {
         ],
       });
 
-      if (appleAuthRequestResponse['realUserStatus']) {
+      if (appleAuthRequestResponse.realUserStatus) {
         console.log(appleAuthRequestResponse)
         if (appleAuthRequestResponse.email) {
           await AsyncStorage.setItem("appleEmail", appleAuthRequestResponse.email)
@@ -128,7 +128,7 @@ const Signup = (props) => {
         <View style={styles.signup_logo_view}>
           <Image source={Images.Mlogo} />
         </View>
-        <NLUserDataForm {...props} isFeatured={props.navigation.getParam('isFeatured', false)} showsConfirmPassword={true} />
+        <NLUserDataForm {...props} screenToGoBackTo={Screen.SignUp} postcodeGooglePlaceselectedResult={props.navigation.getParam('postcodeGooglePlaceselectedResult')} postcodeGooglePlaces={props.navigation.getParam('postcodeGooglePlaces')} isFeatured={props.navigation.getParam('isFeatured', false)} showsConfirmPassword />
         <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player"), isFeatured: props.navigation.getParam('isFeatured') })}>
           <View style={[styles.signup_other_view, { color: 'black', paddingTop: '5%', paddingBottom: '5%' }]}>
             <Text style={styles.signup_continue}>Go to Login</Text>
@@ -150,10 +150,8 @@ const Signup = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => {
-                    return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken }))
-                  })
-                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { featured: props.navigation.getParam('isFeatured'),deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
+                  .then(({ accessToken }) => RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken })))
+                  .then(({ accessToken, deviceToken }) => FBlogin({ data: { featured: props.navigation.getParam('isFeatured'), deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role'), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
                     return getUserData()
@@ -174,11 +172,12 @@ const Signup = (props) => {
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={async () => {
                 setSocialLogin(true)
                 try {
                   const deviceToken = await RequestDeviceToken()
+                  console.log({ deviceToken })
                   await GoogleSignin.hasPlayServices();
                   const userInfo = await GoogleSignin.signIn();
                   console.log(userInfo)
@@ -215,8 +214,8 @@ const Signup = (props) => {
               style={[styles.google_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1, marginTop: '5%' }]}
             >
               <Text style={styles.google_title}>Google +</Text>
-            </TouchableOpacity>
-            {Platform.OS != "android" && (
+            </TouchableOpacity> */}
+            {Platform.OS !== "android" && (
               <AppleButton
                 buttonStyle={AppleButton.Style.BLACK}
                 buttonType={AppleButton.Type.SIGN_IN}

@@ -1,23 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
-import styles from './styles';
-import NavigationService from '../../navigation/NavigationService';
 import { Text, View, CheckBox, Spinner } from 'native-base';
+import base64 from 'react-native-base64'
+import useAxios, { makeUseAxios } from 'axios-hooks'
+import { WebView } from 'react-native-webview';
+import { NavigationActions, StackActions } from 'react-navigation';
+import styles from './styles';
 import Header from '../../components/header/Header';
 import Images from '../../constants/image';
 import Colors from '../../constants/color';
 import { GET_PAYPAL_JSON, getTotalBookingPrice } from "./PaypalUtils"
-import base64 from 'react-native-base64'
-import { makeUseAxios } from 'axios-hooks'
-import { WebView } from 'react-native-webview';
-import moment from 'moment'
-import useAxios from 'axios-hooks'
 import { useGlobalState } from '../../state/GlobalState';
-import { NavigationActions, StackActions } from 'react-navigation';
 import GlobalContants from '../../constants/GlobalContants';
 import { UsePaypalHook } from '../../utils/UsePaypalHook';
-var qs = require('qs');
-var UrlParser = require('url-parse');
+
+const qs = require('qs');
+const UrlParser = require('url-parse');
 
 const simpleAxiosHook = makeUseAxios()
 
@@ -39,7 +37,7 @@ const PaymentConcentScreen = (props) => {
     method: 'POST'
   }, { manual: true })
 
-  const [{ data, loading, error }, getAccessToken] = simpleAxiosHook({
+  const [{ loading },] = simpleAxiosHook({
     url: GlobalContants.PAYPAL_TOKEN_URL,
     method: 'POST',
     params,
@@ -49,18 +47,16 @@ const PaymentConcentScreen = (props) => {
     },
   }, { manual: true })
 
-  const [paymentReq, doPayment] = simpleAxiosHook({
+  const [paymentReq,] = simpleAxiosHook({
     url: GlobalContants.PAYPAL_PAYMENT_URL,
     method: 'POST'
   }, { manual: true })
 
   const isLoading = () => loading || paymentReq.loading
 
-  console.log(props.navigation.getParam('sessions'))
-
   return (
     <ScrollView hide style={{ flex: 1, backgroundColor: 'white' }}>
-      <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} hideCreatePost={true} />
+      <Header toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate} hideCreatePost />
       <View style={{ backgroundColor: '#f0f2f3', marginTop: '10%' }}>
         <View style={{ paddingHorizontal: '5%', justifyContent: 'space-between', flexDirection: 'row' }}>
           <Text style={{ fontSize: 30 }}>£ {getTotalBookingPrice(props.navigation.getParam('coach'), props.navigation.getParam('sessions'))}</Text>
@@ -78,19 +74,19 @@ const PaymentConcentScreen = (props) => {
             <View style={{ width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
               <Text style={{ fontSize: 16 }}>
                 I have read understood and accepted
-          </Text>
+              </Text>
               <Text style={{ fontSize: 16 }}>
                 {' '}Next Level{' '}
               </Text>
               <Text onPress={() => navigation.navigate('TermsConditions')} style={{ color: Colors.g_text, fontSize: 16 }}>
                 Terms & Conditions
-          </Text>
+              </Text>
               <Text style={{ fontSize: 16 }}>
                 {' '}and{' '}
               </Text>
               <Text onPress={() => navigation.navigate('Policy')} style={{ color: Colors.g_text, fontSize: 16 }}>
                 Privacy Policy.
-          </Text>
+              </Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -99,7 +95,9 @@ const PaymentConcentScreen = (props) => {
           disabled={!checked}
           style={[styles.buttonSave, { width: 200, opacity: checked ? 1 : 0.5 }]}
           onPress={() => {
-            generatePaymentOrderFor(GET_PAYPAL_JSON(props.navigation.getParam('coach'), props.navigation.getParam('sessions')))
+            const jsonPaypal = GET_PAYPAL_JSON(props.navigation.getParam('coach'), props.navigation.getParam('sessions'))
+            console.log("jsonPaypal", JSON.stringify(jsonPaypal))
+            generatePaymentOrderFor(jsonPaypal)
               .then((res) => {
                 setOpenModal(res.data.links.find(i => i.rel == 'approve').href)
               })
@@ -147,7 +145,7 @@ const PaymentConcentScreen = (props) => {
                       "transactionID": captureRes.data.id,
                       "bookingStatus": "Done"
                     }
-                    // console.log(data)
+                    // console.log("saveBooking", data)
                     saveBooking({ data })
                       .then(r => {
                         setApiCalled(true)

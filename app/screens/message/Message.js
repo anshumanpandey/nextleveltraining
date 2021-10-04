@@ -1,9 +1,7 @@
 import React from 'react'
 
-// import { ApiCall } from '../config/Constant';
-// import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment'
-import {SafeAreaView} from 'react-navigation'
+import { SafeAreaView } from 'react-navigation'
 import {
   View,
   Text,
@@ -20,7 +18,7 @@ import {
 } from 'react-native-gesture-handler'
 import database from '@react-native-firebase/database'
 import sendImage from '../../assets/images/send-button.png'
-import {axiosInstance} from '../../api/AxiosBootstrap'
+import { axiosInstance } from '../../api/AxiosBootstrap'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState'
 export default class Message extends React.Component {
   chatFlatList = null
@@ -32,11 +30,11 @@ export default class Message extends React.Component {
       user2_id: this.props.navigation.getParam('RecieverId'),
       chat_id:
         this.props.navigation.getParam('SenderId') >
-        this.props.navigation.getParam('RecieverId')
+          this.props.navigation.getParam('RecieverId')
           ? this.props.navigation.getParam('SenderId') +
-            this.props.navigation.getParam('RecieverId')
+          this.props.navigation.getParam('RecieverId')
           : this.props.navigation.getParam('RecieverId') +
-            this.props.navigation.getParam('SenderId'),
+          this.props.navigation.getParam('SenderId'),
       data: {},
       friendName: this.props.navigation.getParam('friendName'),
       messages: [],
@@ -97,7 +95,7 @@ export default class Message extends React.Component {
     database()
       .ref('/' + this.state.chat_id + '/status')
       .set({
-        [this.state.user1_id]: {typing: 'true'},
+        [this.state.user1_id]: { typing: 'true' },
       })
       .then(() => console.log('Data set.'))
 
@@ -105,7 +103,7 @@ export default class Message extends React.Component {
       database()
         .ref('/' + this.state.chat_id + '/status')
         .set({
-          [this.state.user1_id]: {typing: 'false'},
+          [this.state.user1_id]: { typing: 'false' },
         })
         .then(() => console.log('Data set.'))
     }, 2000)
@@ -137,7 +135,7 @@ export default class Message extends React.Component {
         text: this.state.textMessage,
         receiverId:
           this.props.navigation.getParam('RecieverId') ===
-          this.props.navigation.getParam('SenderId')
+            this.props.navigation.getParam('SenderId')
             ? this.props.navigation.getParam('SenderId')
             : this.props.navigation.getParam('RecieverId'),
         senderId: this.props.navigation.getParam('SenderId'),
@@ -148,7 +146,7 @@ export default class Message extends React.Component {
       console.log(r, 'hheeee')
       if (r.data && r.data.length !== 0) {
         console.log(r.data, 'here')
-        
+
       }
     })
     this.setState({
@@ -160,7 +158,7 @@ export default class Message extends React.Component {
     const config = {
       url: '/Users/GetUser',
     }
-    const res = await axiosInstance({...config})
+    const res = await axiosInstance({ ...config })
     if (res.status === 200) {
       dispatchGlobalState({
         type: GLOBAL_STATE_ACTIONS.PROFILE,
@@ -325,7 +323,7 @@ export default class Message extends React.Component {
               inverted={true}
               keyExtractor={item => item.id}
               data={this.state.messages}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 return (
                   <View>
                     {item.sender_id == this.state.user1_id
@@ -337,7 +335,7 @@ export default class Message extends React.Component {
             />
           </View>
           {this.state._isTyping && (
-            <Text style={{color: 'gray'}}>
+            <Text style={{ color: 'gray' }}>
               {' '}
               {this.state.friendName + ' is typing..'}{' '}
             </Text>
@@ -388,7 +386,7 @@ export default class Message extends React.Component {
                   this.onSend(this.state.textMessage)
                 }
               }}>
-              <Image source={sendImage} style={{height: 20, width: 20}} />
+              <Image source={sendImage} style={{ height: 20, width: 20 }} />
             </TouchableOpacity>
           </View>
         </View>
@@ -401,7 +399,7 @@ export default class Message extends React.Component {
   }
 
   senderMessage(item, index) {
-    var {height, width} = Dimensions.get('window')
+    var { height, width } = Dimensions.get('window')
     return (
       <View
         style={{
@@ -431,7 +429,7 @@ export default class Message extends React.Component {
               // width: 90
             }}>
             {moment(item.created_at).format('DD-MM-YYYY') ==
-            moment(new Date()).format('DD-MM-YYYY')
+              moment(new Date()).format('DD-MM-YYYY')
               ? moment(item.created_at).format('hh:mm a')
               : moment(item.created_at).format('hh:mm a DD-MM-YYYY')}
           </Text>
@@ -440,7 +438,7 @@ export default class Message extends React.Component {
     )
   }
   receverMessage(item, index) {
-    var {height, width} = Dimensions.get('window')
+    var { height, width } = Dimensions.get('window')
     return (
       <View
         style={{
@@ -470,7 +468,7 @@ export default class Message extends React.Component {
               // width: 90
             }}>
             {moment(item.created_at).format('DD-MM-YYYY') ==
-            moment(new Date()).format('DD-MM-YYYY')
+              moment(new Date()).format('DD-MM-YYYY')
               ? moment(item.created_at).format('hh:mm a')
               : moment(item.created_at).format('hh:mm a DD-MM-YYYY')}
           </Text>

@@ -1,18 +1,18 @@
 import React, { Component, useState, useEffect } from 'react';
 import { View, TextInput, Text, FlatList, TouchableOpacity, Platform, Linking } from 'react-native';
 import { Icon, Spinner, Tabs, Tab, Button } from 'native-base';
-import Header from '../../components/header/Header';
 import useAxios from 'axios-hooks'
-import Colors from '../../constants/color';
-import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS, getStoreIosDeviceToken, userAskedToBeFeatured, needsToAskFeaturedAfterLogin } from '../../state/GlobalState';
-import PostCard from '../home/components/PostCard';
 import moment from 'moment'
-import PostSearchCard from './components/subcomponents/PostSearchCard';
 import Modal from 'react-native-modal';
-import NavigationService from '../../navigation/NavigationService';
 import getDistance from 'geolib/es/getDistance';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import Header from '../../components/header/Header';
+import Colors from '../../constants/color';
+import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS, getStoreIosDeviceToken, userAskedToBeFeatured, needsToAskFeaturedAfterLogin } from '../../state/GlobalState';
+import PostCard from '../home/components/PostCard';
+import PostSearchCard from './components/subcomponents/PostSearchCard';
+import NavigationService from '../../navigation/NavigationService';
 import { RequestAndroidDeviceToken, sendAndroidToken, sendIosToken } from '../../utils/firebase/RequestDeviceToken';
 
 const NoResultMessage = () => <Text style={{ textAlign: 'center', fontSize: 22, marginTop: '10%' }}>No results</Text>
@@ -110,16 +110,16 @@ const FilterModal = ({ isModalVisible, onClose }) => {
           <View>
             <Text style={{ fontSize: 20, marginBottom: '3%' }}>Distance</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.DISTANCE_ASC)} selected={filterValues.orderBy == SORTING_KEYS.DISTANCE_ASC} text={"Nearest"} />
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.DISTANCE_DESC)} selected={filterValues.orderBy == SORTING_KEYS.DISTANCE_DESC} text={"Farest"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.DISTANCE_ASC)} selected={filterValues.orderBy == SORTING_KEYS.DISTANCE_ASC} text="Nearest" />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.DISTANCE_DESC)} selected={filterValues.orderBy == SORTING_KEYS.DISTANCE_DESC} text="Farest" />
             </View>
           </View>
 
           <View>
             <Text style={{ fontSize: 20, marginBottom: '3%' }}>Price</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.PRICE_ASC)} selected={filterValues.orderBy == SORTING_KEYS.PRICE_ASC} text={"Most Expensive"} />
-              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.PRICE_DESC)} selected={filterValues.orderBy == SORTING_KEYS.PRICE_DESC} text={"Least Expensive"} />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.PRICE_ASC)} selected={filterValues.orderBy == SORTING_KEYS.PRICE_ASC} text="Most Expensive" />
+              <FilterOptionItem onPress={() => setFilterValueFor('orderBy', SORTING_KEYS.PRICE_DESC)} selected={filterValues.orderBy == SORTING_KEYS.PRICE_DESC} text="Least Expensive" />
             </View>
           </View>
 
@@ -130,43 +130,43 @@ const FilterModal = ({ isModalVisible, onClose }) => {
                 onPress={() => addValueFor('dayOfWeek', 'Sunday')}
                 selected={filterValues.dayOfWeek.includes('Sunday')}
                 styles={{ width: '30%' }}
-                text={"Sun"}
+                text="Sun"
               />
               <FilterOptionItem
                 onPress={() => addValueFor('dayOfWeek', 'Monday')}
                 selected={filterValues.dayOfWeek.includes('Monday')}
                 styles={{ width: '30%' }}
-                text={"Mon"}
+                text="Mon"
               />
               <FilterOptionItem
                 onPress={() => addValueFor('dayOfWeek', 'Tuesday')}
                 selected={filterValues.dayOfWeek.includes('Tuesday')}
                 styles={{ width: '30%' }}
-                text={"Tues"}
+                text="Tues"
               />
               <FilterOptionItem
                 onPress={() => addValueFor('dayOfWeek', 'Wednesday')}
                 selected={filterValues.dayOfWeek.includes('Wednesday')}
                 styles={{ width: '30%' }}
-                text={"Wed"}
+                text="Wed"
               />
               <FilterOptionItem
                 onPress={() => addValueFor('dayOfWeek', 'Thursday')}
                 selected={filterValues.dayOfWeek.includes('Thursday')}
                 styles={{ width: '30%' }}
-                text={"Thurs"}
+                text="Thurs"
               />
               <FilterOptionItem
                 onPress={() => addValueFor('dayOfWeek', 'Friday')}
                 selected={filterValues.dayOfWeek.includes('Friday')}
                 styles={{ width: '30%' }}
-                text={"Fri"}
+                text="Fri"
               />
               <FilterOptionItem
                 onPress={() => addValueFor('dayOfWeek', 'Saturday')}
                 selected={filterValues.dayOfWeek.includes('Saturday')}
                 styles={{ width: '30%' }}
-                text={"Sat"}
+                text="Sat"
               />
             </View>
           </View>
@@ -177,31 +177,31 @@ const FilterModal = ({ isModalVisible, onClose }) => {
               <FilterOptionItem
                 onPress={() => toggleValueFor('level', 1)}
                 selected={filterValues.level == 1}
-                text={"Level 1"}
+                text="Level 1"
               />
 
               <FilterOptionItem
                 onPress={() => toggleValueFor('level', 2)}
                 selected={filterValues.level == 2}
-                text={"Level 2"}
+                text="Level 2"
               />
 
               <FilterOptionItem
                 onPress={() => toggleValueFor('level', 3)}
                 selected={filterValues.level == 3}
-                text={"Level 3"}
+                text="Level 3"
               />
 
               <FilterOptionItem
                 onPress={() => toggleValueFor('level', 4)}
                 selected={filterValues.level == 4}
-                text={"Level 4"}
+                text="Level 4"
               />
 
               <FilterOptionItem
                 onPress={() => toggleValueFor('level', 5)}
                 selected={filterValues.level == 5}
-                text={"Level 5"}
+                text="Level 5"
               />
 
             </View>
@@ -277,7 +277,6 @@ const Search = (props) => {
   const [orderingType, setOrderingType] = useState({ orderBy: SORTING_KEYS.DISTANCE_ASC });
   const [profile] = useGlobalState('profile')
 
-  //TODO: add missing data for post for each coach
   const [searchCoachesReq, searchCoaches] = useAxios({
     url: `/Users/SearchPost`,
     method: 'POST',
@@ -319,31 +318,31 @@ const Search = (props) => {
 
     if (Platform.OS == 'ios') {
       getStoreIosDeviceToken()
-      .then(token => {
-        sendIosToken(token)
-      })
+        .then(token => {
+          sendIosToken(token)
+        })
     } else if (Platform.OS == 'android') {
       RequestAndroidDeviceToken()
-      .then(token => {
-        sendAndroidToken(token)
-      })
+        .then(token => {
+          sendAndroidToken(token)
+        })
     }
     userAskedToBeFeatured()
-    .then(asked => {
-      if (asked) {
-        props.navigation.navigate("AskFeatured")
-        return Promise.resolve('no')
-      } else {
+      .then(asked => {
+        if (asked) {
+          props.navigation.navigate("AskFeatured")
+          return Promise.resolve('no')
+        }
         return needsToAskFeaturedAfterLogin()
-      }
-    })
-    .then((needToAsk) => {
-      if (needToAsk) {
-        props.navigation.navigate("AskFeatured")
-      } else {
-        searchCoaches({ data: { search: keyword } })
-      }
-    })
+
+      })
+      .then((needToAsk) => {
+        if (needToAsk) {
+          props.navigation.navigate("AskFeatured")
+        } else {
+          searchCoaches({ data: { search: keyword } })
+        }
+      })
 
     const focusListener = props.navigation.addListener('didFocus', () => {
       searchCoaches({ data: { search: keyword } })
@@ -386,13 +385,9 @@ const Search = (props) => {
 
   const [currentTab, setCurrentTab] = useState({ i: resolveTabIdx() })
 
-  const displayFilter = () => {
-    return (currentTab.i == 0 && TabsName[0] == "Coaches") || (currentTab.i == 1 && TabsName[1] == "Coaches")
-  }
+  const displayFilter = () => (currentTab.i == 0 && TabsName[0] == "Coaches") || (currentTab.i == 1 && TabsName[1] == "Coaches")
 
-  const rateFilter = (coach, val) => {
-    return coach.Rate == val
-  }
+  const rateFilter = (coach, val) => coach.Rate == val
 
   const distanceFilter = (a, b) => {
     const distanceToCoachA = getDistance(
@@ -408,52 +403,49 @@ const Search = (props) => {
     return distanceToCoachA - distanceToCoachB
   }
 
-  const parseResults = (users) => {
-    return users
-      ?.sort((a, b) => {
-        if (!a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
+  const parseResults = (users) => users
+    ?.sort((a, b) => {
+      if (!a.Lat || !a.Lng || !b.Lat || !b.Lng || !profile?.Lat || !profile?.Lng) return 0
 
-        if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
-          return distanceFilter(a, b)
-        } else if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
-          return distanceFilter(b, a)
-        } else if (orderingType.orderBy == SORTING_KEYS.PRICE_ASC) {
-          return b.Rate - a.Rate
-        } else if (orderingType.orderBy == SORTING_KEYS.PRICE_DESC) {
-          return a.Rate - b.Rate
-        } else {
-          return 0
-        }
-      })
-      ?.filter(coach => {
-        if (coach.Role == "Player") return true
-        if (orderingType.rate) {
-          return rateFilter(coach, orderingType.rate)
-        }
+      if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
+        return distanceFilter(a, b)
+      } if (orderingType.orderBy == SORTING_KEYS.DISTANCE_ASC) {
+        return distanceFilter(b, a)
+      } if (orderingType.orderBy == SORTING_KEYS.PRICE_ASC) {
+        return b.Rate - a.Rate
+      } if (orderingType.orderBy == SORTING_KEYS.PRICE_DESC) {
+        return a.Rate - b.Rate
+      }
+      return 0
 
-        return true
-      })
-      ?.filter(coach => {
-        if (coach.Role == "Player") return true
-        if (!orderingType.dayOfWeek || orderingType.dayOfWeek.length == 0) return true
-        if (coach.Availabilities.length == 0) return false
+    })
+    ?.filter(coach => {
+      if (coach.Role == "Player") return true
+      if (orderingType.rate) {
+        return rateFilter(coach, orderingType.rate)
+      }
 
-        return coach.Availabilities.some(a => orderingType.dayOfWeek.find(dow => a.Day == dow) != null)
+      return true
+    })
+    ?.filter(coach => {
+      if (coach.Role == "Player") return true
+      if (!orderingType.dayOfWeek || orderingType.dayOfWeek.length == 0) return true
+      if (coach.Availabilities.length == 0) return false
 
-      })
-      ?.filter(coach => {
-        if (coach.Role == "Player") return true
-        if (!orderingType.level) return true
+      return coach.Availabilities.some(a => orderingType.dayOfWeek.find(dow => a.Day == dow) != null)
 
-        return coach.Level == orderingType.level
-      })
+    })
+    ?.filter(coach => {
+      if (coach.Role == "Player") return true
+      if (!orderingType.level) return true
 
-  }
+      return coach.Level == orderingType.level
+    })
 
-  const NotificationCountComponent = ({currentNotifications}) => {
+  const NotificationCountComponent = ({ currentNotifications }) => {
     console.log(currentNotifications.length);
     return (
-      <Text style={{color: 'white', textAlign: 'center', fontSize: 12}}>
+      <Text style={{ color: 'white', textAlign: 'center', fontSize: 12 }}>
         {currentNotifications.filter((i) => i.IsRead == false).length}
       </Text>
     );
@@ -463,7 +455,7 @@ const Search = (props) => {
     const [notifications] = useGlobalState('notifications');
 
     return (
-      <View style={{marginTop: 7, alignItems: 'center'}}>
+      <View style={{ marginTop: 7, alignItems: 'center' }}>
         <View
           style={{
             marginTop: 'auto',
@@ -493,7 +485,7 @@ const Search = (props) => {
             <Icon
               type="Feather"
               name="bell"
-              style={{color: 'black', fontSize:25}}
+              style={{ color: 'black', fontSize: 25 }}
             />
           </View>
         </View>
@@ -502,37 +494,37 @@ const Search = (props) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <Header
-        hideCreatePost={true}
+        hideCreatePost
         navigate={props.navigation.navigate}
-        // customButton={() => {
-        //   return (
-        //     <>
-        //       <View style={{width: '70%'}} />
-        //       <TouchableOpacity
-        //         onPress={() => {
-        //           props.navigation.navigate('Notification');
-        //         }}
-        //         style={{marginHorizontal: 10}}>
-        //         <BadgeNotification />
-        //       </TouchableOpacity>
-        //       <TouchableOpacity
-        //         onPress={() => {
-        //           props.navigation.navigate('LastMessage');
-        //         }}
-        //         style={{marginHorizontal: 10}}>
-        //         <Icon
-        //           type="Feather"
-        //           name="message-square"
-        //           style={{color: 'black', fontSize: 25}}
-        //         />
-        //       </TouchableOpacity>
-        //     </>
-        //   );
-        // }}
+      // customButton={() => {
+      //   return (
+      //     <>
+      //       <View style={{width: '70%'}} />
+      //       <TouchableOpacity
+      //         onPress={() => {
+      //           props.navigation.navigate('Notification');
+      //         }}
+      //         style={{marginHorizontal: 10}}>
+      //         <BadgeNotification />
+      //       </TouchableOpacity>
+      //       <TouchableOpacity
+      //         onPress={() => {
+      //           props.navigation.navigate('LastMessage');
+      //         }}
+      //         style={{marginHorizontal: 10}}>
+      //         <Icon
+      //           type="Feather"
+      //           name="message-square"
+      //           style={{color: 'black', fontSize: 25}}
+      //         />
+      //       </TouchableOpacity>
+      //     </>
+      //   );
+      // }}
       />
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <View
           style={{
             borderColor: '#DEDEDE',
@@ -592,7 +584,7 @@ const Search = (props) => {
         </View>
         {displayFilter() && (
           <TouchableOpacity
-            style={{justifyContent: 'center', alignItems: 'center'}}>
+            style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Icon
               onPress={() => {
                 setModalVisible(true);
@@ -608,27 +600,27 @@ const Search = (props) => {
       </View>
       <Tabs
         onChangeTab={(current) => setCurrentTab(current)}
-        tabBarUnderlineStyle={{backgroundColor: Colors.nl_yellow}}>
+        tabBarUnderlineStyle={{ backgroundColor: Colors.nl_yellow }}>
         <Tab
           textStyle={tabStyle}
           activeTextStyle={activeTabStyle}
-          tabStyle={{backgroundColor: 'white'}}
-          activeTabStyle={{backgroundColor: 'white'}}
+          tabStyle={{ backgroundColor: 'white' }}
+          activeTabStyle={{ backgroundColor: 'white' }}
           heading={TabsName[0]}>
-          <View style={{padding: '2%'}}>
+          <View style={{ padding: '2%' }}>
             {searchCoachesReq.data &&
               parseResults(searchCoachesReq.data[propsToIterate[0]]).length ==
-                0 && <NoResultMessage />}
+              0 && <NoResultMessage />}
             {searchCoachesReq.data &&
               searchCoachesReq.data[propsToIterate[0]].length != 0 && (
                 <FlatList
-                  contentContainerStyle={{backgroundColor: '#00000020'}}
+                  contentContainerStyle={{ backgroundColor: '#00000020' }}
                   keyExtractor={(item) => item.Id}
                   data={parseResults(searchCoachesReq.data[propsToIterate[0]])}
-                  renderItem={({item}) => (
+                  renderItem={({ item }) => (
                     <PostSearchCard
-                      hideCoachLevel={true}
-                      hideAddress={true}
+                      hideCoachLevel
+                      hideAddress
                       onPress={() =>
                         NavigationService.navigate(screensToNavigate[0], {
                           player: item,
@@ -636,7 +628,7 @@ const Search = (props) => {
                         })
                       }
                       {...item}
-                      hideHeartIcon={true}
+                      hideHeartIcon
                     />
                   )}
                 />
@@ -646,22 +638,22 @@ const Search = (props) => {
         <Tab
           textStyle={tabStyle}
           activeTextStyle={activeTabStyle}
-          tabStyle={{backgroundColor: 'white'}}
-          activeTabStyle={{backgroundColor: 'white'}}
+          tabStyle={{ backgroundColor: 'white' }}
+          activeTabStyle={{ backgroundColor: 'white' }}
           heading={TabsName[1]}>
-          <View style={{padding: '2%'}}>
+          <View style={{ padding: '2%' }}>
             {searchCoachesReq.data &&
               parseResults(searchCoachesReq.data[propsToIterate[1]]).length ==
-                0 && <NoResultMessage />}
+              0 && <NoResultMessage />}
             {searchCoachesReq.data &&
               searchCoachesReq.data[propsToIterate[1]].length != 0 && (
                 <FlatList
-                  contentContainerStyle={{backgroundColor: '#00000020'}}
+                  contentContainerStyle={{ backgroundColor: '#00000020' }}
                   keyExtractor={(item) => item.Id}
                   data={parseResults(searchCoachesReq.data[propsToIterate[1]])}
-                  renderItem={({item}) => (
+                  renderItem={({ item }) => (
                     <PostSearchCard
-                      hideAddress={true}
+                      hideAddress
                       onPress={() =>
                         NavigationService.navigate(screensToNavigate[1], {
                           player: item,
@@ -669,7 +661,7 @@ const Search = (props) => {
                         })
                       }
                       {...item}
-                      hideHeartIcon={true}
+                      hideHeartIcon
                     />
                   )}
                 />
@@ -680,15 +672,15 @@ const Search = (props) => {
         <Tab
           textStyle={tabStyle}
           activeTextStyle={activeTabStyle}
-          tabStyle={{backgroundColor: 'white'}}
-          activeTabStyle={{backgroundColor: 'white'}}
+          tabStyle={{ backgroundColor: 'white' }}
+          activeTabStyle={{ backgroundColor: 'white' }}
           heading="Featured">
           {searchCoachesReq.data &&
             searchCoachesReq.data?.Featured?.length == 0 && <NoResultMessage />}
           {searchCoachesReq.data &&
             searchCoachesReq.data?.Featured?.length != 0 && (
               <FlatList
-                contentContainerStyle={{backgroundColor: '#00000020'}}
+                contentContainerStyle={{ backgroundColor: '#00000020' }}
                 keyExtractor={(item) => item.Id}
                 data={searchCoachesReq?.data?.Featured.sort((a, b) => {
                   if (
@@ -706,14 +698,14 @@ const Search = (props) => {
                   }
                   return 0;
                 })}
-                renderItem={({item, index}) => {
+                renderItem={({ item, index }) => {
                   console.log(
                     `${item.Id} - ${item.FullName} - ${item.EmailID} - ${index}`,
                   );
 
                   return (
                     <PostSearchCard
-                      hideAddress={true}
+                      hideAddress
                       onPress={() =>
                         NavigationService.navigate(screensToNavigate[1], {
                           player: item,
@@ -721,7 +713,7 @@ const Search = (props) => {
                         })
                       }
                       {...item}
-                      hideHeartIcon={true}
+                      hideHeartIcon
                     />
                   );
                 }}

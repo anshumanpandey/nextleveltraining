@@ -1,11 +1,11 @@
 import useAxios from "axios-hooks";
 import Axios from "axios";
 import { useEffect, useState } from "react"
-import { useGlobalState } from "../state/GlobalState";
-import { API_BASE_URL } from '../api/AxiosBootstrap';
 import { lightFormat, isAfter, endOfMonth, setMonth } from 'date-fns';
 import moment from 'moment'
 import color from 'color'
+import { API_BASE_URL } from '../api/AxiosBootstrap';
+import { useGlobalState } from "../state/GlobalState";
 import Colors from "../constants/color";
 
 const getWeeksDay = (except) => {
@@ -13,7 +13,7 @@ const getWeeksDay = (except) => {
     return daysInWeek.filter(d => !except.includes(d))
 }
 
-var getDaysArray = function (s, e) { for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) { a.push(new Date(d)); } return a; };
+const getDaysArray = function (s, e) { for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) { a.push(new Date(d)); } return a; };
 
 const UseMultipleAxioHook = (config) => {
     const [token] = useGlobalState('token');
@@ -23,17 +23,13 @@ const UseMultipleAxioHook = (config) => {
 
     const fetch = (con) => {
         setLoading(true)
-        const finalConfig = (con || config).map(c => {
-            return {
-                ...c,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        const finalConfig = (con || config).map(c => ({
+            ...c,
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        })
-        return Promise.all(finalConfig.map(c => {
-            return Axios(c)
         }))
+        return Promise.all(finalConfig.map(c => Axios(c)))
             .then((r) => {
                 setLoading(false)
                 setData(r.map(d => d.data))
@@ -68,18 +64,16 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         const newState = {}
         const firstOfMonth = moment().startOf("month").startOf("day")
         while (firstOfMonth.isBefore(moment(), "day")) {
-            newState[firstOfMonth.toDate().toISOString().split('T')[0]] = { customStyles: { container: { backgroundColor: 'gray'} }, disabled: true }
+            newState[firstOfMonth.toDate().toISOString().split('T')[0]] = { customStyles: { container: { backgroundColor: 'gray' } }, disabled: true }
             firstOfMonth.add(1, "day")
         }
         setPastDates(newState)
     }, [])
 
-    const getTimespansPerDate = (date, timespans) => {
-        return timespans.filter(timespan => {
-            const formattedDate = timespan.BookingDate.split("T")[0]
-            return formattedDate == date
-        })
-    }
+    const getTimespansPerDate = (date, timespans) => timespans.filter(timespan => {
+        const formattedDate = timespan.BookingDate.split("T")[0]
+        return formattedDate == date
+    })
 
     const selectRange = (date) => {
         if (!startDate && !endDate) {
@@ -118,10 +112,10 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         let newState = { ...multipleDates }
 
         if (multipleDates[date]) {
-            const { [date]: toIgnore , ...rest} = newState
+            const { [date]: toIgnore, ...rest } = newState
             newState = { ...rest }
         } else {
-            newState[date] = { startingDay: true, customStyles: { container: { backgroundColor: Colors.nl_yellow } }}
+            newState[date] = { startingDay: true, customStyles: { container: { backgroundColor: Colors.nl_yellow } } }
         }
         setMultipleDates(newState)
     }
@@ -160,24 +154,22 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
             getAvailablesDates(axiosReq)
                 .then(r => {
                     console.log(r.data)
-                    const datesToCheck = r.data.map(timeSpan => {
-                        return timeSpan.BookingDate.split("T")[0]
-                    })
-                    .reduce((newArray, next) => {
-                        const temp = new Set(newArray)
-                        temp.add(next)
-                        return Array.from(temp.values())
-                    }, [])
+                    const datesToCheck = r.data.map(timeSpan => timeSpan.BookingDate.split("T")[0])
+                        .reduce((newArray, next) => {
+                            const temp = new Set(newArray)
+                            temp.add(next)
+                            return Array.from(temp.values())
+                        }, [])
 
                     datesToCheck.forEach(d => {
                         const bookedDay = bookedDays[d]
 
                         if (bookedDay) {
-                            //console.log("bookedDay", bookedDay)
-                            //console.log("getTimespansPerDate", getTimespansPerDate(d, r.data).length)
-                            
+                            // console.log("bookedDay", bookedDay)
+                            // console.log("getTimespansPerDate", getTimespansPerDate(d, r.data).length)
+
                             if (bookedDay.total >= getTimespansPerDate(d, r.data).length) {
-                                bookedDays[d] = { customStyles: { container: { backgroundColor: 'gray'} }, disabled: true }
+                                bookedDays[d] = { customStyles: { container: { backgroundColor: 'gray' } }, disabled: true }
                             } else {
                                 bookedDays[d] = { selected: true, customStyles: { container: { backgroundColor: Colors.s_blue } } }
                             }
@@ -195,8 +187,8 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     }
 
     const markDayOfWeekNonAvailable = (dayOfWeek) => {
-        var dayOfW = moment().startOf('month')
-        var month = dayOfW.month();
+        let dayOfW = moment().startOf('month')
+        const month = dayOfW.month();
 
         const dayArr = []
         while (month === dayOfW.month()) {
@@ -207,7 +199,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         }
         const newDate = {}
         dayArr.forEach(d => {
-            newDate[d] = { disabled: true, customStyles: { container: { backgroundColor: 'gray'} } }
+            newDate[d] = { disabled: true, customStyles: { container: { backgroundColor: 'gray' } } }
         })
 
         setNonAvailableDays((p) => ({ ...p, ...newDate }))
@@ -226,3 +218,5 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         endDate
     }
 }
+
+export default UseNLMarkedDates

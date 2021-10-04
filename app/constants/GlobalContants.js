@@ -1,4 +1,4 @@
-const GlobalContants = {
+/* const GlobalContants = {
     ENV: 'LIVE',
     FEATURED_PRICE: '15',
     BOOKING_COMISSION: 2,
@@ -16,18 +16,18 @@ const GlobalContants = {
         accountName: '', // [Android] specifies an account name on the device that should be used
         iosClientId: '669575831507-r84633mtfqc26al0917hep98i2mse110.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     }
-}
+} */
 
 
-//TEST CREDENTIALS
-/*const GlobalContants = {
+// TEST CREDENTIALS
+const GlobalContants = {
     ENV: 'TEST',
-    FEATURED_PRICE:'20',
+    FEATURED_PRICE: '20',
     BOOKING_COMISSION: 2,
-    PAYPAL_CLIENT_ID:'AS7OSbMNJhiMOE9IlFst44IhkGiRXmttKDa20ovXwQvS3WiU7enHhjeglB-vwgHYkeQ8MvIUORS4LPOM',
-    PAYPAL_CLIENT_SECRET:'EC8lbXoww3XPmnabMFsup2tt6_N9duhvKRn7619rCLHrejFN513BoXMuauPIrcLYfN20TwpPLvFeHJD9',
+    PAYPAL_CLIENT_ID: 'AS7OSbMNJhiMOE9IlFst44IhkGiRXmttKDa20ovXwQvS3WiU7enHhjeglB-vwgHYkeQ8MvIUORS4LPOM',
+    PAYPAL_CLIENT_SECRET: 'EC8lbXoww3XPmnabMFsup2tt6_N9duhvKRn7619rCLHrejFN513BoXMuauPIrcLYfN20TwpPLvFeHJD9',
     PAYPAL_TOKEN_URL: 'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-    PAYPAL_PAYMENT_URL:'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+    PAYPAL_PAYMENT_URL: 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
     PAYPAL_CAPTURE_URL: 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
     GOOGLE_SIGNIN_DATA: {
         scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -39,7 +39,7 @@ const GlobalContants = {
         accountName: '', // [Android] specifies an account name on the device that should be used
         iosClientId: '669575831507-r84633mtfqc26al0917hep98i2mse110.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     }
-}*/
+}
 
 
 export default GlobalContants;

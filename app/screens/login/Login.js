@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, Image, Alert, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import { GoogleSignin } from 'react-native-google-signin';
 import appleAuth, {
@@ -7,28 +7,26 @@ import appleAuth, {
   AppleAuthRequestScope,
   AppleAuthError
 } from '@invertase/react-native-apple-authentication';
-var jwtDecode = require('jwt-decode');
 import { LoginManager, AccessToken } from "react-native-fbsdk";
-import Images from '../../constants/image'
-import styles from './styles.js';
 import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Spinner, Input as TextInput } from 'native-base';
+import DeviceInfo from 'react-native-device-info';
+import JwtDecode from 'jwt-decode';
+import { StackActions } from 'react-navigation';
+import Images from '../../constants/image'
+import styles from './styles';
 import ErrorLabel from '../../components/ErrorLabel';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { askToBefeatured, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import Screen from '../../utils/screen';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
-import DeviceInfo from 'react-native-device-info';
-import JwtDecode from 'jwt-decode';
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken';
-import { NavigationActions, StackActions } from 'react-navigation';
 import GlobalContants from '../../constants/GlobalContants';
 
 const Login = (props) => {
   const [role, setRole] = useState();
-  const [{ data, loading, error }, login] = useAxios({
+  const [{ loading }, login] = useAxios({
     url: '/Account/Login',
     method: 'POST',
   }, { manual: true })
@@ -52,9 +50,7 @@ const Login = (props) => {
     method: 'POST'
   }, { manual: true })
 
-  const isLoginDisabled = () => {
-    return loading || FBloginReq.loading || getUserReq.loading || googeReq.loading || appleReq.loading
-  }
+  const isLoginDisabled = () => loading || FBloginReq.loading || getUserReq.loading || googeReq.loading || appleReq.loading
 
   useEffect(() => {
     GoogleSignin.configure(GlobalContants.GOOGLE_SIGNIN_DATA);
@@ -71,7 +67,7 @@ const Login = (props) => {
   }, [])
 
   const redirectAferLogin = () => {
-    const resetAction = StackActions.navigate({ routeName: 'MainStack' })
+    const resetAction = StackActions.replace({ routeName: 'MainStack' })
     props.navigation.dispatch(resetAction);
     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.GOTO, state: 'Search' })
   }
@@ -87,7 +83,7 @@ const Login = (props) => {
         ],
       });
 
-      if (appleAuthRequestResponse['realUserStatus']) {
+      if (appleAuthRequestResponse.realUserStatus) {
         console.log(appleAuthRequestResponse)
         if (appleAuthRequestResponse.email) {
           await AsyncStorage.setItem("appleEmail", appleAuthRequestResponse.email)
@@ -148,7 +144,6 @@ const Login = (props) => {
           <Image source={Images.Mlogo} />
           <Text style={styles.login_logo_text}>Sign In</Text>
         </View>
-
         <Formik
           initialValues={{ emailID: '', password: '' }}
           validate={(values) => {
@@ -189,7 +184,7 @@ const Login = (props) => {
                 <View style={styles.login_info_view}>
                   <TextInput
                     style={{ color: "black" }}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Email ID"
                     keyboardType="email-address"
                     onChangeText={handleChange('emailID')}
@@ -201,9 +196,9 @@ const Login = (props) => {
                 <View style={styles.login_info_view}>
                   <TextInput
                     style={{ color: "black" }}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Password"
-                    secureTextEntry={true}
+                    secureTextEntry
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                     value={values.password}
@@ -255,9 +250,7 @@ const Login = (props) => {
                   if (result.isCancelled) throw new Error("Login cancelled")
                   return AccessToken.getCurrentAccessToken()
                 })
-                  .then(({ accessToken }) => {
-                    return RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken }))
-                  })
+                  .then(({ accessToken }) => RequestDeviceToken().then(deviceToken => ({ deviceToken, accessToken })))
                   .then(({ accessToken, deviceToken }) => FBlogin({ data: { featured: props.navigation.getParam('isFeatured'), deviceToken, deviceType: Platform.OS, deviceID: DeviceInfo.getUniqueId(), role: props.navigation.getParam('role', role), authenticationToken: accessToken } }))
                   .then((r) => {
                     dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOKEN, state: r.data })
@@ -274,14 +267,14 @@ const Login = (props) => {
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               disabled={isLoginDisabled()}
               onPress={async () => {
                 try {
                   const deviceToken = await RequestDeviceToken()
                   await GoogleSignin.hasPlayServices();
+                  console.log("has service")
                   const userInfo = await GoogleSignin.signIn();
-                  console.log(userInfo, "token =>", deviceToken)
                   loginWithGoogle({
                     data: {
                       "name": `${userInfo.user.givenName} ${userInfo.user.familyName}`,
@@ -312,7 +305,7 @@ const Login = (props) => {
               style={[styles.google_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1, marginTop: '5%' }]}
             >
               <Text style={styles.google_title}>Google +</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {Platform.OS != "android" && (
               <AppleButton
                 buttonStyle={AppleButton.Style.BLACK}
@@ -327,7 +320,7 @@ const Login = (props) => {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </ScrollView >
   )
 }
 

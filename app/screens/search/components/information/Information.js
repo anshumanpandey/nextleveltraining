@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect, useCallback} from 'react'
+import React, { Component, useState, useEffect, useCallback } from 'react'
 import {
   View,
   Image,
@@ -7,37 +7,37 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native'
+import { Icon, Spinner } from 'native-base'
+import StarRating from 'react-native-star-rating'
+import useAxios from 'axios-hooks'
+import getDistance from 'geolib/es/getDistance'
+import { StackActions, NavigationActions } from 'react-navigation'
 import Images from '../../../../constants/image'
 import styles from './information-style'
-import {Icon, Spinner} from 'native-base'
 import NavigationService from '../../../../navigation/NavigationService'
-import StarRating from 'react-native-star-rating'
 import InformationTab from './informationTab'
 import MediaTab from './MediaTab'
 import ReviewTab from './ReviewTab'
-import useAxios from 'axios-hooks'
 import Tabs from './Tabs'
 import Colors from '../../../../constants/color'
-import getDistance from 'geolib/es/getDistance'
-import {getGlobalState, useGlobalState} from '../../../../state/GlobalState'
+import { getGlobalState, useGlobalState } from '../../../../state/GlobalState'
 import dimensions from '../../../../constants/dimensions'
-import {StackActions, NavigationActions} from 'react-navigation'
 import ConnectedWidget from '../../../../components/ConnectedWidget'
-var convert = require('convert-units')
+
+const convert = require('convert-units')
 
 const Information = props => {
   const [profile] = useGlobalState('profile')
   // console.log(profile)
   const coachId = props.navigation.getParam('Id')
 
-  const [token] = useGlobalState('token')
   const [selectedTab, setSelectedTab] = useState(0)
   const [milesAway, setMilesAway] = useState()
   const [verifiying, setVerifiying] = useState(false)
   const activeColor = Colors.nl_yellow
   const inActiveColor = 'gray'
 
-  const [getMessageExist, messageExist] = useAxios(
+  const [, messageExist] = useAxios(
     `/Users/MessagesExist/${coachId}`,
   )
 
@@ -58,7 +58,7 @@ const Information = props => {
       setMilesAway(-1)
     } else {
       const meters = getDistance(
-        {latitude: profile.Lat, longitude: profile.Lng},
+        { latitude: profile.Lat, longitude: profile.Lng },
         {
           latitude: parseFloat(props.navigation.getParam('Lat')),
           longitude: parseFloat(props.navigation.getParam('Lng')),
@@ -82,26 +82,24 @@ const Information = props => {
     return () => focusListener?.remove()
   }, [])
 
-  // console.log(props.navigation.getParam("editable", false))
-
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
       <View style={styles.topContain}>
         <View style={styles.orgView}>
           <Icon
             onPress={() => NavigationService.goBack()}
             name="close"
             type="MaterialIcons"
-            style={{fontSize: 25, color: Colors.s_blue, padding: 10}}
+            style={{ fontSize: 25, color: Colors.s_blue, padding: 10 }}
           />
         </View>
-        <View style={[styles.infoContain, {marginTop: '5%'}]}>
+        <View style={[styles.infoContain, { marginTop: '5%' }]}>
           <TouchableOpacity
             disabled={!(props.navigation.getParam('editable', false) == true)}
             onPress={() =>
               props.navigation.navigate({
                 routeName: 'ProfilePic',
-                params: {goBackTo: 'Profile'},
+                params: { goBackTo: 'Profile' },
               })
             }>
             <View>
@@ -109,7 +107,7 @@ const Information = props => {
                 style={styles.user_pic}
                 source={
                   props.navigation.getParam('ProfileImage')
-                    ? {uri: props.navigation.getParam('ProfileImage')}
+                    ? { uri: props.navigation.getParam('ProfileImage') }
                     : Images.PlayerPlaceholder
                 }
               />
@@ -132,7 +130,7 @@ const Information = props => {
                 <Icon
                   type="EvilIcons"
                   name="pencil"
-                  style={{color: 'white', fontSize: 25}}
+                  style={{ color: 'white', fontSize: 25 }}
                 />
               </View>
             )}
@@ -145,13 +143,13 @@ const Information = props => {
               height: 60,
             }}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.userName}>
                 {props.navigation.getParam('FullName')}
               </Text>
             </View>
             {props.navigation.getParam('hideConnect', false) == false && (
-              <View style={{position: 'absolute', right: 0}}>
+              <View style={{ position: 'absolute', right: 0 }}>
                 <ConnectedWidget
                   userToConnectTo={props.navigation.getParam('Id')}
                 />
@@ -163,7 +161,7 @@ const Information = props => {
               <Text style={styles.headText}>
                 £ {props.navigation.getParam('Rate')}
               </Text>
-              <Text style={{fontSize: 12, color: 'gray'}}>per hour</Text>
+              <Text style={{ fontSize: 12, color: 'gray' }}>per hour</Text>
             </View>
             <View style={styles.rate_miles_view}>
               <View style={styles.ps_star_view}>
@@ -175,32 +173,32 @@ const Information = props => {
                     props.navigation.getParam('AverageBookingRating'),
                   ),
                 ) && (
-                  <StarRating
-                    disabled={false}
-                    maxStars={1}
-                    rating={props.navigation.getParam('AverageBookingRating')}
-                    fullStarColor={'#38A663'}
-                    starSize={12}
-                  />
-                )}
+                    <StarRating
+                      disabled={false}
+                      maxStars={1}
+                      rating={props.navigation.getParam('AverageBookingRating')}
+                      fullStarColor="#38A663"
+                      starSize={12}
+                    />
+                  )}
               </View>
             </View>
             {props.navigation.getParam('hideCoachButtons', false) == false && (
               <>
                 {milesAway && milesAway != -1 && (
                   <View
-                    style={[styles.rate_miles_view, {width: dimensions.pro40}]}>
-                    <Text style={[styles.headText, {textAlign: 'right'}]}>
+                    style={[styles.rate_miles_view, { width: dimensions.pro40 }]}>
+                    <Text style={[styles.headText, { textAlign: 'right' }]}>
                       {`${milesAway} miles`}
                     </Text>
                     <Text
-                      style={{fontSize: 12, textAlign: 'right', color: 'gray'}}>
-                      {'away'}
+                      style={{ fontSize: 12, textAlign: 'right', color: 'gray' }}>
+                      away
                     </Text>
                   </View>
                 )}
                 {milesAway == undefined && <Spinner color={Colors.s_blue} />}
-                {milesAway == -1 && <Text></Text>}
+                {milesAway == -1 && <Text />}
               </>
             )}
           </View>
@@ -208,10 +206,15 @@ const Information = props => {
           {props.navigation.getParam('hideCoachButtons', false) == false && (
             <View style={styles.buttonContain}>
               <TouchableOpacity
-                onPress={() =>
-                  NavigationService.navigate('BookNow', {
-                    coach: props.navigation.state.params,
-                  })
+                onPress={() => {
+                  if (props.navigation.getParam('Rate', "0").toString() === "0") {
+                    Alert.alert("Error", "Coaches do not have any rate assigned, bookings can not be done at this moment.")
+                  } else {
+                    NavigationService.navigate('BookNow', {
+                      coach: props.navigation.state.params,
+                    })
+                  }
+                }
                 }
                 style={[styles.button_view]}>
                 <Icon
@@ -235,51 +238,49 @@ const Information = props => {
                             SenderId: profile?.Id,
                             friendName: props.navigation.getParam('FullName'),
                           })
+                        } else if (profile.Credits > 0) {
+                          Alert.alert(
+                            'Are you sure?',
+                            'One credit will be consumed to start chatting with this coach',
+                            [
+                              {
+                                text: 'Cancel',
+                                onPress: () => { },
+                                style: 'cancel',
+                              },
+                              {
+                                text: 'Proceed',
+                                onPress: () => {
+                                  props.navigation.navigate('Message', {
+                                    RecieverId: props.navigation.getParam(
+                                      'Id',
+                                    ),
+                                    SenderId: profile?.Id,
+                                    friendName: props.navigation.getParam(
+                                      'FullName',
+                                    ),
+                                  })
+                                },
+                              },
+                            ],
+                          )
                         } else {
-                          if (profile.Credits > 0) {
-                             Alert.alert(
-                               'Are you sure?',
-                               'One credit will be consumed to start chatting with this coach',
-                               [
-                                 {
-                                   text: 'Cancel',
-                                   onPress: () => {},
-                                   style: 'cancel',
-                                 },
-                                 {
-                                   text: 'Proceed',
-                                   onPress: () => {
-                                     props.navigation.navigate('Message', {
-                                       RecieverId: props.navigation.getParam(
-                                         'Id',
-                                       ),
-                                       SenderId: profile?.Id,
-                                       friendName: props.navigation.getParam(
-                                         'FullName',
-                                       ),
-                                     })
-                                   },
-                                 },
-                               ],
-                             )
-                          } else {
-                            Alert.alert(
-                              'Not enough Credits',
-                              'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
-                              [
-                                {
-                                  text: 'Cancel',
-                                  onPress: () => {},
-                                  style: 'cancel',
-                                },
-                                {
-                                  text: 'Buy Now',
-                                  onPress: () =>
-                                    props.navigation.navigate('Cart'),
-                                },
-                              ],
-                            )
-                          }
+                          Alert.alert(
+                            'Not enough Credits',
+                            'You have 0 credits left in you wallet, Please purchase credits from settings tab.',
+                            [
+                              {
+                                text: 'Cancel',
+                                onPress: () => { },
+                                style: 'cancel',
+                              },
+                              {
+                                text: 'Buy Now',
+                                onPress: () =>
+                                  props.navigation.navigate('Cart'),
+                              },
+                            ],
+                          )
                         }
                       }
                     })
@@ -291,17 +292,17 @@ const Information = props => {
                 {verifiying ? (
                   <Spinner
                     color={Colors.s_yellow}
-                    style={{height: 17, marginRight: 10}}
+                    style={{ height: 17, marginRight: 10 }}
                     size="small"
                   />
                 ) : (
-                    <Icon
-                      type="MaterialIcons"
-                      name="comment"
-                      style={styles.post_comment}
-                    />
+                  <Icon
+                    type="MaterialIcons"
+                    name="comment"
+                    style={styles.post_comment}
+                  />
                 )}
-                <Text style={styles.btn_text}>{'Message'}</Text>
+                <Text style={styles.btn_text}>Message</Text>
               </TouchableOpacity>
             </View>
           )}

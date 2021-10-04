@@ -1,35 +1,29 @@
 import React, { Component, useState, useEffect, useRef, useCallback } from 'react'
-import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions, TextInput as RNTextInput } from 'react-native'
+import { View, FlatList, Image, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import { CheckBox, Icon, Spinner, Input as TextInput, Tabs, Tab } from 'native-base';
-import Header from '../../components/header/Header'
-import { Picker } from '@react-native-community/picker';
-import Images from "../../constants/image";
-import styles from "./CoachStyle";
-import NavigationService from '../../navigation/NavigationService';
-import NLToggleButton from '../../components/NLToggleButton';
-import { getGlobalState, useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import { axiosInstance } from '../../api/AxiosBootstrap';
+import Header from '../../../components/header/Header'
+import Images from "../../../constants/image";
+import styles from "../CoachStyle";
+import NavigationService from '../../../navigation/NavigationService';
+import NLToggleButton from '../../../components/NLToggleButton';
+import { getGlobalState, useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../../state/GlobalState';
+import { axiosInstance } from '../../../api/AxiosBootstrap';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment'
-import { Formik, FieldArray } from 'formik';
+import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import ErrorLabel from '../../components/ErrorLabel';
-import Colors from '../../constants/color.js';
+import ErrorLabel from '../../../components/ErrorLabel';
+import Colors from '../../../constants/color.js';
 import AsyncStorage from '@react-native-community/async-storage';
-import NLGooglePlacesAutocomplete from '../../components/NLGooglePlacesAutocomplete';
-import GlobalStyles from '../../constants/GlobalStyles';
-import { syncProfilePic, syncTrainingLocationImage } from '../../utils/SyncProfileAssets';
-import ImagePicker from 'react-native-image-picker';
+import GlobalStyles from '../../../constants/GlobalStyles';
 import Menu, { MenuItem } from 'react-native-material-menu';
-import Upload from 'react-native-background-upload'
-import { StackActions, NavigationActions, withNavigation } from 'react-navigation';
-import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess';
-import NLCropperImagePicker from '../../components/NLCropperImagePicker';
-import NLAddressSuggestionInput, { getFullSuggestionAddress } from '../../components/NLAddressSuggestionInput';
+import Dimension from '../../../constants/dimensions'
+import TrainingLocationFormModal from './TrainingLocationFormModal'
+import { NavigationActions, withNavigation } from 'react-navigation';
+import HasCompletedVerificationProcess from '../../../utils/HasCompletedVerificationProcess';
 
 const signupSegments = ['ABOUT ME', 'BANK ACCOUNT', 'AVAILABILITY', 'TRAINING LOCATION']
 const TEXT_COLOR = 'gray'
-const Width = Dimensions.get('window').width;
 
 class MultiStep extends Component {
 
@@ -109,7 +103,7 @@ class MultiStep extends Component {
 
         if (HasCompletedVerificationProcess(profile)) {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
-            NavigationService.navigate('Home')
+            //NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
             this.focusListener?.remove();
             return
@@ -117,7 +111,7 @@ class MultiStep extends Component {
 
         if (this.stepFourIsComplete(profile) && HasCompletedVerificationProcess(profile)) {
             dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE });
-            NavigationService.navigate('Home')
+            //NavigationService.navigate('Home')
             console.log('step four is completed, navigating to home')
             this.focusListener?.remove();
             return
@@ -193,14 +187,14 @@ class MultiStep extends Component {
 
     render() {
         return (
-          <View keyboardShouldPersistTaps="handled" style={{flex: 1}}>
-            <Header
-              toggleDrawer={this.props.navigation.toggleDrawer}
-              hideCreatePost={true}
-              title="Save Profile"
-            />
-            {this.about()}
-          </View>
+            <View keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+                <Header
+                    toggleDrawer={this.props.navigation.toggleDrawer}
+                    hideCreatePost={true}
+                    title="Save Profile"
+                />
+                {this.about()}
+            </View>
         )
     }
 
@@ -215,7 +209,10 @@ class MultiStep extends Component {
     }
     //bank account
     bankAccount() {
-        return (<BankAccountForm setSubmitFn={(fn) => this.setState({ bankSubmitFn: fn })} />)
+        console.log(this.props.navigation)
+        return (<BankAccountForm
+            navigation={this.props.navigation}
+            setSubmitFn={(fn) => this.setState({ bankSubmitFn: fn })} />)
     }
 
 
@@ -334,34 +331,34 @@ const TimeInput = ({ onSelected, value }) => {
     }, [value])
 
     return (
-      <>
-        {showPicker && (
-          <DateTimePickerModal
-            headerTextIOS={'Pick a Time'}
-            isVisible={showPicker}
-            mode="time"
-            pickerContainerStyleIOS={{
-              backgroundColor: '#d1d3d8',
-              justifyContent: 'center',
-            }}
-            onConfirm={d => {
-              setShowPicker(false)
-              //setDate(d)
-              onSelected(d)
-            }}
-            onCancel={() => setShowPicker(false)}
-          />
-        )}
-        <TouchableOpacity
-          style={{width: '70%', height: '80%', justifyContent: 'flex-end'}}
-          onPress={() => setShowPicker(true)}>
-          <View style={[styles.collapsedViewInner]}>
-            <Text style={{color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)'}}>
-              {hasValue() ? moment(date).format('hh:mm A') : '12:00 PM'}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </>
+        <>
+            {showPicker && (
+                <DateTimePickerModal
+                    headerTextIOS={'Pick a Time'}
+                    isVisible={showPicker}
+                    mode="time"
+                    pickerContainerStyleIOS={{
+                        backgroundColor: '#d1d3d8',
+                        justifyContent: 'center',
+                    }}
+                    onConfirm={d => {
+                        setShowPicker(false)
+                        //setDate(d)
+                        onSelected(d)
+                    }}
+                    onCancel={() => setShowPicker(false)}
+                />
+            )}
+            <TouchableOpacity
+                style={{ width: '70%', height: '80%', justifyContent: 'flex-end' }}
+                onPress={() => setShowPicker(true)}>
+                <View style={[styles.collapsedViewInner]}>
+                    <Text style={{ color: hasValue() ? 'black' : 'rgba(0,0,0,0.3)' }}>
+                        {hasValue() ? moment(date).format('hh:mm A') : '12:00 PM'}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        </>
     )
 }
 
@@ -515,6 +512,8 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
                 "isWorking": true,
             })
         }
+
+        console.log({ data })
 
         return doPost({ data })
             .then(() => axiosInstance({ url: '/Users/GetUser' }))
@@ -960,203 +959,12 @@ export const AvailabiltyForm = ({ setSubmitFn }) => {
     );
 }
 
-
-export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...params }) => {
-    const formikRef = useRef()
-    const [image, setImage] = useState()
-    const [profile] = useGlobalState('profile')
-    const [{ data, loading, error }, doPost] = useAxios({
-        url: '/Users/SaveTrainingLocation',
-        method: 'POST',
-    }, { manual: true })
-
-    const [getUserReq, getUserData] = useAxios({
-        url: '/Users/GetUser',
-    }, { manual: true })
-
-    useEffect(() => {
-        setSubmitFn && setSubmitFn(formikRef?.current?.submitForm)
-        formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
-        formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
-        formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
-        formikRef?.current?.setFieldValue("file", null)
-        formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
-        formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
-
-        if (params?.ImageUrl) {
-            formikRef?.current?.setFieldValue('file', { uri: params?.ImageUrl })
-        } else {
-            AsyncStorage.getItem((`Location-${params.Id}-file`).toString())
-                .then(img => {
-                    if (!img) return
-                    formikRef?.current?.setFieldValue('file', JSON.parse(img).file)
-                })
-        }
-
-    }, [params.Id, params.LocationName, params.LocationAddress])
-
-    useEffect(() => {
-        const focusListener = navigation?.addListener('didFocus', () => {
-            console.log(params?.Id)
-            formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
-            formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
-            formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
-            formikRef?.current?.setFieldValue("file", null)
-            formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
-            formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
-        })
-
-        const blurListener = navigation?.addListener('didBlur', () => {
-            formikRef?.current?.setFieldValue("trainingLocationId", undefined)
-            formikRef?.current?.setFieldValue("locationName", "")
-            formikRef?.current?.setFieldValue("address", "")
-            formikRef?.current?.setFieldValue("file", null)
-            formikRef?.current?.setFieldValue("lat", 0)
-            formikRef?.current?.setFieldValue("lng", 0)
-            formikRef?.current?.setErrors({
-                locationName: undefined,
-                address: undefined,
-            })
-        });
-
-        return () => {
-            focusListener?.remove()
-            blurListener?.remove()
-        }
-    }, [])
-
-    const signupIsDisabled = () => loading || getUserReq.loading
-
-    return (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
-            <Formik
-                innerRef={(r) => formikRef.current = r}
-                initialValues={{
-                    trainingLocationId: params.Id || undefined,
-                    locationName: params.LocationName || "",
-                    address: params.LocationAddress || "",
-                    file: params.ImageUrl || null,
-                    lat: params.Lat || 0,
-                    lng: params.Lng || 0
-                }}
-                validate={(values) => {
-                    const errors = {}
-
-                    if (!values.locationName) errors.locationName = 'Required'
-                    if (!values.address) errors.address = 'Required'
-
-                    return errors
-                }}
-                onSubmit={(values, { setFieldValue, setErrors, setTouched }) => {
-                    const data = {
-                        "trainingLocationId": values.trainingLocationId || undefined,
-                        "locationName": values.locationName,
-                        "locationAddress": values.address,
-                        "role": profile.Role,
-                        "playerOrCoachID": profile.Id,
-                        lat: values.lat,
-                        lng: values.lng
-                    }
-
-                    return doPost({ data })
-                        .then((r) => {
-                            if (values?.file?.uploadPath) {
-                                syncTrainingLocationImage(values.file, r.data.Id)
-                                delete values.file.data
-                                return AsyncStorage.setItem(`Location-${r.data.Id}-file`, JSON.stringify({ file: values.file, uploaded: false }))
-                            }
-                        })
-                        .then(r => getUserData())
-                        .then((r) => {
-                            if (onCreate) {
-                                onCreate(() => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }));
-                            } else {
-                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                            }
-                            setErrors({
-                                locationName: undefined,
-                                address: undefined,
-                                file: undefined,
-                            })
-                            setTouched({
-                                locationName: undefined,
-                                address: undefined,
-                                file: undefined,
-                            })
-
-                            setFieldValue("trainingLocationId", undefined)
-                            setFieldValue("locationName", "")
-                            setFieldValue("address", "")
-                            setFieldValue("file", null)
-                            setFieldValue("lat", 0)
-                            setFieldValue("lng", 0)
-                        })
-                }}
-            >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
-                    return (
-                        <>
-                            <View style={styles.containerCommon}>
-                                <View style={styles.inputContainer}>
-                                    <RNTextInput
-                                        style={{ height: 50, color: 'black', paddingLeft:5 }}
-                                        placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                        placeholder={"Location Name"}
-                                        onChangeText={handleChange('locationName')}
-                                        onBlur={handleBlur('locationName')}
-                                        value={values.locationName}
-                                    />
-                                </View>
-                                {errors.locationName && touched.locationName && <ErrorLabel text={errors.locationName} />}
-
-                                <NLAddressSuggestionInput
-                                    showList={true}
-                                    defaultValue={values.address}
-                                    onLocationSelected={(loc) => {
-                                        setFieldValue("address", getFullSuggestionAddress(loc))
-                                    }}
-                                />
-
-                                {errors.address && touched.address && <ErrorLabel text={errors.address} />}
-
-                                <View style={[styles.inputContainer, { marginTop: '2%' }]}>
-                                    <Text numberOfLines={1} style={{ paddingLeft:5, color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Training Location image"}</Text>
-                                </View>
-                                <NLCropperImagePicker onFileSelected={(file) => {
-                                    console.log(file)
-                                    setFieldValue("file", file)
-                                }} />
-                                {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
-                                {errors.file && touched.file && <ErrorLabel text={errors.file} />}
-
-                                {!setSubmitFn && (
-                                    <View style={styles.signup_btn_view}>
-                                        <TouchableOpacity
-                                            disabled={signupIsDisabled()}
-                                            style={[styles.buttonSave, { width: 200 }, signupIsDisabled() && GlobalStyles.disabled_button]}
-                                            onPress={handleSubmit}
-                                        >
-                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ color: 'white' }}>Save</Text>
-                                                {signupIsDisabled() && <Spinner color={Colors.s_yellow} />}
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
-                            </View>
-                        </>
-                    )
-                }}
-            </Formik>
-        </ScrollView>
-    );
-}
-
 export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
     const [triggerChange, setTriggerChange] = useState(true);
     const [submitFn, attachSubmitFn] = useState(null);
     const [currentTab, setCurrentTab] = useState(0);
     const [profilePic, setProfilePic] = useState();
+    const [showTrainingLocationModal, setShowTrainingLocationModal] = useState(false);
     const [profile] = useGlobalState('profile');
     const [token] = useGlobalState('token')
 
@@ -1197,211 +1005,213 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
     }, [profilePic])
 
     useEffect(() => {
+        setTriggerChange(o => !o)
         profileChecker()
     }, [profile])
 
     return (
-      <ScrollView>
-        <View style={styles.containerAbout}>
-          <TouchableOpacity
-            onPress={async () => {
-              const d = NavigationActions.navigate({
-                routeName: 'ProfilePic',
-                params: {goBackTo: props.goBackTo ? props.goBackTo : 'AboutMe'},
-              })
-              props.navigation.dispatch(d)
-            }}
-            style={{
-              position: 'relative',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              width: '25%',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}>
-            {triggerChange == true && (
-              <Image
-                resizeMode="stretch"
-                source={
-                  profilePic ? {uri: profilePic} : Images.PlayerPlaceholder
-                }
-                style={styles.profileImage}
-              />
-            )}
-            {triggerChange == false && (
-              <Image
-                resizeMode="stretch"
-                source={
-                  profilePic ? {uri: profilePic} : Images.PlayerPlaceholder
-                }
-                style={styles.profileImage}
-              />
-            )}
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'absolute',
-                width: Dimension.px30,
-                height: Dimension.px30,
-                backgroundColor: Colors.s_blue,
-                borderRadius: Dimension.px30 / 2,
-                right: 0,
-                top: 3,
-              }}>
-              <Icon
-                type="EvilIcons"
-                name="pencil"
-                style={{color: 'white', fontSize: 25}}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <Text style={{alignSelf: 'center', color: 'red'}}>
-            *Required
-          </Text>
-
-          <TouchableOpacity
-            onPress={() =>
-              handleOnCardPress({
-                title: 'About Me',
-                data: profile?.AboutUs,
-                goBackTo: props.goBackTo ? props.goBackTo : 'AboutMe',
-              })
-            }>
-            <View style={styles.cardContainer}>
-              <View style={styles.cardInner}>
-                <Text style={styles.textProfile}>About me</Text>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{color: Colors.s_blue, fontSize: 25}}
-                />
-              </View>
-              <View style={styles.cardContainer}>
-                <Text style={styles.profileDescription}>
-                  {profile?.AboutUs}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              handleOnCardPress({
-                title: 'Accomplishment',
-                data: profile?.Accomplishment,
-                goBackTo: 'AboutMe',
-              })
-            }>
-            <View style={styles.cardContainer}>
-              <View style={styles.cardInner}>
-                <Text style={styles.textProfile}>Accomplishment</Text>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{color: Colors.s_blue, fontSize: 25}}
-                />
-              </View>
-              <View style={styles.cardContainer}>
-                <Text style={styles.profileDescription}>
-                  {profile?.Accomplishment}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.cardContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                NavigationService.navigate('AddExperience', {
-                  title: 'Add Experience',
-                  cb: team => {},
-                  goBackTo: 'AboutMe',
-                })
-              }}>
-              <View style={styles.cardInner}>
-                <Text style={styles.textProfile}>Job Role</Text>
-                <Icon
-                  name="plus"
-                  type="EvilIcons"
-                  style={{fontSize: 30, color: Colors.s_yellow}}
-                />
-              </View>
-            </TouchableOpacity>
-            <View style={styles.cardContainer}>
-              {profile?.Experiences.map(e => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('AddExperience', {
-                        title: 'Add Experience',
-                        goBackTo: 'AboutMe',
-                        cb: team => {},
-                        ...e,
-                      })
+        <ScrollView>
+            <View style={styles.containerAbout}>
+                <TouchableOpacity
+                    onPress={async () => {
+                        const navigateParams = {
+                            routeName: 'ProfilePic',
+                            params: { goBackTo: props.goBackTo ? props.goBackTo : 'AboutMe' },
+                        }
+                        const d = NavigationActions.navigate(navigateParams)
+                        props.navigation.dispatch(d)
+                    }}
+                    style={{
+                        position: 'relative',
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                        width: '25%',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
                     }}>
-                    <View
-                      style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'rgba(0,0,0,0.1)',
-                      }}>
-                      <View style={styles.editView}>
-                        <Text style={{fontWeight: 'bold'}}>{e.Club}</Text>
-                        <Icon
-                          type="EvilIcons"
-                          name="pencil"
-                          style={{color: Colors.s_blue, fontSize: 25}}
+                    {triggerChange == true && (
+                        <Image
+                            resizeMode="stretch"
+                            source={
+                                profilePic ? { uri: profilePic } : Images.PlayerPlaceholder
+                            }
+                            style={styles.profileImage}
                         />
-                      </View>
-                      <Text>{e.JobPosition}</Text>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
-                        <Text> To </Text>
-
-                        {e.CurrentlyWorking == true && <Text> Till Date</Text>}
-                        {e.CurrentlyWorking == false && (
-                          <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>
-                        )}
-                      </View>
+                    )}
+                    {triggerChange == false && (
+                        <Image
+                            resizeMode="stretch"
+                            source={
+                                profilePic ? { uri: profilePic } : Images.PlayerPlaceholder
+                            }
+                            style={styles.profileImage}
+                        />
+                    )}
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute',
+                            width: Dimension.px30,
+                            height: Dimension.px30,
+                            backgroundColor: Colors.s_blue,
+                            borderRadius: Dimension.px30 / 2,
+                            right: 0,
+                            top: 3,
+                        }}>
+                        <Icon
+                            type="EvilIcons"
+                            name="pencil"
+                            style={{ color: 'white', fontSize: 25 }}
+                        />
                     </View>
-                  </TouchableOpacity>
-                )
-              })}
-            </View>
-          </View>
-          <View style={styles.cardContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                NavigationService.navigate('AddQualifications', {
-                  title: 'Add Experience',
-                  cb: team => {},
-                  goBackTo: 'AboutMe',
-                  Qualifications: profile?.Qualifications,
-                })
-              }}>
-              <View style={styles.cardInner}>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.textProfile}>Qualifications</Text>
-                </View>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{color: Colors.s_blue, fontSize: 25}}
-                />
-              </View>
-              {profile?.Qualifications && (
+                </TouchableOpacity>
+
+                <Text style={{ alignSelf: 'center', color: 'red' }}>
+                    *Required
+                </Text>
+
+                <TouchableOpacity
+                    onPress={() =>
+                        handleOnCardPress({
+                            title: 'About Me',
+                            data: profile?.AboutUs,
+                            goBackTo: props.goBackTo ? props.goBackTo : 'AboutMe',
+                        })
+                    }>
+                    <View style={styles.cardContainer}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>About me</Text>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        <View style={styles.cardContainer}>
+                            <Text style={styles.profileDescription}>
+                                {profile?.AboutUs}
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        handleOnCardPress({
+                            title: 'Accomplishment',
+                            data: profile?.Accomplishment,
+                            goBackTo: 'AboutMe',
+                        })
+                    }>
+                    <View style={styles.cardContainer}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>Accomplishment</Text>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        <View style={styles.cardContainer}>
+                            <Text style={styles.profileDescription}>
+                                {profile?.Accomplishment}
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.cardContainer}>
-                  {profile?.Qualifications.map(q => {
-                    return (
-                      <Text style={styles.profileDescription}>
-                        {q.Qualification}
-                      </Text>
-                    )
-                  })}
+                    <TouchableOpacity
+                        onPress={() => {
+                            NavigationService.navigate('AddExperience', {
+                                title: 'Add Experience',
+                                cb: team => { },
+                                goBackTo: 'AboutMe',
+                            })
+                        }}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>Job Role</Text>
+                            <Icon
+                                name="plus"
+                                type="EvilIcons"
+                                style={{ fontSize: 30, color: Colors.s_yellow }}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.cardContainer}>
+                        {profile?.Experiences.map(e => {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        NavigationService.navigate('AddExperience', {
+                                            title: 'Add Experience',
+                                            goBackTo: 'AboutMe',
+                                            cb: team => { },
+                                            ...e,
+                                        })
+                                    }}>
+                                    <View
+                                        style={{
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: 'rgba(0,0,0,0.1)',
+                                        }}>
+                                        <View style={styles.editView}>
+                                            <Text style={{ fontWeight: 'bold' }}>{e.Club}</Text>
+                                            <Icon
+                                                type="EvilIcons"
+                                                name="pencil"
+                                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                                            />
+                                        </View>
+                                        <Text>{e.JobPosition}</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text>{moment(e.StartDate).format('DD MMM YYYY')}</Text>
+                                            <Text> To </Text>
+
+                                            {e.CurrentlyWorking == true && <Text> Till Date</Text>}
+                                            {e.CurrentlyWorking == false && (
+                                                <Text>{moment(e.EndDate).format('DD MMM YYYY')}</Text>
+                                            )}
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
                 </View>
-              )}
-            </TouchableOpacity>
-          </View>
-          {/* <View style={styles.cardContainer}>
+                <View style={styles.cardContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            NavigationService.navigate('AddQualifications', {
+                                title: 'Add Experience',
+                                cb: team => { },
+                                goBackTo: 'AboutMe',
+                                Qualifications: profile?.Qualifications,
+                            })
+                        }}>
+                        <View style={styles.cardInner}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.textProfile}>Qualifications</Text>
+                            </View>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        {profile?.Qualifications && (
+                            <View style={styles.cardContainer}>
+                                {profile?.Qualifications.map(q => {
+                                    return (
+                                        <Text style={styles.profileDescription}>
+                                            {q.Qualification}
+                                        </Text>
+                                    )
+                                })}
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                </View>
+                {/* <View style={styles.cardContainer}>
             <TouchableOpacity
               onPress={() => {
                 NavigationService.navigate('AddDbsCertificate', {
@@ -1441,100 +1251,130 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
               </View>
             </TouchableOpacity>
           </View> */}
-          {/* <View style={styles.cardContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                NavigationService.navigate('VerificationId', {
-                  title: 'Add Experience',
-                  goBackTo: 'AboutMe',
-                  cb: team => {},
-                  ...profile.VerificationDocument,
-                })
-              }}>
-              <View style={styles.cardInner}>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.textProfile}>Valid ID</Text>
-                  {profile?.VerificationDocument?.Verified == true && (
-                    <Text
-                      style={{marginLeft: '5%', fontSize: 14, color: 'green'}}>
-                      Verified
-                    </Text>
-                  )}
-                  {(!profile?.VerificationDocument ||
-                    profile?.VerificationDocument.Verified == false) && (
-                    <Text
-                      style={{marginLeft: '5%', fontSize: 14, color: 'red'}}>
-                      Not Verified
-                    </Text>
-                  )}
+                <View style={styles.cardContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            NavigationService.navigate('VerificationId', {
+                                title: 'Add Experience',
+                                goBackTo: 'AboutMe',
+                                cb: team => { },
+                                ...profile.VerificationDocument,
+                            })
+                        }}>
+                        <View style={styles.cardInner}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.textProfile}>Valid ID</Text>
+                                {profile?.VerificationDocument?.Verified == true && (
+                                    <Text
+                                        style={{ marginLeft: '5%', fontSize: 14, color: 'green' }}>
+                                        Verified
+                                    </Text>
+                                )}
+                                {(!profile?.VerificationDocument ||
+                                    profile?.VerificationDocument.Verified == false) && (
+                                        <Text
+                                            style={{ marginLeft: '5%', fontSize: 14, color: 'red' }}>
+                                            Not Verified
+                                        </Text>
+                                    )}
+                            </View>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                    </TouchableOpacity>
                 </View>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{color: Colors.s_blue, fontSize: 25}}
-                />
-              </View>
-            </TouchableOpacity>
-          </View> */}
-          <TouchableOpacity
-            onPress={() =>
-              handleOnCardPress({
-                title: 'Price Per Hour',
-                data: profile.Rate,
-                screen: 'EditInput',
-                keyboardType: 'numeric',
-                goBackTo: 'AboutMe',
-              })
-            }>
-            <View style={styles.cardContainer}>
-              <View style={styles.cardInner}>
-                <Text style={styles.textProfile}>Price Per Hour</Text>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{color: Colors.s_blue, fontSize: 25}}
-                />
-              </View>
-              <View style={styles.cardContainer}>
-                <Text style={styles.profileDescription}>£ {profile?.Rate}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        handleOnCardPress({
+                            title: 'Price Per Hour',
+                            data: profile.Rate,
+                            screen: 'EditInput',
+                            keyboardType: 'numeric',
+                            goBackTo: 'AboutMe',
+                        })
+                    }>
+                    <View style={styles.cardContainer}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>Price Per Hour</Text>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        <View style={styles.cardContainer}>
+                            <Text style={styles.profileDescription}>£ {profile?.Rate}</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() =>
-              handleOnCardPress({
-                title: 'Travel Miles',
-                data: profile.TravelMile
-                  ? profile.TravelMile.TravelDistance
-                  : '',
-                screen: 'EditInput',
-                keyboardType: 'numeric',
-                goBackTo: 'AboutMe',
-              })
-            }>
-            <View style={styles.cardContainer}>
-              <View style={styles.cardInner}>
-                <Text style={styles.textProfile}>Travel Miles</Text>
-                <Icon
-                  type="EvilIcons"
-                  name="pencil"
-                  style={{color: Colors.s_blue, fontSize: 25}}
-                />
-              </View>
-              <View style={styles.cardContainer}>
-                <Text style={styles.profileDescription}>
-                  {profile?.TravelMile ? profile.TravelMile.TravelDistance : ''}
-                </Text>
-              </View>
+                <TouchableOpacity
+                    onPress={() =>
+                        handleOnCardPress({
+                            title: 'Travel Miles',
+                            data: profile.TravelMile
+                                ? profile.TravelMile.TravelDistance
+                                : '',
+                            screen: 'EditInput',
+                            keyboardType: 'numeric',
+                            goBackTo: 'AboutMe',
+                        })
+                    }>
+                    <View style={styles.cardContainer}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>Travel Miles</Text>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        <View style={styles.cardContainer}>
+                            <Text style={styles.profileDescription}>
+                                {profile?.TravelMile ? profile.TravelMile.TravelDistance : ''}
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() =>
+                        setShowTrainingLocationModal(true)
+                    }>
+                    <View style={styles.cardContainer}>
+                        <View style={styles.cardInner}>
+                            <Text style={styles.textProfile}>Training Location</Text>
+                            <Icon
+                                type="EvilIcons"
+                                name="pencil"
+                                style={{ color: Colors.s_blue, fontSize: 25 }}
+                            />
+                        </View>
+                        <View style={styles.cardContainer}>
+                            {profile?.TrainingLocations.length !== 0 ? profile.TrainingLocations.map(() => {
+                                return (<Text style={styles.profileDescription}>
+                                    TT
+                                </Text>);
+                            }) : (<Text style={styles.profileDescription}>
+                                No tranining locations
+                            </Text>)}
+                        </View>
+                    </View>
+                </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <TrainingLocationFormModal
+                afterCreation={() => setShowTrainingLocationModal(false)}
+                isVisible={showTrainingLocationModal}
+                onCancel={() => setShowTrainingLocationModal(false)}
+            />
+        </ScrollView>
     )
 })
 
-export const BankAccountForm = ({ setSubmitFn }) => {
+export const BankAccountForm = ({ setSubmitFn, navigation }) => {
     const [showModal, setShowModal] = useState(false)
     const formikRef = useRef()
     const menuRef = useRef()
@@ -1593,9 +1433,9 @@ export const BankAccountForm = ({ setSubmitFn }) => {
                         return doPost({ data })
                             .then((r) => getUserData())
                             .then((r) => {
-                                console.log(r.data)
                                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: null })
+                                navigation.goBack()
+                                // dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE, state: null })
                             })
                     }}
                 >

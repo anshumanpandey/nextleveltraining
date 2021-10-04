@@ -1,5 +1,6 @@
-import Colors from '../../constants/color'
 import { Dimensions, StyleSheet } from 'react-native'
+import Colors from '../../constants/color'
+
 const WINDOW_WIDTH = Dimensions.get('window').width;
 const guidelineBaseWidth = 375;
 
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     editView: {
         justifyContent: 'space-between',
         flexDirection: 'row'
-      },
+    },
 
 })
 export default styles;

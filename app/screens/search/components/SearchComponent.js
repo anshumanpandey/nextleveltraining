@@ -1,11 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import { View, FlatList, TextInput, Image } from 'react-native';
 import { Icon, Spinner } from 'native-base';
+import useAxios from 'axios-hooks'
 import PostSearchCard from './subcomponents/PostSearchCard';
 import Images from '../../../constants/image';
 import NavigationService from '../../../navigation/NavigationService';
 import { useGlobalState, dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../../state/GlobalState';
-import useAxios from 'axios-hooks'
 import Header from '../../../components/header/Header';
 
 const SearchComponent = (props) => {
@@ -13,7 +13,7 @@ const SearchComponent = (props) => {
   const [keyword, setKeyword] = useState('')
   const [coaches, setCoaches] = useState([])
 
-  //TODO: add missing data for post for each coach
+  // TODO: add missing data for post for each coach
   const [searchCoachesReq, searchCoaches] = useAxios({
     url: `/Users/GetCoaches`,
     method: 'POST',

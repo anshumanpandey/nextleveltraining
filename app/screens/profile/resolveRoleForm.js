@@ -1,5 +1,5 @@
 import React from 'react'
-import { AboutMeCoachForm, BankAccountForm, TrainingLocationForm, TravelForm, AvailabiltyForm } from './CoachProfile'
+import { AboutMeCoachForm, BankAccountForm, TrainingLocationForm, TravelForm, AvailabiltyForm } from './coachProfile/CoachProfile'
 import PlayerProfile from './Profile'
 
 const resolveRoleForm = (profile, formName = "AboutMe", params, attachFn) => {
@@ -11,12 +11,12 @@ const resolveRoleForm = (profile, formName = "AboutMe", params, attachFn) => {
             return <AboutMeCoachForm setSubmitFn={attachFn} />
         }
         if (profile.Role == "Player") {
-            return <PlayerProfile {...params} submit={true} />
+            return <PlayerProfile {...params} submit />
         }
     }
 
     if (formName == "BankAccount") {
-        return <BankAccountForm setSubmitFn={attachFn}/>
+        return <BankAccountForm setSubmitFn={attachFn} />
     }
 
     if (formName == "TrainingLocation") {

@@ -1,17 +1,16 @@
 import React, { Component, useEffect, useState } from 'react'
 import { View, Text, Image, Alert, TouchableOpacity, ScrollView } from 'react-native'
-import { GoogleSignin } from 'react-native-google-signin';
 import { LoginManager, AccessToken } from "react-native-fbsdk";
-import Images from '../../constants/image'
-import styles from './styles.js';
 import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Spinner, Input as TextInput } from 'native-base';
+import Images from '../../constants/image'
+import styles from './styles.js';
 import ErrorLabel from '../../components/ErrorLabel';
 import GlobalStyles from '../../constants/GlobalStyles';
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
 import Screen from '../../utils/screen';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Spinner, Input as TextInput } from 'native-base';
 import Colors from '../../constants/color';
 import NavigationService from '../../navigation/NavigationService';
 import InfoLabel from '../../components/InfoLabel';
@@ -31,9 +30,7 @@ const ForceChangePassword = (props) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
-  const isLoginDisabled = () => {
-    return loading
-  }
+  const isLoginDisabled = () => loading
 
   return (
     <ScrollView style={styles.login_layout}>
@@ -85,7 +82,7 @@ const ForceChangePassword = (props) => {
                 return getUserData()
               })
               .then((r) => {
-                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data})
+                dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.TOGGLE })
                 NavigationService.navigate("Home")
               })
@@ -96,42 +93,42 @@ const ForceChangePassword = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{ color: "black"}}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    style={{ color: "black" }}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Current Passsword"
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                     value={values.password}
-                    secureTextEntry={true}
+                    secureTextEntry
                   />
                 </View>
                 {errors.password && touched.password && <ErrorLabel text={errors.password} />}
 
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{ color: "black"}}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    style={{ color: "black" }}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="New Passsword"
                     onChangeText={handleChange('newPassword')}
                     onBlur={handleBlur('newPassword')}
                     value={values.newPassword}
-                    secureTextEntry={true}
+                    secureTextEntry
                   />
                 </View>
                 {errors.newPassword && touched.newPassword && <ErrorLabel text={errors.newPassword} />}
 
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{ color: "black"}}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    style={{ color: "black" }}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Confirm Passsword"
                     onChangeText={handleChange('confirmPassword')}
                     onBlur={handleBlur('confirmPassword')}
                     value={values.confirmPassword}
-                    secureTextEntry={true}
+                    secureTextEntry
                   />
                 </View>
-                <InfoLabel style={{ width: '85%' }} text={"Password should contain at least 1 number, 1 alphabet in caps and 1 special character."} />
+                <InfoLabel style={{ width: '85%' }} text="Password should contain at least 1 number, 1 alphabet in caps and 1 special character." />
                 {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
 
               </View>

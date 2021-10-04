@@ -1,11 +1,10 @@
 import React from 'react'
-import {View, TouchableOpacity, ScrollView, Text, Alert} from 'react-native'
-import Header from '../../components/header/Header'
-import {Icon} from 'native-base'
-import styles from './styles'
-import MapView, {Marker} from 'react-native-maps'
+import { View, TouchableOpacity, ScrollView, Text, Alert } from 'react-native'
+import { Icon } from 'native-base'
 import useAxios from 'axios-hooks'
-import {CreditIcon} from '../../components/styled'
+import Header from '../../components/header/Header'
+import styles from './styles'
+import { CreditIcon } from '../../components/styled'
 import {
   useGlobalState,
   dispatchGlobalState,
@@ -30,28 +29,26 @@ const LeadDetails = props => {
   const email = player.EmailID.split("@")
   const providers = email[1].split('.')
 
-  console.log(player)
-
   const [purchaseLeadReq, purchaseLead] = useAxios(
     {
       url: `/Users/PurchaseLead`,
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const [getUserReq, getUserData] = useAxios(
     {
       url: '/Users/GetUser',
     },
-    {manual: true},
+    { manual: true },
   )
 
   return (
-    <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
+    <View style={{ flex: 1, backgroundColor: '#F8F8FA' }}>
       <Header
         title="Customer Details"
-        hideCreatePost={true}
+        hideCreatePost
         customButton={() => (
           <Icon
             onPress={() => props.navigation.goBack()}
@@ -70,7 +67,7 @@ const LeadDetails = props => {
       <ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1, alignItems: 'center'}}>
+        contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
         <View
           style={{
             width: '100%',
@@ -83,7 +80,7 @@ const LeadDetails = props => {
             {player.Distance} meters away
           </Text> */}
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <Text
             style={{
               fontSize: 30,
@@ -93,7 +90,7 @@ const LeadDetails = props => {
             {player.FullName}
           </Text>
         </View>
-        <View style={{width: '100%', marginTop: 10}}>
+        <View style={{ width: '100%', marginTop: 10 }}>
           <Text
             style={{
               fontSize: 20,
@@ -102,7 +99,7 @@ const LeadDetails = props => {
             Football Coaching
           </Text>
         </View>
-        <View style={{width: '100%', marginTop: 10}}>
+        <View style={{ width: '100%', marginTop: 10 }}>
           <Text
             style={{
               fontSize: 20,
@@ -113,9 +110,9 @@ const LeadDetails = props => {
               : address}
           </Text>
         </View>
-        <View style={{width: '100%', marginTop: 20, flexDirection: 'row'}}>
+        <View style={{ width: '100%', marginTop: 20, flexDirection: 'row' }}>
           <Icon
-            onPress={() => {}}
+            onPress={() => { }}
             type="Feather"
             name="phone"
             style={{
@@ -129,13 +126,13 @@ const LeadDetails = props => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            {player.MobileNo ? `${player.MobileNo.substring(0,4)}*****`: '34*****798'}
+            {player.MobileNo ? `${player.MobileNo.substring(0, 4)}*****` : '34*****798'}
           </Text>
         </View>
 
-        <View style={{width: '100%', marginTop: 10, flexDirection: 'row'}}>
+        <View style={{ width: '100%', marginTop: 10, flexDirection: 'row' }}>
           <Icon
-            onPress={() => {}}
+            onPress={() => { }}
             type="Feather"
             name="mail"
             style={{
@@ -149,14 +146,13 @@ const LeadDetails = props => {
               fontSize: 18,
               paddingLeft: 15,
             }}>
-            {`${email[0].substring(0, 2)}****@${
-              providers[0]
-            }.${providers[1].substring(0, 1)}**`}
+            {`${email[0].substring(0, 2)}****@${providers[0]
+              }.${providers[1].substring(0, 1)}**`}
           </Text>
         </View>
 
-        <View style={{width: '100%', marginTop: 10, flexDirection: 'row'}}>
-          <CreditIcon style={{marginLeft: 10}} />
+        <View style={{ width: '100%', marginTop: 10, flexDirection: 'row' }}>
+          <CreditIcon style={{ marginLeft: 10 }} />
           <Text style={styles.creditText}>1 Credit</Text>
         </View>
 
@@ -204,7 +200,7 @@ const LeadDetails = props => {
                 }}>
                 What is the student's current level of experience?
               </Text>
-              <Text style={{fontSize: 18, paddingLeft: 15}}>
+              <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                 {player.Experience}
               </Text>
             </View>
@@ -226,7 +222,7 @@ const LeadDetails = props => {
                 }}>
                 How old is the student?
               </Text>
-              <Text style={{fontSize: 18, paddingLeft: 15}}>{player.Age}</Text>
+              <Text style={{ fontSize: 18, paddingLeft: 15 }}>{player.Age}</Text>
             </View>
             <View
               style={{
@@ -247,12 +243,12 @@ const LeadDetails = props => {
                 }}>
                 Which kind of coaching would you consider?
               </Text>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 {player.CoachingType.map(item => (
-                  <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>{item}</Text>
                 ))}
               </View>
-              <Text style={{fontSize: 18, paddingLeft: 15}}></Text>
+              <Text style={{ fontSize: 18, paddingLeft: 15 }} />
             </View>
             <View
               style={{
@@ -273,9 +269,9 @@ const LeadDetails = props => {
                 }}>
                 Which day(s) would you consider for coaching?
               </Text>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 {player.Days.map(item => (
-                  <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>{item}</Text>
                 ))}
               </View>
             </View>
@@ -298,9 +294,9 @@ const LeadDetails = props => {
                 }}>
                 Which time(s) of day would you consider for coaching?
               </Text>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 {player.CoachingTime.map(item => (
-                  <Text style={{fontSize: 18, paddingLeft: 15}}>{item}</Text>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>{item}</Text>
                 ))}
               </View>
             </View>
@@ -324,7 +320,7 @@ const LeadDetails = props => {
                 }}>
                 How many times a week does the player want to train?
               </Text>
-              <Text style={{fontSize: 18, paddingLeft: 15}}>
+              <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                 {player.DaysOfWeek[0]}
               </Text>
             </View>
@@ -349,7 +345,7 @@ const LeadDetails = props => {
                   }}>
                   Price per hour?
                 </Text>
-                <Text style={{fontSize: 18, paddingLeft: 15}}>
+                <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                   {player.MaximumPrice}
                 </Text>
               </View>
@@ -378,7 +374,7 @@ const LeadDetails = props => {
                     }}>
                     What is the student's current level of experience?
                   </Text>
-                  <Text style={{fontSize: 18, paddingLeft: 15}}>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                     {lead.Experience}
                   </Text>
                 </View>
@@ -400,7 +396,7 @@ const LeadDetails = props => {
                     }}>
                     How old is the student?
                   </Text>
-                  <Text style={{fontSize: 18, paddingLeft: 15}}>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                     {lead.Age}
                   </Text>
                 </View>
@@ -423,14 +419,14 @@ const LeadDetails = props => {
                     }}>
                     Which kind of coaching would you consider?
                   </Text>
-                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     {lead.CoachingType.map(item => (
-                      <Text style={{fontSize: 18, paddingLeft: 15}}>
+                      <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                         {item}
                       </Text>
                     ))}
                   </View>
-                  <Text style={{fontSize: 18, paddingLeft: 15}}></Text>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }} />
                 </View>
                 <View
                   style={{
@@ -451,9 +447,9 @@ const LeadDetails = props => {
                     }}>
                     Which day(s) would you consider for coaching?
                   </Text>
-                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     {lead.Days.map(item => (
-                      <Text style={{fontSize: 18, paddingLeft: 15}}>
+                      <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                         {item}
                       </Text>
                     ))}
@@ -478,9 +474,9 @@ const LeadDetails = props => {
                     }}>
                     Which time(s) of day would you consider for coaching?
                   </Text>
-                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     {lead.CoachingTime.map(item => (
-                      <Text style={{fontSize: 18, paddingLeft: 15}}>
+                      <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                         {item}
                       </Text>
                     ))}
@@ -506,7 +502,7 @@ const LeadDetails = props => {
                     }}>
                     How many times a week does the player want to train?
                   </Text>
-                  <Text style={{fontSize: 18, paddingLeft: 15}}>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                     {lead.DaysOfWeek[0]}
                   </Text>
                 </View>
@@ -531,7 +527,7 @@ const LeadDetails = props => {
                       }}>
                       Price per hour?
                     </Text>
-                    <Text style={{fontSize: 18, paddingLeft: 15}}>
+                    <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                       {lead.MaximumPrice}
                     </Text>
                   </View>
@@ -546,7 +542,7 @@ const LeadDetails = props => {
                   justifyContent: 'center',
                   marginTop: 20,
                 }}>
-                <Text style={{fontSize: 18}}>
+                <Text style={{ fontSize: 18 }}>
                   Player hasn't filled his detail form yet.
                 </Text>
               </View>
@@ -556,13 +552,13 @@ const LeadDetails = props => {
 
         {about ? (
           <>
-            <View style={{width: '100%', marginTop: 30, marginLeft: 15}}>
-              <Text style={{fontSize: 18, paddingLeft: 15}}>
+            <View style={{ width: '100%', marginTop: 30, marginLeft: 15 }}>
+              <Text style={{ fontSize: 18, paddingLeft: 15 }}>
                 Additional Details
               </Text>
             </View>
 
-            <View style={{width: '100%', marginTop: 10, marginLeft: 15}}>
+            <View style={{ width: '100%', marginTop: 10, marginLeft: 15 }}>
               <Text
                 style={{
                   fontSize: 18,
@@ -606,8 +602,8 @@ const LeadDetails = props => {
             <TouchableOpacity
               onPress={() => {
                 if (profile.Credits > 0) {
-                  const data = {leadId: player.Id}
-                  purchaseLead({data})
+                  const data = { leadId: player.Id }
+                  purchaseLead({ data })
                     .then(res => {
                       if (res.status === 200) {
                         getUserData()
@@ -636,7 +632,7 @@ const LeadDetails = props => {
                     [
                       {
                         text: 'Cancel',
-                        onPress: () => {},
+                        onPress: () => { },
                         style: 'cancel',
                       },
                       {
@@ -656,7 +652,7 @@ const LeadDetails = props => {
                 justifyContent: 'center',
                 marginVertical: 20,
               }}>
-              <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
+              <Text style={{ color: 'white', fontSize: 17, fontWeight: '500' }}>
                 Buy Lead
               </Text>
             </TouchableOpacity>
@@ -667,8 +663,8 @@ const LeadDetails = props => {
               <TouchableOpacity
                 onPress={() => {
                   if (profile.Credits > 0) {
-                    const data = {leadId: lead.Id}
-                    purchaseLead({data})
+                    const data = { leadId: lead.Id }
+                    purchaseLead({ data })
                       .then(res => {
                         if (res.status === 200) {
                           getUserData()
@@ -697,7 +693,7 @@ const LeadDetails = props => {
                       [
                         {
                           text: 'Cancel',
-                          onPress: () => {},
+                          onPress: () => { },
                           style: 'cancel',
                         },
                         {
@@ -717,7 +713,7 @@ const LeadDetails = props => {
                   justifyContent: 'center',
                   marginVertical: 20,
                 }}>
-                <Text style={{color: 'white', fontSize: 17, fontWeight: '500'}}>
+                <Text style={{ color: 'white', fontSize: 17, fontWeight: '500' }}>
                   Buy Lead
                 </Text>
               </TouchableOpacity>

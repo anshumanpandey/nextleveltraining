@@ -1,35 +1,29 @@
-import React, { Component, useEffect, useState } from 'react'
+import React from 'react'
 import { View, Text, Image, Alert, TouchableOpacity, ScrollView } from 'react-native'
-import { GoogleSignin } from 'react-native-google-signin';
-import { LoginManager, AccessToken } from "react-native-fbsdk";
-import Images from '../../constants/image'
-import styles from './styles.js';
 import useAxios from 'axios-hooks'
 import { Formik } from 'formik';
+import { Spinner, Input as TextInput, Icon } from 'native-base';
+import Images from '../../constants/image'
+import styles from './styles';
 import ErrorLabel from '../../components/ErrorLabel';
 import GlobalStyles from '../../constants/GlobalStyles';
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS } from '../../state/GlobalState';
-import Screen from '../../utils/screen';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Spinner, Input as TextInput, Icon } from 'native-base';
 import Colors from '../../constants/color';
 import Header from '../../components/header/Header'
+import validations from '../../utils/validations'
 
 const ForgotPassword = (props) => {
-  const [{ data, loading, error }, resetPassword] = useAxios({
+  const [{ loading }, resetPassword] = useAxios({
     url: '/Account/ResetPassword',
     method: 'POST',
   }, { manual: true })
 
-  const isLoginDisabled = () => {
-    return loading
-  }
+  const isLoginDisabled = () => loading
 
   return (
     <ScrollView style={styles.login_layout}>
       <Header
         title="Forget Password"
-        hideCreatePost={true}
+        hideCreatePost
         customButton={() => (
           <Icon
             onPress={() => props.navigation.goBack()}
@@ -52,16 +46,22 @@ const ForgotPassword = (props) => {
         </View>
 
         <Formik
-          initialValues={{emailID: '', password: ''}}
+          initialValues={{ emailID: '', password: '' }}
           validate={values => {
             const errors = {}
 
-            if (!values.emailID) errors.emailID = 'Required'
+            const isValid = validations.isValidEmail(values.emailID)
+
+            if (!values.emailID) {
+              errors.emailID = 'Required'
+            } else if (!isValid) {
+              errors.emailID = 'Non valid email'
+            }
 
             return errors
           }}
           onSubmit={values => {
-            resetPassword({data: values}).then(r => {
+            resetPassword({ data: values }).then(() => {
               Alert.alert('', 'A new password has been sent to this email')
               props.navigation.navigate('Login')
             })
@@ -78,8 +78,8 @@ const ForgotPassword = (props) => {
               <View style={styles.login_info_input_view}>
                 <View style={styles.login_info_view}>
                   <TextInput
-                    style={{color: 'black'}}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    style={{ color: 'black' }}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Email ID"
                     keyboardType="email-address"
                     onChangeText={handleChange('emailID')}

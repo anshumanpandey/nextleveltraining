@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import resolveRoleForm from '../profile/resolveRoleForm'
 import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
-import { BankAccountForm } from '../profile/CoachProfile'
+import { BankAccountForm } from '../profile/coachProfile/CoachProfile'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { Spinner } from 'native-base'
 
@@ -26,9 +26,9 @@ const BankAccountScreen = (props) => {
                                     setIsSaving(true)
                                     if (submitFn) {
                                         submitFn()
-                                        .then(() => {
-                                            setIsSaving(false)
-                                        })
+                                            .then(() => {
+                                                setIsSaving(false)
+                                            })
                                     }
                                 }}>
                                 <Text style={{ color: 'black', opacity: isSaving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>

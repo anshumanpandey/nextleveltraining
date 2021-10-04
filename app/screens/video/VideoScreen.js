@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import resolveRoleForm from '../profile/resolveRoleForm'
-import { useGlobalState } from '../../state/GlobalState'
 import Video from 'react-native-video';
 import { View, Spinner, Text } from 'native-base';
-import Colors from '../../constants/color';
 import { Alert } from 'react-native';
+import Colors from '../../constants/color';
 
 const VideoScreen = (props) => {
     const [isLoading, setIsLoading] = useState(true)
@@ -37,14 +35,14 @@ const VideoScreen = (props) => {
                     setIsLoading(false)
                 }}
                 controls={isReady}
-                resizeMode={"cover"}
+                resizeMode="cover"
                 onError={() => {
                     console.log('onError')
                     setHasError(true)
                     setIsLoading(false)
                 }}
                 style={{
-                    position: isReady ? 'absolute':"relative", top: 0, bottom: 0, left: 0, right: 0
+                    position: isReady ? 'absolute' : "relative", top: 0, bottom: 0, left: 0, right: 0
                 }} />
         </>
     );

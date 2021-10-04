@@ -1,92 +1,95 @@
-import React, {useState, useRef, useEffect} from 'react'
-import {Text, TouchableOpacity, Platform, Dimensions} from 'react-native'
-import NLGooglePlacesAutocomplete from '../NLGooglePlacesAutocomplete'
-import GlobalStyles from '../../constants/GlobalStyles'
-import {Formik} from 'formik'
-import ErrorLabel from '../ErrorLabel'
-import {View, Input as TextInput} from 'native-base'
-import styles from './styles.js'
+import React, { useRef, useEffect } from 'react'
+import { Text, TouchableOpacity, Platform } from 'react-native'
+import { Formik } from 'formik'
+import { View, Input as TextInput } from 'native-base'
 import useAxios from 'axios-hooks'
 import AsyncStorage from '@react-native-community/async-storage'
+import DeviceInfo from 'react-native-device-info'
+import GlobalStyles from '../../constants/GlobalStyles'
+import ErrorLabel from '../ErrorLabel'
+import styles from './styles'
+import validations from '../../utils/validations'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
 } from '../../state/GlobalState'
-import DeviceInfo from 'react-native-device-info'
-import Screens from '../../utils/screen'
 import InfoLabel from '../InfoLabel'
-import messaging from '@react-native-firebase/messaging'
-import {FIREBASE_SENDER_ID} from '../../utils/Firebase'
-import {RequestDeviceToken} from '../../utils/firebase/RequestDeviceToken'
-import {NavigationActions, StackActions} from 'react-navigation'
-import NLAddressSuggestionInput, {
-  getFullSuggestionAddress,
-} from '../NLAddressSuggestionInput'
-import NLDropdownMenu from '../NLDropdownMenu'
+import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken'
+import NLAddressSuggestionInput from '../postcodeInput/NLAddressSuggestionInput'
+import { usePostCodeSearch } from '../postcodeInput/state';
 
 const NLUserDataForm = ({
   action = 'register',
   showsConfirmPassword = false,
-  isFeatured = false,
+  screenToGoBackTo,
+  setSubmitFn,
+  navigation,
   ...props
 }) => {
   const formikRef = useRef()
-  const [addresses, setAddresses] = useState([])
+  const postCodeSearch = usePostCodeSearch()
 
-  const [{data, loading, error}, register] = useAxios(
-    {
-      url: action == 'update' ? '/Users/UpdateProfile' : '/Account/Register',
-      method: 'POST',
-    },
-    {manual: true},
-  )
+  const [{ loading }, register] = useAxios({
+    url: action == 'update' ? '/Users/UpdateProfile' : '/Account/Register',
+    method: 'POST',
+  },
+    { manual: true })
 
-  const [loginReq, login] = useAxios(
-    {
-      url: '/Account/Login',
-      method: 'POST',
-    },
-    {manual: true},
-  )
+  const [loginReq, login] = useAxios({
+    url: '/Account/Login',
+    method: 'POST',
+  },
+    { manual: true })
 
-  const [getUserReq, getUserData] = useAxios(
-    {
-      url: '/Users/GetUser',
-    },
-    {manual: true},
-  )
+  const [getUserReq, getUserData] = useAxios({
+    url: '/Users/GetUser',
+  },
+    { manual: true })
 
   const signupIsDisabled = () =>
-    loading || loginReq.loading || getUserReq.loading
+    loading || loginReq.loading || getUserReq.loading || postCodeSearch.isSearching
 
   useEffect(() => {
-    props.setSubmitFn && props.setSubmitFn(formikRef.current?.submitForm)
-  }, [])
+    const focusListener = navigation.addListener('didBlur', () => formikRef.current?.setFieldValue("postCode", ""));
+    return () => {
+      focusListener?.remove();
+    }
+  }, [navigation])
+
+  useEffect(() => {
+    if (setSubmitFn) {
+      setSubmitFn(formikRef.current?.submitForm)
+    }
+  }, [setSubmitFn])
 
   return (
     <Formik
-      innerRef={r => (formikRef.current = r)}
+      innerRef={r => { formikRef.current = r }}
       initialValues={{
-        fullName: props.navigation.getParam('FullName') || '',
-        address: props.navigation.getParam('Address') || '',
-        emailID: props.navigation.getParam('EmailID') || '',
-        mobileNo: props.navigation.getParam('MobileNo') || '',
-        postCode: props.navigation.getParam('PostCode') || '',
-        state: props.navigation.getParam('state') || '',
-        role: props.navigation.getParam('role', 'Player'),
+        fullName: navigation.getParam('FullName') || '',
+        emailId: navigation.getParam('EmailID') || '',
+        username: navigation.getParam('Username') || '',
+        address: navigation.getParam('Address') || '',
+        mobileNo: navigation.getParam('MobileNo') || '',
+        postCode: navigation.getParam('PostCode') || '',
+        state: navigation.getParam('state') || '',
+        role: navigation.getParam('role', 'Player'),
         password: '',
         confirmPassword: '',
-        lat: props.navigation.getParam('Lat'),
-        lng: props.navigation.getParam('Lng'),
+        lat: navigation.getParam('Lat'),
+        lng: navigation.getParam('Lng'),
       }}
       validate={values => {
         const errors = {}
 
-        console.log(values)
         if (!values.fullName) errors.fullName = 'Required'
         if (!values.address) errors.address = 'Required'
-        if (!values.emailID) errors.emailID = 'Required'
         if (!values.mobileNo) errors.mobileNo = 'Required'
+        if (!values.emailId) {
+          errors.emailId = 'Required'
+        } else if (!validations.isValidEmail(values.emailId)) {
+          errors.emailId = 'Non valid Email'
+        }
         if (!values.postCode) errors.postCode = 'Required'
         if (!values.state) errors.state = 'Required'
 
@@ -121,25 +124,26 @@ const NLUserDataForm = ({
 
         return errors
       }}
-      onSubmit={async values => {
+      onSubmit={async v => {
+        const values = { ...v }
         const deviceToken = await RequestDeviceToken()
 
-        console.log('saving user data')
         if (props.hidePasswordInput == true) {
           delete values.password
         }
         values.deviceId = DeviceInfo.getUniqueId()
         values.deviceType = Platform.OS
         values.deviceToken = deviceToken
-        return register({data: values})
-          .then(r => {
+        return register({ data: values })
+          .then(() => AsyncStorage.setItem("justRegistered", "1"))
+          .then(() => {
             if (action == 'register') {
               AsyncStorage.setItem(
                 'role',
-                props.navigation.getParam('role', 'Player'),
+                navigation.getParam('role', 'Player'),
               )
               return login({
-                data: {emailID: values.emailID, password: values.password},
+                data: { emailId: values.emailId, password: values.password },
               })
             }
             return Promise.resolve()
@@ -158,6 +162,7 @@ const NLUserDataForm = ({
               type: GLOBAL_STATE_ACTIONS.PROFILE,
               state: r.data,
             })
+            postCodeSearch.clearState()
           })
           .catch(r => console.log(r))
       }}>
@@ -174,8 +179,8 @@ const NLUserDataForm = ({
           <View style={styles.signup_info_input_view}>
             <View style={styles.signup_info_view}>
               <TextInput
-                style={{color: 'black'}}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
+                style={{ color: 'black' }}
+                placeholderTextColor="rgba(0,0,0,0.3)"
                 placeholder="Full Name"
                 keyboardType="default"
                 onChangeText={handleChange('fullName')}
@@ -188,90 +193,57 @@ const NLUserDataForm = ({
             )}
 
             <NLAddressSuggestionInput
-              style={{width: '85%'}}
-              placeholder={'Home Postcode'}
-              defaultValue={values.postCode}
-              onSuggestionsUpdated={suggetions => {
-                setAddresses(suggetions)
+              style={{ width: '85%' }}
+              placeholder="Address"
+              defaultValue={values.address}
+              onLocationSelected={(location) => {
+                postCodeSearch.getSiteDetails(location)
+                  .then(details => {
+                    setFieldValue('address', details.getAddress())
+                    const coordinates = details.getPlaceLatLong()
+                    setFieldValue('lat', coordinates.lat)
+                    setFieldValue('lng', coordinates.lng)
+                    setFieldValue('postCode', details.getPlacePostCode())
+                    setFieldValue('state', `${details.getPlaceDistrict()} ${details.getPlaceCounty()}, ${details.getPlaceCountry()}`.trim())
+                  })
               }}
-            />
-            {errors.address && touched.address && (
-              <ErrorLabel text={errors.address} />
-            )}
 
-            <NLDropdownMenu
-              disabled={addresses.length == 0}
-              placeholder={
-                addresses.length == 0 ? 'No options' : 'Select an address'
-              }
-              theme={{
-                menu: {width: '80%'},
-                textButton: {
-                  fontSize: 18,
-                  color: 'rgba(0,0,0,0.3)',
-                  paddingLeft: 0,
-                },
-                button: {
-                  ...styles.signup_info_view,
-                  width: Dimensions.get('screen').width * 0.83,
-                },
-              }}
-              onSelect={selected => {
-                setFieldValue('address', getFullSuggestionAddress(selected))
-                setFieldValue('lat', selected.latitude)
-                setFieldValue('lng', selected.longitude)
-                setFieldValue('postCode', selected.postcode)
-                setFieldValue(
-                  'state',
-                  `${selected.district} ${selected.county}, ${selected.country}`,
-                )
-              }}
-              options={addresses.map(a => ({
-                label: getFullSuggestionAddress(a),
-                value: a,
-              }))}
             />
-            {errors.postCode && touched.postCode && (
-              <ErrorLabel text={errors.postCode} />
-            )}
 
             <View style={styles.signup_info_view}>
               <TextInput
-                style={{color: 'black'}}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                editable={
-                  !props.navigation.getParam('emailIDIsDisabled', false)
-                }
-                placeholder="Email ID"
-                keyboardType="email-address"
-                onChangeText={handleChange('emailID')}
-                onBlur={handleBlur('emailID')}
-                value={values.emailID}
+                style={{ color: 'black' }}
+                placeholderTextColor="rgba(0,0,0,0.3)"
+                autoCapitalize={false}
+                placeholder="Email"
+                onChangeText={handleChange('emailId')}
+                onBlur={handleBlur('emailId')}
+                value={values.emailId}
               />
             </View>
-            {errors.emailID && touched.emailID && (
-              <ErrorLabel text={errors.emailID} />
+            {errors.emailId && touched.emailId && (
+              <ErrorLabel text={errors.emailId} />
             )}
 
             <View style={styles.signup_info_view}>
               <TextInput
-                style={{color: 'black'}}
-                disabled={true}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                placeholder="County"
-                // onChangeText={handleChange('state')}
-                // onBlur={handleBlur('state')}
-                value={values.state}
+                style={{ color: 'black' }}
+                placeholderTextColor="rgba(0,0,0,0.3)"
+                autoCapitalize={false}
+                placeholder="Username"
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+                value={values.username}
               />
             </View>
-            {errors.state && touched.state && (
-              <ErrorLabel text={errors.state} />
+            {errors.username && touched.username && (
+              <ErrorLabel text={errors.username} />
             )}
 
             <View style={styles.signup_info_view}>
               <TextInput
-                style={{color: 'black'}}
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
+                style={{ color: 'black' }}
+                placeholderTextColor="rgba(0,0,0,0.3)"
                 placeholder="Mobile Number"
                 keyboardType="numeric"
                 onChangeText={handleChange('mobileNo')}
@@ -287,10 +259,10 @@ const NLUserDataForm = ({
               <>
                 <View style={styles.signup_info_view}>
                   <TextInput
-                    style={{color: 'black'}}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    style={{ color: 'black' }}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Password"
-                    secureTextEntry={true}
+                    secureTextEntry
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                     value={values.password}
@@ -301,24 +273,22 @@ const NLUserDataForm = ({
                 )}
               </>
             )}
-            {showsConfirmPassword == true && (
+            {showsConfirmPassword === true && (
               <>
                 <View style={styles.signup_info_view}>
                   <TextInput
-                    style={{color: 'black'}}
-                    placeholderTextColor={'rgba(0,0,0,0.3)'}
+                    style={{ color: 'black' }}
+                    placeholderTextColor="rgba(0,0,0,0.3)"
                     placeholder="Confirm Password"
-                    secureTextEntry={true}
+                    secureTextEntry
                     onChangeText={handleChange('confirmPassword')}
                     onBlur={handleBlur('confirmPassword')}
                     value={values.confirmPassword}
                   />
                 </View>
                 <InfoLabel
-                  style={{width: '85%'}}
-                  text={
-                    'Password should contain at least 1 number, 1 alphabet in caps and 1 special character.'
-                  }
+                  style={{ width: '85%' }}
+                  text="Password should contain at least 1 number, 1 alphabet in caps and 1 special character."
                 />
                 {errors.confirmPassword && touched.confirmPassword && (
                   <ErrorLabel text={errors.confirmPassword} />
@@ -332,13 +302,13 @@ const NLUserDataForm = ({
                 disabled={signupIsDisabled()}
                 style={[
                   styles.signup_btn_player,
-                  {width: 200},
+                  { width: 200 },
                   signupIsDisabled() && GlobalStyles.disabled_button,
                 ]}
                 onPress={handleSubmit}>
                 <View style={styles.signup_btn_player_view}>
                   <Text style={styles.signup_player_text}>
-                    {props.navigation.getParam('btnText', 'Join Now')}
+                    {navigation.getParam('btnText', 'Join Now')}
                   </Text>
                 </View>
               </TouchableOpacity>

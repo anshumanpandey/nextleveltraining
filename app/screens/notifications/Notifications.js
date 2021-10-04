@@ -1,16 +1,15 @@
-import React, {Component, useRef, useEffect} from 'react'
-import Header from '../../components/header/Header'
-import {Image, ScrollView, Text, FlatList, TouchableOpacity} from 'react-native'
-import {View} from 'native-base'
+import React, { Component, useRef, useEffect } from 'react'
+import { Image, ScrollView, Text, FlatList, TouchableOpacity } from 'react-native'
+import { View, Icon } from 'native-base'
 import useAxios from 'axios-hooks'
+import { parseISO, formatDistanceToNow } from 'date-fns'
 import styles from '../message/styles'
-import {Icon} from 'native-base'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
   useGlobalState,
 } from '../../state/GlobalState'
-import {parseISO, formatDistanceToNow} from 'date-fns'
+import Header from '../../components/header/Header'
 import Images from '../../constants/image'
 import NavigationActions from '../../navigation/NavigationService'
 
@@ -22,27 +21,27 @@ const Notifications = props => {
     {
       url: '/Users/GetNotifications',
     },
-    {manual: true},
+    { manual: true },
   )
   const [readNotificationReq, readNotification] = useAxios(
     {
       url: '/Users/ReadNotification/',
     },
-    {manual: true},
+    { manual: true },
   )
   const readMessage = id => {
-    readNotification({url: `/Users/ReadNotification/${id}`}).then(() =>
+    readNotification({ url: `/Users/ReadNotification/${id}` }).then(() =>
       getUserData(),
     )
   }
-  function Item({item, key}) {
+  function Item({ item, key }) {
     return (
       <View style={styles.flatListNotification} key={key}>
         <TouchableOpacity
           disable={readNotificationReq.loading}
           style={[
             styles.container_text,
-            {opacity: readNotificationReq.loading ? 0.5 : 1},
+            { opacity: readNotificationReq.loading ? 0.5 : 1 },
           ]}
           onPress={() => {
             readMessage(item.Id)
@@ -53,12 +52,12 @@ const Notifications = props => {
             }
           }}>
           <View
-            style={[styles.innerRow, {width: '100%', flexDirection: 'row'}]}>
+            style={[styles.innerRow, { width: '100%', flexDirection: 'row' }]}>
             <Image
-              style={{height: 45, width: 45, borderRadius: 45 / 2}}
+              style={{ height: 45, width: 45, borderRadius: 45 / 2 }}
               source={item.Image ? item.Image : Images.PlayerPlaceholder}
             />
-            <View style={{width: '80%'}}>
+            <View style={{ width: '80%' }}>
               <Text style={styles.description}>{item.Text}</Text>
               <Text style={styles.description2}>
                 {formatDistanceToNow(new Date(item.CreatedDate))} ago
@@ -70,7 +69,7 @@ const Notifications = props => {
           <Icon
             type="FontAwesome"
             name="circle"
-            style={{color: 'blue', fontSize: 12}}
+            style={{ color: 'blue', fontSize: 12 }}
           />
         ) : (
           <View />
@@ -80,17 +79,17 @@ const Notifications = props => {
   }
   function ItemSeparator() {
     return (
-      <View style={{height: 0.5, width: '100%', backgroundColor: 'black'}} />
+      <View style={{ height: 0.5, width: '100%', backgroundColor: 'black' }} />
     )
   }
-  /*useEffect(() => {
+  /* useEffect(() => {
         getUserData()
         const focusListener = props.navigation.addListener('didFocus', () => {
             getUserData()
         });
 
         return () => focusListener.remove()
-    }, []);*/
+    }, []); */
 
   useEffect(() => {
     if (getUserReq.data) {
@@ -112,45 +111,43 @@ const Notifications = props => {
     }
   }, [getUserReq.loading])
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Header
         menu={false}
-        title={'Notifications'}
-        hideCreatePost={true}
+        title="Notifications"
+        hideCreatePost
         toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
-        customButton={() => {
-          return (
-            <View
+        customButton={() => (
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexGrow: 1,
+            }}>
+            <Icon
+              onPress={() => props.navigation.goBack()}
+              type="Feather"
+              name="arrow-left"
               style={{
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexGrow: 1,
-              }}>
-              <Icon
-                onPress={() => props.navigation.goBack()}
-                type="Feather"
-                name="arrow-left"
-                style={{
-                  left: 15,
-                  fontSize: 22,
-                  color: '#2D7AF0',
-                }}
-              />
-            </View>
-          )
-        }}
+                left: 15,
+                fontSize: 22,
+                color: '#2D7AF0',
+              }}
+            />
+          </View>
+        )}
       />
       <View style={[styles.signup_container]}>
         <View style={[styles.fullFlatListContainer]}>
           {notifications?.length > 0 && (
             <>
               <FlatList
-                contentContainerStyle={{flexGrow: 1}}
+                contentContainerStyle={{ flexGrow: 1 }}
                 ListEmptyComponent={
-                  <Text style={{textAlign: 'center', marginTop: '10%'}}>
+                  <Text style={{ textAlign: 'center', marginTop: '10%' }}>
                     No notifications
                   </Text>
                 }
@@ -159,14 +156,14 @@ const Notifications = props => {
                     (a, b) => parseISO(b.CreatedDate) - parseISO(a.CreatedDate),
                   ) || []
                 }
-                renderItem={({item, key}) => <Item item={item} key={key} />}
+                renderItem={({ item, key }) => <Item item={item} key={key} />}
                 temSeparatorComponent={() => <ItemSeparator />}
                 keyExtractor={item => item.id}
               />
             </>
           )}
         </View>
-        {!!notifications?.length && (
+        {!notifications?.length && (
           <Text style={styles.notFoundText}>No Notifications</Text>
         )}
         {getUserReq.loading && (

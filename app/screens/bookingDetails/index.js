@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useDebugValue } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View, Alert, Dimensions } from 'react-native';
+import { Icon, Spinner } from 'native-base';
+import moment from 'moment';
+import useAxios from 'axios-hooks'
+import { parseISO, format, differenceInHours, isAfter } from 'date-fns';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 import HeaderTitleBack from '../../components/header/HeaderTitleBack';
 import Images from '../../constants/image';
-import { Icon, Spinner } from 'native-base';
-import moment from 'moment';
 import { useGlobalState } from '../../state/GlobalState';
-import useAxios from 'axios-hooks'
 import Colors from '../../constants/color';
-import { parseISO, format, differenceInHours, isAfter } from 'date-fns';
 
 
 const JobDetails = (props) => {
@@ -56,7 +56,7 @@ const JobDetails = (props) => {
 
     let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
     userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
-    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)    
+    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)
 
     return differenceInHours(sessionDatetime, serverDatetime) >= 72 && !cancelBookingReq.loading && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
@@ -68,14 +68,14 @@ const JobDetails = (props) => {
 
     let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
     userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
-    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)   
-    
-    console.log('canReschedule BookingDate',props.navigation.getParam("BookingDate"))
-    console.log('canReschedule sessionDatetime', sessionDatetime)
-    console.log('canReschedule serverDatetime',serverDatetime)
-    console.log('canReschedule differenceInHours',differenceInHours(sessionDatetime, serverDatetime))
+    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)
 
-    return differenceInHours(sessionDatetime,serverDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
+    console.log('canReschedule BookingDate', props.navigation.getParam("BookingDate"))
+    console.log('canReschedule sessionDatetime', sessionDatetime)
+    console.log('canReschedule serverDatetime', serverDatetime)
+    console.log('canReschedule differenceInHours', differenceInHours(sessionDatetime, serverDatetime))
+
+    return differenceInHours(sessionDatetime, serverDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
 
   const renderCompletedButton = () => {
@@ -85,7 +85,7 @@ const JobDetails = (props) => {
 
     let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
     userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
-    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)   
+    sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)
 
     return isAfter(serverDatetime, sessionDatetime)
   }
@@ -95,7 +95,7 @@ const JobDetails = (props) => {
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }} contentContainerStyle={{ flexGrow: 1 }}>
-      <HeaderTitleBack title={'Job Detail'} onBackPress={() => props.navigation.navigate('Booking')} navigate={props.navigation.navigate} />
+      <HeaderTitleBack title="Job Detail" onBackPress={() => props.navigation.navigate('Booking')} navigate={props.navigation.navigate} />
 
       <View style={styles.detailsView}>
         <View style={styles.userView}>
@@ -129,7 +129,7 @@ const JobDetails = (props) => {
 
           <View style={styles.orderView}>
             <Text style={styles.headText}>Training Location Address</Text>
-            <Text style={styles.headText1}>{props.navigation.getParam("Location").LocationAddress}</Text>
+            <Text style={styles.headText1}>{ }</Text>
           </View>
         </View>
       </View>
@@ -168,7 +168,7 @@ const JobDetails = (props) => {
         {renderCompletedButton() && profile?.Role == "Player" && (
           <TouchableOpacity disabled={!canComplete()} onPress={() => {
             NavigationService.navigate("ReviewScreen", { bookingId: props.navigation.getParam("Id") })
-          }} style={{ width: '33%', justifyContent: 'center', opacity: canComplete() ? 1:0.5 }}>
+          }} style={{ width: '33%', justifyContent: 'center', opacity: canComplete() ? 1 : 0.5 }}>
             <View style={[styles.btnTab]}>
               {cancelBookingReq.loading && <Spinner color={Colors.g_text} />}
               {!cancelBookingReq.loading && (
@@ -229,65 +229,60 @@ const JobDetails = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      <StepsComponent steps={props.navigation.getParam("Statuses").map((s, idx, arr) => {
-        return {
-          title: s.Status,
-          details: s.Date ? `On ${s.Date.split('T')[0]}` : undefined,
-          status: idx == arr.length - 1 ? 'Active': undefined
-        }
-      })} {...props} />
+      <StepsComponent steps={props.navigation.getParam("Statuses").map((s, idx, arr) => ({
+        title: s.Status,
+        details: s.Date ? `On ${s.Date.split('T')[0]}` : undefined,
+        status: idx == arr.length - 1 ? 'Active' : undefined
+      }))} {...props} />
     </ScrollView>
   );
 };
 
-const StepsComponent = ({ steps, ...props }) => {
-  return (
-    <View style={styles.jobStatus}>
-      <Text style={[styles.btnText, { fontSize: 18, marginBottom: '5%' }]}>Job Status</Text>
-      {steps.map((({ title, details, status = 'Idle' }, idx, arr) => {
-        let cardStatusStyles = {}
-        let triangleStatusStyles = {}
-        let textStatusStyles = {}
-        let dashStatusStyles = {}
-        let dashWrapperStatusStyles = { backgroundColor: 'rgba(29,181,56,1)' }
-        if (status == "Idle") {
-          cardStatusStyles = { backgroundColor: 'rgb(244,247,248)' }
-          triangleStatusStyles = { borderRightColor: 'rgb(244,247,248)' }
-        }
-        if (status == "Disabled") {
-          cardStatusStyles = { backgroundColor: 'rgb(244,247,248)' }
-          triangleStatusStyles = { borderRightColor: 'rgb(244,247,248)' }
-          textStatusStyles = { color: 'lightgray' }
-          dashStatusStyles = { height: 0 }
-          dashWrapperStatusStyles = { borderWidth: 0, backgroundColor: 'lightgray', marginTop: '5%' }
-        }
-        return (
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={[{ width: '10%', alignItems: 'center' }]}>
-                {status == 'Disabled' && <View style={{ width: '10%', flex: 0.7, backgroundColor: 'gray' }} />}
-                <View style={[styles.dontFilled, { ...dashWrapperStatusStyles }]} />
-                <View style={{ width: '10%', flex: 1, height: '100%', backgroundColor: status == 'Disabled' || idx == arr.length - 1 ? 'transparent' : 'gray' }} />
-              </View>
-              <View style={{ flexDirection: 'row' }}>
-                <View style={[styles.triangle, triangleStatusStyles]} />
-                <View style={[styles.details, cardStatusStyles]}>
-                  <Text style={[styles.btnText, { fontSize: 18, color: 'black' }]}>{title}</Text>
-                  {details && (
-                    <Text style={[styles.btnText, { fontSize: 12, fontWeight: '300', ...textStatusStyles }]}>
-                      {details}
-                    </Text>
-                  )}
-                </View>
+const StepsComponent = ({ steps, ...props }) => (
+  <View style={styles.jobStatus}>
+    <Text style={[styles.btnText, { fontSize: 18, marginBottom: '5%' }]}>Job Status</Text>
+    {steps.map((({ title, details, status = 'Idle' }, idx, arr) => {
+      let cardStatusStyles = {}
+      let triangleStatusStyles = {}
+      let textStatusStyles = {}
+      let dashStatusStyles = {}
+      let dashWrapperStatusStyles = { backgroundColor: 'rgba(29,181,56,1)' }
+      if (status == "Idle") {
+        cardStatusStyles = { backgroundColor: 'rgb(244,247,248)' }
+        triangleStatusStyles = { borderRightColor: 'rgb(244,247,248)' }
+      }
+      if (status == "Disabled") {
+        cardStatusStyles = { backgroundColor: 'rgb(244,247,248)' }
+        triangleStatusStyles = { borderRightColor: 'rgb(244,247,248)' }
+        textStatusStyles = { color: 'lightgray' }
+        dashStatusStyles = { height: 0 }
+        dashWrapperStatusStyles = { borderWidth: 0, backgroundColor: 'lightgray', marginTop: '5%' }
+      }
+      return (
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={[{ width: '10%', alignItems: 'center' }]}>
+              {status == 'Disabled' && <View style={{ width: '10%', flex: 0.7, backgroundColor: 'gray' }} />}
+              <View style={[styles.dontFilled, { ...dashWrapperStatusStyles }]} />
+              <View style={{ width: '10%', flex: 1, height: '100%', backgroundColor: status == 'Disabled' || idx == arr.length - 1 ? 'transparent' : 'gray' }} />
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={[styles.triangle, triangleStatusStyles]} />
+              <View style={[styles.details, cardStatusStyles]}>
+                <Text style={[styles.btnText, { fontSize: 18, color: 'black' }]}>{title}</Text>
+                {details && (
+                  <Text style={[styles.btnText, { fontSize: 12, fontWeight: '300', ...textStatusStyles }]}>
+                    {details}
+                  </Text>
+                )}
               </View>
             </View>
           </View>
-        );
-      }))}
+        </View>
+      );
+    }))}
 
-    </View>
-  );
-
-}
+  </View>
+)
 
 export default JobDetails;
