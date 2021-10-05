@@ -82,7 +82,7 @@ const AboutMeScreen = (props) => {
           )
           }
         />
-        {resolveRoleForm(profile, "AboutMe", { player: profile, submit: true }, (cb) => {
+        {resolveRoleForm(profile, "AboutMe", { player: profile, submit: true, navigation: props.navigation }, (cb) => {
           if (cb == null) {
             setSubmitFn(null)
           } else {
