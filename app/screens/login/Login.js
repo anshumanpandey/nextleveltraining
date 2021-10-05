@@ -263,7 +263,7 @@ const Login = (props) => {
                   })
                   .catch(err => console.log(err))
               }}
-              style={[styles.fb_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1 }]}
+              style={[styles.fb_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1, marginBottom: 30 }]}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
