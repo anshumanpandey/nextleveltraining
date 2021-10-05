@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react'
 import { View, Text, Alert } from 'react-native'
-import Header from '../../components/header/Header'
-import NLUserDataForm from '../../components/userDataForm/NLUserDataForm'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
-import { Spinner, Tabs, Tab } from 'native-base'
+import { Spinner, Tabs, Tab, Input as TextInput } from 'native-base'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { Formik } from 'formik';
 import useAxios from 'axios-hooks'
-import { Input as TextInput } from 'native-base';
+import NLUserDataForm from '../../components/userDataForm/NLUserDataForm'
+import Header from '../../components/header/Header'
 import styles from './styles.js';
 import ErrorLabel from '../../components/ErrorLabel'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState'
@@ -37,27 +36,25 @@ const EditProfile = (props) => {
             }}>
                 <Header
                     title="Personal Details"
-                    hideCreatePost={true}
+                    hideCreatePost
                     toggleDrawer={props.navigation.toggleDrawer}
                     navigate={props.navigation.navigate}
-                    customButton={() => {
-                        return (
-                            <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
-                                {isSaving && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
-                                <TouchableOpacity
-                                    disabled={isSaving == true}
-                                    onPress={() => {
-                                        if (currentSubmitFn) {
-                                            setIsSaving(true)
-                                            currentSubmitFn()
-                                                .then(() => setIsSaving(false))
-                                        }
-                                    }}>
-                                    <Text style={{ color: 'black', opacity: isSaving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
-                                </TouchableOpacity>
-                            </View>
-                        );
-                    }}
+                    customButton={() => (
+                        <View style={{ flexDirection: 'row', width: '70%', justifyContent: 'flex-end', alignItems: 'center', flexGrow: 1 }}>
+                            {isSaving && <Spinner size={28} color="black" style={{ right: 20, position: 'absolute', marginRight: '10%', height: '10%' }} />}
+                            <TouchableOpacity
+                                disabled={isSaving == true}
+                                onPress={() => {
+                                    if (currentSubmitFn) {
+                                        setIsSaving(true)
+                                        currentSubmitFn()
+                                            .then(() => setIsSaving(false))
+                                    }
+                                }}>
+                                <Text style={{ color: 'black', opacity: isSaving == true ? 0.5 : 1, fontSize: 18 }}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 />
                 <Tabs onChangeTab={(e) => {
                     console.log(e.i)
@@ -71,8 +68,8 @@ const EditProfile = (props) => {
                     <Tab activeTextStyle={{ color: Colors.s_blue }} tabStyle={{ backgroundColor: 'white' }} activeTabStyle={{ backgroundColor: 'white' }} heading="Personal details">
                         <NLUserDataForm
                             {...props}
-                            hidePasswordInput={true}
-                            hideSaveBtn={true}
+                            hidePasswordInput
+                            hideSaveBtn
                             action="update"
                             setSubmitFn={(submitFn) => {
                                 setDetailsSubmitFn(() => submitFn)
@@ -125,49 +122,47 @@ const EditProfile = (props) => {
                                     })
                             }}
                         >
-                            {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
-                                return (
-                                    <View style={{ padding: '5%' }}>
-                                        <View style={styles.signup_info_view}>
-                                            <View style={styles.signup_info_view}>
-                                                <TextInput
-                                                    style={{ color: "black"}}
-                                                    placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                                    placeholder="Password"
-                                                    secureTextEntry={true}
-                                                    onChangeText={handleChange('password')}
-                                                    onBlur={handleBlur('password')}
-                                                    value={values.password}
-                                                />
-                                            </View>
-                                            {errors.password && touched.password && <ErrorLabel text={errors.password} />}
-                                            <TextInput
-                                                style={{ color: "black"}}
-                                                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                                placeholder="New Password"
-                                                secureTextEntry={true}
-                                                onChangeText={handleChange('newPassword')}
-                                                onBlur={handleBlur('newPassword')}
-                                                value={values.newPassword}
-                                            />
-                                        </View>
-                                        {errors.newPassword && touched.newPassword && <ErrorLabel text={errors.newPassword} />}
+                            {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+                                <View style={{ padding: '5%' }}>
+                                    <View style={styles.signup_info_view}>
                                         <View style={styles.signup_info_view}>
                                             <TextInput
-                                                style={{ color: "black"}}
-                                                placeholderTextColor={'rgba(0,0,0,0.3)'}
-                                                placeholder="Confirm Password"
-                                                secureTextEntry={true}
-                                                onChangeText={handleChange('confirmPassword')}
-                                                onBlur={handleBlur('confirmPassword')}
-                                                value={values.confirmPassword}
+                                                style={{ color: "black" }}
+                                                placeholderTextColor="rgba(0,0,0,0.3)"
+                                                placeholder="Password"
+                                                secureTextEntry
+                                                onChangeText={handleChange('password')}
+                                                onBlur={handleBlur('password')}
+                                                value={values.password}
                                             />
                                         </View>
-                                        <InfoLabel style={{ width: '85%' }} text={"Password should contain at least 1 number, 1 alphabet in caps and 1 special character."} />
-                                        {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
+                                        {errors.password && touched.password && <ErrorLabel text={errors.password} />}
+                                        <TextInput
+                                            style={{ color: "black" }}
+                                            placeholderTextColor="rgba(0,0,0,0.3)"
+                                            placeholder="New Password"
+                                            secureTextEntry
+                                            onChangeText={handleChange('newPassword')}
+                                            onBlur={handleBlur('newPassword')}
+                                            value={values.newPassword}
+                                        />
                                     </View>
-                                );
-                            }}
+                                    {errors.newPassword && touched.newPassword && <ErrorLabel text={errors.newPassword} />}
+                                    <View style={styles.signup_info_view}>
+                                        <TextInput
+                                            style={{ color: "black" }}
+                                            placeholderTextColor="rgba(0,0,0,0.3)"
+                                            placeholder="Confirm Password"
+                                            secureTextEntry
+                                            onChangeText={handleChange('confirmPassword')}
+                                            onBlur={handleBlur('confirmPassword')}
+                                            value={values.confirmPassword}
+                                        />
+                                    </View>
+                                    <InfoLabel style={{ width: '85%' }} text="Password should contain at least 1 number, 1 alphabet in caps and 1 special character." />
+                                    {errors.confirmPassword && touched.confirmPassword && <ErrorLabel text={errors.confirmPassword} />}
+                                </View>
+                            )}
                         </Formik>
 
                     </Tab>

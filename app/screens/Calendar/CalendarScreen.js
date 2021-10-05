@@ -1,21 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import Header from '../../components/header/Header'
-import DatePicker from 'react-native-date-ranges';
+import React, { useState, useEffect } from 'react'
 import { FlatList, View, Text, TouchableOpacity } from 'react-native';
 import moment from 'moment'
 import useAxios from 'axios-hooks'
-import { useGlobalState } from '../../state/GlobalState';
-import Colors from '../../constants/color';
 import { Icon } from 'native-base';
 import { Calendar } from 'react-native-calendars';
-import { UseNLMarkedDates } from '../../utils/UseNLMarkedDates';
 import { parseISO } from 'date-fns';
+import { useGlobalState } from '../../state/GlobalState';
+import Colors from '../../constants/color';
+import { UseNLMarkedDates } from '../../utils/UseNLMarkedDates';
+import Header from '../../components/header/Header'
 import CalendarRules from '../../components/CalendarRules';
 
 const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
     const [agroupedData, setAgroupedData] = useState([])
-    
+
     const { markedDays, startDate, endDate, selectRange } = UseNLMarkedDates({ EmailID: profile?.EmailID })
 
     const [{ data, loading, error }, getBookings] = useAxios({
@@ -58,12 +57,10 @@ const CalendarScreen = (props) => {
                 groups[date].push(game);
                 return groups;
             }, {})
-        const groupArrays = Object.keys(d).map((date) => {
-            return {
-                date,
-                bookings: d[date]
-            };
-        });
+        const groupArrays = Object.keys(d).map((date) => ({
+            date,
+            bookings: d[date]
+        }));
         setAgroupedData([...groupArrays])
     }, [data, startDate, endDate])
 
@@ -71,17 +68,31 @@ const CalendarScreen = (props) => {
         <>
             <Header
                 title="Calendar"
-                hideCreatePost={true}
+                hideCreatePost
                 toggleDrawer={props.navigation.toggleDrawer}
                 navigate={props.navigation.navigate}
+                customButton={() => (
+                    <Icon
+                        onPress={() => props.navigation.goBack()}
+                        type="Feather"
+                        name="arrow-left"
+                        style={{
+                            paddingVertical: 10,
+                            paddingRight: 10,
+                            left: 15,
+                            fontSize: 22,
+                            color: '#2D7AF0',
+                        }}
+                    />
+                )}
             />
             <Calendar
                 onDayPress={(day) => {
                     selectRange(parseISO(day.dateString))
                 }}
                 markedDates={markedDays}
-                disableAllTouchEventsForDisabledDays={true}
-                markingType={'period'}
+                disableAllTouchEventsForDisabledDays
+                markingType="period"
                 theme={{
                     todayBackgroundColor: 'white',
                     dayTextColor: Colors.s_blue,
@@ -109,52 +120,44 @@ const CalendarScreen = (props) => {
                 }}
                 contentContainerStyle={{ flexGrow: 1 }}
                 data={[...agroupedData]}
-                keyExtractor={(item, index) => 'D' + index.toString()}
-                renderItem={({ item }) => {
-                    return (<BookingGroup data={item.bookings} groupDate={item.date} />)
-                }}
+                keyExtractor={(item, index) => `D${index.toString()}`}
+                renderItem={({ item }) => (<BookingGroup data={item.bookings} groupDate={item.date} />)}
             />
         </>
     );
 }
 
-const BookingGroup = ({ data = [], groupDate }) => {
-    return (
-        <FlatList
-            ListHeaderComponent={
-                <View style={{ padding: '3%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
-                    <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{groupDate}</Text>
-                </View>
-            }
-            contentContainerStyle={{ flexGrow: 1 }}
-            data={data}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.Id}
-            renderItem={({ item }) => {
-                return (<CalendarListItem {...item} Address={item.Location.LocationAddress} />)
-            }}
-        />
-    );
-}
-
-export const CalendarListItem = (item) => {
-    return (
-        <View style={{ flexDirection: 'row', padding: '3%' }}>
-            <View style={{ marginRight: '5%' }}>
-                <Text>{moment(item.FromTime).format("HH:mm")}</Text>
-                <Text>{moment(item.ToTime).format("HH:mm")}</Text>
+const BookingGroup = ({ data = [], groupDate }) => (
+    <FlatList
+        ListHeaderComponent={
+            <View style={{ padding: '3%', borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
+                <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{groupDate}</Text>
             </View>
-            <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Icon type="FontAwesome" name="circle" style={{ color: Colors.s_blue, fontSize: 12 }} />
-                    <Text>{item.FullName}</Text>
-                </View>
-                <View style={{ paddingLeft: '3%' }}>
-                    <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{item.Address}</Text>
-                </View>
+        }
+        contentContainerStyle={{ flexGrow: 1 }}
+        data={data}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={item => item.Id}
+        renderItem={({ item }) => (<CalendarListItem {...item} Address={item?.Location?.LocationAddress || ""} />)}
+    />
+)
+
+export const CalendarListItem = (item) => (
+    <View style={{ flexDirection: 'row', padding: '3%' }}>
+        <View style={{ marginRight: '5%' }}>
+            <Text>{moment(item.FromTime).format("HH:mm")}</Text>
+            <Text>{moment(item.ToTime).format("HH:mm")}</Text>
+        </View>
+        <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Icon type="FontAwesome" name="circle" style={{ color: Colors.s_blue, fontSize: 12 }} />
+                <Text>{item.FullName}</Text>
+            </View>
+            <View style={{ paddingLeft: '3%' }}>
+                <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{item.Address}</Text>
             </View>
         </View>
-    );
-}
+    </View>
+)
 
 export default CalendarScreen

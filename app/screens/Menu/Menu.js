@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, ImageBackground, TextInput, ScrollView, Image, SafeAreaView, FlatList } from 'react-native';
 import { Icon } from 'native-base'
 
+import AsyncStorage from '@react-native-community/async-storage';
 import Images from '../../constants/image.js'
 import styles from './styles'
 import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, useGlobalState } from '../../state/GlobalState.js';
-import AsyncStorage from '@react-native-community/async-storage';
 import NavigationService from '../../navigation/NavigationService.js';
 import Screens from '../../utils/screen.js';
 import HasCompletedVerificationProcess from '../../utils/HasCompletedVerificationProcess.js';
@@ -73,7 +73,7 @@ const Menu = (props) => {
         },
         {
             id: 4,
-            title: profile?.Role == "Player" ? 'Home Pitch Location':'Training Pitch Location',
+            title: profile?.Role == "Player" ? 'Home Pitch Location' : 'Training Pitch Location',
             icon: `${Images.HomeTrainingIcon}`,
             path: 'PaymentMethod',
             onPress: (props, profile) => {

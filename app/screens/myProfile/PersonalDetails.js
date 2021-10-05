@@ -50,39 +50,38 @@ const PersonalDetails = props => {
     isSaving === true
   )
 
-  const customeHeader = () => {
-    if (currentTab === 0) return <></>
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '70%',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexGrow: 1,
-        }}>
-        {isSaving && (
-          <Spinner
-            size={28}
-            color="black"
-            style={{
-              right: 20,
-              position: 'absolute',
-              marginRight: '10%',
-              height: '10%',
-            }}
-          />
-        )}
-        <Icon
-          onPress={() => props.navigation.goBack()}
-          type="Feather"
-          name="arrow-left"
+  const customeHeader = () => (
+    <View
+      style={{
+        flexDirection: 'row',
+        width: '70%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexGrow: 1,
+      }}>
+      {isSaving && (
+        <Spinner
+          size={28}
+          color="black"
           style={{
-            left: 15,
-            fontSize: 22,
-            color: '#2D7AF0',
+            right: 20,
+            position: 'absolute',
+            marginRight: '10%',
+            height: '10%',
           }}
         />
+      )}
+      <Icon
+        onPress={() => props.navigation.goBack()}
+        type="Feather"
+        name="arrow-left"
+        style={{
+          left: 15,
+          fontSize: 22,
+          color: '#2D7AF0',
+        }}
+      />
+      {currentTab === 1 && (
         <TouchableOpacity
           disabled={isReadyToSave === false}
           onPress={() => {
@@ -100,9 +99,9 @@ const PersonalDetails = props => {
             Save
           </Text>
         </TouchableOpacity>
-      </View>
-    )
-  }
+      )}
+    </View>
+  )
 
   return (
     <ScrollView

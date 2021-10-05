@@ -1,11 +1,30 @@
 import React from 'react'
 import { StyleSheet, ScrollView, Text } from 'react-native'
-import { View } from 'native-base';
+import { View, Icon } from 'native-base';
 import Header from '../../components/header/Header';
 
 const TermsScreen = ({ navigation }) => (
     <ScrollView>
-        <Header title="Terms" hideCreatePost toggleDrawer={navigation.toggleDrawer} navigate={navigation.navigate} />
+        <Header
+            title="Terms"
+            hideCreatePost
+            toggleDrawer={navigation.toggleDrawer}
+            navigate={navigation.navigate}
+            customButton={() => (
+                <Icon
+                    onPress={() => navigation.goBack()}
+                    type="Feather"
+                    name="arrow-left"
+                    style={{
+                        paddingVertical: 10,
+                        paddingRight: 10,
+                        left: 15,
+                        fontSize: 22,
+                        color: '#2D7AF0',
+                    }}
+                />
+            )}
+        />
 
         <View style={{ padding: '5%' }}>
             <Text style={styles.title1}>Terms and conditions</Text>

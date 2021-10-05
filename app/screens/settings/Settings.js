@@ -16,7 +16,7 @@ import GlobalContants from '../../constants/GlobalContants'
 const Settings = props => {
   const [profile] = useGlobalState('profile')
 
-  const [getDeleteRes, deleteAccount] = useAxios(
+  const [, deleteAccount] = useAxios(
     { url: `/Account/DeleteAccount/${profile?.EmailID}` },
     { manual: true },
   )
@@ -118,7 +118,7 @@ const Settings = props => {
           <Button
             height={100}
             title="Find a coach"
-            subTitle="Find a coach to inhance your skills"
+            subTitle="Find a coach to enhance your skills"
             dividerFlag
             onPress={() => props.navigation.navigate('FindCoach')}
           />
