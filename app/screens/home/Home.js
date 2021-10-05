@@ -229,7 +229,7 @@ const Home = ({ navigation }) => {
         )}
       />
       <DailyReminderModal id="OUTSIDE_CONTACT_WARNING">
-        <Text style={{ textAlign: "center" }}>Please note that contanting out the app is forbidden and can lead to account termination.</Text>
+        <Text style={{ textAlign: "center", padding: 5 }}>Please note that contacting out the app is forbidden and can lead to account termination.</Text>
       </DailyReminderModal>
       <NLLastesChangesModal changes={[{ title: "Login", body: "Now user can login with username or email" }, { title: "UI", body: "Fix on colors and layout" }]} />
       {body}

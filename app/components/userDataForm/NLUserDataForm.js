@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { Text, TouchableOpacity, Platform } from 'react-native'
 import { Formik } from 'formik'
-import { View, Input as TextInput } from 'native-base'
+import { View, Input as TextInput, Spinner } from 'native-base'
 import useAxios from 'axios-hooks'
 import AsyncStorage from '@react-native-community/async-storage'
 import DeviceInfo from 'react-native-device-info'
@@ -17,6 +17,7 @@ import InfoLabel from '../InfoLabel'
 import { RequestDeviceToken } from '../../utils/firebase/RequestDeviceToken'
 import NLAddressSuggestionInput from '../postcodeInput/NLAddressSuggestionInput'
 import { usePostCodeSearch } from '../postcodeInput/state';
+import Colors from '../../constants/color';
 
 const NLUserDataForm = ({
   action = 'register',
@@ -310,6 +311,7 @@ const NLUserDataForm = ({
                   <Text style={styles.signup_player_text}>
                     {navigation.getParam('btnText', 'Join Now')}
                   </Text>
+                  {signupIsDisabled() === true && <Spinner color={Colors.s_yellow} />}
                 </View>
               </TouchableOpacity>
             </View>
