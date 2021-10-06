@@ -46,7 +46,6 @@ const PersonalDetailsEdit = (props) => {
         if (!values.fullName) errors.fullName = 'Required'
         if (!values.address) errors.address = 'Required'
         if (!values.mobileNo) errors.mobileNo = 'Required'
-        if (!values.postCode) errors.postCode = 'Required'
         if (!values.state) errors.state = 'Required'
 
         return errors

@@ -26,14 +26,14 @@ const Home = ({ navigation }) => {
     { manual: true },
   )
 
-  /* useEffect(() => {
+  useEffect(() => {
     AsyncStorage.getItem("justRegistered")
       .then((item) => {
-        if (HasCompletedVerificationProcess(profile) === true && item === "1" && profile.Role === "Player") {
-          navigation.navigate('FindCoach')
+        if (HasCompletedVerificationProcess(profile) === true && item === "1" && profile.Role === "Coach") {
+          navigation.navigate('AskFeatured', { goToOnCancel: "Home" })
         }
       })
-  }, []) */
+  }, [])
 
   useEffect(() => {
     refetch()

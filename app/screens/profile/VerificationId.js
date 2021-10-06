@@ -111,7 +111,9 @@ const AddTeam = ({ navigation }) => {
               </Menu>
               {errors.type && touched.type && <ErrorLabel text={errors.type} />}
               <View style={[styles.inputContain, { paddingHorizontal: 30 }]}>
-                <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>{(values.file?.fileName || values.file?.uri) ? (values.file?.fileName || values.file?.uri) : "Upload Valid ID"}</Text>
+                <Text numberOfLines={1} style={{ color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>
+                  {(values.file?.uri) ? (values.file?.uri.split("/").pop()) : "Upload Valid ID"}
+                </Text>
               </View>
               <NLCropperImagePicker onFileSelected={(file) => {
                 console.log(file)

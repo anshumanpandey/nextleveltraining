@@ -39,6 +39,8 @@ const PlayerInfoForm = ({ navigation }) => {
     const focusListener = navigation?.addListener('didFocus', () => {
       getLead()
         .then(({ data }) => {
+          if (data === "") return
+
           formikRef.current.setValues({
             experience: data.Experience,
             age: data.Age,

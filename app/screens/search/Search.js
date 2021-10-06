@@ -327,22 +327,6 @@ const Search = (props) => {
           sendAndroidToken(token)
         })
     }
-    userAskedToBeFeatured()
-      .then(asked => {
-        if (asked) {
-          props.navigation.navigate("AskFeatured")
-          return Promise.resolve('no')
-        }
-        return needsToAskFeaturedAfterLogin()
-
-      })
-      .then((needToAsk) => {
-        if (needToAsk) {
-          props.navigation.navigate("AskFeatured")
-        } else {
-          searchCoaches({ data: { search: keyword } })
-        }
-      })
 
     const focusListener = props.navigation.addListener('didFocus', () => {
       searchCoaches({ data: { search: keyword } })

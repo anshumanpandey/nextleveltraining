@@ -269,11 +269,13 @@ const AppMain = () => {
       MyProfileCoach: { screen: MyProfileCoach },
       PersonalDetails: { screen: PersonalDetails },
       FindCoach: { screen: FindCoach },
+      AskFeatured: { screen: AskFeatured },
       MyProfilePlayer: { screen: MyProfilePlayer },
       Cart: { screen: Cart },
       PayCredits: { screen: PayCredits },
       SuccessPayCredits: { screen: SuccessPayCredits },
       CardPayment: { screen: CardPayment },
+      ProfilePic: { screen: ProfilePicScreen },
       PayFeatured: { screen: PayFeatured }
     },
     {
@@ -429,7 +431,7 @@ const AppMain = () => {
   }
 
   if (HasCompletedVerificationProcess(profile) == true && token) {
-    ; (tabs.Home = {
+    tabs.Home = {
       screen: HomeStack,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
@@ -442,14 +444,14 @@ const AppMain = () => {
           </View>
         ),
       }),
-    }),
-      (tabs.succesPayFeatured = {
-        screen: SuccessPayFeatured,
-        navigationOptions: () => ({
-          tabBarVisible: false,
-          tabBarButtonComponent: () => <></>,
-        }),
-      })
+    }
+    tabs.succesPayFeatured = {
+      screen: SuccessPayFeatured,
+      navigationOptions: () => ({
+        tabBarVisible: false,
+        tabBarButtonComponent: () => <></>,
+      }),
+    }
     tabs.CreatePost = {
       screen: CreatePostScreen,
       navigationOptions: () => ({
@@ -590,6 +592,9 @@ const AppMain = () => {
           </View>
         ),
       }),
+      options: {
+        unmountOnBlur: true,// set this props in your tab screen options
+      }
     }
     // tabs.Message = {
     //   screen: LastMessage,

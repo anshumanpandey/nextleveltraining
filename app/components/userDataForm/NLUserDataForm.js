@@ -91,7 +91,6 @@ const NLUserDataForm = ({
         } else if (!validations.isValidEmail(values.emailId)) {
           errors.emailId = 'Non valid Email'
         }
-        if (!values.postCode) errors.postCode = 'Required'
         if (!values.state) errors.state = 'Required'
 
         if (props.hidePasswordInput != true) {

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Text, StyleSheet, FlatList, View } from 'react-native';
 import Axios from 'axios';
 import { GOOGLE_API_KEY } from '../../constants/google';
+import useThrottle from '../../utils/useThrottle';
 import { usePostCodeSearch } from './state';
 import PostcodeListItem from './PostcodeListItem';
 
@@ -25,11 +26,12 @@ const InputResultBox = ({ postCode, isVisible, onSelect, onResultsFound, coordin
 
   const canSearch = useCallback(() => isVisible === true && isRefreshing() === false, [isVisible, isRefreshing])
 
-  const performSearch = useCallback(() => {
+  const performSearch = useThrottle(useCallback(() => {
     setLoading(true)
     fetchSuggestions()
       .then((data) => data.status === "OK" ? data : Promise.reject(data.error_message))
       .then((data) => {
+        console.log(data)
         onResultsFound(data)
         setResults(data)
         setLoading(false)
@@ -39,7 +41,7 @@ const InputResultBox = ({ postCode, isVisible, onSelect, onResultsFound, coordin
         setResults({ predictions: [] })
         onResultsFound([])
       })
-  }, [onResultsFound, fetchSuggestions])
+  }, [onResultsFound, fetchSuggestions]), 600)
 
   useEffect(() => {
     if (canSearch() === true) {

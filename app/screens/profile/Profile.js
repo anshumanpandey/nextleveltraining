@@ -1,25 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Text,
-  StatusBar,
-  ActivityIndicator,
-  Alert
+  BackHandler
 } from 'react-native';
 import { Icon } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImageProgress from 'react-native-image-progress';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
-import { Formik } from 'formik';
-import CheckBox from '@react-native-community/checkbox';
-import useAxios from 'axios-hooks'
 import Header from '../../components/header/Header';
 import Images from '../../constants/image';
 import styles from './styles';
@@ -36,7 +25,6 @@ import PlayerInfo from './playerLeadForm/PlayerInfo';
 const PlayerProfile = (props) => {
   const [triggerChange, setTriggerChange] = useState(true);
   const [profilePic, setProfilePic] = useState();
-  const [submit, setSubmit] = useState(props.submit)
   const [profile] = useGlobalState('profile');
   const { AboutUs, Achievements, Teams, UpcomingMatches } = profile;
 
@@ -51,6 +39,17 @@ const PlayerProfile = (props) => {
     }
   };
 
+  const onGoBack = () => {
+    setTimeout(() => {
+      AsyncStorage.getItem("justRegistered")
+        .then((item) => {
+          if (HasCompletedVerificationProcess(profile) === true && item === "1" && profile.Role === "Player") {
+            props?.navigation?.navigate('AskFeatured', { goToOnCancel: "Home" })
+          }
+        })
+    }, 500)
+  }
+
   useEffect(() => {
     resolveProfilePic();
 
@@ -64,8 +63,19 @@ const PlayerProfile = (props) => {
       }
     });
 
-    return () => focusListener?.remove();
-  }, [props.navigation]);
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      onGoBack
+    );
+
+    return () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress',
+        onGoBack
+      );
+      focusListener?.remove();
+    }
+  }, [props?.navigation]);
 
   useEffect(() => {
     resolveProfilePic();

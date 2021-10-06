@@ -1,19 +1,15 @@
-import React, { Component, useEffect, useState } from 'react'
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage';
 import Images from '../../constants/image'
-import { LogoText, SignupPlayer, SignupCoach, CheckText, SigninText } from './LevelTexts'
-import styles from './styles.js';
+import { LogoText, SignupPlayer, SignupCoach } from './LevelTexts'
+import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
-import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../constants/color';
-import { Textarea } from 'native-base';
-import { generateMultipleDeviceToken } from '../../utils/firebase/RequestDeviceToken';
-import { useGlobalState } from '../../state/GlobalState';
 
 const Level = (props) => {
-  const [onRegisterToken] = useGlobalState("onRegisterToken")
-  const [role, setRole] = useState();
+  const [, setRole] = useState();
 
   useEffect(() => {
     const focusListener = props.navigation.addListener('didFocus', () => {
@@ -44,7 +40,7 @@ const Level = (props) => {
       <View style={styles.level_btn_view}>
         <TouchableOpacity
           style={styles.level_btn_player}
-          onPress={() => NavigationService.navigate("AskFeatured", { role: "Player" })}
+          onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Player" })}
         >
           <View style={styles.level_btn_player_view}>
             <Image source={Images.PlayerIcon} style={styles.level_btn_icon_size} />
@@ -53,7 +49,7 @@ const Level = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.level_btn_coach, { backgroundColor: Colors.nl_yellow }]}
-          onPress={() => NavigationService.navigate("AskFeatured", { role: "Coach" })}
+          onPress={() => NavigationService.navigate(Screens.SignUp, { role: "Coach" })}
         >
           <View style={styles.level_btn_player_view}>
             <Image source={Images.CoachIcon} style={styles.level_btn_icon_size} />

@@ -1,99 +1,98 @@
-import React, { Component, useEffect, useState } from 'react'
-import { View, Text, Image, Alert, TouchableOpacity, ScrollView, Platform } from 'react-native'
-var jwtDecode = require('jwt-decode');
+import React from 'react'
+import { View, Text, Image, Alert, TouchableOpacity } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage';
 import Images from '../../constants/image'
-import styles from './styles.js';
+import styles from './styles';
 import Colors from '../../constants/color';
 import NavigationService from '../../navigation/NavigationService';
 import Screens from '../../utils/screen';
-import AsyncStorage from '@react-native-community/async-storage';
 import GlobalContants from '../../constants/GlobalContants';
 
-const AskFeatured = (props) => {
 
-  return (
-    <View style={styles.level_container}>
-      <View style={styles.level_logo_view}>
-        <Image source={Images.Logo} style={{width: 150, height: 150}} />
-        <Text style={styles.level_logo_text}>
-          Find out more about how to boost your likes , comments and bookings on
-          Next Level by becoming “Featured.“
-        </Text>
-      </View>
-      <View style={styles.level_btn_view}>
-        <TouchableOpacity
-          style={styles.level_btn_player}
-          onPress={() => {
-            Alert.alert(
-              'Choose payment method',
-              'How you wana pay for the credits?',
-              [
-                {
-                  text: 'Pay with Paypal',
-                  onPress: () => {
-                    if (props.navigation.getParam('redirect', false)) {
-                      props.navigation.navigate('PayFeatured')
-                    } else {
-                      AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
-                        () => {
-                          NavigationService.navigate(Screens.SignUp, {
-                            isFeatured: true,
-                            role: props.navigation.getParam('role', 'Player'),
-                          })
-                        },
-                      )
-                    }
-                  },
-                },
-                {
-                  text: 'Pay with Credit/Debit Card',
-                  onPress: () => {
-                    if (props.navigation.getParam('redirect', false)) {
-                      props.navigation.navigate('CardPayment', {
-                        amount: parseInt(GlobalContants.FEATURED_PRICE),
-                        purchaseType: 'featured',
-                      })
-                    } else {
-                      AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
-                        () => {
-                          NavigationService.navigate(Screens.SignUp, {
-                            isFeatured: true,
-                            role: props.navigation.getParam('role', 'Player'),
-                          })
-                        },
-                      )
-                    }
-                  },
-                },
-              ],
-              {cancelable: true},
-            )
-          }}>
-          <View style={styles.level_btn_player_view}>
-            <Text style={styles.level_player_text}>Go Featured</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.level_btn_coach, {backgroundColor: Colors.nl_yellow}]}
-          onPress={() => {
-            if (props.navigation.getParam('redirect', false)) {
-              props.navigation.navigate('Search')
-            } else {
-              NavigationService.navigate(Screens.SignUp, {
-                isFeatured: false,
-                role: props.navigation.getParam('role', 'Coach'),
-              })
-            }
-            AsyncStorage.removeItem('wantToBeFeatured')
-            AsyncStorage.removeItem('askToBeFeatured')
-          }}>
-          <View style={styles.level_btn_player_view}>
-            <Text style={styles.level_player_text}>Not Now</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+const AskFeatured = (props) => (
+  <View style={styles.level_container}>
+    <View style={styles.level_logo_view}>
+      <Image source={Images.Logo} style={{ width: 150, height: 150 }} />
+      <Text style={styles.level_logo_text}>
+        Find out more about how to boost your likes , comments and bookings on
+        Next Level by becoming “Featured.“
+      </Text>
     </View>
-  )
-}
+    <View style={styles.level_btn_view}>
+      <TouchableOpacity
+        style={styles.level_btn_player}
+        onPress={() => {
+          Alert.alert(
+            'Choose payment method',
+            'How you wana pay for the credits?',
+            [
+              {
+                text: 'Pay with Paypal',
+                onPress: () => {
+                  if (props.navigation.getParam('redirect', false)) {
+                    props.navigation.navigate('PayFeatured')
+                  } else {
+                    AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
+                      () => {
+                        NavigationService.navigate(Screens.SignUp, {
+                          isFeatured: true,
+                          role: props.navigation.getParam('role', 'Player'),
+                        })
+                      },
+                    )
+                  }
+                },
+              },
+              {
+                text: 'Pay with Credit/Debit Card',
+                onPress: () => {
+                  if (props.navigation.getParam('redirect', false)) {
+                    props.navigation.navigate('CardPayment', {
+                      amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
+                      purchaseType: 'featured',
+                    })
+                  } else {
+                    AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
+                      () => {
+                        NavigationService.navigate(Screens.SignUp, {
+                          isFeatured: true,
+                          role: props.navigation.getParam('role', 'Player'),
+                        })
+                      },
+                    )
+                  }
+                },
+              },
+            ],
+            { cancelable: true },
+          )
+        }}>
+        <View style={styles.level_btn_player_view}>
+          <Text style={styles.level_player_text}>Go Featured</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.level_btn_coach, { backgroundColor: Colors.nl_yellow }]}
+        onPress={() => {
+          const backTo = props.navigation.getParam('goToOnCancel', undefined)
+          if (props.navigation.getParam('redirect', false) || backTo !== undefined) {
+            props.navigation.navigate(backTo || 'Search')
+          } else {
+            NavigationService.navigate(Screens.SignUp, {
+              isFeatured: false,
+              role: props.navigation.getParam('role', 'Coach'),
+            })
+          }
+          AsyncStorage.removeItem('wantToBeFeatured')
+          AsyncStorage.removeItem('askToBeFeatured')
+          AsyncStorage.removeItem('justRegistered')
+        }}>
+        <View style={styles.level_btn_player_view}>
+          <Text style={styles.level_player_text}>Not Now</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  </View>
+)
 
 export default AskFeatured;

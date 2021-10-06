@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Spinner, View, Icon } from 'native-base'
 import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
-import FindCoachForm from './FindCoachForm'
+import FindCoachForm from '../profile/playerLeadForm/PlayerInfo'
 
 const FindCoach = props => {
   const [isSaving, setIsSaving] = useState(false)
@@ -52,7 +52,7 @@ const FindCoach = props => {
         )
         }
       />
-      <FindCoachForm />
+      <FindCoachForm navigation={props.navigation} />
     </>
   )
 }
