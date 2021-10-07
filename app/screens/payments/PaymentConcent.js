@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity, Modal } from 'react-native';
-import { Text, View, CheckBox, Spinner } from 'native-base';
+import { Text, View, Spinner } from 'native-base';
+// eslint-disable-next-line import/no-unresolved
+import CheckBox from '@react-native-community/checkbox';
 import base64 from 'react-native-base64'
 import useAxios, { makeUseAxios } from 'axios-hooks'
 import { WebView } from 'react-native-webview';
@@ -69,7 +71,11 @@ const PaymentConcentScreen = (props) => {
           You will be redirected to PayPal's website to acess your account and submit your payment.\n Then you will return to Next Level App to obtain your booking confirmation
         </Text>
         <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', marginTop: '5%' }}>
-          <CheckBox color={Colors.g_text} checked={checked} onPress={() => setChecked(p => !p)} />
+          <CheckBox
+            color={Colors.g_text}
+            value={checked}
+            onValueChange={() => setChecked(p => !p)}
+          />
           <TouchableWithoutFeedback onPress={() => setChecked(p => !p)}>
             <View style={{ width: '90%', flexDirection: 'row', flexWrap: 'wrap' }}>
               <Text style={{ fontSize: 16 }}>

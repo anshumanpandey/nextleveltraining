@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native'
-import { Text, View, CheckBox, Spinner } from 'native-base'
+import { Text, View, Spinner } from 'native-base'
+// eslint-disable-next-line import/no-unresolved
+import CheckBox from '@react-native-community/checkbox';
 import { WebView } from 'react-native-webview'
 import useAxios from 'axios-hooks'
 import qs from 'qs'
@@ -175,8 +177,8 @@ const PayCredits = props => {
           }}>
           <CheckBox
             color={Colors.g_text}
-            checked={checked}
-            onPress={() => setChecked(p => !p)}
+            value={checked}
+            onValueChange={() => setChecked(p => !p)}
           />
           <TouchableWithoutFeedback onPress={() => setChecked(p => !p)}>
             <View
