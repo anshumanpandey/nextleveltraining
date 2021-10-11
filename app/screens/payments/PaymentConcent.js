@@ -68,7 +68,7 @@ const PaymentConcentScreen = (props) => {
       <View style={{ paddingHorizontal: '5%', alignItems: "center", marginTop: '5%' }}>
         <Image source={Images.PaypalLogo} />
         <Text style={{ fontSize: 20, textAlign: 'center' }}>
-          You will be redirected to PayPal's website to acess your account and submit your payment.\n Then you will return to Next Level App to obtain your booking confirmation
+          You will be redirected to PayPal&apos;s website to acess your account and submit your payment.\n Then you will return to Next Level App to obtain your booking confirmation
         </Text>
         <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row', marginTop: '5%' }}>
           <CheckBox

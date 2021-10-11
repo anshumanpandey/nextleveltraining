@@ -3,7 +3,6 @@ import { View, TouchableOpacity, Text } from 'react-native'
 import { Spinner, Icon } from 'native-base'
 import Header from '../../components/header/Header'
 import { AvailabiltyForm } from '../profile/coachProfile/CoachProfile'
-import NavigationService from '../../navigation/NavigationService'
 
 const AvailavilityScreen = (props) => {
   const { navigation } = props
@@ -67,6 +66,7 @@ const AvailavilityScreen = (props) => {
               }}>
               <Text
                 style={{
+                  paddingVertical: 15,
                   color: 'black',
                   opacity: isSaving == true ? 0.5 : 1,
                   fontSize: 18,

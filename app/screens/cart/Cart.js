@@ -95,12 +95,12 @@ const CardItem = ({ navigation, item }) => (
       <ButtonText>Buy credits</ButtonText>
     </Button>
 
-    <Row>
+    { /* <Row>
       <CheckBox value={false} onValueChange={() => { }} />
       <Text style={{ fontWeight: '500', marginLeft: 10 }}>
         Auto top-up next time
-      </Text>
-    </Row>
+    </Text>
+    </Row> */}
   </Card>
 )
 

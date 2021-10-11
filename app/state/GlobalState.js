@@ -1,6 +1,5 @@
 import { createStore } from 'react-hooks-global-state';
 import AsyncStorage from '@react-native-community/async-storage';
-import hasFullProfile from '../utils/perType/profileResolver';
 import HasCompletedVerificationProcess from '../utils/HasCompletedVerificationProcess';
 
 export const GLOBAL_STATE_ACTIONS = {
@@ -51,8 +50,8 @@ const reducer = (state, action) => {
       return { ...state, ...{ token: action.state }, toggle: !state.toggle };
     }
     case GLOBAL_STATE_ACTIONS.PROFILE: {
-      let toggle = state.toggle
-      let goto = undefined
+      let { toggle } = state
+      let goto
       AsyncStorage.setItem('profile', JSON.stringify(action.state))
       if (state.profile == null && action?.state?.Id) {
         console.log('setting profile first tinme')
@@ -92,7 +91,7 @@ const reducer = (state, action) => {
         }
       }
       if (state.toggle !== toggle) {
-        return { ...state, ...{ profile: action.state }, toggle: toggle, goto };
+        return { ...state, ...{ profile: action.state }, toggle, goto };
       }
       return { ...state, ...{ profile: action.state } };
     }
@@ -105,6 +104,7 @@ const reducer = (state, action) => {
       return { ...state, toggle: !state.toggle };
     }
     case GLOBAL_STATE_ACTIONS.PREFERENCES: {
+      AsyncStorage.setItem('preferences', JSON.stringify(action.state))
       return { ...state, preferences: action.state }
     }
     default: return state;
@@ -123,27 +123,22 @@ AsyncStorage.getItem('profile')
     if (profile) dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: JSON.parse(profile) })
   })
 
-export const storeIosDeviceToken = (token) => {
-  return AsyncStorage.setItem("IOSDeviceToken", token)
-}
+AsyncStorage.getItem('preferences')
+  .then(preferences => {
+    if (preferences) {
+      dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.preferences, state: JSON.parse(preferences) })
+    }
+  })
 
-export const getStoreIosDeviceToken = () => {
-  return AsyncStorage.getItem("IOSDeviceToken")
-}
+export const storeIosDeviceToken = (token) => AsyncStorage.setItem("IOSDeviceToken", token)
 
-export const userAskedToBeFeatured = () => {
-  return AsyncStorage.getItem("wantToBeFeatured")
-    .then((item) => {
-      return item == "yes"
-    })
-}
+export const getStoreIosDeviceToken = () => AsyncStorage.getItem("IOSDeviceToken")
 
-export const needsToAskFeaturedAfterLogin = () => {
-  return AsyncStorage.getItem("askToBeFeatured")
-    .then((item) => {
-      return item == "yes"
-    })
-}
+export const userAskedToBeFeatured = () => AsyncStorage.getItem("wantToBeFeatured")
+  .then((item) => item == "yes")
+
+export const needsToAskFeaturedAfterLogin = () => AsyncStorage.getItem("askToBeFeatured")
+  .then((item) => item == "yes")
 export const askToBefeatured = (user) => {
   if (user.Featured == false) {
     return AsyncStorage.setItem("askToBeFeatured", "yes")

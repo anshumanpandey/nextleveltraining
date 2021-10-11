@@ -11,42 +11,38 @@ import Header from '../../components/header/Header';
 import NLDropdownMenu from '../../components/NLDropdownMenu';
 import styles from './styles';
 import NLAddressSuggestionInput from '../../components/postcodeInput';
+import { usePostCodeSearch } from '../../components/postcodeInput/state';
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
   useGlobalState,
 } from '../../state/GlobalState';
 
-const { width } = Dimensions.get('screen');
-
-const getFullSuggestionAddress = (suggestion) => `${suggestion.line_1} ${suggestion.line_2} ${suggestion.line_3} ${suggestion.district} ${suggestion.county} ${suggestion.country}`;
-
 const LeadPreferences = (props) => {
-  const [profile] = useGlobalState('profile');
+  const postCodeSearch = usePostCodeSearch()
+
   const [preferences] = useGlobalState('preferences');
-  const [addresses, setAddresses] = useState([]);
   const [address, setAddress] = useState({
     postCode: preferences?.postCode,
     lat: preferences?.lat,
     lng: preferences?.lng,
     county: preferences?.county,
-    state: preferences?.state
+    state: preferences?.state,
+    address: preferences?.address,
   });
-  const [postCode, setPostCode] = useState(
-    preferences?.postCode || profile.PostCode,
-  );
   const [range, setRange] = useState(preferences?.range || '50');
 
   const setPreferences = () => {
     dispatchGlobalState({
       type: GLOBAL_STATE_ACTIONS.PREFERENCES,
       state: {
-        postCode: address?.postcode,
+        postCode: address?.postCode,
         lat: address?.latitude,
         lng: address?.longitude,
         range,
         county: address?.county,
         state: address?.country,
+        address: address?.address,
       },
     })
     props.navigation.goBack();
@@ -82,7 +78,6 @@ const LeadPreferences = (props) => {
                 <Text
                   style={{
                     fontSize: 18,
-                    color: 'black',
                     opacity: 1,
                     fontWeight: 'bold',
                     color: '#2D7AF0',
@@ -113,35 +108,23 @@ const LeadPreferences = (props) => {
         </Text>
         <NLAddressSuggestionInput
           placeholder="Postcode"
-          defaultValue={postCode}
-          onSuggestionsUpdated={setAddresses}
+          defaultValue={address.address}
           lookUpButtonStyle={{ backgroundColor: '#2D7AF0', borderRadius: 5 }}
           lookUpInitial
-        />
-        <NLDropdownMenu
-          disabled={!addresses.length}
-          placeholder={!addresses.length ? 'No options' : 'Select an address'}
-          theme={{
-            menu: { width: '80%' },
-            textButton: {
-              fontSize: 18,
-              color: 'rgba(0,0,0,0.3)',
-              paddingLeft: 5,
-            },
-            button: {
-              ...styles.signup_info_view,
-              width: width * 0.83,
-            },
+          onLocationSelected={(place) => {
+            postCodeSearch.getSiteDetails(place)
+              .then(details => {
+                const coordinates = details.getPlaceLatLong()
+                setAddress({
+                  postCode: details.getPlacePostCode(),
+                  lat: coordinates.lat,
+                  lng: coordinates.lng,
+                  county: details.getPlaceCounty(),
+                  state: details.getPlaceCountry(),
+                  address: details.getAddress()
+                })
+              })
           }}
-          onSelect={(selected) => {
-            console.log(JSON.stringify(selected, null, 2));
-            setPostCode(selected.postcode);
-            setAddress(selected);
-          }}
-          options={addresses.map((a) => ({
-            label: getFullSuggestionAddress(a),
-            value: a,
-          }))}
         />
 
         <Text style={{ fontSize: 18 }}>Range</Text>
@@ -182,9 +165,5 @@ const LeadPreferences = (props) => {
     </View >
   );
 };
-
-const Seperator = ({ opacity = 0.3 }) => (
-  <View style={{ height: 1, backgroundColor: '#C7C9D6', opacity }} />
-);
 
 export default LeadPreferences;

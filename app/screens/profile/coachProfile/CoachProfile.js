@@ -1359,7 +1359,7 @@ export const AboutMeCoachForm = withNavigation(({ setSubmitFn, ...props }) => {
                                     TT
                                 </Text>);
                             }) : (<Text style={styles.profileDescription}>
-                                No tranining locations
+                                No training locations
                             </Text>)}
                         </View>
                     </View>

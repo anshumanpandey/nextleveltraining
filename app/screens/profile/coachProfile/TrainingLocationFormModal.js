@@ -6,29 +6,35 @@ import { Icon } from 'native-base';
 import { TrainingLocationForm } from './TrainingLocationForm';
 import Header from '../../../components/header/Header';
 
-const TrainingLocationFormModal = ({ isVisible, afterCreation, onCancel }) => (
-  <Modal onBackButtonPress={onCancel} style={styles.modal} isVisible={isVisible}>
-    <Header
-      title="Terms"
-      hideCreatePost
-      customButton={() => (
-        <Icon
-          onPress={onCancel}
-          type="Feather"
-          name="arrow-left"
-          style={{
-            paddingVertical: 10,
-            paddingRight: 10,
-            left: 15,
-            fontSize: 22,
-            color: '#2D7AF0',
-          }}
-        />
-      )}
-    />
-    <TrainingLocationForm onCreate={afterCreation} />
-  </Modal>
-);
+const TrainingLocationFormModal = ({ isVisible, afterCreation, onCancel }) => {
+  const onCreate = () => {
+    onCancel()
+    afterCreation()
+  }
+  return (
+    <Modal onBackButtonPress={onCancel} style={styles.modal} isVisible={isVisible}>
+      <Header
+        title="Terms"
+        hideCreatePost
+        customButton={() => (
+          <Icon
+            onPress={onCancel}
+            type="Feather"
+            name="arrow-left"
+            style={{
+              paddingVertical: 10,
+              paddingRight: 10,
+              left: 15,
+              fontSize: 22,
+              color: '#2D7AF0',
+            }}
+          />
+        )}
+      />
+      <TrainingLocationForm onCreate={onCreate} />
+    </Modal>
+  )
+};
 
 TrainingLocationFormModal.propTypes = {
   isVisible: PropTypes.bool.isRequired,

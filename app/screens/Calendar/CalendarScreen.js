@@ -40,12 +40,14 @@ const CalendarScreen = (props) => {
     }, [])
 
     useEffect(() => {
-        console.log(data)
         if (!data || data.length == 0) return
 
         const d = data
             .filter(booking => {
-                if (startDate && endDate) return moment(booking.BookingDate).isBetween(startDate, endDate, "D", "[]")
+                if (startDate && endDate) {
+                    return booking.Sessions
+                        .some(session => moment(session.BookingDate).isBetween(startDate, endDate, "D", "[]"))
+                }
 
                 return true
             })
