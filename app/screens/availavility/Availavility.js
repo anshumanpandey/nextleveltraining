@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { View, TouchableOpacity, Text } from 'react-native'
+import { View } from 'react-native'
 import { Spinner, Icon } from 'native-base'
 import Header from '../../components/header/Header'
 import { AvailabiltyForm } from '../profile/coachProfile/CoachProfile'
+import NLSaveButton from '../../components/NLSaveButton'
 
 const AvailavilityScreen = (props) => {
   const { navigation } = props
@@ -19,7 +20,7 @@ const AvailavilityScreen = (props) => {
           <View
             style={{
               flexDirection: 'row',
-              width: '90%',
+              width: '100%',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
@@ -45,8 +46,8 @@ const AvailavilityScreen = (props) => {
                 color: '#2D7AF0',
               }}
             />
-            <TouchableOpacity
-              disabled={isSaving == true}
+            <NLSaveButton
+              disabled={isSaving === true}
               onPress={() => {
                 setIsSaving(true)
                 if (submitFn) {
@@ -63,17 +64,8 @@ const AvailavilityScreen = (props) => {
                       setIsSaving(false)
                     })
                 }
-              }}>
-              <Text
-                style={{
-                  paddingVertical: 15,
-                  color: 'black',
-                  opacity: isSaving == true ? 0.5 : 1,
-                  fontSize: 18,
-                }}>
-                Save
-              </Text>
-            </TouchableOpacity>
+              }}
+            />
           </View>
         )}
       />

@@ -6,6 +6,7 @@ import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
 import Colors from '../../constants/color'
 import { BankAccountForm } from '../profile/coachProfile/CoachProfile'
+import NLSaveButton from '../../components/NLSaveButton'
 
 const AboutMeScreen = (props) => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -59,8 +60,8 @@ const AboutMeScreen = (props) => {
                   color: '#2D7AF0',
                 }}
               />
-              <TouchableOpacity
-                disabled={isSaving == true}
+              <NLSaveButton
+                disabled={isSaving === true}
                 onPress={() => {
                   setIsSaving(true)
                   if (submitFn) {
@@ -68,16 +69,8 @@ const AboutMeScreen = (props) => {
                       setIsSaving(false)
                     })
                   }
-                }}>
-                <Text
-                  style={{
-                    color: 'black',
-                    opacity: isSaving == true ? 0.5 : 1,
-                    fontSize: 18,
-                  }}>
-                  Save
-                </Text>
-              </TouchableOpacity>
+                }}
+              />
             </View>
           )
           }

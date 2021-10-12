@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  Dimensions,
   SafeAreaView,
-  TouchableOpacity,
 } from 'react-native';
 import { Icon, Picker } from 'native-base';
 import Header from '../../components/header/Header';
-import NLDropdownMenu from '../../components/NLDropdownMenu';
+import NLSaveButton from '../../components/NLSaveButton';
 import styles from './styles';
 import NLAddressSuggestionInput from '../../components/postcodeInput';
 import { usePostCodeSearch } from '../../components/postcodeInput/state';
@@ -74,17 +72,7 @@ const LeadPreferences = (props) => {
                 right: 0,
                 zIndex: 1,
               }}>
-              <TouchableOpacity onPress={setPreferences}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    opacity: 1,
-                    fontWeight: 'bold',
-                    color: '#2D7AF0',
-                  }}>
-                  Save
-                </Text>
-              </TouchableOpacity>
+              <NLSaveButton onPress={setPreferences} />
             </View>
           </>
         )}

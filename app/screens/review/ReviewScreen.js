@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import {
-  View, StyleSheet, Text, ScrollView, TouchableOpacity
+  View, StyleSheet, ScrollView
 } from 'react-native';
 import {
   Input as TextInput, Spinner,
@@ -11,6 +11,7 @@ import { AirbnbRating } from 'react-native-ratings';
 import ErrorLabel from '../../components/ErrorLabel';
 import { useGlobalState } from '../../state/GlobalState';
 import HeaderTitleBack from '../../components/header/HeaderTitleBack';
+import NLSaveButton from '../../components/NLSaveButton';
 import NavigationService from '../../navigation/NavigationService';
 
 const ReviewScreen = (props) => {
@@ -47,9 +48,7 @@ const ReviewScreen = (props) => {
                 }}
               />
             )}
-            <TouchableOpacity disabled={postReq.loading} onPress={() => formikRef?.current?.handleSubmit()}>
-              <Text style={{ fontSize: 18, paddingVertical: 25 }}>Save</Text>
-            </TouchableOpacity>
+            <NLSaveButton onPress={() => formikRef?.current?.handleSubmit()} />
           </View>
         )}
         onBackPress={() => props.navigation.navigate('Booking')}

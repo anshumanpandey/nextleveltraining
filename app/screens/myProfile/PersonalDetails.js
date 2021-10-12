@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { View, Text, Alert } from 'react-native'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler'
 import { Spinner, Tabs, Tab, Icon, Input as TextInput } from 'native-base'
@@ -6,8 +6,9 @@ import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { Formik } from 'formik'
 import useAxios from 'axios-hooks'
 import Header from '../../components/header/Header'
-import styles from './styles.js'
+import styles from './styles'
 import ErrorLabel from '../../components/ErrorLabel'
+import NLSaveButton from '../../components/NLSaveButton';
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
@@ -82,23 +83,14 @@ const PersonalDetails = props => {
         }}
       />
       {currentTab === 1 && (
-        <TouchableOpacity
+        <NLSaveButton
           disabled={isReadyToSave === false}
           onPress={() => {
             if (currentSubmitFn) {
               setIsSaving(true)
               currentSubmitFn().then(() => setIsSaving(false))
             }
-          }}>
-          <Text
-            style={{
-              color: 'black',
-              opacity: isReadyToSave === false ? 0.5 : 1,
-              fontSize: 18,
-            }}>
-            Save
-          </Text>
-        </TouchableOpacity>
+          }} />
       )}
     </View>
   )
