@@ -7,6 +7,8 @@ const NLSaveButton = ({ onPress, disabled }) => (
   <TouchableOpacity disabled={disabled} onPress={onPress}>
     <Text
       style={{
+        paddingHorizontal: 5,
+        paddingVertical: 15,
         fontSize: 18,
         opacity: 1,
         fontWeight: 'bold',

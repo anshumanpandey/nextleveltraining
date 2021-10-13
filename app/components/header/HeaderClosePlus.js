@@ -4,6 +4,7 @@ import { Icon, Spinner } from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
 import Dimension from '../../constants/dimensions';
+import NLSaveButton from '../NLSaveButton';
 
 const HeaderClosePlus = ({ isSaveButton, saveOnPress, isLoading = false, onGoBack = null }) => (
   <View style={styles.header_layout}>
@@ -26,9 +27,10 @@ const HeaderClosePlus = ({ isSaveButton, saveOnPress, isLoading = false, onGoBac
         {isSaveButton ? (
           <>
             {isLoading && <Spinner color="black" style={{ marginRight: '10%' }} />}
-            <TouchableOpacity style={{ paddingVertical: Dimension.px10 }} disabled={isLoading} onPress={() => saveOnPress()}>
-              <Text style={{ fontSize: 18, color: 'black', opacity: isLoading ? 0.5 : 1, fontWeight: 'bold' }}>Save</Text>
-            </TouchableOpacity>
+            <NLSaveButton
+              disabled={isLoading}
+              onPress={() => saveOnPress()}
+            />
           </>
         ) : (
           <Icon

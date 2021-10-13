@@ -22,6 +22,17 @@ const ProfilePicScreen = (props) => {
 
     const isSaving = () => getUserReq.loading === true || isFileUploading
 
+    const afterUpload = () => {
+        if (HasCompletedVerificationProcess(profile)) {
+            const goTo = props?.navigation?.getParam("goBackTo", "AboutMe")
+            const params = goTo != "Profile" ? undefined : { player: getGlobalState("profile"), ...getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true }
+            console.log("profilepic: back to", goTo)
+            NavigationService.navigate(goTo, params)
+        } else {
+            NavigationService.goBack()
+        }
+    }
+
     return (
         <Formik
             innerRef={(r) => { formikRef.current = r }}
@@ -36,24 +47,19 @@ const ProfilePicScreen = (props) => {
                 return errors
             }}
             onSubmit={values => {
-                uploadFile({
-                    file: values.file,
-                    type: FILE_TYPE_UPLOAD.PROFILE
-                })
-                    .then(() => getUserData())
-                    .then((r) => {
-                        console.log(r.data)
-                        dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
-                        if (HasCompletedVerificationProcess(profile)) {
-                            const goTo = props?.navigation?.getParam("goBackTo", "AboutMe")
-                            const params = goTo != "Profile" ? undefined : { player: getGlobalState("profile"), ...getGlobalState("profile"), hideConnect: true, hideCoachButtons: true, editable: true }
-                            console.log("profilepic: back to", goTo)
-                            NavigationService.navigate(goTo, params)
-                        } else {
-                            NavigationService.goBack()
-                        }
-                        console.log("new profile")
+                if (values.file === profile?.ProfileImage) {
+                    afterUpload()
+                } else {
+                    uploadFile({
+                        file: values.file,
+                        type: FILE_TYPE_UPLOAD.PROFILE
                     })
+                        .then(() => getUserData())
+                        .then((r) => {
+                            dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                            afterUpload()
+                        })
+                }
             }}
         >
             {({ handleSubmit, setFieldValue, values, errors, touched }) => (
