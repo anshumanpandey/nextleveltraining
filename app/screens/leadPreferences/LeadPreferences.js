@@ -95,7 +95,7 @@ const LeadPreferences = (props) => {
           Select Location
         </Text>
         <NLAddressSuggestionInput
-          placeholder="Postcode"
+          placeholder="Address"
           defaultValue={address.address}
           lookUpButtonStyle={{ backgroundColor: '#2D7AF0', borderRadius: 5 }}
           lookUpInitial

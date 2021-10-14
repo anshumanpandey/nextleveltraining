@@ -7,14 +7,15 @@ import { TrainingLocationForm } from './TrainingLocationForm';
 import Header from '../../../components/header/Header';
 
 const TrainingLocationFormModal = ({ isVisible, afterCreation, onCancel }) => {
-  const onCreate = () => {
+  const onCreate = (cb) => {
     onCancel()
     afterCreation()
+    cb()
   }
   return (
     <Modal onBackButtonPress={onCancel} style={styles.modal} isVisible={isVisible}>
       <Header
-        title="Terms"
+        title="Create Training Location"
         hideCreatePost
         customButton={() => (
           <Icon

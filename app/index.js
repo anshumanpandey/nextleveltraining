@@ -259,6 +259,7 @@ const AppMain = () => {
       AboutMe: { screen: AboutMeScreen },
       Availability: { screen: AvailavilityScreen },
       TrainingLocation: { screen: TrainingLocationScreen },
+      TrainingLocationEdit: { screen: TrainingLocationEdit },
       Calendar: { screen: CalendarScreen },
       Terms: { screen: TermsScreen },
       Privacy: { screen: PrivacyPolicyScreen },

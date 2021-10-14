@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { TouchableOpacity } from "react-native"
-import { Text, View, Spinner, Icon } from 'native-base'
+import React, { useState } from 'react'
+import { Icon, View, Spinner } from 'native-base'
 import Header from '../../components/header/Header'
-import { TrainingLocationForm } from '../profile/coachProfile/CoachProfile'
+import { TrainingLocationForm } from '../profile/coachProfile/TrainingLocationForm'
 import NavigationService from '../../navigation/NavigationService'
+import NLSaveButton from '../../components/NLSaveButton'
 
 
 const TrainingLocationEdit = (props) => {
@@ -15,64 +15,62 @@ const TrainingLocationEdit = (props) => {
       <Header
         title="Add Location"
         customButton={() => (
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              flexGrow: 1,
-            }}>
-            {isSaving && (
-              <Spinner
-                size={28}
-                color="black"
-                style={{
-                  right: 20,
-                  position: 'absolute',
-                  marginRight: '10%',
-                  height: '10%',
-                }}
-              />
-            )}
-            {/* <Icon
-                          onPress={() => props.navigation.goBack()}
-                          type="Feather"
-                          name="arrow-left"
-                          style={{
-                            left: 15,
-                            fontSize: 22,
-                            color: '#2D7AF0',
-                          }}
-                        /> */}
-            <TouchableOpacity
-              disabled={isSaving === true}
-              onPress={() => {
-                if (submitFn) {
-                  setIsSaving(true)
-                  submitFn().then(() => {
-                    setIsSaving(false)
-                    NavigationService.navigate('TrainingLocation')
-                  })
-                }
+          <>
+            <Icon
+              onPress={() => props.navigation.goBack()}
+              type="Feather"
+              name="arrow-left"
+              style={{
+                position: 'absolute',
+                left: 15,
+                fontSize: 22,
+                zIndex: 1,
+                color: '#2D7AF0',
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                flexGrow: 1,
               }}>
-              <Text
-                style={{
-                  color: 'black',
-                  opacity: isSaving === true ? 0.5 : 1,
-                  fontSize: 18,
-                }}>
-                Save
-              </Text>
-            </TouchableOpacity>
-          </View>
+              {isSaving && (
+                <Spinner
+                  size={28}
+                  color="black"
+                  style={{
+                    right: 20,
+                    position: 'absolute',
+                    marginRight: '10%',
+                    height: '10%',
+                  }}
+                />
+              )}
+              <NLSaveButton
+                disabled={isSaving === true}
+                onPress={() => {
+                  if (submitFn) {
+                    setIsSaving(true)
+                    submitFn().then(() => {
+                      setIsSaving(false)
+                      NavigationService.navigate('TrainingLocation')
+                    })
+                  }
+                }} />
+            </View>
+          </>
         )}
         hideCreatePost
         toggleDrawer={props.navigation.toggleDrawer} navigate={props.navigation.navigate}
       />
-      <TrainingLocationForm navigation={props.navigation} isSaving={isSaving} setSubmitFn={(fn) => {
-        setSubmitFunction(() => fn)
-      }} {...props.navigation.state.params.item} />
+      <TrainingLocationForm
+        navigation={props.navigation}
+        isSaving={isSaving}
+        setSubmitFn={(fn) => {
+          setSubmitFunction(() => fn)
+        }} {...props.navigation.state.params.item} />
     </View>
   );
 }

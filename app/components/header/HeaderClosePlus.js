@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Icon, Spinner } from 'native-base';
 import styles from './styles';
 import NavigationService from '../../navigation/NavigationService';
-import Dimension from '../../constants/dimensions';
 import NLSaveButton from '../NLSaveButton';
 
 const HeaderClosePlus = ({ isSaveButton, saveOnPress, isLoading = false, onGoBack = null }) => (

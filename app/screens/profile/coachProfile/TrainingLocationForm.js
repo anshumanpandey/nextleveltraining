@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import { ScrollView, View, TextInput as RNTextInput, Text, TouchableOpacity, Image } from 'react-native'
+import { ScrollView, View, TextInput as RNTextInput, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
 import useAxios from 'axios-hooks'
+import PropTypes from 'prop-types'
 import { Formik } from 'formik';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Spinner } from 'native-base';
@@ -18,15 +19,18 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
   const formikRef = useRef()
   const [profile] = useGlobalState('profile')
   const [{ loading }, doPost] = useAxios({
-    url: '/Users/savetraininglocation',
+    url: '/Users/SaveTrainingLocation',
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
   }, { manual: true })
 
   const [getUserReq, getUserData] = useAxios({
     url: '/Users/GetUser',
   }, { manual: true })
 
-  const [, uploadFile] = useFileUploader()
+  const [{ loading: uploadingFile }, uploadFile] = useFileUploader()
 
   useEffect(() => {
     if (setSubmitFn) {
@@ -35,6 +39,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
     formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
     formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
     formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
+    formikRef?.current?.setFieldValue("file", null)
     formikRef?.current?.setFieldValue("file", null)
     formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
     formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
@@ -56,7 +61,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
       formikRef?.current?.setFieldValue("locationName", params?.LocationName || "")
       formikRef?.current?.setFieldValue("trainingLocationId", params?.Id || undefined)
       formikRef?.current?.setFieldValue("address", params?.LocationAddress || "")
-      formikRef?.current?.setFieldValue("file", null)
+      formikRef?.current?.setFieldValue("file", params.ImageUrl ? { imageUrl: params.ImageUrl } : null)
       formikRef?.current?.setFieldValue("lat", params?.Lat || 0)
       formikRef?.current?.setFieldValue("lng", params?.Lng || 0)
     })
@@ -80,7 +85,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
     }
   }, [])
 
-  const signupIsDisabled = () => loading || getUserReq.loading
+  const signupIsDisabled = () => loading || getUserReq.loading || uploadingFile
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
@@ -103,29 +108,34 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
           return errors
         }}
         onSubmit={(values, { setFieldValue, setErrors, setTouched }) => {
-          uploadFile({
-            file: values.file,
-            type: FILE_TYPE_UPLOAD.LOCATION
-          })
-            .then(({ responseBody }) => {
-              const dataToSend = {
-                "trainingLocationId": values.trainingLocationId || undefined,
-                "locationName": values.locationName,
-                "locationAddress": values.address,
-                "role": profile.Role,
-                "playerOrCoachID": profile.Id,
-                lat: values.lat.toFixed(2),
-                lng: values.lng.toFixed(2),
-                // imageUrl: responseBody
-              }
-
-              console.log({ dataToSend })
-              return doPost({ dataToSend })
+          let promise = Promise.resolve()
+          if (values.file && values.file.imageUrl !== undefined) {
+            promise = uploadFile({
+              file: values.file,
+              type: FILE_TYPE_UPLOAD.LOCATION
             })
+          }
+
+          promise.then(({ responseBody }) => {
+            const dataToSend = {
+              "trainingLocationId": values.trainingLocationId || undefined,
+              "locationName": values.locationName,
+              "LocationAddress": values.address,
+              "role": profile.Role,
+              "playerOrCoachID": profile.Id,
+              lat: parseFloat(values.lat.toFixed(2)),
+              lng: parseFloat(values.lng.toFixed(2)),
+              ImageUrl: responseBody
+            }
+
+            return doPost({ data: dataToSend })
+          })
             .then(() => getUserData())
             .then((r) => {
               if (onCreate) {
-                onCreate(() => dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data }));
+                onCreate(() => {
+                  dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
+                });
               } else {
                 dispatchGlobalState({ type: GLOBAL_STATE_ACTIONS.PROFILE, state: r.data })
               }
@@ -155,7 +165,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
             <View style={styles.containerCommon}>
               <View style={styles.inputContainer}>
                 <RNTextInput
-                  style={{ height: 50, color: 'black', paddingLeft: 5 }}
+                  style={extraStyles.input}
                   placeholderTextColor="rgba(0,0,0,0.3)"
                   placeholder="Location Name"
                   onChangeText={handleChange('locationName')}
@@ -171,7 +181,6 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
                 onLocationSelected={(loc) => {
                   postCoder.getSiteDetails(loc)
                     .then(details => {
-                      console.log({ details })
                       const coord = details.getPlaceLatLong()
                       setFieldValue('address', details.getAddress())
                       setFieldValue('lat', coord.lat)
@@ -182,15 +191,15 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
 
               {errors.address && touched.address && <ErrorLabel text={errors.address} />}
 
-              <View style={[styles.inputContainer, { marginTop: '2%' }]}>
-                <Text numberOfLines={1} style={{ paddingLeft: 5, color: (values.file?.fileName || values.file?.uri) ? 'black' : 'rgba(0,0,0,0.3)', paddingVertical: '4%' }}>
-                  {(values.file?.uri) ? (values.file?.uri.split("/").pop()) : "Upload Training Location image"}
-                </Text>
-              </View>
+              <FakeInput
+                isActive={values.file?.fileName || values.file?.uri || values.file?.imageUrl}
+                placeholder="Upload Training Location image"
+                value={values.file?.uri?.split("/").pop()}
+              />
               <NLCropperImagePicker onFileSelected={(file) => {
                 setFieldValue("file", file)
               }} />
-              {values.file && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri }} />}
+              {(values.file?.uri || values.file?.imageUrl) && <Image style={{ height: 250, resizeMode: 'contain' }} source={{ uri: values.file?.uri || values.file?.imageUrl }} />}
               {errors.file && touched.file && <ErrorLabel text={errors.file} />}
 
               {!setSubmitFn && (
@@ -214,5 +223,27 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
     </ScrollView>
   );
 }
+
+const FakeInput = ({ isActive, placeholder, value }) => (
+  <View style={[styles.inputContainer, extraStyles.fileNameInput]}>
+    <Text numberOfLines={1} style={[extraStyles.fileNameInputText, isActive && extraStyles.fileNameInputText]}>
+      {isActive ? value : placeholder}
+    </Text>
+  </View>
+)
+
+FakeInput.propTypes = {
+  isActive: PropTypes.bool.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+}
+
+const extraStyles = StyleSheet.create({
+  input: { height: 50, color: 'black', paddingLeft: 5 },
+  fileNameInput: { marginTop: '2%' },
+  fileNameInputText: { paddingLeft: 5, color: 'rgba(0,0,0,0.3)', paddingVertical: '4%' },
+  fileNameInputTextActive: { paddingLeft: 5, color: "black", paddingVertical: '4%' }
+
+});
 
 export default TrainingLocationForm;
