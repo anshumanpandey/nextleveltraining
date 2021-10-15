@@ -26,7 +26,7 @@ const PostCard = ({ item, refreshCb, onPressOfComment }) => {
   const [likes, setLikes] = useState([]);
   const [videoIsReady, setVideoIsReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [, setImageLoaded] = useState(false);
   const [profile] = useGlobalState('profile')
 
   const [{ loading }, postLike] = useAxios({

@@ -102,9 +102,9 @@ const Home = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <PostCard
       refreshCb={refetch}
-      onPressOfComment={() =>
+      onPressOfComment={() => {
         navigation.navigate(screen.CreateComment, { post: item })
-      }
+      }}
       item={item}
       onClickItem={() => { }}
     />
