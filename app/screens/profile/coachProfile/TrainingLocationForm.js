@@ -109,7 +109,7 @@ export const TrainingLocationForm = ({ setSubmitFn, onCreate, navigation, ...par
         }}
         onSubmit={(values, { setFieldValue, setErrors, setTouched }) => {
           let promise = Promise.resolve()
-          if (values.file && values.file.imageUrl !== undefined) {
+          if (values.file && (values.file.imageUrl !== undefined || values.file.uri !== undefined)) {
             promise = uploadFile({
               file: values.file,
               type: FILE_TYPE_UPLOAD.LOCATION
