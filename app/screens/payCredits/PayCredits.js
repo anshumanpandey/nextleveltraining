@@ -29,7 +29,6 @@ import {
 const PayCredits = props => {
   const amount = props.navigation.getParam('amount', 0)
   const credits = props.navigation.getParam('credits', 0)
-  const purchaseType = props.navigation.getParam('purchaseType', null)
 
   const webview = useRef(null)
 
@@ -90,12 +89,14 @@ const PayCredits = props => {
       if (apiCalled) return
       try {
         const { data } = await capturePaymentForToken(urlParams.token, json)
-        console.log(data)
+        console.log({ data })
+        console.log("1")
 
         await onPaymentSuccess(data.id)
         setApiCalled(true)
         setOpenModal(false)
         props.navigation.navigate('SuccessPayCredits')
+        console.log("buy cmpleted")
       } catch (error) {
         console.log('capturePaymentForToken error', error)
         setOpenModal(false)

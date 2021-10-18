@@ -1,11 +1,12 @@
-import {useEffect, useState} from 'react'
-import {makeUseAxios} from 'axios-hooks'
-import GlobalContants from '../constants/GlobalContants'
+import { useEffect, useState } from 'react'
+import { makeUseAxios } from 'axios-hooks'
 import base64 from 'react-native-base64'
+import GlobalContants from '../constants/GlobalContants'
+
 const simpleAxiosHook = makeUseAxios()
 
 export const getCaptureUrl = token => {
-  if (GlobalContants.ENV == 'LIVE') {
+  if (GlobalContants.ENV === 'LIVE') {
     return `https://api.paypal.com/v2/checkout/orders/${token}/capture`
   }
   return `https://api.sandbox.paypal.com/v2/checkout/orders/${token}/capture`
@@ -34,7 +35,7 @@ export const UsePaypalHook = () => {
       url: GlobalContants.PAYPAL_PAYMENT_URL,
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   useEffect(() => {
@@ -47,26 +48,26 @@ export const UsePaypalHook = () => {
     {
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
-  const generatePaymentOrderFor = paypalJson => {
-    return doPayment({
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-      data: paypalJson,
-    })
-  }
+  const generatePaymentOrderFor = paypalJson => doPayment({
+    headers: {
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    data: paypalJson,
+  })
 
   const capturePaymentForToken = (token, paypalJson) => {
-    return doCapturePayment({
+    const reqData = {
       url: getCaptureUrl(token),
-      data: {...paypalJson, final_capture: true},
+      data: { ...paypalJson, final_capture: true },
       headers: {
         Authorization: `Bearer ${bearerToken}`,
       },
-    })
+    }
+    console.log("capturePaymentForToken", JSON.stringify(reqData))
+    return doCapturePayment(reqData)
   }
 
   return {

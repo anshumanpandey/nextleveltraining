@@ -1,8 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import Colors from '../../../../constants/color';
-import styles from './information-style';
-import { Icon } from 'native-base';
+import { View } from 'react-native';
 import moment from 'moment';
 import DetailsCard from './DetailsCard';
 import ExperienceCard from './ExperienceCard';
@@ -43,27 +40,25 @@ const InformationTab = (props) => {
       <DetailsCard
         onPress={() => handleOnCardPress({ title: "About Me", data: props.coach.AboutUs, goBackTo: 'Profile' })}
         editable={props.editable}
-        title={'About me'}
+        title="About me"
         value={props.coach.AboutUs}
       />
       <DetailsCard
         onPress={() => handleOnCardPress({ title: "Accomplishment", data: props.coach.Accomplishment, goBackTo: 'Profile' })}
         editable={props.editable}
-        title={'Accomplishments'}
+        title="Accomplishments"
         value={props.coach.Accomplishment}
       />
       <ExperienceCard
         editable={props.editable}
-        title={'Experience'}
-        data={props.coach.Experiences.map(e => {
-          return {
-            id: e.Id,
-            title: e.Club,
-            desig: e.JobPosition,
-            date: `${moment(e.StartDate).format("DD MMM YYYY")} ${e.EndDate ? moment(e.EndDate).format("DD MMM YYYY") : "Till Date"}`,
-            ...e
-          }
-        })}
+        title="Experience"
+        data={props.coach.Experiences.map(e => ({
+          id: e.Id,
+          title: e.Club,
+          desig: e.JobPosition,
+          date: `${moment(e.StartDate).format("DD MMM YYYY")} ${e.EndDate ? moment(e.EndDate).format("DD MMM YYYY") : "Till Date"}`,
+          ...e
+        }))}
       />
       <DetailsCard
         onPress={() => {
@@ -75,10 +70,8 @@ const InformationTab = (props) => {
           })
         }}
         editable={props.editable}
-        title={'Qualifications'}
-        value={props.coach.Qualifications.map(e => {
-          return e.Qualification
-        }).join("\n")}
+        title="Qualifications"
+        value={props.coach.Qualifications.map(e => e.Qualification).join("\n")}
       />
     </View>
   );

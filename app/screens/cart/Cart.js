@@ -1,8 +1,7 @@
 import React from 'react'
 import { FlatList, Text, Alert } from 'react-native'
-import CheckBox from '@react-native-community/checkbox'
-
 import Header from '../../components/header/Header'
+import NLBackButton from '../../components/header/NLBackButton'
 import Images from '../../constants/image'
 import { Row } from '../../components/styled'
 import {
@@ -24,7 +23,15 @@ const Cart = ({ navigation }) => {
 
   return (
     <Container>
-      <Header title="Credits" hideCreatePost />
+      <Header
+        title="Credits"
+        hideCreatePost
+        customButton={() => (
+          <>
+            <NLBackButton navigation={navigation} />
+          </>
+        )}
+      />
 
       <FlatList
         data={items}
@@ -58,7 +65,7 @@ const CardItem = ({ navigation, item }) => (
     )}
 
     <Row>
-      <Text style={{ fontWeight: '700' }}>£ {item.price}</Text>
+      <Text style={{ fontWeight: '700' }}>£ {item.price.toFixed(2)}</Text>
       <Text style={{ fontWeight: '500' }}> + VAT</Text>
     </Row>
 

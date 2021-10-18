@@ -1,5 +1,6 @@
 /* const GlobalContants = {
     ENV: 'LIVE',
+    STRIPE_KEY: 'pk_live_hsdDdRGSyYxs38fMNIaAY1CD00rAm7kvcW',
     FEATURED_PRICE: '15',
     BOOKING_COMISSION: 2,
     PAYPAL_CLIENT_ID: 'AWpaMztfwuCn_dP0IYhyvsnGRxgHtgP5GjDOfFi1U21ANbvyr7PRly1iwcplriBjtPuUGnZufVn894cE',
@@ -24,6 +25,7 @@ const GlobalContants = {
     ENV: 'TEST',
     FEATURED_PRICE: '20',
     BOOKING_COMISSION: 2,
+    STRIPE_KEY: "pk_test_x7ILp8ZkceqUqaIxDWAiBsLi00Fz2vPqrZ",
     PAYPAL_CLIENT_ID: 'AS7OSbMNJhiMOE9IlFst44IhkGiRXmttKDa20ovXwQvS3WiU7enHhjeglB-vwgHYkeQ8MvIUORS4LPOM',
     PAYPAL_CLIENT_SECRET: 'EC8lbXoww3XPmnabMFsup2tt6_N9duhvKRn7619rCLHrejFN513BoXMuauPIrcLYfN20TwpPLvFeHJD9',
     PAYPAL_TOKEN_URL: 'https://api-m.sandbox.paypal.com/v1/oauth2/token',

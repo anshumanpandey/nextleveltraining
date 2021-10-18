@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react'
-import {Icon, Spinner} from 'native-base'
-import {Image, ScrollView, Text, View, FlatList} from 'react-native'
+import React, { useEffect } from 'react'
+import { Icon, Spinner } from 'native-base'
+import { Image, ScrollView, Text, View, FlatList } from 'react-native'
+import useAxios from 'axios-hooks'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
 import styles from './styles'
-import useAxios from 'axios-hooks'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
@@ -13,7 +13,7 @@ import {
 
 const Wallet = props => {
   const [profile] = useGlobalState('profile')
-  const [{loading, data}] = useAxios('/Users/GetCreditHistory')
+  const [{ loading, data }] = useAxios('/Users/GetCreditHistory')
   const [getUserReq] = useAxios('/Users/GetUser')
 
   useEffect(() => {
@@ -27,14 +27,16 @@ const Wallet = props => {
 
 
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     const temp = item.CreatedAt.split('T')
     const date = temp[0].split('-')
     return (
       <View style={styles.historyItem}>
         <View style={styles.itemRow}>
-          <Text style={styles.titleText}>Paypal</Text>
-          <Text style={styles.amountText}>£ {item.AmountPaid}</Text>
+          <Text style={styles.titleText}>
+            {!item.PaypalPaymentId ? "Credit Card" : "Paypal"}
+          </Text>
+          <Text style={styles.amountText}>£ {item.AmountPaid.toFixed(2)}</Text>
         </View>
         <View style={styles.itemRow}>
           <Text
@@ -45,9 +47,7 @@ const Wallet = props => {
     )
   }
 
-  const transactions = React.useMemo(() => {
-    return data?.reverse();
-  }, [data?.length])
+  const transactions = React.useMemo(() => data?.reverse(), [data?.length])
 
   return (
     <ScrollView style={styles.container}>
@@ -76,10 +76,10 @@ const Wallet = props => {
       />
 
       <View style={styles.creditSection}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={{fontSize: 35}}>{profile?.Credits || 0}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 35 }}>{profile?.Credits || 0}</Text>
           <Image
-            style={{width: 30, height: 20}}
+            style={{ width: 30, height: 20 }}
             resizeMode="contain"
             source={Images.LogoOnly}
           />
@@ -95,7 +95,7 @@ const Wallet = props => {
           renderItem={renderItem}
           ListEmptyComponent={() => (
             <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text style={styles.infoText}>No credit history</Text>
             </View>
           )}
@@ -106,7 +106,7 @@ const Wallet = props => {
   )
 }
 
-const BackButton = ({navigation}) => (
+const BackButton = ({ navigation }) => (
   <Icon
     onPress={() => navigation.goBack()}
     type="Feather"

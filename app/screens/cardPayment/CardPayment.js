@@ -1,22 +1,22 @@
 import React from 'react'
-import {View, TouchableOpacity, Text} from 'react-native'
-import Header from '../../components/header/Header'
-import styles from './styles'
-import {Icon} from 'native-base'
+import { Alert, View } from 'react-native'
+import { Icon } from 'native-base'
 import stripe from 'tipsi-stripe'
-import {CreditCardInput} from 'react-native-credit-card-input'
+import { CreditCardInput } from 'react-native-credit-card-input'
 import useAxios from 'axios-hooks'
+import { NavigationActions, StackActions } from 'react-navigation'
+import { nanoid } from 'nanoid'
 import {
   dispatchGlobalState,
   GLOBAL_STATE_ACTIONS,
+  useGlobalState
 } from '../../state/GlobalState'
-import { Alert } from 'react-native'
-import { NavigationActions, StackActions } from 'react-navigation'
-import { nanoid } from 'nanoid'
-import {useGlobalState} from '../../state/GlobalState'
+import Header from '../../components/header/Header'
+import NLButton from '../../components/NLButton'
+import GlobalContants from '../../constants/GlobalContants'
 
 stripe.setOptions({
-  publishableKey: 'pk_live_hsdDdRGSyYxs38fMNIaAY1CD00rAm7kvcW',
+  publishableKey: GlobalContants.STRIPE_KEY,
 })
 
 const CardPayment = props => {
@@ -27,14 +27,14 @@ const CardPayment = props => {
   const purchaseType = props.navigation.getParam('purchaseType', null)
 
   const [cardDetails, setCardDetails] = React.useState(null)
-  const [disabled, setDisabled] = React.useState(true)
+  const [disabled, setDisabled] = React.useState(false)
 
   const [stripePaymentCreateIntentRes, stripePaymentCreateIntent] = useAxios(
     {
       url: `/Users/PayWithStripe`,
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const [buyCreditsReq, buyCredits] = useAxios(
@@ -42,14 +42,14 @@ const CardPayment = props => {
       url: '/Users/BuyCredits',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const [getUserReq, getUserData] = useAxios(
     {
       url: '/Users/GetUser',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const [saveBookingReq, saveBooking] = useAxios(
@@ -57,7 +57,7 @@ const CardPayment = props => {
       url: '/Users/SaveBooking',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
   const [savePaymenReq, savePayment] = useAxios(
@@ -65,10 +65,16 @@ const CardPayment = props => {
       url: '/Users/UpdatePaymentDetails',
       method: 'POST',
     },
-    {manual: true},
+    { manual: true },
   )
 
-  const _confirmPayment = async () => {
+  const isMakingRequest = () => stripePaymentCreateIntentRes.loading === true ||
+    buyCreditsReq.loading === true ||
+    saveBookingReq.loading === true ||
+    getUserReq.loading === true ||
+    savePaymenReq.data
+
+  const confirmPayment = async () => {
     try {
       setDisabled(true)
       const expiry = cardDetails.expiry.split('/')
@@ -76,15 +82,15 @@ const CardPayment = props => {
       const year = `20${expiry[1]}`
       const params = {
         number: cardDetails.number,
-        expMonth: month,
-        expYear: year,
+        expMonth: parseInt(month, 10),
+        expYear: parseInt(year, 10),
         cvc: cardDetails.cvc,
       }
       console.log(params)
       const paymentMethod = await stripe.createPaymentMethod({
         card: params,
       })
-      // console.log('method:', paymentMethod)
+      console.log('method:', paymentMethod)
       const result = await stripePaymentCreateIntent({
         data: {
           amount: amount * 100,
@@ -114,7 +120,7 @@ const CardPayment = props => {
               bookingStatus: 'Done',
             }
             // console.log(data)
-            saveBooking({data})
+            saveBooking({ data })
               .then(r => {
                 console.log(r.data)
               })
@@ -135,7 +141,7 @@ const CardPayment = props => {
                 props.navigation.dispatch(resetAction)
               })
           } else if (purchaseType === 'featured') {
-            const data = {paypalPaymentId: nanoid()}
+            const data = { paypalPaymentId: nanoid() }
             const res = await savePayment({ data })
             Alert.alert('Succeed', 'Payment Successful!')
             const resetAction = StackActions.reset({
@@ -153,12 +159,12 @@ const CardPayment = props => {
             props.navigation.dispatch(resetAction)
           } else {
             const newData = {
-              credits: credits,
+              credits,
               amountPaid: Math.round(amount),
             }
-            const response = await buyCredits({data: newData})
+            const response = await buyCredits({ data: newData })
             if (response.status !== 200) return
-            const {data} = await getUserData()
+            const { data } = await getUserData()
             dispatchGlobalState({
               type: GLOBAL_STATE_ACTIONS.PROFILE,
               state: data,
@@ -172,7 +178,7 @@ const CardPayment = props => {
                   routeName: 'MainStack',
                   action: NavigationActions.navigate({
                     routeName: 'Profile',
-                    action: NavigationActions.navigate({routeName: 'Wallet'}),
+                    action: NavigationActions.navigate({ routeName: 'Wallet' }),
                   }),
                 }),
               ],
@@ -182,11 +188,13 @@ const CardPayment = props => {
         }
       }
     } catch (e) {
+      Alert.alert("Error", e.toString())
+      setDisabled(false)
       console.log('err:', e)
     }
   }
 
-  const _onChange = form => {
+  const onChange = form => {
     setCardDetails(form.values)
     if (
       form.status.cvc === 'valid' &&
@@ -201,10 +209,10 @@ const CardPayment = props => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: '#F8F8FA'}}>
+    <View style={{ flex: 1, backgroundColor: '#F8F8FA' }}>
       <Header
         title="Card Details"
-        hideCreatePost={true}
+        hideCreatePost
         customButton={() => (
           <Icon
             onPress={() => props.navigation.goBack()}
@@ -220,21 +228,15 @@ const CardPayment = props => {
           />
         )}
       />
-      <CreditCardInput onChange={_onChange} />
+      <CreditCardInput onChange={onChange} />
 
-      <TouchableOpacity
+      <NLButton
+        style={{ width: "55%", marginTop: "15%", marginLeft: "auto", marginRight: "auto" }}
+        variant="secondary"
+        value="Pay Now"
         disabled={disabled}
-        style={[styles.buttonSave, {width: 200, opacity: disabled ? 0.5 : 1}]}
-        onPress={_confirmPayment}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'white', marginHorizontal: 10}}>Pay Now</Text>
-        </View>
-      </TouchableOpacity>
+        loading={isMakingRequest()}
+        onPress={confirmPayment} />
     </View>
   )
 }
