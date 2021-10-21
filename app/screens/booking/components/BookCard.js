@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native'
 import { Icon } from 'native-base'
-import moment from 'moment'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styles from './styles'
 import NavigationService from '../../../navigation/NavigationService';

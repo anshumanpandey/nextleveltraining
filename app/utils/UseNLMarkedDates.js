@@ -1,7 +1,7 @@
 import useAxios from "axios-hooks";
 import Axios from "axios";
 import { useEffect, useState } from "react"
-import { lightFormat, isAfter, endOfMonth, setMonth } from 'date-fns';
+import { lightFormat, isAfter } from 'date-fns';
 import moment from 'moment'
 import color from 'color'
 import { API_BASE_URL } from '../api/AxiosBootstrap';
@@ -54,8 +54,8 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
     const [pastDates, setPastDates] = useState({})
 
     const [singleUserReq, getSingleUser] = useAxios({}, { manual: true })
-    const [availablesDatesReq, getAvailablesDates] = useAxios({}, { manual: true })
-    const [availableTimePerCoach, getUserData] = UseMultipleAxioHook()
+    const [, getAvailablesDates] = useAxios({}, { manual: true })
+    const [availableTimePerCoach,] = UseMultipleAxioHook()
 
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
@@ -64,7 +64,10 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         const newState = {}
         const firstOfMonth = moment().startOf("month").startOf("day")
         while (firstOfMonth.isBefore(moment(), "day")) {
-            newState[firstOfMonth.toDate().toISOString().split('T')[0]] = { customStyles: { container: { backgroundColor: 'gray' } }, disabled: true }
+            newState[firstOfMonth.toDate().toISOString().split('T')[0]] = {
+                customStyles: { container: { backgroundColor: 'gray' } },
+                disabled: true
+            }
             firstOfMonth.add(1, "day")
         }
         setPastDates(newState)
@@ -153,7 +156,6 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
             const axiosReq = { data, url: `${API_BASE_URL}/Users/GetAvailableTimeByCoachId`, method: 'post' }
             getAvailablesDates(axiosReq)
                 .then(r => {
-                    console.log(r.data)
                     const datesToCheck = r.data.map(timeSpan => timeSpan.BookingDate.split("T")[0])
                         .reduce((newArray, next) => {
                             const temp = new Set(newArray)
@@ -165,9 +167,6 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
                         const bookedDay = bookedDays[d]
 
                         if (bookedDay) {
-                            // console.log("bookedDay", bookedDay)
-                            // console.log("getTimespansPerDate", getTimespansPerDate(d, r.data).length)
-
                             if (bookedDay.total >= getTimespansPerDate(d, r.data).length) {
                                 bookedDays[d] = { customStyles: { container: { backgroundColor: 'gray' } }, disabled: true }
                             } else {
@@ -205,9 +204,44 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
         setNonAvailableDays((p) => ({ ...p, ...newDate }))
     }
 
+    const markedDaysOnCalendar = {
+        ...markedDays,
+        ...nonAvailableDays,
+        ...partialBookedDay,
+        ...markedDates,
+        ...multipleDates,
+        ...pastDates
+    }
+
+    const getAvailableDates = () => {
+        const currentDay = moment().startOf("month").startOf("day")
+        const endOfMonth = moment().endOf('month').endOf("day")
+        const availableDays = {}
+
+        while (currentDay.isSameOrBefore(endOfMonth)) {
+            const jsonKey = currentDay.toDate().toISOString().split('T')[0]
+
+            if (!markedDaysOnCalendar[jsonKey]) {
+                availableDays[jsonKey] = {
+                    customStyles: {
+                        container: { backgroundColor: Colors.s_blue },
+                        text: {
+                            color: 'white',
+                        }
+                    },
+                }
+            }
+            currentDay.add(1, "day");
+        }
+        return availableDays
+    }
+
     return {
         isUpdating,
-        markedDays: { ...markedDays, ...nonAvailableDays, ...partialBookedDay, ...markedDates, ...multipleDates },
+        markedDays: {
+            ...markedDaysOnCalendar,
+            ...getAvailableDates()
+        },
         pastDates,
         markAvailableDay,
         markDayOfWeekNonAvailable,

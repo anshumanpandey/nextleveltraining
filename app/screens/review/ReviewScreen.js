@@ -56,7 +56,7 @@ const ReviewScreen = (props) => {
         navigate={props.navigation.navigate}
       />
       <Formik
-        innerRef={(r) => formikRef.current = r}
+        innerRef={(r) => { formikRef.current = r }}
         initialValues={{ rate: 0, review: '' }}
         validate={(values) => {
           const errors = {};
@@ -85,7 +85,7 @@ const ReviewScreen = (props) => {
         }}
       >
         {({
-          handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched,
+          handleChange, handleBlur, setFieldValue, values, errors, touched,
         }) => (
           <>
             <ScrollView contentContainerStyle={styles.scrollView}>

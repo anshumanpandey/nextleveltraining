@@ -19,6 +19,12 @@ const JobDetails = (props) => {
     "playerId": profile?.Id,
     "search": ""
   }
+
+  const [postReq, doPost] = useAxios({
+    url: '/Users/SaveBookingReview',
+    method: 'POST',
+  }, { manual: true });
+
   const [getCoachReq, getCoach] = useAxios({
     url: '/Users/GetCoaches',
     method: 'POST',
@@ -69,11 +75,6 @@ const JobDetails = (props) => {
     let sessionDatetime = parseISO(props.navigation.getParam("BookingDate"))
     userTimezoneOffset = sessionDatetime.getTimezoneOffset() * 60000;
     sessionDatetime = new Date(sessionDatetime.getTime() - userTimezoneOffset)
-
-    console.log('canReschedule BookingDate', props.navigation.getParam("BookingDate"))
-    console.log('canReschedule sessionDatetime', sessionDatetime)
-    console.log('canReschedule serverDatetime', serverDatetime)
-    console.log('canReschedule differenceInHours', differenceInHours(sessionDatetime, serverDatetime))
 
     return differenceInHours(sessionDatetime, serverDatetime) >= 48 && props.navigation.getParam("BookingStatus") != "Cancelled"
   }
@@ -187,25 +188,48 @@ const JobDetails = (props) => {
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => {
-            const params = {
-              coach: profile,
-              BookingId: props.navigation.getParam("Id"),
-              FromTime: moment(props.navigation.getParam("FromTime")).utc().format('hh:mm A'),
-              ToTime: moment(props.navigation.getParam("ToTime")).utc().format('hh:mm A'),
-              Location: props.navigation.getParam("Location"),
-              SentDate: props.navigation.getParam("SentDate"),
-              isEditing: true,
+            if (canReschedule()) {
+              const params = {
+                coach: profile,
+                BookingId: props.navigation.getParam("Id"),
+                FromTime: moment(props.navigation.getParam("FromTime")).utc().format('hh:mm A'),
+                ToTime: moment(props.navigation.getParam("ToTime")).utc().format('hh:mm A'),
+                Location: props.navigation.getParam("Location"),
+                SentDate: props.navigation.getParam("SentDate"),
+                isEditing: true,
+              }
+              NavigationService.navigate("BookNow", params)
+            } else {
+              Alert.alert(
+                'Are you sure?',
+                'Coach or Player did not showed to the practice?',
+                [{
+                  text: 'Yes',
+                  onPress: () => {
+                    const reviewData = {
+                      playerId: profile.Id,
+                      bookingId: props.navigation.getParam('Id'),
+                      rating: null,
+                      feedback: null,
+                      status: "NotShow"
+                    };
+                    doPost({ data: reviewData })
+                  },
+                },
+                {
+                  text: 'Cancel',
+                  style: "cancel"
+                },]
+              );
             }
-            NavigationService.navigate("BookNow", params)
-          }}
-          disabled={!canReschedule()}>
-          <View style={[styles.btnTab, { opacity: canReschedule() ? 1 : 0.5 }]}>
+          }}>
+          <View style={[styles.btnTab, { opacity: 1 }]}>
             <Icon
               name="restore"
               type="MaterialIcons"
               style={styles.btn_menu_icon}
             />
-            <Text style={styles.btnText}>Reschedule</Text>
+            <Text style={styles.btnText}>{canReschedule() ? "Reschedule" : "Not Show"}</Text>
           </View>
         </TouchableOpacity>
 
@@ -238,14 +262,13 @@ const JobDetails = (props) => {
   );
 };
 
-const StepsComponent = ({ steps, ...props }) => (
+const StepsComponent = ({ steps }) => (
   <View style={styles.jobStatus}>
     <Text style={[styles.btnText, { fontSize: 18, marginBottom: '5%' }]}>Job Status</Text>
     {steps.map((({ title, details, status = 'Idle' }, idx, arr) => {
       let cardStatusStyles = {}
       let triangleStatusStyles = {}
       let textStatusStyles = {}
-      let dashStatusStyles = {}
       let dashWrapperStatusStyles = { backgroundColor: 'rgba(29,181,56,1)' }
       if (status == "Idle") {
         cardStatusStyles = { backgroundColor: 'rgb(244,247,248)' }
@@ -255,7 +278,6 @@ const StepsComponent = ({ steps, ...props }) => (
         cardStatusStyles = { backgroundColor: 'rgb(244,247,248)' }
         triangleStatusStyles = { borderRightColor: 'rgb(244,247,248)' }
         textStatusStyles = { color: 'lightgray' }
-        dashStatusStyles = { height: 0 }
         dashWrapperStatusStyles = { borderWidth: 0, backgroundColor: 'lightgray', marginTop: '5%' }
       }
       return (

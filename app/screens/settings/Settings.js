@@ -143,46 +143,50 @@ const Settings = props => {
           dividerFlag={false}
         /> */}
 
-        <Text
-          style={{
-            fontSize: 20,
-            color: '#9FA2B7',
-            paddingLeft: 20,
-            marginTop: 40,
-            marginBottom: 20,
-          }}>
-          Extra Services
-        </Text>
-        <Button
-          height={120}
-          title="Be Featured"
-          subTitle="Find out more about how to boost your likes , comments and bookings on Next Level by becoming “Featured“."
-          dividerFlag={false}
-          onPress={() => {
-            Alert.alert(
-              'Choose payment method',
-              'How you wana pay for the credits?',
-              [
-                {
-                  text: 'Pay with Paypal',
-                  onPress: () => {
-                    props.navigation.navigate('PayFeatured')
-                  },
-                },
-                {
-                  text: 'Pay with Credit/Debit Card',
-                  onPress: () => {
-                    props.navigation.navigate('CardPayment', {
-                      amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
-                      purchaseType: 'featured',
-                    })
-                  },
-                },
-              ],
-              { cancelable: true },
-            )
-          }}
-        />
+        {profile.Featured === false && (
+          <>
+            <Text
+              style={{
+                fontSize: 20,
+                color: '#9FA2B7',
+                paddingLeft: 20,
+                marginTop: 40,
+                marginBottom: 20,
+              }}>
+              Extra Services
+            </Text>
+            <Button
+              height={120}
+              title="Be Featured"
+              subTitle="Find out more about how to boost your likes , comments and bookings on Next Level by becoming “Featured“."
+              dividerFlag={false}
+              onPress={() => {
+                Alert.alert(
+                  'Choose payment method',
+                  'How you wana pay for the credits?',
+                  [
+                    {
+                      text: 'Pay with Paypal',
+                      onPress: () => {
+                        props.navigation.navigate('PayFeatured')
+                      },
+                    },
+                    {
+                      text: 'Pay with Credit/Debit Card',
+                      onPress: () => {
+                        props.navigation.navigate('CardPayment', {
+                          amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
+                          purchaseType: 'featured',
+                        })
+                      },
+                    },
+                  ],
+                  { cancelable: true },
+                )
+              }}
+            />
+          </>
+        )}
 
         {/* <Text
           style={{

@@ -125,9 +125,23 @@ const Home = ({ navigation }) => {
   }
 
   const NotificationCountComponent = ({ currentNotifications }) => (
-    <Text style={{ color: 'white', textAlign: 'center', fontSize: 12 }}>
-      {currentNotifications.filter(i => i.IsRead === false).length}
-    </Text>
+    <View
+      style={{
+        backgroundColor: Colors.s_blue,
+        zIndex: 2,
+        position: 'absolute',
+        top: '-50%',
+        left: '50%',
+        height: 18,
+        width: 18,
+        borderRadius: 18 / 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <Text style={{ color: 'white', textAlign: 'center', fontSize: 12 }}>
+        {currentNotifications.filter(i => i.IsRead === false).length}
+      </Text>
+    </View>
   )
 
   const BadgeNotification = () => {
@@ -145,24 +159,12 @@ const Home = ({ navigation }) => {
           justifyContent: 'center',
         }}>
         <View>
-          <View
-            style={{
-              backgroundColor: Colors.s_blue,
-              zIndex: 2,
-              position: 'absolute',
-              top: '-50%',
-              left: '50%',
-              height: 18,
-              width: 18,
-              borderRadius: 18 / 2,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+          {n.length !== 0 && (
             <NotificationCountComponent
               key={n.length}
               currentNotifications={n}
             />
-          </View>
+          )}
           <Icon
             type="Feather"
             name="bell"
@@ -181,24 +183,12 @@ const Home = ({ navigation }) => {
 
     return (
       <View>
-        <View
-          style={{
-            backgroundColor: Colors.s_blue,
-            zIndex: 2,
-            position: 'absolute',
-            top: '-50%',
-            left: '50%',
-            height: 18,
-            width: 18,
-            borderRadius: 18 / 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+        {n.length !== 0 && (
           <NotificationCountComponent
             key={n.length}
             currentNotifications={n}
           />
-        </View>
+        )}
         <Icon
           type="Feather"
           name="message-square"

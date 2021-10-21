@@ -1,16 +1,13 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Icon, Spinner } from 'native-base';
-import Axios from 'axios'
 import moment from 'moment';
 import { Calendar } from 'react-native-calendars';
 import useAxios from 'axios-hooks'
 import getDistance from 'geolib/es/getDistance';
-import { isAfter } from 'date-fns';
 import Images from '../../../constants/image';
 import styles from './information/information-style';
 import NavigationService from '../../../navigation/NavigationService';
-import Dimension from '../../../constants/dimensions';
 import TeachingCard from "./subcomponents/TeachingCard";
 import Colors from '../../../constants/color';
 import Tabs from './information/Tabs';
@@ -19,7 +16,6 @@ import { UseNLMarkedDates } from '../../../utils/UseNLMarkedDates';
 import CalendarRules from '../../../components/CalendarRules';
 import NLButton from '../../../components/NLButton';
 
-const _today = new Date();
 
 const agroupSessionPerDay = (sessions) => {
   const newArr = sessions.reduce((map, next) => {
@@ -191,7 +187,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
               toggleDate(day.dateString)
             }}
             markingType="custom"
-            markedDates={{ ...markedDays, ...pastDates }}
+            markedDates={{ ...markedDays }}
             disableAllTouchEventsForDisabledDays
             theme={{
               todayBackgroundColor: 'white',
