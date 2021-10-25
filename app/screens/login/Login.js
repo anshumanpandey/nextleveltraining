@@ -237,7 +237,7 @@ const Login = (props) => {
           <View style={styles.login_line}>
             <Text style={styles.login_continue}>Or Continue with</Text>
           </View>
-          <View style={styles.login_other_social_view}>
+          <View style={[styles.login_other_social_view, { marginBottom: '5%' }]}>
             <TouchableOpacity
               disabled={isLoginDisabled()}
               onPress={() => {

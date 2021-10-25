@@ -57,8 +57,6 @@ const Profile = (props) => {
 
   const postBeingCreated = () => postReq.loading || isFileUploading === true || getUserDataReq.loading === true
 
-  console.log({ postBeingCreated: postBeingCreated() })
-
   return (
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flex: 1, backgroundColor: 'white' }}>
       <Header

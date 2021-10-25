@@ -92,7 +92,7 @@ const NLAddressSuggestionInput = ({
           placeholder={placeholder || 'Search by a post code'}
           placeholderTextColor="rgba(0,0,0,0.3)"
           value={currentDisaplyValue}
-          style={{ fontSize: 16, width: "100%" }}
+          style={{ fontSize: 16, width: "100%", height: 50 }}
           onChangeText={(t) => {
             setCurrentDisaplyValue(t);
             setValueToSearch(t)

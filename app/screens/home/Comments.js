@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, FlatList, View, TextInput, Text, Dimensions, Keyboard } from 'react-native';
+import { ScrollView, FlatList, View, TextInput, Text, Dimensions, Keyboard, KeyboardAvoidingView } from 'react-native';
 import useAxios from 'axios-hooks'
 import { Icon, Spinner } from 'native-base';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -56,7 +56,7 @@ const CommentsScreen = ({ navigation }) => {
         <HeaderTitleBack onBackPress={() => navigation.goBack()} navigation={navigation} navigate={navigation.navigate} />
         {commentBody}
       </ScrollView>
-      <View style={[styles.inputContainer, { height: Dimensions.get('screen').height * 0.1 }]}>
+      <KeyboardAvoidingView style={[styles.inputContainer, { height: Dimensions.get('screen').height * 0.1 }]}>
         <View style={styles.inputText}>
           <TextInput
             value={commentText}
@@ -91,7 +91,7 @@ const CommentsScreen = ({ navigation }) => {
             />
           )}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </>
   );
 }
