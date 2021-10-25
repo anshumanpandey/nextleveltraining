@@ -94,6 +94,7 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }, [])
 
   useEffect(() => {
+    if (Object.keys(multipleDates).length === 0) return
     const dateToSearch = Object.keys(multipleDates).map(k => moment(k, 'YYYY-MM-DD').toDate().toISOString())
 
     const data = {
