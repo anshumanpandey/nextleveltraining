@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { parseISO, format } from 'date-fns'
 import Header from '../../components/header/Header'
+import NLBackButton from '../../components/header/NLBackButton'
 import Colors from '../../constants/color'
 import NLButton from '../../components/NLButton';
 import { getTotalBookingPrice } from '../payments/PaypalUtils';
@@ -35,6 +36,9 @@ const BookingCheckout = (props) => {
         hideCreatePost
         toggleDrawer={props.navigation.toggleDrawer}
         navigate={props.navigation.navigate}
+        customButton={() => (
+          <NLBackButton navigation={props.navigation} />
+        )}
       />
       <View style={{ flexGrow: 1 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
