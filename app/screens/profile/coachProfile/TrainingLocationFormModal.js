@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import Modal from "react-native-modal";
 import PropTypes from 'prop-types';
 import { Icon } from 'native-base';
@@ -14,6 +14,7 @@ const TrainingLocationFormModal = ({ isVisible, afterCreation, onCancel }) => {
   }
   return (
     <Modal onBackButtonPress={onCancel} style={styles.modal} isVisible={isVisible}>
+      <SafeAreaView style={{ flex: 1 }}>
       <Header
         title="Create Training Location"
         hideCreatePost
@@ -33,6 +34,7 @@ const TrainingLocationFormModal = ({ isVisible, afterCreation, onCancel }) => {
         )}
       />
       <TrainingLocationForm onCreate={onCreate} />
+      </SafeAreaView>
     </Modal>
   )
 };

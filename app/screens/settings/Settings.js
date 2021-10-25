@@ -143,7 +143,7 @@ const Settings = props => {
           dividerFlag={false}
         /> */}
 
-        {profile.Featured === false && (
+        {profile?.Featured === false && (
           <>
             <Text
               style={{
