@@ -94,16 +94,17 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
   }, [])
 
   useEffect(() => {
-    if (Object.keys(multipleDates).length === 0) return
-    const dateToSearch = Object.keys(multipleDates).map(k => moment(k, 'YYYY-MM-DD').toDate().toISOString())
+    const dateToSearch = Object.keys(multipleDates).map(k => moment.utc(k, 'YYYY-MM-DD').toDate().toISOString())
 
-    const data = {
+    const userData = {
       "coachID": coach.Id,
       "requestedDates": dateToSearch,
     }
-    getUserData({ data })
+    if (userData.requestedDates.length === 0) {
+      return;
+    }
+    getUserData({ data: userData })
       .then((r) => {
-        console.log(r.data)
         setDropdownOptions(r.data)
         if (r.data.length == 0) {
           setSessions([])
@@ -209,9 +210,9 @@ const BookNow = ({ navigation: { addListener, state: { params: { coach, BookingI
         <View style={[styles.whenView, { marginTop: "5%" }]}>
           {availableTimePerCoach.loading && <Spinner color={Colors.s_blue} />}
           <View style={{ justifyContent: 'space-between' }}>
-            {!availableTimePerCoach.loading && availableTimePerCoach?.data?.length == 0 && <Text>No results. Select a new time range</Text>}
+            {!availableTimePerCoach.loading && (availableTimePerCoach?.data?.length == 0 || Object.keys(multipleDates).length === 0) && <Text>No results. Select a new time range</Text>}
 
-            {!availableTimePerCoach.loading && availableTimePerCoach.data && agroupSessionPerDay(availableTimePerCoach.data)
+            {!availableTimePerCoach.loading && availableTimePerCoach.data && Object.keys(multipleDates).length !== 0 && agroupSessionPerDay(availableTimePerCoach.data)
               .sort((a, b) => moment.parseZone(`${a[0]}T00:00:00.00Z`) - moment.parseZone(`${b[0]}T00:00:00.00Z`))
               .map(t => (
                 <>
