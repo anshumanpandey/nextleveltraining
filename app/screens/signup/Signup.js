@@ -168,7 +168,7 @@ const Signup = (props) => {
                     console.log(err)
                   })
               }}
-              style={[styles.fb_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1 }]}
+              style={[styles.fb_btn_view, { opacity: signupIsDisabled() ? 0.2 : 1, marginBottom: '5%' }]}
             >
               <Text style={styles.fb_title}>Facebook</Text>
             </TouchableOpacity>
