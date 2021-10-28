@@ -242,6 +242,7 @@ export const UseNLMarkedDates = ({ Bookings = [], ...props }) => {
             ...markedDaysOnCalendar,
             ...getAvailableDates()
         },
+        selectedDays: markedDates,
         pastDates,
         markAvailableDay,
         markDayOfWeekNonAvailable,

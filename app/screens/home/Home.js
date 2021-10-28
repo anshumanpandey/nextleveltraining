@@ -150,6 +150,8 @@ const Home = ({ navigation }) => {
     const n = notifications
       .filter(a => a.Text !== "You have a message")
 
+    console.log(n.length)
+
     return (
       <View
         style={{
@@ -159,7 +161,7 @@ const Home = ({ navigation }) => {
           justifyContent: 'center',
         }}>
         <View>
-          {n.length !== 0 && (
+          {n.filter(i => i.IsRead === false).length !== 0 && (
             <NotificationCountComponent
               key={n.length}
               currentNotifications={n}
@@ -183,7 +185,7 @@ const Home = ({ navigation }) => {
 
     return (
       <View>
-        {n.length !== 0 && (
+        {n.filter(i => i.IsRead === false).length !== 0 && (
           <NotificationCountComponent
             key={n.length}
             currentNotifications={n}

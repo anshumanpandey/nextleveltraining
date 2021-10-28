@@ -15,9 +15,9 @@ const CalendarScreen = (props) => {
     const [profile] = useGlobalState('profile')
     const [agroupedData, setAgroupedData] = useState([])
 
-    const { markedDays, startDate, endDate, selectRange } = UseNLMarkedDates({ EmailID: profile?.EmailID })
+    const { selectedDays, startDate, endDate, selectRange } = UseNLMarkedDates({ EmailID: profile?.EmailID })
 
-    const [{ data, loading, error }, getBookings] = useAxios({
+    const [{ data, loading, }, getBookings] = useAxios({
         url: '/Users/GetBookings',
         method: 'POST',
         data: {
@@ -52,7 +52,7 @@ const CalendarScreen = (props) => {
                 return true
             })
             .reduce((groups, game) => {
-                const date = game.BookingDate.split('T')[0];
+                const date = game.Sessions[0].BookingDate.split('T')[0];
                 if (!groups[date]) {
                     groups[date] = [];
                 }
@@ -92,7 +92,7 @@ const CalendarScreen = (props) => {
                 onDayPress={(day) => {
                     selectRange(parseISO(day.dateString))
                 }}
-                markedDates={markedDays}
+                markedDates={selectedDays}
                 disableAllTouchEventsForDisabledDays
                 markingType="period"
                 theme={{

@@ -150,12 +150,6 @@ const PersonalDetails = props => {
                   </Text>
                 </View>
                 <View style={styles.personal_detail_view}>
-                  <Text style={styles.personal_detail_label}>Post Code:</Text>
-                  <Text style={styles.personal_detail_text}>
-                    {profile.PostCode}
-                  </Text>
-                </View>
-                <View style={styles.personal_detail_view}>
                   <Text style={styles.personal_detail_label}>Address:</Text>
                   <Text style={styles.personal_detail_text}>
                     {profile.Address}

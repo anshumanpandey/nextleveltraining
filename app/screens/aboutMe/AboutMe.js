@@ -6,16 +6,14 @@ import { useGlobalState } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
 import Colors from '../../constants/color'
 import { BankAccountForm } from '../profile/coachProfile/CoachProfile'
-import NLSaveButton from '../../components/NLSaveButton'
+import NLBackButton from '../../components/header/NLBackButton'
 
 const AboutMeScreen = (props) => {
-  const [currentTab, setCurrentTab] = useState(0);
+  const [, setCurrentTab] = useState(0);
   const [submitFn, setSubmitFn] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   let [profile] = useGlobalState('profile')
   if (props?.navigation?.state?.params?.player) profile = props.navigation.state.params.player
-
-  console.log("submitFn", submitFn)
 
   if (profile?.Role == "Player") {
 
@@ -28,7 +26,6 @@ const AboutMeScreen = (props) => {
           navigate={props.navigation.navigate}
           customButton={() =>
           // if (currentTab == 0) return <></>
-
           (
             <View
               style={{
@@ -38,39 +35,7 @@ const AboutMeScreen = (props) => {
                 alignItems: 'center',
                 flexGrow: 1,
               }}>
-              {isSaving == true && (
-                <Spinner
-                  size={28}
-                  color="black"
-                  style={{
-                    right: 20,
-                    position: 'absolute',
-                    marginRight: '10%',
-                    height: '10%',
-                  }}
-                />
-              )}
-              <Icon
-                onPress={() => props.navigation.goBack()}
-                type="Feather"
-                name="arrow-left"
-                style={{
-                  left: 15,
-                  fontSize: 22,
-                  color: '#2D7AF0',
-                }}
-              />
-              <NLSaveButton
-                disabled={isSaving === true}
-                onPress={() => {
-                  setIsSaving(true)
-                  if (submitFn) {
-                    submitFn().then(() => {
-                      setIsSaving(false)
-                    })
-                  }
-                }}
-              />
+              <NLBackButton navigation={props.navigation} />
             </View>
           )
           }
