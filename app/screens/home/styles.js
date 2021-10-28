@@ -1,6 +1,6 @@
+import { StyleSheet } from 'react-native';
 import Dimension from '../../constants/dimensions.js';
 import Colors from '../../constants/color.js';
-import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   home_container: {
@@ -16,8 +16,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'center',
-    width: Dimension.pro90,
-    position: 'absolute',
+    backgroundColor: "white",
     bottom: 7,
   },
   inputText: {
@@ -35,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabContain: {marginTop: 7, alignItems: 'center'},
-  icons: {fontSize: 25},
+  tabContain: { marginTop: 7, alignItems: 'center' },
+  icons: { fontSize: 25 },
 });
 export default styles;
