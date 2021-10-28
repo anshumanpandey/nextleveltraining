@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FlatList, View, TextInput, Text, Dimensions, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { ScrollView,FlatList, View, TextInput, Text, Dimensions, Keyboard, KeyboardAvoidingView } from 'react-native';
 import useAxios from 'axios-hooks'
 import { Icon, Spinner } from 'native-base';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -14,6 +14,9 @@ const CommentsScreen = ({ navigation }) => {
   const [profile] = useGlobalState('profile')
   const [commentText, setCommentText] = useState()
   const [thisComments, setThisComments] = useState([])
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
+
+  console.log(keyboardHeight)
 
   const [commentReq, postComment] = useAxios({
     url: '/Users/SaveComment',
@@ -35,6 +38,30 @@ const CommentsScreen = ({ navigation }) => {
     }
   }, [post.id])
 
+  const onKeyboardWillShow = e => {
+    setKeyboardHeight(300);
+  };
+
+  const onKeyboardWillHide = () => {
+    setKeyboardHeight(0);
+  };
+
+  useEffect(() => {
+    // These listeners on ios are a little more snappy but not available on Android
+    // If you want to use this on Android use keyboardDidShow/Hide
+    if (Platform.OS === 'ios') {
+      Keyboard.addListener('keyboardWillShow', onKeyboardWillShow);
+      Keyboard.addListener('keyboardWillHide', onKeyboardWillHide);
+    }
+
+    return () => {
+      if (Platform.OS === 'ios') {
+        Keyboard.removeListener('keyboardWillShow', onKeyboardWillShow);
+        Keyboard.removeListener('keyboardWillHide', onKeyboardWillHide);
+      }
+    };
+  }, []);
+
   let commentBody = (
     <Text style={{ textAlign: 'center', fontSize: 18, marginTop: '10%' }}>No comments</Text>
   );
@@ -52,8 +79,8 @@ const CommentsScreen = ({ navigation }) => {
     );
   }
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "white" }}
+    <View
+      style={{ flex: 1, backgroundColor: "white", paddingBottom: keyboardHeight }}
     >
       <HeaderTitleBack onBackPress={() => navigation.goBack()} navigation={navigation} navigate={navigation.navigate} />
       {commentBody}
@@ -92,7 +119,7 @@ const CommentsScreen = ({ navigation }) => {
           )}
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
