@@ -147,8 +147,8 @@ const BookingGroup = ({ data = [], groupDate }) => (
 export const CalendarListItem = (item) => (
     <View style={{ flexDirection: 'row', padding: '3%' }}>
         <View style={{ marginRight: '5%' }}>
-            <Text>{moment(item.FromTime).format("HH:mm")}</Text>
-            <Text>{moment(item.ToTime).format("HH:mm")}</Text>
+            <Text>{moment(item.Sessions[0].FromTime).format("HH:mm")}</Text>
+            <Text>{moment(item.Sessions[item.Sessions.length - 1].ToTime).format("HH:mm")}</Text>
         </View>
         <View style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.3)' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
