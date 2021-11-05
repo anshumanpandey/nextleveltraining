@@ -1,8 +1,10 @@
-import React, { useRef, useEffect } from 'react'
-import { Text, TouchableOpacity, Platform } from 'react-native'
+import React, { useRef, useEffect, useState } from 'react'
+import { Text, TouchableOpacity, Platform, StyleSheet } from 'react-native'
 import { Formik } from 'formik'
 import { View, Input as TextInput, Spinner } from 'native-base'
 import useAxios from 'axios-hooks'
+// eslint-disable-next-line import/no-unresolved
+import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-community/async-storage'
 import DeviceInfo from 'react-native-device-info'
 import GlobalStyles from '../../constants/GlobalStyles'
@@ -25,10 +27,20 @@ const NLUserDataForm = ({
   screenToGoBackTo,
   setSubmitFn,
   navigation,
+  onTermChanged,
   ...props
 }) => {
   const formikRef = useRef()
   const postCodeSearch = usePostCodeSearch()
+  const [selected, setSelected] = useState(false);
+
+  const toggleSelection = () => {
+    setSelected(p => !p)
+  }
+
+  const goToTerms = () => {
+    navigation.navigate("Terms")
+  }
 
   const [{ loading }, register] = useAxios({
     url: action == 'update' ? '/Users/UpdateProfile' : '/Account/Register',
@@ -47,8 +59,11 @@ const NLUserDataForm = ({
   },
     { manual: true })
 
-  const signupIsDisabled = () =>
+  const signupIsLoading = () =>
     loading || loginReq.loading || getUserReq.loading || postCodeSearch.isSearching
+
+  const signupIsDisabled = () =>
+    loading || loginReq.loading || getUserReq.loading || postCodeSearch.isSearching || !selected
 
   useEffect(() => {
     const focusListener = navigation.addListener('didBlur', () => formikRef.current?.setFieldValue("postCode", ""));
@@ -56,6 +71,10 @@ const NLUserDataForm = ({
       focusListener?.remove();
     }
   }, [navigation])
+
+  useEffect(() => {
+    onTermChanged && onTermChanged(selected)
+  }, [selected])
 
   useEffect(() => {
     if (setSubmitFn) {
@@ -296,6 +315,21 @@ const NLUserDataForm = ({
               </>
             )}
           </View>
+          <View style={checkboxStyles.root}>
+            <CheckBox
+              disabled={false}
+              value={selected}
+              onValueChange={toggleSelection}
+            />
+            <View style={{ flexDirection: "row" }}>
+              <Text onPress={toggleSelection} style={checkboxStyles.label}>
+                Please accept our
+              </Text>
+              <Text onPress={goToTerms} style={checkboxStyles.link}>
+                Terms And Conditions
+              </Text>
+            </View>
+          </View>
           {props.hideSaveBtn != true && (
             <View style={styles.signup_btn_view}>
               <TouchableOpacity
@@ -310,7 +344,7 @@ const NLUserDataForm = ({
                   <Text style={styles.signup_player_text}>
                     {navigation.getParam('btnText', 'Join Now')}
                   </Text>
-                  {signupIsDisabled() === true && <Spinner color={Colors.s_yellow} />}
+                  {signupIsLoading() === true && <Spinner color={Colors.s_yellow} />}
                 </View>
               </TouchableOpacity>
             </View>
@@ -320,5 +354,23 @@ const NLUserDataForm = ({
     </Formik>
   )
 }
+
+const checkboxStyles = StyleSheet.create({
+  root: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: "5%",
+  },
+  label: {
+    fontSize: 16, fontWeight: '500'
+  },
+  link: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: "blue",
+    textDecorationLine: 'underline'
+  },
+})
 
 export default NLUserDataForm

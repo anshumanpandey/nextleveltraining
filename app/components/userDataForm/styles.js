@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
-        marginTop: Dimension.px40
+        marginTop: Dimension.px15
     },
     signup_btn_player: {
         width: Dimension.pro80,

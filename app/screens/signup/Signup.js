@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native'
 import useAxios from 'axios-hooks'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -22,6 +22,7 @@ import GlobalContants from '../../constants/GlobalContants';
 
 const Signup = (props) => {
   const [socialLogin, setSocialLogin] = useState(false);
+  const [termWasAccepted, setTermWasAccepted] = useState(false);
 
   const [{ data, loading, error }, register] = useAxios({
     url: '/Account/Register',
@@ -52,7 +53,7 @@ const Signup = (props) => {
     method: 'POST'
   }, { manual: true })
 
-  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading || FBloginReq.loading || socialLogin || appleReq.loading
+  const signupIsDisabled = () => loading || loginReq.loading || getUserReq.loading || googeReq.loading || FBloginReq.loading || socialLogin || appleReq.loading || !termWasAccepted
 
   useEffect(() => {
     GoogleSignin.configure(GlobalContants.GOOGLE_SIGNIN_DATA);
@@ -128,7 +129,7 @@ const Signup = (props) => {
         <View style={styles.signup_logo_view}>
           <Image source={Images.Mlogo} />
         </View>
-        <NLUserDataForm {...props} screenToGoBackTo={Screen.SignUp} postcodeGooglePlaceselectedResult={props.navigation.getParam('postcodeGooglePlaceselectedResult')} postcodeGooglePlaces={props.navigation.getParam('postcodeGooglePlaces')} isFeatured={props.navigation.getParam('isFeatured', false)} showsConfirmPassword />
+        <NLUserDataForm {...props} onTermChanged={(accepted) => setTermWasAccepted(accepted)} screenToGoBackTo={Screen.SignUp} postcodeGooglePlaceselectedResult={props.navigation.getParam('postcodeGooglePlaceselectedResult')} postcodeGooglePlaces={props.navigation.getParam('postcodeGooglePlaces')} isFeatured={props.navigation.getParam('isFeatured', false)} showsConfirmPassword />
         <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player"), isFeatured: props.navigation.getParam('isFeatured') })}>
           <View style={[styles.signup_other_view, { color: 'black', paddingTop: '5%', paddingBottom: '5%' }]}>
             <Text style={styles.signup_continue}>Go to Login</Text>

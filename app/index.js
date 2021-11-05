@@ -897,6 +897,7 @@ const AppMain = () => {
     screens.Level = { screen: Level }
     screens.AskFeatured = { screen: AskFeatured }
     screens.Login = { screen: Login }
+    screens.Terms = { screen: TermsScreen }
     screens.ForgotPassword = { screen: ForgotPassword }
     screens.SignUp = { screen: SignUp }
     screens.AskReview = { screen: AskReview }
