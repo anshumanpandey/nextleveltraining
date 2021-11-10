@@ -41,7 +41,7 @@ const ForgotPassword = (props) => {
       />
       <View style={styles.login_container}>
         <View style={styles.login_logo_view}>
-          <Image source={Images.Mlogo} />
+          <Image source={Images.Logo} />
           <Text style={styles.login_logo_text}>Reset Password</Text>
         </View>
 

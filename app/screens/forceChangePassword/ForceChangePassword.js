@@ -36,7 +36,7 @@ const ForceChangePassword = (props) => {
     <ScrollView style={styles.login_layout}>
       <View style={styles.login_container}>
         <View style={styles.login_logo_view}>
-          <Image source={Images.Mlogo} />
+          <Image source={Images.Logo} />
           <Text style={styles.login_logo_text}>Change Password</Text>
         </View>
 

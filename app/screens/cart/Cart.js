@@ -41,7 +41,7 @@ const Cart = ({ navigation }) => {
         )}
         ListHeaderComponent={() => (
           <LogoContainer>
-            <Logo source={Images.Mlogo} />
+            <Logo source={Images.Logo} />
           </LogoContainer>
         )}
       />

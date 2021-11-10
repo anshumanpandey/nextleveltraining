@@ -14,7 +14,7 @@
     "android-windows": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && react-native run-android",
     "clean-build": "cd android && gradlew clean && cd .. && npm run android-windows",
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "android-release": "cd android && gradlew assembleRelease",
+    "android-release": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && rm -rf android/app/src/main/res/drawable-* && rm -rf android/app/src/main/res/raw/* && cd android && ./gradlew bundleRelease && cd ..",
     "build:android:debug": "npm run android-bundle && cd android && ./gradlew assembleDebug",
     "build:debug": "react-native run-android --variant=release",
     "android:log": "adb logcat com.nextleveltraining:D *:W"

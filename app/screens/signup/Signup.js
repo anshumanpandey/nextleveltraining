@@ -127,7 +127,7 @@ const Signup = (props) => {
     <ScrollView keyboardShouldPersistTaps="handled" style={styles.signup_layout}>
       <View style={styles.signup_container}>
         <View style={styles.signup_logo_view}>
-          <Image source={Images.Mlogo} />
+          <Image source={Images.Logo} />
         </View>
         <NLUserDataForm {...props} onTermChanged={(accepted) => setTermWasAccepted(accepted)} screenToGoBackTo={Screen.SignUp} postcodeGooglePlaceselectedResult={props.navigation.getParam('postcodeGooglePlaceselectedResult')} postcodeGooglePlaces={props.navigation.getParam('postcodeGooglePlaces')} isFeatured={props.navigation.getParam('isFeatured', false)} showsConfirmPassword />
         <TouchableOpacity onPress={() => props.navigation.navigate("Login", { role: props.navigation.getParam('role', "Player"), isFeatured: props.navigation.getParam('isFeatured') })}>

@@ -1,14 +1,15 @@
-import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, storeIosDeviceToken } from '../state/GlobalState'
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
-var PushNotification = require("react-native-push-notification");
 import DeviceInfo from "react-native-device-info"
-import { Platform, Alert } from 'react-native';
+import { Platform } from 'react-native';
+import { dispatchGlobalState, GLOBAL_STATE_ACTIONS, storeIosDeviceToken } from '../state/GlobalState'
+
+const PushNotification = require("react-native-push-notification");
 
 const isEmulator = DeviceInfo.isEmulatorSync()
-if(isEmulator && Platform.OS == "ios") {
-    
+if (isEmulator && Platform.OS == "ios") {
+
 } else {
-   PushNotification.createChannel(
+  PushNotification.createChannel(
     {
       channelId: "default_notification_channel_id", // (required)
       channelName: "My channel", // (required)
@@ -21,14 +22,14 @@ if(isEmulator && Platform.OS == "ios") {
   );
   // Must be outside of any component LifeCycle (such as `componentDidMount`).
   PushNotification.configure({
-    onRegister: function (tokenData) {
+    onRegister(tokenData) {
       const { token } = tokenData;
       console.log("TOKEN:", token);
       storeIosDeviceToken(token)
-    },  
+    },
 
     // (required) Called when a remote is received or opened, or local notification is opened
-    onNotification: function (notification) {
+    onNotification(notification) {
       console.log("FIREBASE NOTIFICATION", notification)
       const NLnotification = JSON.parse(notification.data.notification)
 
@@ -40,7 +41,7 @@ if(isEmulator && Platform.OS == "ios") {
       notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
     popInitialNotification: true,
-    onRegistrationError: function (err) {
+    onRegistrationError(err) {
       console.error(err.message, err);
     },
   });
