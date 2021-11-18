@@ -171,8 +171,10 @@ const Settings = props => {
                 if (Platform.OS === "ios") {
                   const paymentid = await askApplePay({ label: "Be featured on NextLevel!", amount: parseInt(GlobalContants.FEATURED_PRICE, 10) })
                   const data = { paypalPaymentId: paymentid }
-                  await savePayment({ data })
-                  Alert.alert('Succeed', 'Payment Successful!')
+                  setTimeout(async () => {
+                    await savePayment({ data })
+                    Alert.alert('Succeed', 'Payment Successful!')
+                  }, 1000)
                   return
                 }
                 Alert.alert(

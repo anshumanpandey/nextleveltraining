@@ -114,7 +114,7 @@ const CardPayment = props => {
               bookingDate: props.navigation.getParam('selectedDate'),
               trainingLocationID: props.navigation.getParam('selectedLocation')
                 .id,
-              amount: props.navigation.getParam('coach').Rate,
+              amount: props.navigation.getParam('amount'),
               paymentStatus: 'Processed',
               transactionID: nanoid(),
               bookingStatus: 'Done',

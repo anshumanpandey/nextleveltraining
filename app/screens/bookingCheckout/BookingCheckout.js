@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native'
 import { parseISO, format } from 'date-fns'
+import { NavigationActions, StackActions } from 'react-navigation'
+import useAxios from 'axios-hooks'
 import Header from '../../components/header/Header'
 import NLBackButton from '../../components/header/NLBackButton'
 import Colors from '../../constants/color'
@@ -8,12 +10,27 @@ import NLButton from '../../components/NLButton';
 import { getTotalBookingPrice } from '../payments/PaypalUtils';
 import GlobalContants from '../../constants/GlobalContants';
 import NavigationService from '../../navigation/NavigationService';
+import askApplePay from '../../utils/askApplePay'
+import {
+  useGlobalState
+} from '../../state/GlobalState'
 
 const BookingCheckout = (props) => {
+  const [profile] = useGlobalState('profile')
   const [currentSessions, setCurrentSessions] = useState([]);
   const coach = props.navigation.getParam("coach")
   const sessions = props.navigation.getParam("sessions")
   const selectedLocation = props.navigation.getParam("selectedLocation")
+
+  const [, savePayment] = useAxios({
+    url: '/Users/UpdatePaymentDetails',
+    method: 'POST',
+  }, { manual: true })
+
+  const [, saveBooking] = useAxios({
+    url: '/Users/SaveBooking',
+    method: 'POST',
+  }, { manual: true })
 
   useEffect(() => {
     setCurrentSessions(sessions)
@@ -77,7 +94,45 @@ const BookingCheckout = (props) => {
 
         <NLButton
           color={Colors.s_blue}
-          onPress={() => {
+          onPress={async () => {
+            if (Platform.OS === "ios") {
+              const paymentid = await askApplePay({ label: "Be featured on NextLevel!", amount: parseInt(GlobalContants.FEATURED_PRICE, 10) })
+              const data = {
+                playerID: profile.Id,
+                coachID: coach.Id,
+                sessions: currentSessions,
+                bookingDate: props.navigation.getParam('selectedDate'),
+                trainingLocationID: selectedLocation.id,
+                amount: parseInt(getTotalBookingPrice(coach, currentSessions), 10),
+                paymentStatus: 'Processed',
+                transactionID: paymentid,
+                bookingStatus: 'Done',
+              }
+
+              setTimeout(async () => {
+                await saveBooking({ data })
+                  .then(r => {
+                    console.log(r.data)
+                  })
+                  .finally(() => {
+                    Alert.alert('Succeed', 'Payment Successful!')
+                    const resetAction = StackActions.reset({
+                      index: 0,
+                      key: null,
+                      actions: [
+                        NavigationActions.navigate({
+                          routeName: 'MainStack',
+                          action: NavigationActions.navigate({
+                            routeName: 'Booking',
+                          }),
+                        }),
+                      ],
+                    })
+                    props.navigation.dispatch(resetAction)
+                  })
+              }, 1000)
+              return
+            }
             Alert.alert(
               'Choose payment method',
               'How you wana pay for the credits?',
@@ -96,7 +151,7 @@ const BookingCheckout = (props) => {
                   text: 'Pay with Credit/Debit Card',
                   onPress: () => {
                     props.navigation.navigate('CardPayment', {
-                      amount: parseInt(getTotalBookingPrice(coach, currentSessions)),
+                      amount: parseInt(getTotalBookingPrice(coach, currentSessions), 10),
                       coach,
                       selectedLocation,
                       sessions: currentSessions,
