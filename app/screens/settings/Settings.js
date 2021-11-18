@@ -8,10 +8,10 @@ import {
   Alert,
   Platform
 } from 'react-native'
-import { ApplePayButton, PaymentRequest } from 'react-native-payments';
 import useAxios from 'axios-hooks'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
+import askApplePay from '../../utils/askApplePay'
 import { useGlobalState } from '../../state/GlobalState'
 import GlobalContants from '../../constants/GlobalContants'
 
@@ -22,6 +22,11 @@ const Settings = props => {
     { url: `/Account/DeleteAccount/${profile?.EmailID}` },
     { manual: true },
   )
+
+  const [, savePayment] = useAxios({
+    url: '/Users/UpdatePaymentDetails',
+    method: 'POST',
+  }, { manual: true })
 
   const _deleteAccount = async () => {
     try {
@@ -162,36 +167,12 @@ const Settings = props => {
               title="Be Featured"
               subTitle="Find out more about how to boost your likes , comments and bookings on Next Level by becoming “Featured“."
               dividerFlag={false}
-              onPress={() => {
+              onPress={async () => {
                 if (Platform.OS === "ios") {
-                  const METHOD_DATA = [{
-                    supportedMethods: ['apple-pay'],
-                    data: {
-                      merchantIdentifier: 'merchant.Nextlevel',
-                      supportedNetworks: ['visa', 'mastercard'],
-                      countryCode: 'US',
-                      currencyCode: 'USD'
-                    }
-                  }];
-
-                  const DETAILS = {
-                    id: 'basic-example',
-                    displayItems: [
-                      {
-                        label: 'Movie Ticket',
-                        amount: { currency: 'USD', value: '15.00' }
-                      }
-                    ],
-                    total: {
-                      label: 'Merchant Name',
-                      amount: { currency: 'USD', value: '15.00' }
-                    }
-                  };
-
-                  const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS);
-
-                  paymentRequest.show();
-
+                  const paymentid = await askApplePay({ label: "Be featured on NextLevel!", amount: parseInt(GlobalContants.FEATURED_PRICE, 10) })
+                  const data = { paypalPaymentId: paymentid }
+                  await savePayment({ data })
+                  Alert.alert('Succeed', 'Payment Successful!')
                   return
                 }
                 Alert.alert(
