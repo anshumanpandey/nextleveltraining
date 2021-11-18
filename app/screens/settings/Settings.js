@@ -6,7 +6,9 @@ import {
   Image,
   ScrollView,
   Alert,
+  Platform
 } from 'react-native'
+import { ApplePayButton, PaymentRequest } from 'react-native-payments';
 import useAxios from 'axios-hooks'
 import Header from '../../components/header/Header'
 import Images from '../../constants/image'
@@ -161,6 +163,37 @@ const Settings = props => {
               subTitle="Find out more about how to boost your likes , comments and bookings on Next Level by becoming “Featured“."
               dividerFlag={false}
               onPress={() => {
+                if (Platform.OS === "ios") {
+                  const METHOD_DATA = [{
+                    supportedMethods: ['apple-pay'],
+                    data: {
+                      merchantIdentifier: 'merchant.Nextlevel',
+                      supportedNetworks: ['visa', 'mastercard'],
+                      countryCode: 'US',
+                      currencyCode: 'USD'
+                    }
+                  }];
+
+                  const DETAILS = {
+                    id: 'basic-example',
+                    displayItems: [
+                      {
+                        label: 'Movie Ticket',
+                        amount: { currency: 'USD', value: '15.00' }
+                      }
+                    ],
+                    total: {
+                      label: 'Merchant Name',
+                      amount: { currency: 'USD', value: '15.00' }
+                    }
+                  };
+
+                  const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS);
+
+                  paymentRequest.show();
+
+                  return
+                }
                 Alert.alert(
                   'Choose payment method',
                   'How you wana pay for the credits?',
