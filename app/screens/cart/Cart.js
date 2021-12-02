@@ -94,7 +94,7 @@ const CardItem = ({ navigation, item }) => {
               amountPaid: Math.round(item.price),
             }
 
-            await askApplePay({ label: "Be featured on NextLevel!", amount: newData.amountPaid })
+            await askApplePay({ label: `Buy ${newData.amountPaid} credits on NextLevel`, amount: newData.amountPaid })
 
             setTimeout(async () => {
               const response = await buyCredits({ data: newData })

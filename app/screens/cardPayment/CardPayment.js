@@ -13,11 +13,6 @@ import {
 } from '../../state/GlobalState'
 import Header from '../../components/header/Header'
 import NLButton from '../../components/NLButton'
-import GlobalContants from '../../constants/GlobalContants'
-
-stripe.setOptions({
-  publishableKey: GlobalContants.STRIPE_KEY,
-})
 
 const CardPayment = props => {
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import 'react-native-get-random-values'
+import stripe from 'tipsi-stripe'
 import './utils/PushNotifications'
 import './utils/GlobalErrorHandler'
 // import './utils/Firebase';
@@ -95,6 +96,12 @@ import PersonalDetails from './screens/myProfile/PersonalDetails'
 import FindCoach from './screens/myProfile/FindCoach'
 import SuccessPayCredits from './screens/successPayCredits/SuccessPayCredits'
 import CardPayment from './screens/cardPayment/CardPayment'
+
+import GlobalContants from './constants/GlobalContants'
+
+stripe.setOptions({
+  publishableKey: GlobalContants.STRIPE_KEY,
+})
 
 let initialRouteName = null
 let Apps = null
