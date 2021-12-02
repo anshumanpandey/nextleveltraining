@@ -1,6 +1,15 @@
+import { Alert } from 'react-native'
 import stripe from 'tipsi-stripe'
 
 const askApplePay = async ({ label, amount }) => {
+  const canMake = await stripe.canMakeNativePayPayments({ networks: ['visa', 'master_card'] })
+  if (!canMake) {
+    Alert.alert("Error", "Payment with Visa or Mastercard not supported")
+  }
+  const supportPayment = await stripe.deviceSupportsNativePay()
+  if (!supportPayment) {
+    Alert.alert("Error", "Device does not support native payment")
+  }
   try {
     const token = await stripe.paymentRequestWithNativePay(
       {
