@@ -14,14 +14,14 @@ const askApplePay = async ({ label, amount }) => {
     }
     const items = [{
       label,
-      amount,
+      amount: parseFloat(amount.toFixed(2)),
     }]
 
     const shippingMethods = [{
       id: 'fedex',
       label: 'FedEX',
       detail: label,
-      amount,
+      amount: parseFloat(amount.toFixed(2)),
     }]
 
     const options = {
