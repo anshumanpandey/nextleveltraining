@@ -28,7 +28,7 @@ const askApplePay = async ({ label, amount }) => {
       shippingMethods,
     }
 
-    const token = await stripe.paymentRequestWithNativePay(items, options)
+    const token = await stripe.paymentRequestWithNativePay(options, items)
     Alert.alert("Success", token)
 
     return stripe.completeNativePayRequest()
