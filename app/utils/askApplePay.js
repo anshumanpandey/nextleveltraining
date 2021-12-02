@@ -1,40 +1,40 @@
 import { Alert } from "react-native";
-
-const { PaymentRequest } = require('react-native-payments');
+import stripe from 'tipsi-stripe'
 
 const askApplePay = async ({ label, amount }) => {
   try {
-    const METHOD_DATA = [{
-      supportedMethods: ['apple-pay'],
-      data: {
-        merchantIdentifier: 'Y77A2C426U.merchant.Nextlevel',
-        supportedNetworks: ['visa', 'mastercard', 'amex'],
-        countryCode: 'GB',
-        currencyCode: 'GBP'
-      }
-    }];
-    const DETAILS = {
-      id: 'basic-example',
-      displayItems: [
-        {
-          label,
-          amount: { currency: 'GBP', value: amount }
-        }
-      ],
-      total: {
-        label,
-        amount: { currency: 'GBP', value: amount }
-      }
-    };
-    const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS);
-    return paymentRequest.show()
-      .then(paymentResponse => {
-        const { transactionIdentifier } = paymentResponse.details;
-        return transactionIdentifier
-      });
+    const canMakePayment = await stripe.canMakeNativePayPayments()
+    if (!canMakePayment) {
+      Alert.alert("Error", "Make sure your credit card is set up properly")
+    }
 
+    const supportsPayment = await stripe.deviceSupportsNativePay()
+    if (!supportsPayment) {
+      Alert.alert("Error", "This device does not support ApplePay")
+    }
+    const items = [{
+      label,
+      amount,
+    }]
+
+    const shippingMethods = [{
+      id: 'fedex',
+      label: 'FedEX',
+      detail: label,
+      amount,
+    }]
+
+    const options = {
+      shippingMethods,
+    }
+
+    const token = await stripe.paymentRequestWithNativePay(items, options)
+    Alert.alert("Success", token)
+
+    return stripe.completeNativePayRequest()
   } catch (err) {
     Alert.alert(err)
+    stripe.cancelNativePayRequest()
     throw err
   }
 }
