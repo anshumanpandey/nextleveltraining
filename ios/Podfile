@@ -82,7 +82,7 @@ target 'nextleveltraining' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'RNFBDatabase', :path => '../node_modules/@react-native-firebase/database'
   pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
-  pod 'Stripe', '~> 21.4.0'
+
   target 'nextleveltrainingTests' do
     inherit! :complete
     # Pods for testing

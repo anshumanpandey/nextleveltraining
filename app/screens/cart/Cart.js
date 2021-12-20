@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import { FlatList, Text, Alert, Platform } from 'react-native'
 import { NavigationActions, StackActions } from 'react-navigation'
 import useAxios from 'axios-hooks'
@@ -22,6 +22,8 @@ import {
 } from '../../state/GlobalState'
 
 const Cart = ({ navigation }) => {
+
+
   const items = [
     { credits: 1, price: 2.5 },
     { credits: 5, price: 12.5 },
@@ -57,6 +59,7 @@ const Cart = ({ navigation }) => {
 }
 
 const CardItem = ({ navigation, item }) => {
+  const [selectedItem, setselectedItem] = useState(1);
   const [, buyCredits] = useAxios({
     url: '/Users/BuyCredits',
     method: 'POST',
@@ -66,20 +69,51 @@ const CardItem = ({ navigation, item }) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
+  let PaymentRequest = require('react-native-payments').PaymentRequest;
+
+  const METHOD_DATA = [{
+    supportedMethods: ['apple-pay'],
+    data: {
+      merchantIdentifier: 'merchant.com.nextleveltraining',
+      supportedNetworks: ['visa', 'mastercard', 'amex'],
+      countryCode: 'US',
+      currencyCode: 'EUR'
+    }
+  }];
+
+  const DETAILS = {
+    displayItems: [
+      {
+        label: 'Credits',
+        amount: { currency: 'EUR', value: selectedItem }
+      }
+
+    ],
+    total: {
+      label: 'Credits Total',
+      amount: { currency: 'USD', value: selectedItem }
+    }
+  };
+  const OPTIONS = {
+
+  };
+  let paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS, OPTIONS);
+
+
   return (
     <Card>
       <CardTitle>Buy Credits</CardTitle>
       {item.credits === 1 ? (
         <Text style={{ fontWeight: '500' }}>About {item.credits} response</Text>
       ) : (
-        <Text style={{ fontWeight: '500' }}>About {item.credits} responses</Text>
-      )}
+          <Text style={{ fontWeight: '500' }}>About {item.credits} responses</Text>
+        )}
 
       {item.credits === 1 ? (
         <Text style={{ fontWeight: '500' }}>{item.credits} credit</Text>
       ) : (
-        <Text style={{ fontWeight: '500' }}>{item.credits} credits</Text>
-      )}
+          <Text style={{ fontWeight: '500' }}>{item.credits} credits</Text>
+        )}
 
       <Row>
         <Text style={{ fontWeight: '700' }}>£ {item.price.toFixed(2)}</Text>
@@ -88,61 +122,59 @@ const CardItem = ({ navigation, item }) => {
 
       <Button
         onPress={async () => {
-          if (Platform.OS === "ios") {
-            const newData = {
-              credits: item.credits,
-              amountPaid: Math.round(item.price),
-            }
+          setselectedItem(item.price)
 
-            await askApplePay({ label: `Buy ${newData.amountPaid} credits on NextLevel`, amount: newData.amountPaid })
+          const newData = {
+            credits: item.credits,
+            amountPaid: Math.round(item.price),
 
-            setTimeout(async () => {
-              const response = await buyCredits({ data: newData })
-              if (response.status !== 200) return
-              const { data: userData } = await getUserData()
-              dispatchGlobalState({
-                type: GLOBAL_STATE_ACTIONS.PROFILE,
-                state: userData,
-              })
-              Alert.alert('Succeed', 'Payment Successful!')
-              const resetAction = StackActions.reset({
-                index: 0,
-                key: null,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'MainStack',
-                    action: NavigationActions.navigate({
-                      routeName: 'Profile',
-                      action: NavigationActions.navigate({ routeName: 'Wallet' }),
-                    }),
-                  }),
-                ],
-              })
-              navigation.dispatch(resetAction)
-            }, 1000)
-            return
           }
           Alert.alert(
             'Choose payment method',
             'How you wana pay for the credits?',
             [
+
               {
-                text: 'Pay with Paypal',
+                text: 'Apple Pay',
                 onPress: () => {
-                  navigation.navigate('PayCredits', {
-                    amount: item.price,
-                    credits: item.credits,
-                    purchaseType: 'coins',
-                  })
-                },
-              },
-              {
-                text: 'Pay with Credit/Debit Card',
-                onPress: () => {
-                  navigation.navigate('CardPayment', {
-                    amount: item.price,
-                    credits: item.credits,
-                    purchaseType: 'coins',
+                  paymentRequest.canMakePayments().then((canMakePayment) => {
+                    if (canMakePayment) {
+
+                      paymentRequest.show()
+                        .then(paymentResponse => {
+                          paymentResponse.complete('success');
+                          setTimeout(async () => {
+                            const response = await buyCredits({ data: newData })
+                            if (response.status !== 200) return
+                            const { data: userData } = await getUserData()
+                            dispatchGlobalState({
+                              type: GLOBAL_STATE_ACTIONS.PROFILE,
+                              state: userData,
+                            })
+                            Alert.alert('Succeed', 'Payment Successful!')
+                            const resetAction = StackActions.reset({
+                              index: 0,
+                              key: null,
+                              actions: [
+                                NavigationActions.navigate({
+                                  routeName: 'MainStack',
+                                  action: NavigationActions.navigate({
+                                    routeName: 'Profile',
+                                    action: NavigationActions.navigate({ routeName: 'Wallet' }),
+                                  }),
+                                }),
+                              ],
+                            })
+                            navigation.dispatch(resetAction)
+                          }, 1000)
+                          return
+
+
+                        }).catch(r => paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS))
+                    }
+                    else {
+                      console.log('Cant Make Payment')
+                    }
                   })
                 },
               },
@@ -153,12 +185,7 @@ const CardItem = ({ navigation, item }) => {
         <ButtonText>Buy credits</ButtonText>
       </Button>
 
-      { /* <Row>
-      <CheckBox value={false} onValueChange={() => { }} />
-      <Text style={{ fontWeight: '500', marginLeft: 10 }}>
-        Auto top-up next time
-    </Text>
-    </Row> */}
+
     </Card>
   )
 }

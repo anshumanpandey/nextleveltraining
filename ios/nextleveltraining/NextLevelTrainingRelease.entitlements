@@ -8,9 +8,13 @@
 	<array>
 		<string>Default</string>
 	</array>
-	<key>keychain-access-groups</key>		
- 	<array>		
- 		<string>$(AppIdentifierPrefix)com.nextleveltraining</string>		
- 	</array>
+	<key>com.apple.developer.in-app-payments</key>
+	<array>
+		<string>merchant.com.nextleveltraining</string>
+	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.nextleveltraining</string>
+	</array>
 </dict>
 </plist>
