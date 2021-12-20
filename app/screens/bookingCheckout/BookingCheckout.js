@@ -158,36 +158,37 @@ const BookingCheckout = (props) => {
                 ],
                 { cancelable: true },
               )
+            } else {
+              Alert.alert(
+                'Choose payment method',
+                'How you wana pay for the credits?',
+                [
+                  {
+                    text: 'Pay with Paypal',
+                    onPress: () => {
+                      NavigationService.navigate('PaymentConcent', {
+                        coach,
+                        selectedLocation,
+                        sessions: currentSessions,
+                      })
+                    },
+                  },
+                  {
+                    text: 'Pay with Credit/Debit Card',
+                    onPress: () => {
+                      props.navigation.navigate('CardPayment', {
+                        amount: parseInt(getTotalBookingPrice(coach, currentSessions), 10),
+                        coach,
+                        selectedLocation,
+                        sessions: currentSessions,
+                        purchaseType: 'booking',
+                      })
+                    },
+                  },
+                ],
+                { cancelable: true },
+              )
             }
-            Alert.alert(
-              'Choose payment method',
-              'How you wana pay for the credits?',
-              [
-                {
-                  text: 'Pay with Paypal',
-                  onPress: () => {
-                    NavigationService.navigate('PaymentConcent', {
-                      coach,
-                      selectedLocation,
-                      sessions: currentSessions,
-                    })
-                  },
-                },
-                {
-                  text: 'Pay with Credit/Debit Card',
-                  onPress: () => {
-                    props.navigation.navigate('CardPayment', {
-                      amount: parseInt(getTotalBookingPrice(coach, currentSessions), 10),
-                      coach,
-                      selectedLocation,
-                      sessions: currentSessions,
-                      purchaseType: 'booking',
-                    })
-                  },
-                },
-              ],
-              { cancelable: true },
-            )
           }}
           value="Pay"
           style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: '10%' }}

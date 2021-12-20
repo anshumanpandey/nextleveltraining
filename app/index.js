@@ -9,6 +9,7 @@ import {
   View,
   SafeAreaView,
   Alert,
+  Platform
 } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -98,8 +99,14 @@ import SuccessPayCredits from './screens/successPayCredits/SuccessPayCredits'
 import CardPayment from './screens/cardPayment/CardPayment'
 
 import GlobalContants from './constants/GlobalContants'
+let stripeCofig;
+if (Platform.OS == 'android') {
 
-
+  stripeCofig = require('tipsi-stripe');
+  stripeCofig.setOptions({
+    publishableKey: GlobalContants.STRIPE_KEY,
+  })
+}
 
 let initialRouteName = null
 let Apps = null

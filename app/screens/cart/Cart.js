@@ -129,58 +129,88 @@ const CardItem = ({ navigation, item }) => {
             amountPaid: Math.round(item.price),
 
           }
-          Alert.alert(
-            'Choose payment method',
-            'How you wana pay for the credits?',
-            [
+          if (Platform.OS === "ios") {
+            Alert.alert(
+              'Choose payment method',
+              'How you wana pay for the credits?',
+              [
 
-              {
-                text: 'Apple Pay',
-                onPress: () => {
-                  paymentRequest.canMakePayments().then((canMakePayment) => {
-                    if (canMakePayment) {
+                {
+                  text: 'Apple Pay',
+                  onPress: () => {
+                    paymentRequest.canMakePayments().then((canMakePayment) => {
+                      if (canMakePayment) {
 
-                      paymentRequest.show()
-                        .then(paymentResponse => {
-                          paymentResponse.complete('success');
-                          setTimeout(async () => {
-                            const response = await buyCredits({ data: newData })
-                            if (response.status !== 200) return
-                            const { data: userData } = await getUserData()
-                            dispatchGlobalState({
-                              type: GLOBAL_STATE_ACTIONS.PROFILE,
-                              state: userData,
-                            })
-                            Alert.alert('Succeed', 'Payment Successful!')
-                            const resetAction = StackActions.reset({
-                              index: 0,
-                              key: null,
-                              actions: [
-                                NavigationActions.navigate({
-                                  routeName: 'MainStack',
-                                  action: NavigationActions.navigate({
-                                    routeName: 'Profile',
-                                    action: NavigationActions.navigate({ routeName: 'Wallet' }),
+                        paymentRequest.show()
+                          .then(paymentResponse => {
+                            paymentResponse.complete('success');
+                            setTimeout(async () => {
+                              const response = await buyCredits({ data: newData })
+                              if (response.status !== 200) return
+                              const { data: userData } = await getUserData()
+                              dispatchGlobalState({
+                                type: GLOBAL_STATE_ACTIONS.PROFILE,
+                                state: userData,
+                              })
+                              Alert.alert('Succeed', 'Payment Successful!')
+                              const resetAction = StackActions.reset({
+                                index: 0,
+                                key: null,
+                                actions: [
+                                  NavigationActions.navigate({
+                                    routeName: 'MainStack',
+                                    action: NavigationActions.navigate({
+                                      routeName: 'Profile',
+                                      action: NavigationActions.navigate({ routeName: 'Wallet' }),
+                                    }),
                                   }),
-                                }),
-                              ],
-                            })
-                            navigation.dispatch(resetAction)
-                          }, 1000)
-                          return
+                                ],
+                              })
+                              navigation.dispatch(resetAction)
+                            }, 1000)
+                            return
 
 
-                        }).catch(r => paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS))
-                    }
-                    else {
-                      console.log('Cant Make Payment')
-                    }
-                  })
+                          }).catch(r => paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS))
+                      }
+                      else {
+                        console.log('Cant Make Payment')
+                      }
+                    })
+                  },
                 },
-              },
-            ],
-            { cancelable: true },
-          )
+              ],
+              { cancelable: true },
+            )
+          } else {
+            Alert.alert(
+              'Choose payment method',
+              'How you wana pay for the credits?',
+              [
+                {
+                  text: 'Pay with Paypal',
+                  onPress: () => {
+                    navigation.navigate('PayCredits', {
+                      amount: item.price,
+                      credits: item.credits,
+                      purchaseType: 'coins',
+                    })
+                  },
+                },
+                {
+                  text: 'Pay with Credit/Debit Card',
+                  onPress: () => {
+                    navigation.navigate('CardPayment', {
+                      amount: item.price,
+                      credits: item.credits,
+                      purchaseType: 'coins',
+                    })
+                  },
+                },
+              ],
+              { cancelable: true },
+            )
+          }
         }}>
         <ButtonText>Buy credits</ButtonText>
       </Button>
