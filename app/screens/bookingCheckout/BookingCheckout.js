@@ -109,55 +109,38 @@ const BookingCheckout = (props) => {
                 transactionID: '1',
                 bookingStatus: 'Done',
               }
-              Alert.alert(
-                'Choose payment method',
-                'How you wana pay for the credits?',
-                [
 
-                  {
-                    text: 'Apple Pay',
-                    onPress: () => {
-                      paymentRequest.canMakePayments().then((canMakePayment) => {
-                        if (canMakePayment) {
-
-                          paymentRequest.show()
-                            .then(paymentResponse => {
-                              paymentResponse.complete('success');
-                              setTimeout(async () => {
-                                await saveBooking({ data })
-                                  .then(r => {
-                                    console.log(r.data)
-                                  })
-                                  .finally(() => {
-                                    Alert.alert('Succeed', 'Payment Successful!')
-                                    const resetAction = StackActions.reset({
-                                      index: 0,
-                                      key: null,
-                                      actions: [
-                                        NavigationActions.navigate({
-                                          routeName: 'MainStack',
-                                          action: NavigationActions.navigate({
-                                            routeName: 'Booking',
-                                          }),
-                                        }),
-                                      ],
-                                    })
-                                    props.navigation.dispatch(resetAction)
-                                  })
-                              }, 1000)
-                              return
-
-                            }).catch(r => paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS))
-                        }
-                        else {
-                          console.log('Cant Make Payment')
-                        }
+              let responsePaymet = await askApplePay({ price: parseInt(getTotalBookingPrice(coach, currentSessions), 10) })
+              if (responsePaymet == true) {
+                setTimeout(async () => {
+                  await saveBooking({ data })
+                    .then(r => {
+                      console.log(r.data)
+                    })
+                    .finally(() => {
+                      Alert.alert('Succeed', 'Payment Successful!')
+                      const resetAction = StackActions.reset({
+                        index: 0,
+                        key: null,
+                        actions: [
+                          NavigationActions.navigate({
+                            routeName: 'MainStack',
+                            action: NavigationActions.navigate({
+                              routeName: 'Booking',
+                            }),
+                          }),
+                        ],
                       })
-                    },
-                  },
-                ],
-                { cancelable: true },
-              )
+                      props.navigation.dispatch(resetAction)
+                    })
+                }, 1000)
+                return
+
+
+
+
+              }
+
             } else {
               Alert.alert(
                 'Choose payment method',
@@ -189,7 +172,8 @@ const BookingCheckout = (props) => {
                 { cancelable: true },
               )
             }
-          }}
+          }
+          }
           value="Pay"
           style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: '10%' }}
         />

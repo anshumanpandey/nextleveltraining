@@ -130,58 +130,39 @@ const CardItem = ({ navigation, item }) => {
 
           }
           if (Platform.OS === "ios") {
-            Alert.alert(
-              'Choose payment method',
-              'How you wana pay for the credits?',
-              [
-
-                {
-                  text: 'Apple Pay',
-                  onPress: () => {
-                    paymentRequest.canMakePayments().then((canMakePayment) => {
-                      if (canMakePayment) {
-
-                        paymentRequest.show()
-                          .then(paymentResponse => {
-                            paymentResponse.complete('success');
-                            setTimeout(async () => {
-                              const response = await buyCredits({ data: newData })
-                              if (response.status !== 200) return
-                              const { data: userData } = await getUserData()
-                              dispatchGlobalState({
-                                type: GLOBAL_STATE_ACTIONS.PROFILE,
-                                state: userData,
-                              })
-                              Alert.alert('Succeed', 'Payment Successful!')
-                              const resetAction = StackActions.reset({
-                                index: 0,
-                                key: null,
-                                actions: [
-                                  NavigationActions.navigate({
-                                    routeName: 'MainStack',
-                                    action: NavigationActions.navigate({
-                                      routeName: 'Profile',
-                                      action: NavigationActions.navigate({ routeName: 'Wallet' }),
-                                    }),
-                                  }),
-                                ],
-                              })
-                              navigation.dispatch(resetAction)
-                            }, 1000)
-                            return
 
 
-                          }).catch(r => paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS))
-                      }
-                      else {
-                        console.log('Cant Make Payment')
-                      }
-                    })
-                  },
-                },
-              ],
-              { cancelable: true },
-            )
+            let responsePaymet = await askApplePay({ price: item.price })
+            if (responsePaymet == true) {
+              setTimeout(async () => {
+                const response = await buyCredits({ data: newData })
+                if (response.status !== 200) return
+                const { data: userData } = await getUserData()
+                dispatchGlobalState({
+                  type: GLOBAL_STATE_ACTIONS.PROFILE,
+                  state: userData,
+                })
+                Alert.alert('Succeed', 'Payment Successful!')
+                const resetAction = StackActions.reset({
+                  index: 0,
+                  key: null,
+                  actions: [
+                    NavigationActions.navigate({
+                      routeName: 'MainStack',
+                      action: NavigationActions.navigate({
+                        routeName: 'Profile',
+                        action: NavigationActions.navigate({ routeName: 'Wallet' }),
+                      }),
+                    }),
+                  ],
+                })
+                navigation.dispatch(resetAction)
+              }, 1000)
+              return
+
+            }
+
+
           } else {
             Alert.alert(
               'Choose payment method',
