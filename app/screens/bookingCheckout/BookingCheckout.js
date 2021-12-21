@@ -96,7 +96,7 @@ const BookingCheckout = (props) => {
           color={Colors.s_blue}
           onPress={async () => {
             if (Platform.OS === "ios") {
-              setselectedItem(parseInt(getTotalBookingPrice(coach, currentSessions), 10))
+
 
               const data = {
                 playerID: profile.Id,
