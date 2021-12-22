@@ -69,35 +69,6 @@ const CardItem = ({ navigation, item }) => {
     url: '/Users/GetUser',
   }, { manual: true })
 
-  let PaymentRequest = require('react-native-payments').PaymentRequest;
-
-  const METHOD_DATA = [{
-    supportedMethods: ['apple-pay'],
-    data: {
-      merchantIdentifier: 'merchant.com.nextleveltraining',
-      supportedNetworks: ['visa', 'mastercard', 'amex'],
-      countryCode: 'US',
-      currencyCode: 'EUR'
-    }
-  }];
-
-  const DETAILS = {
-    displayItems: [
-      {
-        label: 'Credits',
-        amount: { currency: 'EUR', value: selectedItem }
-      }
-
-    ],
-    total: {
-      label: 'Credits Total',
-      amount: { currency: 'USD', value: selectedItem }
-    }
-  };
-  const OPTIONS = {
-
-  };
-  let paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS, OPTIONS);
 
 
   return (
