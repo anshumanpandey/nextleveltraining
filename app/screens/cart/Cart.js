@@ -132,7 +132,7 @@ const CardItem = ({ navigation, item }) => {
           if (Platform.OS === "ios") {
 
 
-            let responsePaymet = await askApplePay({ price: item.price })
+            let responsePaymet = await askApplePay({ label: "Credits", price: item.price })
             if (responsePaymet == true) {
               setTimeout(async () => {
                 const response = await buyCredits({ data: newData })

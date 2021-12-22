@@ -30,58 +30,64 @@ const AskFeatured = (props) => {
           style={styles.level_btn_player}
           onPress={async () => {
             if (Platform.OS === "ios") {
-              const paymentid = await askApplePay({ label: "Be featured on NextLevel!", amount: parseInt(GlobalContants.FEATURED_PRICE, 10) })
-              const data = { paypalPaymentId: paymentid }
-              setTimeout(async () => {
-                await savePayment({ data })
-                Alert.alert('Succeed', 'Payment Successful!')
-              }, 1000)
-              return
+
+              let responsePaymet = await askApplePay({ label: "Featured", price: parseInt(GlobalContants.FEATURED_PRICE, 10) })
+              if (responsePaymet == true) {
+                const data = { paypalPaymentId: 1 }
+                setTimeout(async () => {
+                  await savePayment({ data })
+                  Alert.alert('Succeed', 'Payment Successful!')
+                }, 1000)
+                return
+
+              }
+
+            } else {
+              Alert.alert(
+                'Choose payment method',
+                'How you wana pay for the credits?',
+                [
+                  {
+                    text: 'Pay with Paypal',
+                    onPress: () => {
+                      if (props.navigation.getParam('redirect', false)) {
+                        props.navigation.navigate('PayFeatured')
+                      } else {
+                        AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
+                          () => {
+                            NavigationService.navigate(Screens.SignUp, {
+                              isFeatured: true,
+                              role: props.navigation.getParam('role', 'Player'),
+                            })
+                          },
+                        )
+                      }
+                    },
+                  },
+                  {
+                    text: 'Pay with Credit/Debit Card',
+                    onPress: () => {
+                      if (props.navigation.getParam('redirect', false)) {
+                        props.navigation.navigate('CardPayment', {
+                          amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
+                          purchaseType: 'featured',
+                        })
+                      } else {
+                        AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
+                          () => {
+                            NavigationService.navigate(Screens.SignUp, {
+                              isFeatured: true,
+                              role: props.navigation.getParam('role', 'Player'),
+                            })
+                          },
+                        )
+                      }
+                    },
+                  },
+                ],
+                { cancelable: true },
+              )
             }
-            Alert.alert(
-              'Choose payment method',
-              'How you wana pay for the credits?',
-              [
-                {
-                  text: 'Pay with Paypal',
-                  onPress: () => {
-                    if (props.navigation.getParam('redirect', false)) {
-                      props.navigation.navigate('PayFeatured')
-                    } else {
-                      AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
-                        () => {
-                          NavigationService.navigate(Screens.SignUp, {
-                            isFeatured: true,
-                            role: props.navigation.getParam('role', 'Player'),
-                          })
-                        },
-                      )
-                    }
-                  },
-                },
-                {
-                  text: 'Pay with Credit/Debit Card',
-                  onPress: () => {
-                    if (props.navigation.getParam('redirect', false)) {
-                      props.navigation.navigate('CardPayment', {
-                        amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
-                        purchaseType: 'featured',
-                      })
-                    } else {
-                      AsyncStorage.setItem('wantToBeFeatured', 'yes').then(
-                        () => {
-                          NavigationService.navigate(Screens.SignUp, {
-                            isFeatured: true,
-                            role: props.navigation.getParam('role', 'Player'),
-                          })
-                        },
-                      )
-                    }
-                  },
-                },
-              ],
-              { cancelable: true },
-            )
           }}>
           <View style={styles.level_btn_player_view}>
             <Text style={styles.level_player_text}>Go Featured</Text>

@@ -110,7 +110,7 @@ const BookingCheckout = (props) => {
                 bookingStatus: 'Done',
               }
 
-              let responsePaymet = await askApplePay({ price: parseInt(getTotalBookingPrice(coach, currentSessions), 10) })
+              let responsePaymet = await askApplePay({ label: "Booking", price: parseInt(getTotalBookingPrice(coach, currentSessions), 10) })
               if (responsePaymet == true) {
                 setTimeout(async () => {
                   await saveBooking({ data })

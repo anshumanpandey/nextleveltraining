@@ -6,8 +6,8 @@ import {
   GLOBAL_STATE_ACTIONS,
 } from '../state/GlobalState';
 
-// export const API_BASE_URL = 'https://mobileapi.nextlevelfootballtraining.co.uk/api'
-export const API_BASE_URL = 'https://mobileapitest.nextlevelfootballtraining.co.uk:9091/api';
+export const API_BASE_URL = 'https://mobileapi.nextlevelfootballtraining.co.uk/api'
+//export const API_BASE_URL = 'https://mobileapitest.nextlevelfootballtraining.co.uk:9091/api';
 export const axiosInstance = Axios.create({
   baseURL: API_BASE_URL,
 });

@@ -170,35 +170,39 @@ const Settings = props => {
               onPress={async () => {
                 if (Platform.OS === "ios") {
                   const paymentid = await askApplePay({ label: "Be featured on NextLevel!", amount: parseInt(GlobalContants.FEATURED_PRICE, 10) })
-                  const data = { paypalPaymentId: paymentid }
-                  setTimeout(async () => {
-                    await savePayment({ data })
-                    Alert.alert('Succeed', 'Payment Successful!')
-                  }, 1000)
-                  return
+
+                  if (paymentid == true) {
+                    const data = { paypalPaymentId: 1 }
+                    setTimeout(async () => {
+                      await savePayment({ data })
+                      Alert.alert('Succeed', 'Payment Successful!')
+                    }, 1000)
+                    return
+                  }
+                } else {
+                  Alert.alert(
+                    'Choose payment method',
+                    'How you wana pay for the credits?',
+                    [
+                      {
+                        text: 'Pay with Paypal',
+                        onPress: () => {
+                          props.navigation.navigate('PayFeatured')
+                        },
+                      },
+                      {
+                        text: 'Pay with Credit/Debit Card',
+                        onPress: () => {
+                          props.navigation.navigate('CardPayment', {
+                            amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
+                            purchaseType: 'featured',
+                          })
+                        },
+                      },
+                    ],
+                    { cancelable: true },
+                  )
                 }
-                Alert.alert(
-                  'Choose payment method',
-                  'How you wana pay for the credits?',
-                  [
-                    {
-                      text: 'Pay with Paypal',
-                      onPress: () => {
-                        props.navigation.navigate('PayFeatured')
-                      },
-                    },
-                    {
-                      text: 'Pay with Credit/Debit Card',
-                      onPress: () => {
-                        props.navigation.navigate('CardPayment', {
-                          amount: parseInt(GlobalContants.FEATURED_PRICE, 10),
-                          purchaseType: 'featured',
-                        })
-                      },
-                    },
-                  ],
-                  { cancelable: true },
-                )
               }}
             />
           </>

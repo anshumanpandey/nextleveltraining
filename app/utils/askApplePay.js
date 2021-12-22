@@ -1,7 +1,7 @@
 import { Alert } from 'react-native'
 
 let PaymentRequest = require('react-native-payments').PaymentRequest;
-const askApplePay = async ({ amount }) => {
+const askApplePay = async ({ label, amount }) => {
 
 
   const METHOD_DATA = [{
@@ -17,7 +17,7 @@ const askApplePay = async ({ amount }) => {
   const DETAILS = {
     displayItems: [
       {
-        label: 'Credits',
+        label: label,
         amount: { currency: 'EUR', value: amount }
       }
 
