@@ -238,7 +238,7 @@ const Login = (props) => {
             <Text style={styles.login_continue}>Or Continue with</Text>
           </View>
           <View style={[styles.login_other_social_view, { marginBottom: '5%' }]}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               disabled={isLoginDisabled()}
               onPress={() => {
                 if (!role && props.navigation.getParam('role', null) == null) return
@@ -266,7 +266,7 @@ const Login = (props) => {
               style={[styles.fb_btn_view, { opacity: isLoginDisabled() ? 0.2 : 1, marginBottom: 30 }]}
             >
               <Text style={styles.fb_title}>Facebook</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {/* <TouchableOpacity
               disabled={isLoginDisabled()}
               onPress={async () => {
